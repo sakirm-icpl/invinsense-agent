@@ -1,0 +1,31 @@
+<html>
+    <head>
+        <title>Hello Ajax</title>
+        <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+    </head>
+    <body>
+        <h1>hello world!!!</h1>
+        <input type="text" id="url" />
+        <button onclick="getHeader()">Click</button>
+        <script>
+            function getHeader()
+            {
+                var urll = $('#url').val();
+                alert(urll);
+                var xhr = $.ajax({
+                    type : 'POST',
+                    data: {"key":"value"},
+                    url: urll,
+                    success: function(output,status)
+                    {
+                        alert(xhr.getResponseHeader("Content-Type"));
+                    },
+                    error: function(output)
+                    {
+                        alert("Error in Api Call");
+                    }
+                })
+            }
+        </script>
+    </body>
+</html>
