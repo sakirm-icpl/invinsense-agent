@@ -1,26 +1,15 @@
 # Invensense chrome-extension 
 
-# create manifest.json file in this file put Register the background script and Add the storage permission
-# create background.js, popup.js, options.js files
-# create options.html , popup.html files
-# create button.css file
-# create one folder images and put images in this folder 
-
-1. Open the Extension Management page by navigating to chrome://extensions.
-
-	#Alternatively, open this page by clicking on the Extensions menu button and selecting Manage Extensions at the bottom of the menu.
-
-	#Alternatively, open this page by clicking on the Chrome menu, hovering over More Tools then selecting Extensions
-
-2. Enable Developer Mode by clicking the toggle switch next to Developer mode.
-
-3. Click the Load unpacked button and select the extension directory.
-
-4. go to address bar and click on Invensense extension and click to green button
-
-5. Open the Extension Management page by navigating to chrome://extensions.
-
-6. on Invensense extension click on service worker (show all visited urls)
-
-
-
+# Create "manifest.josn" file for plugin configuration, like name, version, background scripts, permissions, etc..
+# now, create "background.js" for code that runs in the background while pulgin is running.
+# next, we have to create "popup.js" file for providing additional js script to plugin.
+# now, we need to create "popup.html" file to provide look and feel for invinsense plugin.
+# next, for plugin icon we have to create one folder in root directory of invinsense plugin setup called "images".
+# after creating that folder we have to put all image or icons which are required for invinsens plugin.
+# once the project directory and files are developed we have to upload that plugin directory to official chrome extension site.
+# for that we need to nevigarte to "chrome://extension".
+# next, in that page we need to enable developer mode from top-right corner of the page.
+# now, we have to upload our plugin directory to chrome-extension for that we need to click on "Load unpacked" button from the top-left corner of the chrome extension.
+# next, for use of invinsense plugin we need to look at right to the address bar, there is one icon of extensions, it will show all the plugin list, we need to click on that,
+  we can find out our invinsense plugin.
+# now, we can easily use our invinsense plugin in browser.
