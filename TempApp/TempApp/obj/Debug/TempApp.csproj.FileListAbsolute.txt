@@ -1,6 +1,0 @@
-D:\BNF\HanPHI Insight\RnD\TempApp\TempApp\bin\Debug\TempApp.exe.config
-D:\BNF\HanPHI Insight\RnD\TempApp\TempApp\bin\Debug\TempApp.exe
-D:\BNF\HanPHI Insight\RnD\TempApp\TempApp\bin\Debug\TempApp.pdb
-D:\BNF\HanPHI Insight\RnD\TempApp\TempApp\obj\Debug\TempApp.csprojResolveAssemblyReference.cache
-D:\BNF\HanPHI Insight\RnD\TempApp\TempApp\obj\Debug\TempApp.exe
-D:\BNF\HanPHI Insight\RnD\TempApp\TempApp\obj\Debug\TempApp.pdb
