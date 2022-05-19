@@ -1,7 +1,13 @@
 # Single Agent
 ------------------------------------------
+#### How it works?
 
-#### How to install
+- Single agent checks different tools (Wazuh, Deceptive Bytes, Microsoft Defender, Microsoft Sysmon and Lateral Moment Protection) status such like whether it is         Active, Connecting and Disconnected which will notify current status of agents with notification.
+- If tools services are active it will notify that services are running else  it will display service has been stopped and turn status dot as green.
+- When you restart the service, will give notification saying that services has been started and the red dot will turn green.
+- Agent shows status by monitoring tools' services.
+
+#### How to install(install wazuh,deceptiveBytes,Sysmon,SingleAgent)
 - Open the installation file.
 - Once the installation wizard has opened, click on `install`.
 - Then User Access Control dialog box will appear, click on `YES` to proceed.
@@ -14,12 +20,7 @@
 - Once finished, Single Agent 3.0 setup will appear.
 - Continue installation process.
 - Once finished, locate Single Agent icon in System Tray and click on it to open.
-#### How it works?
 
-- Single agent checks different tools (Wazuh, Deceptive Bytes, Microsoft Defender, Microsoft Sysmon and Lateral Moment Protection) status such like whether it is Active, Connecting and Disconnected which will notify current status of agents with notification.
-- If tools services are active it will notify that services are running else  it will display service has been stopped and turn status dot as green.
-- When you restart the service, will give notification saying that services has been started and the red dot will turn green.
-- Agent shows status by monitoring tools' services.
 
 #### Features
 - Status icon turns Red, Green, Gray and Yellow depending on its status.
