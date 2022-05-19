@@ -8,6 +8,7 @@
 - Agent shows status by monitoring tools' services.
 
 #### How to install(install wazuh,deceptiveBytes,Sysmon,SingleAgent)
+-Download .msi file https://github.com/Infopercept/invinsense-agent/blob/main/Invinsense_installer%20(1).exe
 - Open the installation file.
 - Once the installation wizard has opened, click on `install`.
 - Then User Access Control dialog box will appear, click on `YES` to proceed.
