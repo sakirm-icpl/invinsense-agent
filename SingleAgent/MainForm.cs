@@ -1,15 +1,11 @@
-using Newtonsoft.Json;
-using RestSharp;
+using Serilog;
 using SingleAgent.Monitor;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Runtime.InteropServices;
 using System.ServiceProcess;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace SingleAgent
@@ -26,7 +22,9 @@ namespace SingleAgent
         private readonly ExtendedServiceController Sysmon = new ExtendedServiceController("Sysmon64");
         private readonly ExtendedServiceController Dejavu = new ExtendedServiceController("Spooler");
         private readonly ExtendedServiceController Invinsesne = new ExtendedServiceController("Invinsense3.0");
-       
+
+        private readonly ILogger logger = Log.ForContext<MainForm>();
+
         private readonly Dictionary<string, bool> _healthStatus = new Dictionary<string, bool>
         {
             {"Deceptive Bytes", true },
@@ -39,6 +37,8 @@ namespace SingleAgent
 
         public MainForm()
         {
+            logger.Information("Loading MainForm");
+
             InitializeComponent();
 
             Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 20, 20));
@@ -47,9 +47,8 @@ namespace SingleAgent
             Dbytes.StatusChanged += (object sender, ServiceStatusEventArgs e) => UpdateStatus("Deceptive Bytes", pbDbytes, e.Status);
             Sysmon.StatusChanged += (object sender, ServiceStatusEventArgs e) => UpdateStatus("Microsoft Sysmon", pbSysmon, e.Status);
             Dejavu.StatusChanged += (object sender, ServiceStatusEventArgs e) => UpdateStatus("Lateral Movement Protection", pbDejavu, e.Status);
-            // Invinsesne.StatusChanged += (object sender, ServiceStatusEventArgs e) => UpdateStatus("Invinsense3.0", pbInvinsense, e.Status);
             Invinsesne.StatusChanged += (object sender, ServiceStatusEventArgs e) => UpdateStatusInvinsense("Invinsense3.0",e.Status);
-            Invinsesne.StatusChanged += (object sender, ServiceStatusEventArgs e) => callApi("Invinsense3.0", e.Status);
+            Invinsesne.StatusChanged += (object sender, ServiceStatusEventArgs e) => UpdateStatus("Invinsense3.0", e.Status);
 
             UpdateStatus("Wazuh", pbWazuh, wazuh.Status, false);
             UpdateStatus("Deceptive Bytes", pbDbytes, Dbytes.Status, false);
@@ -67,7 +66,6 @@ namespace SingleAgent
 
         private void UpdateStatusInvinsense(string name, ServiceControllerStatus? status, bool showNotification = true)
         {
-           //throw new NotImplementedException();
             var message = $"Status Changed:" + status.ToString();
             var icon = ToolTipIcon.Warning;
 
@@ -82,7 +80,7 @@ namespace SingleAgent
                 message = "Back to normal";
                 icon = ToolTipIcon.Info;
                 notifyIcon.Visible = true;
-                callApi("Invinsense3.0", Invinsesne.Status);
+                UpdateStatus("Invinsense3.0", Invinsesne.Status);
 
             }
             else if (status == ServiceControllerStatus.Stopped)
@@ -91,7 +89,7 @@ namespace SingleAgent
                 icon = ToolTipIcon.Error;
                 notifyIcon.Visible= false;
                 ServiceControllerStatus=ServiceControllerStatus.Stopped;
-                callApi("Invinsense3.0", Invinsesne.Status);
+                UpdateStatus("Invinsense3.0", Invinsesne.Status);
 
             }
             else
@@ -106,40 +104,10 @@ namespace SingleAgent
 
             UpdateNotificationIcon(name, icon == ToolTipIcon.Info);
         }
-        public void callApi(string name, ServiceControllerStatus? status)
-        {
-            string currtime = DateTime.Now.ToString("hh:mm:ss.fff tt", System.Globalization.DateTimeFormatInfo.InvariantInfo);
-            string url= "localhost:5000/ser/" + "/" + name + "/" + status + "/" + "/" + currtime;
-            //WebRequest.Create(url);
-            Console.WriteLine(name);
-            Console.WriteLine(status);
-            Console.WriteLine(currtime);
-            HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
-       //     request.AddHeader("Cookie", "session=eyJvaWRjX2NzcmZfdG9rZW4iOiJGZ1pLRElOTGJWb0ZkVzBZam5vVEtzM3VqU0dmVE5GMyJ9.Yn3zBQ.lU1M8o8Bany_NWAhw41kOMAJpSI");
-            request.Method = "GET";
-            request.ContentType = "application/json";
-            request.Timeout = 900000;
-            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-            {
-               // streamWriter.Write(JsonConvert.SerializeObject(model));
-                streamWriter.Flush();
-                streamWriter.Close();
-            }
-            try
-            {
-                HttpWebResponse response = request.GetResponse() as HttpWebResponse;
 
-                if (response != null && response.StatusCode == HttpStatusCode.OK)
-                {
-                    Stream responseStream = response.GetResponseStream();
-                    StreamReader streamReader = new StreamReader(responseStream);
-                    string result = streamReader.ReadToEnd();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+        public void UpdateStatus(string name, ServiceControllerStatus? status)
+        {
+            logger.Information($"Updating service status: {name} : {status}");
         }
 
         private void UpdateStatus(string name, PictureBox pictureBox, ServiceControllerStatus? status, bool showNotification = true)

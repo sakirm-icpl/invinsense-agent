@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.ServiceProcess;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ServiceProcess;
 
 namespace Invinsense3._0
 {
@@ -17,8 +12,9 @@ namespace Invinsense3._0
             ServiceBase[] ServicesToRun;
             ServicesToRun = new ServiceBase[]
             {
-                new Service1()
+                new SingleAgentService()
             };
+
             ServiceBase.Run(ServicesToRun);
         }
     }

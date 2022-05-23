@@ -1,6 +1,6 @@
 ﻿namespace Invinsense3._0
 {
-    partial class Service1
+    partial class SingleAgentService
     {
         /// <summary> 
         /// Required designer variable.

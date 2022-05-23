@@ -1,21 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.ServiceProcess;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 
 namespace Invinsense3._0
 {
-    public partial class Service1 : ServiceBase
+    public partial class SingleAgentService : ServiceBase
     {
         private readonly Timer timer = new Timer(); // name space(using System.Timers;)  
-        public Service1()
+        public SingleAgentService()
         {
             InitializeComponent();
         }
@@ -29,7 +22,6 @@ namespace Invinsense3._0
         protected override void OnStop()
         {
             WriteToFile("Service is stopped at " + DateTime.Now);
-            //ExitCode = 0;
         }
 
         private void OnElapsedTime(object source, ElapsedEventArgs e)
