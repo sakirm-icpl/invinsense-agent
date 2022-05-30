@@ -24,7 +24,7 @@
 
 #### Install single agent using commandline
 
-- Download msi file.
+- Download `msi` file.
 - copy file path and open on cmd(Administration)
 - run following command
 - **msiexec /i "C:\Users\Downloads\InvinsenseSingleAgentSetup.msi" ALLUSERS=1 /qn /l* "C:\Users\Downloads\app.log"**
