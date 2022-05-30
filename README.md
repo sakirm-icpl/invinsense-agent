@@ -22,6 +22,12 @@
 - Continue installation process.
 - Once finished, locate Single Agent icon in System Tray and click on it to open.
 
+#### Install single agent using commandline
+
+-Download msi file.
+-copy file path and open on cmd(Administration)
+-run following command
+-msiexec /i "C:\Users\Downloads\InvinsenseSingleAgentSetup.msi" ALLUSERS=1 /qn /l* "C:\Users\Downloads\app.log"
 
 #### Features
 - Status icon turns Red, Green, Gray and Yellow depending on its status.
