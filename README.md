@@ -1,13 +1,13 @@
 # Single Agent
 ------------------------------------------
-#### How it works?
+### How it works?
 
 - Single agent checks different tools (Wazuh, Deceptive Bytes, Microsoft Defender, Microsoft Sysmon and Lateral Moment Protection) status such like whether it is         Active, Connecting and Disconnected which will notify current status of agents with notification.
 - If tools services are active it will notify that services are running else  it will display service has been stopped and turn status dot as green.
 - When you restart the service, will give notification saying that services has been started and the red dot will turn green.
 - Agent shows status by monitoring tools' services.
 
-#### How to install Single Installer..(install wazuh,deceptiveBytes,Sysmon,SingleAgent)
+### How to install Single Installer..(install wazuh,deceptiveBytes,Sysmon,SingleAgent)
 -Download .msi file https://github.com/Infopercept/invinsense-agent/blob/main/Invinsense_installer%20(1).exe
 - run the installation .msi file.
 - Once the installation wizard has opened, click on `install`.
@@ -27,7 +27,7 @@
 - Download msi file.
 - copy file path and open on cmd(Administration)
 - run following command
-- msiexec /i "C:\Users\Downloads\InvinsenseSingleAgentSetup.msi" ALLUSERS=1 /qn /l* "C:\Users\Downloads\app.log"
+- **msiexec /i "C:\Users\Downloads\InvinsenseSingleAgentSetup.msi" ALLUSERS=1 /qn /l* "C:\Users\Downloads\app.log"**
 
 #### Features
 - Status icon turns Red, Green, Gray and Yellow depending on its status.
