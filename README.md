@@ -8,7 +8,7 @@
 - Agent shows status by monitoring tools' services.
 
 ### How to install Single Installer..(install wazuh,deceptiveBytes,Sysmon,SingleAgent)
--Download .msi file https://github.com/Infopercept/invinsense-agent/blob/main/InvinsenseSingleAgentSetup%20(2).msi
+
 - run the installation .msi file.
 - Once the installation wizard has opened, click on `install`.
 - Then User Access Control dialog box will appear, click on `YES` to proceed.
@@ -23,8 +23,7 @@
 - Once finished, locate Single Agent icon in System Tray and click on it to open.
 
 #### Install single agent using commandline
-
-- Download `msi` file.
+- Download .msi file https://github.com/Infopercept/invinsense-agent/blob/main/InvinsenseSingleAgentSetup%20(2).msi
 - copy file path and open on cmd(Administration)
 - run following command
 - **msiexec /i "C:\Users\Downloads\InvinsenseSingleAgentSetup.msi" ALLUSERS=1 /qn /l* "C:\Users\Downloads\app.log"**
