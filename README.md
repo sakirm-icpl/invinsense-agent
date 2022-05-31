@@ -36,7 +36,7 @@
 
 #### Install deceptive bytes agent using commandline
 
--download .msi file 
+-download '.msi' file 
 
 
 #### Features
