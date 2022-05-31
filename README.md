@@ -23,35 +23,35 @@
 - Once finished, locate Single Agent icon in System Tray and click on it to open.
 
 #### Install single agent using commandline
-- Download .msi file https://github.com/Infopercept/invinsense-agent/blob/main/InvinsenseSingleAgentSetup%20(2).msi
+- Download `.msi` file https://github.com/Infopercept/invinsense-agent/blob/main/InvinsenseSingleAgentSetup%20(2).msi
 - copy file path and open on cmd(Administration)
 - run following command
 - **msiexec /i "C:\Users\Downloads\InvinsenseSingleAgentSetup.msi" ALLUSERS=1 /qn /l* "C:\Users\Downloads\app.log"**
 
 #### Install wazuh agent using commandline
 
--download .msi file https://packages.wazuh.com/4.x/windows/wazuh-agent-4.2.5-1.msi
+-download `.msi` file https://packages.wazuh.com/4.x/windows/wazuh-agent-4.2.5-1.msi
 - run following command 
 - wazuh-agent-4.2.5.msi; ./wazuh-agent-4.2.5.msi /q WAZUH_MANAGER='172.17.14.101' WAZUH_REGISTRATION_SERVER='172.17.14.101'
 
 #### Install deceptive bytes agent using commandline
 
--download '.msi' file https://github.com/Infopercept/invinsense-agent/blob/main/DeceptiveBytes.EPS.x64%20(1).msi
+-download `.msi` file https://github.com/Infopercept/invinsense-agent/blob/main/DeceptiveBytes.EPS.x64%20(1).msi
 - run following command 
 - msiexec /i "DeceptiveBytes.EPS.x64.msi" ALLUSERS=1 /qn /norestart ServerAddress="3.18.202.216" ApiKey="9c208321ad917ef07680f485f6597e37b29ae53d23a62bc7e9ca4af97e0ad85b"
 
 #### Install Sysmon64
-- Download '.msi' file https://download.sysinternals.com/files/Sysmon.zip
+- Download `.msi` file https://download.sysinternals.com/files/Sysmon.zip
 - Open command prompt run as administration.
-- run following command to install sysmon64 'Sysmon64 -i'
-
+- run following command to install sysmon64 `Sysmon64 -i`
 
 #### Features
 - Status icon turns Red, Green, Gray and Yellow depending on its status.
 - System tray icon will turn green if all the services are running properly, if not then it will turn red.
 - User will be prompted with notification depending on status of that specific tool.
+- Create log details for Invisense 3.0 services.
 
-#### System Requirements
+#### System Requirements (Invinsense 3.0)
 | Component | README |
 | ------ | ------ |
 | .NET Framework 4.8 | Must be pre-installed in computer in order to run the Single agent |
