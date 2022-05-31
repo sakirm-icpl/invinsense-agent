@@ -36,7 +36,14 @@
 
 #### Install deceptive bytes agent using commandline
 
--download '.msi' file 
+-download '.msi' file https://github.com/Infopercept/invinsense-agent/blob/main/DeceptiveBytes.EPS.x64%20(1).msi
+- run following command 
+- msiexec /i "DeceptiveBytes.EPS.x64.msi" ALLUSERS=1 /qn /norestart ServerAddress="3.18.202.216" ApiKey="9c208321ad917ef07680f485f6597e37b29ae53d23a62bc7e9ca4af97e0ad85b"
+
+#### Install Sysmon64
+- Download '.msi' file https://download.sysinternals.com/files/Sysmon.zip
+- Open command prompt run as administration.
+- run following command to install sysmon64 'Sysmon64 -i'
 
 
 #### Features
