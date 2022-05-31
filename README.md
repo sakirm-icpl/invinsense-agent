@@ -28,6 +28,17 @@
 - run following command
 - **msiexec /i "C:\Users\Downloads\InvinsenseSingleAgentSetup.msi" ALLUSERS=1 /qn /l* "C:\Users\Downloads\app.log"**
 
+#### Install wazuh agent using commandline
+
+-download .msi file https://packages.wazuh.com/4.x/windows/wazuh-agent-4.2.5-1.msi
+- run following command 
+- wazuh-agent-4.2.5.msi; ./wazuh-agent-4.2.5.msi /q WAZUH_MANAGER='172.17.14.101' WAZUH_REGISTRATION_SERVER='172.17.14.101'
+
+#### Install deceptive bytes agent using commandline
+
+-download .msi file 
+
+
 #### Features
 - Status icon turns Red, Green, Gray and Yellow depending on its status.
 - System tray icon will turn green if all the services are running properly, if not then it will turn red.
