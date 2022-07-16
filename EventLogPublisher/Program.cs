@@ -4,15 +4,14 @@ using System.Linq;
 
 namespace EventLogSample
 {
-    public static class Program
+    internal class Program
     {
         static void Main()
         {
-          
             WriteFromCustomEventSource();
             Console.ReadLine();
         }
-        
+
         private static void Log_EntryWritten(object sender, EntryWrittenEventArgs e)
         {
             Console.WriteLine("Event detected !");
@@ -21,18 +20,12 @@ namespace EventLogSample
 
         private static void WriteFromCustomEventSource()
         {
-            Console.WriteLine("enter event name for publishing");
-            String getevent = Console.ReadLine();
-            EventLog eventLog = new EventLog();
-            eventLog.Source = "SingleAgent";
-            eventLog.WriteEntry(getevent, EventLogEntryType.Information,1010,1);
-
-            if (EventLog.GetEventLogs().Any(x=>x.LogDisplayName == getevent))
+            if(EventLog.GetEventLogs().Any(x=>x.LogDisplayName == "Invinsense"))
             {
-                EventLog.CreateEventSource("SingleAgent", getevent);
+                EventLog.CreateEventSource("SingleAgent", "Invinsense");
             }
 
-            var log = new EventLog()
+            var log = new EventLog("Invinsense")
             {
                 Source = "SingleAgent",
                 EnableRaisingEvents = true
