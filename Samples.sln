@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventLogSubsriber", "EventL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormsTest", "FormsTest\FormsTest.csproj", "{B5DD4FCE-0C5E-4013-BA67-C8C3E994E77E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessMonitorTest", "ProcessMonitorTest\ProcessMonitorTest.csproj", "{381D536C-BC07-4A4B-97F2-59A02EDCF711}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{B5DD4FCE-0C5E-4013-BA67-C8C3E994E77E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5DD4FCE-0C5E-4013-BA67-C8C3E994E77E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5DD4FCE-0C5E-4013-BA67-C8C3E994E77E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{381D536C-BC07-4A4B-97F2-59A02EDCF711}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{381D536C-BC07-4A4B-97F2-59A02EDCF711}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{381D536C-BC07-4A4B-97F2-59A02EDCF711}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{381D536C-BC07-4A4B-97F2-59A02EDCF711}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

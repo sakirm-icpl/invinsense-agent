@@ -1,48 +1,46 @@
 ﻿using System;
-using System.Management;
+using System.Diagnostics;
 
 namespace EventLogSubscriber
 {
+    /// <summary>
+    /// 
+    /// </summary>
     internal class Program
     {
-        static void Main(string[] args)
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        protected Program() { }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        static void Main()
         {
-            ManagementEventWatcher startWatch = new ManagementEventWatcher(new WqlEventQuery("SELECT * FROM Win32_ProcessStartTrace"));
-            startWatch.EventArrived += new EventArrivedEventHandler(StartWatchEventArrived);
-            startWatch.Start();
-            ManagementEventWatcher stopWatch = new ManagementEventWatcher(new WqlEventQuery("SELECT * FROM Win32_ProcessStopTrace"));
-            stopWatch.EventArrived += new EventArrivedEventHandler(StopWatchEventArrived);
-            stopWatch.Start();
+            var log = new EventLog("Invinsense")
+            {
+                EnableRaisingEvents = true
+            };
+
+            log.EntryWritten += Log_EntryWritten;
+
             Console.WriteLine("Press any key to exit");
             while (!Console.KeyAvailable) System.Threading.Thread.Sleep(50);
-            startWatch.Stop();
-            stopWatch.Stop();
+
+            log.EntryWritten -= Log_EntryWritten;
+
+            Console.WriteLine("Application is closed");
         }
 
-        static void StopWatchEventArrived(object sender, EventArrivedEventArgs e)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void Log_EntryWritten(object sender, EntryWrittenEventArgs e)
         {
-            var processName = e.NewEvent.Properties["ProcessName"].Value.ToString();
-
-            if (processName.ToLower().Contains("notepad"))
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-            }
-
-            Console.WriteLine("Process stopped: {0}", processName);
-            Console.ForegroundColor = ConsoleColor.White;
-        }
-
-        static void StartWatchEventArrived(object sender, EventArrivedEventArgs e)
-        {
-            var processName = e.NewEvent.Properties["ProcessName"].Value.ToString();
-
-            if (processName.ToLower().Contains("notepad"))
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-            }
-
-            Console.WriteLine("Process started: {0}", e.NewEvent.Properties["ProcessName"].Value);
-            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("Event detected ! - " + e.Entry.Source + " " + e.Entry.Message);
         }
     }
 }

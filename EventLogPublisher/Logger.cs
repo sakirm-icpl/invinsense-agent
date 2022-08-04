@@ -18,6 +18,11 @@ namespace EventLogPublisher
         private const int MaxEventLogEntryLength = 30000;
 
         /// <summary>
+        /// Constant event log name
+        /// </summary>
+        private const string EventLogName = "Invinsense";
+
+        /// <summary>
         /// Gets or sets the source/caller. When logging, this logger class will attempt to get the
         /// name of the executing/entry assembly and use that as the source when writing to a log.
         /// In some cases, this class can't get the name of the executing assembly. This only seems
@@ -95,37 +100,58 @@ namespace EventLogPublisher
                 source = GetSource();
             }
 
-            string possiblyTruncatedMessage = EnsureLogMessageLimit(message);
-            EventLog.WriteEntry(source, possiblyTruncatedMessage, entryType);
+            message = EnsureLogMessageLimit(message);
+
+            var log = new EventLog(EventLogName)
+            {
+                Source = source
+            };
+
+            log.WriteEntry(message, entryType);
 
             // If we're running a console app, also write the message to the console window.
             if (Environment.UserInteractive)
             {
-                Console.WriteLine(message);
+                Console.WriteLine("Trace:" + message);
             }
         }
 
-        public static void EnsureEventSource(string eventSource = null)
+        public static void EnsureEventSource(string source = null)
         {
-            if(string.IsNullOrEmpty(eventSource))
-            {
-                eventSource = GetSource();
-            }
-
-            bool sourceExists;
             try
             {
-                // searching the source throws a security exception ONLY if not exists!
-                sourceExists = EventLog.SourceExists(eventSource);
-                if (!sourceExists)
-                {   // no exception until yet means the user as admin privilege
-                    EventLog.CreateEventSource(eventSource, "Application");
+                if(string.IsNullOrEmpty(source))
+                {
+                    source = GetSource();
+                }
+
+                if (!EventLog.GetEventLogs().Any(x => x.LogDisplayName == EventLogName) || !EventLog.SourceExists(source))
+                {
+                    EventLog.CreateEventSource(source, EventLogName);
                 }
             }
-            catch 
+            catch (Exception ex)
             {
                 //No need to handle
+                if (Environment.UserInteractive)
+                {
+                    Console.WriteLine(ex.StackTrace);
+                }
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sourceName"></param>
+        public static void DeleteEventSource(string sourceName)
+        {
+            EventLog.DeleteEventSource(sourceName);
+        }
+
+        public static void Delete()
+        {
+            EventLog.Delete(EventLogName);
         }
 
         private static string GetSource()
