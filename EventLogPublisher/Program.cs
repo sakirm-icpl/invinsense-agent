@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 
-namespace EventLogSample
+namespace EventLogPublisher
 {
     internal class Program
     {

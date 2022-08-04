@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Management;
 
-namespace MonitorTest
+namespace EventLogSubscriber
 {
     internal class Program
     {

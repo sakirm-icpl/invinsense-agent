@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{0A9DF203-D636-4FA7-AAD6-6E508135C20B}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>MonitorTest</RootNamespace>
-    <AssemblyName>MonitorTest</AssemblyName>
+    <RootNamespace>EventLogSubscriber</RootNamespace>
+    <AssemblyName>EventLogSubscriber</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
