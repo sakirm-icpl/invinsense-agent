@@ -1,6 +1,6 @@
 ﻿using System.ServiceProcess;
 
-namespace Invinsense3._0
+namespace Invinsense30
 {
     internal static class Program
     {
