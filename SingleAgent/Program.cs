@@ -15,10 +15,10 @@ namespace SingleAgent
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            //Initializing logger with local data
             Log.Logger = new LoggerConfiguration()
-                .WriteTo.LiteDbAsync(@"c:\tmp\logs.db", retentionPeriod: new TimeSpan(7, 0, 0, 0))
-                .CreateLogger();
+               .MinimumLevel.Debug()
+               .WriteTo.File("logs/app.log", rollingInterval: RollingInterval.Day)
+               .CreateLogger();
 
             Application.Run(new MainForm());
         }

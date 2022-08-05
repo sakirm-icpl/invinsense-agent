@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Serilog;
 using System.ServiceProcess;
 using System.Timers;
 
@@ -15,7 +15,7 @@ namespace Invinsense30
 
         protected override void OnStart(string[] args)
         {
-          //  WriteToFile("Service is started at " + DateTime.Now);
+            Log.Information("Service is started");
             timer.Elapsed += new ElapsedEventHandler(OnElapsedTime);
             timer.Interval = 5000; //number in milisecinds  
             timer.Enabled = true;
@@ -23,12 +23,12 @@ namespace Invinsense30
 
         protected override void OnStop()
         {
-          //  WriteToFile("Service is stopped at " + DateTime.Now);
+            Log.Information("Service is stopped");
         }
 
         private void OnElapsedTime(object source, ElapsedEventArgs e)
         {
-          //  WriteToFile("Service is recall at " + DateTime.Now);
+            Log.Information("Service timer");
         }
     }
 }

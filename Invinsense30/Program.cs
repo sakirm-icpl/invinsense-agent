@@ -1,4 +1,5 @@
-﻿using System.ServiceProcess;
+﻿using Serilog;
+using System.ServiceProcess;
 
 namespace Invinsense30
 {
@@ -9,6 +10,11 @@ namespace Invinsense30
         /// </summary>
         static void Main()
         {
+            Log.Logger = new LoggerConfiguration()
+               .MinimumLevel.Debug()
+               .WriteTo.File("logs/app.log", rollingInterval: RollingInterval.Day)
+               .CreateLogger();
+
             ServiceBase[] ServicesToRun;
             ServicesToRun = new ServiceBase[]
             {
