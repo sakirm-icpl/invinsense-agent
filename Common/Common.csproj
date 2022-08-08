@@ -81,6 +81,8 @@
   <ItemGroup>
     <Compile Include="Enumeration.cs" />
     <Compile Include="EventId.cs" />
+    <Compile Include="EventLogWriter.cs" />
+    <Compile Include="EventType.cs" />
     <Compile Include="Models\ApiResponse.cs" />
     <Compile Include="Models\Error.cs" />
     <Compile Include="Models\IModel.cs" />

@@ -55,7 +55,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Logger.cs" />
     <Compile Include="Monitor\ExtendedServiceController.cs">
       <SubType>Component</SubType>
     </Compile>

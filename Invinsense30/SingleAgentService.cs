@@ -1,7 +1,9 @@
-﻿using Invinsense30.Monitor;
+﻿using Common;
+using Invinsense30.Monitor;
 using Serilog;
 using SingleAgent.Monitor;
 using System;
+using System.Diagnostics;
 using System.ServiceProcess;
 using System.Timers;
 
@@ -22,22 +24,107 @@ namespace Invinsense30
         {
             InitializeComponent();
 
-            Dbytes = new ExtendedServiceController("DBytesService");
-            Dbytes.StatusChanged += (object sender, ServiceStatusEventArgs e) => UpdateStatus("Deceptive Bytes", e.Status);
-
             wazuh = new ExtendedServiceController("WazuhSvc");
-            wazuh.StatusChanged += (object sender, ServiceStatusEventArgs e) => UpdateStatus("Wazuh", e.Status);
+            wazuh.StatusChanged += (object sender, ServiceStatusEventArgs e) => WazuhUpdateStatus(e.Status);
+            WazuhUpdateStatus(wazuh.Status);
+
+            Dbytes = new ExtendedServiceController("DBytesService");
+            Dbytes.StatusChanged += (object sender, ServiceStatusEventArgs e) => DbytesUpdateStatus(e.Status);
+            DbytesUpdateStatus(Dbytes.Status);
 
             Sysmon = new ExtendedServiceController("Sysmon64");
-            Sysmon.StatusChanged += (object sender, ServiceStatusEventArgs e) => UpdateStatus("Microsoft Sysmon", e.Status);
+            Sysmon.StatusChanged += (object sender, ServiceStatusEventArgs e) => SysmonUpdateStatus(e.Status);
 
             Dejavu = new ExtendedServiceController("Spooler");
-            Dejavu.StatusChanged += (object sender, ServiceStatusEventArgs e) => UpdateStatus("Lateral Movement Protection", e.Status);
+            Dejavu.StatusChanged += (object sender, ServiceStatusEventArgs e) => LmpStatusUpdate(e.Status);
+        }
 
-            UpdateStatus("Wazuh", wazuh.Status);
-            UpdateStatus("Deceptive Bytes", Dbytes.Status);
-            UpdateStatus("Microsoft Sysmon", Sysmon.Status);
-            UpdateStatus("Dejavu", Dejavu.Status);
+        private void WazuhUpdateStatus(ServiceControllerStatus? status)
+        {
+            if (status == null)
+            {
+                UpdateStatus(EventId.WazuhNotFound);
+                return;
+            }
+
+            switch (status.Value)
+            {
+                case ServiceControllerStatus.Running:
+                    UpdateStatus(EventId.WazuhRunning);
+                    return;
+                case ServiceControllerStatus.Stopped:
+                    UpdateStatus(EventId.WazuhStopped);
+                    return;
+                default:
+                    UpdateStatus(EventId.WazuhWarning);
+                    return;
+            }
+        }
+
+        private void DbytesUpdateStatus(ServiceControllerStatus? status)
+        {
+            if (status == null)
+            {
+                UpdateStatus(EventId.DbytesNotFound);
+                return;
+            }
+
+            switch (status.Value)
+            {
+                case ServiceControllerStatus.Running:
+                    UpdateStatus(EventId.DbytesRunning);
+                    return;
+                case ServiceControllerStatus.Stopped:
+                    UpdateStatus(EventId.DbytesStopped);
+                    return;
+                default:
+                    UpdateStatus(EventId.DbytesWarning);
+                    return;
+            }
+        }
+
+        private void SysmonUpdateStatus(ServiceControllerStatus? status)
+        {
+            if (status == null)
+            {
+                UpdateStatus(EventId.SysmonNotFound);
+                return;
+            }
+
+            switch (status.Value)
+            {
+                case ServiceControllerStatus.Running:
+                    UpdateStatus(EventId.SysmonRunning);
+                    return;
+                case ServiceControllerStatus.Stopped:
+                    UpdateStatus(EventId.SysmonStopped);
+                    return;
+                default:
+                    UpdateStatus(EventId.SysmonWarning);
+                    return;
+            }
+        }
+
+        private void LmpStatusUpdate(ServiceControllerStatus? status)
+        {
+            if (status == null)
+            {
+                UpdateStatus(EventId.LmpNotFound);
+                return;
+            }
+
+            switch (status.Value)
+            {
+                case ServiceControllerStatus.Running:
+                    UpdateStatus(EventId.LmpRunning);
+                    return;
+                case ServiceControllerStatus.Stopped:
+                    UpdateStatus(EventId.LmpStopped);
+                    return;
+                default:
+                    UpdateStatus(EventId.LmpWarning);
+                    return;
+            }
         }
 
         protected override void OnStart(string[] args)
@@ -46,45 +133,19 @@ namespace Invinsense30
             timer.Interval = 5000; //number in milisecinds  
             timer.Enabled = true;
 
-            UpdateStatus("Invinsense3.0", ServiceControllerStatus.Running);
+            UpdateStatus(EventId.IvsRunning);
         }
 
         protected override void OnStop()
         {
-            UpdateStatus("Invinsense3.0", ServiceControllerStatus.Stopped);
-            Log.Information("Service is stopped");
+            UpdateStatus(EventId.IvsStopped);
         }
 
+        private EventId avLastStatus = EventId.None;
         private void OnElapsedTime(object source, ElapsedEventArgs e)
         {
-            Log.Information("Service timer");
-        }
+            Log.Information("Checking windows defender service");
 
-        private void UpdateStatus(string name, ServiceControllerStatus? status)
-        {
-            string message;
-
-            if (status == null)
-            {
-                _logger.Error($"{name} Status Changed: {status}");
-            }
-            else if (status == ServiceControllerStatus.Running)
-            {
-                _logger.Error($"{name} Status Changed: {status}");
-            }
-            else if (status == ServiceControllerStatus.Stopped)
-            {
-                _logger.Error($"{name} Status Changed: {status}");
-            }
-            else
-            {
-                _logger.Error($"{name} Status Changed: {status}");
-            }
-        }
-
-        private string avLastStatus = "";
-        private void AvCheckTick(object sender, EventArgs e)
-        {
             var status = ServiceHelper.AVStatus("Windows Defender");
 
             if (avLastStatus == status)
@@ -94,21 +155,27 @@ namespace Invinsense30
 
             avLastStatus = status;
 
-            switch (status)
+            UpdateStatus(status);
+        }
+
+        private void UpdateStatus(EventId eventId)
+        {
+            var eventDetail = TrackingEventProvider.Instance.GetEventDetail(eventId);
+            EventLogWriter.Log(eventDetail.EventType, "SingleAgent", eventId);
+            
+            if(eventDetail.EventType == EventLogEntryType.SuccessAudit || eventDetail.EventType == EventLogEntryType.Information)
             {
-                case "Enabled":
-                    
-                    break;
-                case "Need Update":
-                    
-                    break;
-                case "Disabled":
-                    
-                    break;
-                default:
-                    //Not found        
-                    break;
+                _logger.Information(eventDetail.Message);
+            }
+            else if (eventDetail.EventType == EventLogEntryType.Warning)
+            {
+                _logger.Warning(eventDetail.Message);
+            }
+            else
+            {
+                _logger.Error(eventDetail.Message);
             }
         }
     }
+
 }

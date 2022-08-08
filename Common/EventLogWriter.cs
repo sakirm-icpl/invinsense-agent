@@ -4,19 +4,13 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 
-namespace Invinsense30
+namespace Common
 {
     /// <summary>
     /// Logging operations
     /// </summary>
-    public static class Logger
+    public static class EventLogWriter
     {
-        /// <summary>
-        /// Note: The actual limit is higher than this, but different Microsoft operating systems actually have different limits. 
-        ///       So just use 30,000 to be safe.
-        /// </summary>
-        private const int MaxEventLogEntryLength = 30000;
-
         /// <summary>
         /// Constant event log name
         /// </summary>
@@ -31,66 +25,9 @@ namespace Invinsense30
         /// any reason that the source isn't being correctly logged, just set it here when your
         /// process starts.
         /// </summary>
-        public static string Source { get; set; }
+        public static string Source { get; set; } = "SingleAgent";
 
-        /// <summary>
-        /// Logs the message, but only if debug logging is true.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        /// <param name="debugLoggingEnabled">if set to <c>true</c> [debug logging enabled].</param>
-        /// <param name="source">The name of the app/process calling the logging method. If not provided,
-        /// an attempt will be made to get the name of the calling process.</param>
-        public static void LogDebug(string message, bool debugLoggingEnabled, string source = "")
-        {
-            if (!debugLoggingEnabled)
-            {
-                return;
-            }
-
-            Log(message, EventLogEntryType.Information, source);
-        }
-
-        /// <summary>
-        /// Logs the information.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        /// <param name="source">The name of the app/process calling the logging method. If not provided,
-        /// an attempt will be made to get the name of the calling process.</param>
-        public static void LogInformation(string message, string source = "")
-        {
-            Log(message, EventLogEntryType.Information, source);
-        }
-
-        /// <summary>
-        /// Logs the warning.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        /// <param name="source">The name of the app/process calling the logging method. If not provided,
-        /// an attempt will be made to get the name of the calling process.</param>
-        public static void LogWarning(string message, string source = "")
-        {
-            Log(message, EventLogEntryType.Warning, source);
-        }
-
-        /// <summary>
-        /// Logs the exception.
-        /// </summary>
-        /// <param name="ex">The ex.</param>
-        /// <param name="source">The name of the app/process calling the logging method. If not provided,
-        /// an attempt will be made to get the name of the calling process.</param>
-        public static void LogException(Exception ex, string source = "")
-        {
-            if (ex == null) { throw new ArgumentNullException("ex"); }
-
-            if (Environment.UserInteractive)
-            {
-                Console.WriteLine(ex.ToString());
-            }
-
-            Log(ex.ToString(), EventLogEntryType.Error, source);
-        }
-
-        private static void Log(string message, EventLogEntryType entryType, string source)
+        public static void Log(EventLogEntryType entryType, string source, EventId eventId)
         {
             // Note: I got an error that the security log was inaccessible.
             // To get around it, I ran the app as administrator just once, then I could run it from within VS.
@@ -100,19 +37,19 @@ namespace Invinsense30
                 source = GetSource();
             }
 
-            message = EnsureLogMessageLimit(message);
-
             var log = new EventLog(EventLogName)
             {
                 Source = source
             };
 
-            log.WriteEntry(message, entryType);
+            var eventDetail = TrackingEventProvider.Instance.GetEventDetail(eventId);
+
+            log.WriteEntry(eventDetail.Message, entryType, eventDetail.Id);
 
             // If we're running a console app, also write the message to the console window.
             if (Environment.UserInteractive)
             {
-                Console.WriteLine("Trace:" + message);
+                Console.WriteLine("Trace:" + eventDetail.Message);
             }
         }
 
@@ -193,7 +130,17 @@ namespace Invinsense30
             }
         }
 
-        // Ensures that the log message entry text length does not exceed the event log viewer maximum length of 32766 characters.
+        /// <summary>
+        /// Note: The actual limit is higher than this, but different Microsoft operating systems actually have different limits. 
+        ///       So just use 30,000 to be safe.
+        /// </summary>
+        private const int MaxEventLogEntryLength = 30000;
+
+        /// <summary>
+        /// Ensures that the log message entry text length does not exceed the event log viewer maximum length of 32766 characters.
+        /// </summary>
+        /// <param name="logMessage"></param>
+        /// <returns></returns>
         private static string EnsureLogMessageLimit(string logMessage)
         {
             if (logMessage.Length > MaxEventLogEntryLength)

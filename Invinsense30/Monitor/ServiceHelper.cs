@@ -2,6 +2,7 @@
 using System.Management;
 using System;
 using System.Linq;
+using Common;
 
 namespace Invinsense30.Monitor
 {
@@ -13,7 +14,7 @@ namespace Invinsense30.Monitor
             return sc.Status.ToString();
         }
 
-        public static string AVStatus(string avName)
+        public static EventId AVStatus(string avName)
         {
             //Windows Defender
             //393472 (060100) = disabled and up to date
@@ -29,18 +30,19 @@ namespace Invinsense30.Monitor
                 {
                     if (mo["productState"].ToString() == "393472")
                     {
-                        return "Disabled";
+                        return EventId.AvDisabled;
                     }
                     else if (mo["productState"].ToString() == "397584")
                     {
-                        return "Need Update";
+                        return EventId.AvEnabledOutDated;
                     }
                     else if (mo["productState"].ToString() == "397568")
                     {
-                        return "Enabled";
+                        return EventId.AvEnabledUpToDate;
                     }
                 }
 
+                //We can have separate AV Object for better reporting
                 Console.WriteLine(mo["displayName"]);
                 Console.WriteLine(mo["instanceGuid"]);
                 Console.WriteLine(mo["pathToSignedProductExe"]);
@@ -48,7 +50,7 @@ namespace Invinsense30.Monitor
                 Console.WriteLine(mo["timestamp"]);
             }
 
-            return "Not Found";
+            return EventId.AvNotFound;
         }
 
         public static void RunManagementEventWatcherForWindowsServices()

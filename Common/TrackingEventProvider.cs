@@ -33,7 +33,7 @@ namespace Common
             }
         }
 
-        public static TrackingEvent GetEventDetail(EventId eventId)
+        public TrackingEvent GetEventDetail(EventId eventId)
         {
             return Instance._dict[eventId];
         }
