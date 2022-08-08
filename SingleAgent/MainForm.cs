@@ -2,6 +2,7 @@ using Common;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -19,12 +20,12 @@ namespace SingleAgent
 
         private readonly Dictionary<string, bool> _healthStatus = new Dictionary<string, bool>
         {
-            {"Deceptive Bytes", true },
+            {"Invinsense3.0",true },
             {"Windows Defender", true },
             {"Wazuh", true },
+            {"Deceptive Bytes", true },
             {"Microsoft Sysmon", true },
-            {"Lateral Movement Protection", true },
-            {"Invinsense3.0",true }
+            {"Lateral Movement Protection", true }
         };
 
         private readonly ILogger _logger = Log.ForContext<MainForm>();
@@ -40,28 +41,82 @@ namespace SingleAgent
             MouseDownFilter mouseFilter = new MouseDownFilter(this);
             mouseFilter.FormClicked += FormClicked;
             Application.AddMessageFilter(mouseFilter);
+
+            var log = new EventLog("Invinsense")
+            {
+                EnableRaisingEvents = true
+            };
+
+            log.EntryWritten += Log_EntryWritten;
         }
 
-        public void UpdateStatus(string name, ServiceControllerStatus? status)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Log_EntryWritten(object sender, EntryWrittenEventArgs e)
         {
-            _logger.Information($"Updating service status: {name} : {status}");
-        }
+            var eventDetail = TrackingEventProvider.Instance.GetEventDetail((EventId)e.Entry.InstanceId);
 
-        private void UpdateStatus(EventId evenId)
-        {
-            var message = $"Status Changed:";
-            var icon = ToolTipIcon.Warning;
+            var pb = pbInvinsense;
 
-            notifyIcon.ShowBalloonTip(5000, "", message, icon);
-            UpdateNotificationIcon("", icon == ToolTipIcon.Info);
-            notifyIcon.ShowBalloonTip(5000, "Windows Defender", message, icon);
+            if (eventDetail.Id < 30)
+            {
+                pb = pbDefender;
+            }
+            else if (eventDetail.Id < 40)
+            {
+                pb = pbWazuh;
+            }
+            else if (eventDetail.Id < 50)
+            {
+                pb = pbDbytes;
+            }
+            else if (eventDetail.Id < 60)
+            {
+                pb = pbSysmon;
+            }
+            else if (eventDetail.Id < 70)
+            {
+                pb = pbDejavu;
+            }
+
+            ToolTipIcon icon;
+            if (eventDetail.EventType == EventLogEntryType.FailureAudit)
+            {
+                icon = ToolTipIcon.Error;
+                pb.Image = NotFoundImage;
+                _logger.Fatal(eventDetail.Message);
+            }
+            else if (eventDetail.EventType == EventLogEntryType.SuccessAudit || eventDetail.EventType == EventLogEntryType.Information)
+            {
+                icon = ToolTipIcon.Info;
+                pb.Image = OkImage;
+                _logger.Information(eventDetail.Message);
+            }
+            else if (eventDetail.EventType == EventLogEntryType.Warning)
+            {
+                icon = ToolTipIcon.Warning;
+                pb.Image = WarnImage;
+                _logger.Warning(eventDetail.Message);
+            }
+            else
+            {
+                icon = ToolTipIcon.Error;
+                pb.Image = ErrorImage;
+                _logger.Error(eventDetail.Message);
+            }
+
+            notifyIcon.ShowBalloonTip(5000, eventDetail.ServiceName, eventDetail.Message, icon);
+            UpdateNotificationIcon(eventDetail.ServiceName, icon == ToolTipIcon.Info);
         }
 
         private void UpdateNotificationIcon(string name, bool status)
         {
             _healthStatus[name] = status;
 
-            if(_healthStatus.Any(x=> !x.Value))
+            if (_healthStatus.Any(x => !x.Value))
             {
                 notifyIcon.Icon = Properties.Resources.red_logo_22_22;
                 notifyIcon.Text = "Invinsense 3.0 - Not all services are healthy";
@@ -69,9 +124,9 @@ namespace SingleAgent
             else
             {
                 notifyIcon.Icon = Properties.Resources.green_logo_22_22;
-                notifyIcon.Text = "Invinsense 3.0 - Healthy"; 
+                notifyIcon.Text = "Invinsense 3.0 - Healthy";
             }
-        }        
+        }
 
         private void MainFormClosing(object sender, FormClosingEventArgs e)
         {
@@ -123,5 +178,5 @@ namespace SingleAgent
            int nHeightEllipse // height of ellipse
         );
 
-     }
+    }
 }
