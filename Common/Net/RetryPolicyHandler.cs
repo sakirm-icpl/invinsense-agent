@@ -7,7 +7,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SingleAgent.Net
+namespace Common.Net
 {
     public class RetryPolicyHandler : DelegatingHandler
     {

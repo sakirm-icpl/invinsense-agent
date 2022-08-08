@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace SingleAgent.Utils
+namespace Common.Utils
 {
     public static class CommonUtils
     {

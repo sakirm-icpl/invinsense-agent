@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 
-namespace Invinsense3._0
+namespace Invinsense30
 {
     /// <summary>
     /// Logging operations

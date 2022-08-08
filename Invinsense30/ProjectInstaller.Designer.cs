@@ -1,4 +1,4 @@
-﻿namespace Invinsense3._0
+﻿namespace Invinsense30
 {
     partial class ProjectInstaller
     {

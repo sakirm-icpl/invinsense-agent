@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace SingleAgent.Models
+namespace Common.Models
 {
     public class ApiResponse
     {

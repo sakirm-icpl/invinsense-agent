@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SingleAgent.Models
+namespace Common.Models
 {
     public class ProcessResult<T, E> where T : IModel where E : IException
     {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-namespace SingleAgent.Utils
+namespace Common.Utils
 {
     public static class FileConfigProvider
     {

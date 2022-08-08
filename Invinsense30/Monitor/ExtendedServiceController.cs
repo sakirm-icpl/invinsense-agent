@@ -1,9 +1,10 @@
-﻿using System;
+﻿using SingleAgent.Monitor;
+using System;
 using System.Collections.Generic;
 using System.ServiceProcess;
 using System.Threading.Tasks;
 
-namespace SingleAgent.Monitor
+namespace Invinsense30.Monitor
 {
     public class ExtendedServiceController : ServiceController
     {

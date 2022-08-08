@@ -9,6 +9,8 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SingleAgentSetup", "SingleA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Invinsense30", "Invinsense30\Invinsense30.csproj", "{8256E95F-31D8-4F30-9CD3-B7D0C3D3CE74}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{0698EB58-DEE6-4285-BAEF-872887FF15CB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{8256E95F-31D8-4F30-9CD3-B7D0C3D3CE74}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8256E95F-31D8-4F30-9CD3-B7D0C3D3CE74}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8256E95F-31D8-4F30-9CD3-B7D0C3D3CE74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0698EB58-DEE6-4285-BAEF-872887FF15CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0698EB58-DEE6-4285-BAEF-872887FF15CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0698EB58-DEE6-4285-BAEF-872887FF15CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0698EB58-DEE6-4285-BAEF-872887FF15CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

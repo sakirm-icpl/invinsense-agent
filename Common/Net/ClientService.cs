@@ -1,4 +1,4 @@
-﻿using SingleAgent.Models;
+﻿using Common.Models;
 using Serilog;
 using Serilog.Events;
 using System;
@@ -7,9 +7,9 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using SingleAgent.Utils;
+using Common.Utils;
 
-namespace SingleAgent.Net
+namespace Common.Net
 {
     public class ClientService
     {

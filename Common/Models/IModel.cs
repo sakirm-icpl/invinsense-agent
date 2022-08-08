@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SingleAgent.Models
+namespace Common.Models
 {
     public interface IModel
     {

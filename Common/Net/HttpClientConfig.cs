@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace SingleAgent.Net
+namespace Common.Net
 {
     public class HttpClientConfig
     {

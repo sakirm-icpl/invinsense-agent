@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 
-namespace SingleAgent.Net
+namespace Common.Net
 {
     public static class Utils
     {

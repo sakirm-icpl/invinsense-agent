@@ -49,7 +49,6 @@ namespace SingleAgent
             this.pbWazuhLogo = new System.Windows.Forms.PictureBox();
             this.pbSysmonLogo = new System.Windows.Forms.PictureBox();
             this.pbDejavuLogo = new System.Windows.Forms.PictureBox();
-            this.tmAvCheck = new System.Windows.Forms.Timer(this.components);
             this.label1 = new System.Windows.Forms.Label();
             this.tlpMain = new System.Windows.Forms.TableLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.pbDbytes)).BeginInit();
@@ -259,12 +258,6 @@ namespace SingleAgent
             this.pbDejavuLogo.TabIndex = 16;
             this.pbDejavuLogo.TabStop = false;
             // 
-            // tmAvCheck
-            // 
-            this.tmAvCheck.Enabled = true;
-            this.tmAvCheck.Interval = 5000;
-            this.tmAvCheck.Tick += new System.EventHandler(this.AvCheckTick);
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -367,7 +360,6 @@ namespace SingleAgent
         private PictureBox pbWazuhLogo;
         private PictureBox pbSysmonLogo;
         private PictureBox pbDejavuLogo;
-        private System.Windows.Forms.Timer tmAvCheck;
         private Label label1;
         private TableLayoutPanel tlpMain;
     }

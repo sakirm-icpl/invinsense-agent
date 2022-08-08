@@ -3,7 +3,7 @@ using System.Management;
 using System;
 using System.Linq;
 
-namespace SingleAgent.Monitor
+namespace Invinsense30.Monitor
 {
     public static class ServiceHelper
     {
@@ -62,7 +62,7 @@ namespace SingleAgent.Monitor
             demoWatcher.Options.Timeout = new TimeSpan(1, 0, 0);
             Console.WriteLine("Perform the appropriate change in a Windows service according to your query");
             ManagementBaseObject nextEvent = demoWatcher.WaitForNextEvent();
-            ManagementBaseObject targetInstance = ((ManagementBaseObject)nextEvent["targetinstance"]);
+            ManagementBaseObject targetInstance = (ManagementBaseObject)nextEvent["targetinstance"];
             PropertyDataCollection props = targetInstance.Properties;
             foreach (PropertyData prop in props)
             {

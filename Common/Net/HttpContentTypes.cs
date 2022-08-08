@@ -1,4 +1,4 @@
-﻿namespace SingleAgent.Net
+﻿namespace Common.Net
 {
     public struct HttpContentTypes
     {
