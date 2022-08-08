@@ -7,16 +7,16 @@ namespace Common
     {
         public int Id { get; }
 
-        public string ServiceName { get; set; }
+        public string ServiceName { get; }
 
-        public string SvcName { get; set; }
+        public string SvcName { get; }
 
-        public string Message { get; set; }
+        public string Message { get; }
 
-        public EventLogEntryType EventType { get; set; }
+        public EventLogEntryType EventType { get; }
 
         [System.Text.Json.Serialization.JsonConstructor]
-        public TrackingEvent(int id, string name, string svcName, EventLogEntryType eventType, string message) => (Id, ServiceName, SvcName, EventType, Message) = (id, name, svcName, eventType, message);
+        public TrackingEvent(int id, string serviceName, string svcName, EventLogEntryType eventType, string message) => (Id, ServiceName, SvcName, EventType, Message) = (id, serviceName, svcName, eventType, message);
 
         public override int GetHashCode() => Id;
 
