@@ -1,5 +1,4 @@
 ﻿using Serilog;
-using System.ServiceProcess;
 
 namespace Invinsense30
 {
@@ -15,6 +14,14 @@ namespace Invinsense30
                .WriteTo.File("logs/app.log", rollingInterval: RollingInterval.Day)
                .CreateLogger();
 
+            Log.Logger.Information("Initializing program");
+
+            try
+            {
+#if (!DEBUG)
+
+            System.Console.WriteLine("Starting service");
+
             ServiceBase[] ServicesToRun;
             ServicesToRun = new ServiceBase[]
             {
@@ -22,6 +29,20 @@ namespace Invinsense30
             };
 
             ServiceBase.Run(ServicesToRun);
+#else
+                var serviceCall = new SingleAgentService();
+
+                System.Console.ReadLine();
+#endif
+
+            }
+            catch (System.Exception ex)
+            {
+                System.Console.WriteLine(ex.StackTrace);
+                Log.Logger.Error(ex.StackTrace);
+            }
+
+            Log.CloseAndFlush();
         }
     }
 }

@@ -20,22 +20,27 @@ namespace Invinsense30
 
         private readonly ILogger _logger = Log.ForContext<SingleAgentService>();
 
+        private bool _isRunning = false;
+
         public SingleAgentService()
         {
             InitializeComponent();
 
+            AutoLog = true;
+            CanShutdown = true;
+
             wazuh = new ExtendedServiceController("WazuhSvc");
-            wazuh.StatusChanged += (object sender, ServiceStatusEventArgs e) => WazuhUpdateStatus(e.Status);
-            WazuhUpdateStatus(wazuh.Status);
-
+            
             Dbytes = new ExtendedServiceController("DBytesService");
-            Dbytes.StatusChanged += (object sender, ServiceStatusEventArgs e) => DbytesUpdateStatus(e.Status);
-            DbytesUpdateStatus(Dbytes.Status);
-
+            
             Sysmon = new ExtendedServiceController("Sysmon64");
-            Sysmon.StatusChanged += (object sender, ServiceStatusEventArgs e) => SysmonUpdateStatus(e.Status);
-
+            
             Dejavu = new ExtendedServiceController("Spooler");
+
+
+            wazuh.StatusChanged += (object sender, ServiceStatusEventArgs e) => WazuhUpdateStatus(e.Status);
+            Dbytes.StatusChanged += (object sender, ServiceStatusEventArgs e) => DbytesUpdateStatus(e.Status);
+            Sysmon.StatusChanged += (object sender, ServiceStatusEventArgs e) => SysmonUpdateStatus(e.Status);
             Dejavu.StatusChanged += (object sender, ServiceStatusEventArgs e) => LmpStatusUpdate(e.Status);
         }
 
@@ -129,16 +134,31 @@ namespace Invinsense30
 
         protected override void OnStart(string[] args)
         {
+            _isRunning = true;
+
             timer.Elapsed += new ElapsedEventHandler(OnElapsedTime);
             timer.Interval = 5000; //number in milisecinds  
             timer.Enabled = true;
 
             UpdateStatus(EventId.IvsRunning);
+
+            WazuhUpdateStatus(wazuh.Status);
+            DbytesUpdateStatus(Dbytes.Status);
+            SysmonUpdateStatus(Sysmon.Status);
+            LmpStatusUpdate(Dejavu.Status);
         }
 
         protected override void OnStop()
         {
             UpdateStatus(EventId.IvsStopped);
+
+            _isRunning = false;
+        }
+
+        protected override void OnShutdown()
+        {
+            base.OnShutdown();
+            _logger.Information("System is shutting down");
         }
 
         private EventId avLastStatus = EventId.None;
@@ -160,6 +180,8 @@ namespace Invinsense30
 
         private void UpdateStatus(EventId eventId)
         {
+            if (!_isRunning) return;
+
             var eventDetail = TrackingEventProvider.Instance.GetEventDetail(eventId);
             EventLogWriter.Log(eventDetail.EventType, "SingleAgent", eventId);
             
@@ -177,5 +199,4 @@ namespace Invinsense30
             }
         }
     }
-
 }
