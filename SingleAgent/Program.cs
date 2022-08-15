@@ -1,5 +1,6 @@
 ﻿using Serilog;
 using System;
+using System.IO;
 using System.Windows.Forms;
 
 namespace SingleAgent
@@ -17,7 +18,7 @@ namespace SingleAgent
 
             Log.Logger = new LoggerConfiguration()
                .MinimumLevel.Debug()
-               .WriteTo.File("logs/app.log", rollingInterval: RollingInterval.Day)
+               .WriteTo.File(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "debug.log"), rollingInterval: RollingInterval.Day)
                .CreateLogger();
 
             Application.Run(new MainForm());

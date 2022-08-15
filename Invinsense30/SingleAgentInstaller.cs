@@ -42,7 +42,7 @@ namespace AgentService
             _serviceInstaller.StartType = ServiceStartMode.Automatic;
 
             // ServiceName must equal those on ServiceBase derived classes.
-            _serviceInstaller.ServiceName = Constants.SingleAgentName;
+            _serviceInstaller.ServiceName = "Invinsense Agent";
             _serviceInstaller.Description = "Invinsense Single Agent Servcie 3.0";
 
             _serviceInstaller.AfterInstall += RunServiceAfterInstall;

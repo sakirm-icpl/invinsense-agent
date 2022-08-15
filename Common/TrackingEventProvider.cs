@@ -17,11 +17,11 @@ namespace Common
 
         private static readonly Lazy<TrackingEventProvider> lazy = new Lazy<TrackingEventProvider>(() => 
         {
-            using (StreamReader r = new StreamReader("event_descriptions.json"))
+            using (StreamReader r = new StreamReader(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "event_descriptions.json")))
             {
                 string json = r.ReadToEnd();
                 List<TrackingEvent> items = JsonSerializer.Deserialize<List<TrackingEvent>>(json);
-                return new TrackingEventProvider(items.ToDictionary(x => (EventId) x.Id, x => x));
+                return new TrackingEventProvider(items.ToDictionary(x => (EventId)x.Id, x => x));
             }
         });
 
