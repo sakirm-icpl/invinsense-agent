@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using System.ServiceProcess;
 
-namespace Invinsense30
+namespace AgentService
 {
     internal static class Program
     {

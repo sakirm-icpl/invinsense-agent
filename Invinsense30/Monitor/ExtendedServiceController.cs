@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.ServiceProcess;
 using System.Threading.Tasks;
 
-namespace Invinsense30.Monitor
+namespace AgentService.Monitor
 {
     public class ExtendedServiceController : ServiceController
     {

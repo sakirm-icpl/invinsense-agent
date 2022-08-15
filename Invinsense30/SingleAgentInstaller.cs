@@ -4,7 +4,7 @@ using System.ComponentModel;
 using Common;
 using System.Diagnostics;
 
-namespace Invinsense30
+namespace AgentService
 {
 
     [RunInstaller(true)]
@@ -21,7 +21,7 @@ namespace Invinsense30
             _eventLogInstaller = new EventLogInstaller
             {
                 // Set the source name of the event log.
-                Source = Constants.SingleAgentLogSourceName,
+                Source = Constants.SingleAgentName,
 
                 // Set the event log that the source writes entries to.
                 Log = Constants.LogGroupName
@@ -42,8 +42,8 @@ namespace Invinsense30
             _serviceInstaller.StartType = ServiceStartMode.Automatic;
 
             // ServiceName must equal those on ServiceBase derived classes.
-            _serviceInstaller.ServiceName = Constants.SingleAgentServiceName;
-            _serviceInstaller.Description = "Single Agent Servcie";
+            _serviceInstaller.ServiceName = Constants.SingleAgentName;
+            _serviceInstaller.Description = "Invinsense Single Agent Servcie 3.0";
 
             _serviceInstaller.AfterInstall += RunServiceAfterInstall;
 

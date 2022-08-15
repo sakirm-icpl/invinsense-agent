@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SingleAgent", "SingleAgent\
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SingleAgentSetup", "SingleAgentSetup\SingleAgentSetup.vdproj", "{786EF73C-BBEE-4011-A86A-13A8AA6A4A20}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Invinsense30", "Invinsense30\Invinsense30.csproj", "{8256E95F-31D8-4F30-9CD3-B7D0C3D3CE74}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgentService", "Invinsense30\AgentService.csproj", "{8256E95F-31D8-4F30-9CD3-B7D0C3D3CE74}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{0698EB58-DEE6-4285-BAEF-872887FF15CB}"
 EndProject

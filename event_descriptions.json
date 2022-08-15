@@ -9,35 +9,35 @@
   {
     "Id": 10,
     "ServiceName": "Invinsense 3.0",
-    "SvcName": "Invinsense30",
+    "SvcName": "AgentService",
     "Message": "Invinsense service not found",
     "EventType": 16
   },
   {
     "Id": 11,
     "ServiceName": "Invinsense 3.0",
-    "SvcName": "Invinsense30",
+    "SvcName": "AgentService",
     "Message": "Invinsense service is in stopped state",
     "EventType": 1
   },
   {
     "Id": 12,
     "ServiceName": "Invinsense 3.0",
-    "SvcName": "Invinsense30",
+    "SvcName": "AgentService",
     "Message": "Invinsense service is in error state",
     "EventType": 1
   },
   {
     "Id": 13,
     "ServiceName": "Invinsense 3.0",
-    "SvcName": "Invinsense30",
+    "SvcName": "AgentService",
     "Message": "Invinsense service is in warning state",
     "EventType": 2
   },
   {
     "Id": 14,
     "ServiceName": "Invinsense 3.0",
-    "SvcName": "Invinsense30",
+    "SvcName": "AgentService",
     "Message": "Invinsense service is in running state",
     "EventType": 8
   },

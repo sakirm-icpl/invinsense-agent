@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using Common;
 
-namespace Invinsense30.Monitor
+namespace AgentService.Monitor
 {
     public static class ServiceHelper
     {

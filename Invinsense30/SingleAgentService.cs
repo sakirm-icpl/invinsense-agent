@@ -1,5 +1,5 @@
 ﻿using Common;
-using Invinsense30.Monitor;
+using AgentService.Monitor;
 using Serilog;
 using SingleAgent.Monitor;
 using System;
@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.ServiceProcess;
 using System.Timers;
 
-namespace Invinsense30
+namespace AgentService
 {
     public partial class SingleAgentService : ServiceBase
     {

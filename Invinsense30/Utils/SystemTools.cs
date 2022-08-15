@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.DirectoryServices;
 using System.IO;
 
-namespace Invinsense30.Utils
+namespace AgentService.Utils
 {
     internal class SystemTools
     {

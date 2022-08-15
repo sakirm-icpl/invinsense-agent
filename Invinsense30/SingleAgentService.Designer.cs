@@ -1,6 +1,6 @@
 ﻿using Common;
 
-namespace Invinsense30
+namespace AgentService
 {
     partial class SingleAgentService
     {
@@ -33,9 +33,9 @@ namespace Invinsense30
             // 
             // SingleAgentService
             // 
-            this.ServiceName = Constants.SingleAgentServiceName;
+            this.ServiceName = Constants.SingleAgentName;
             this.EventLog.Log = Constants.LogGroupName;
-            this.EventLog.Source = Constants.SingleAgentLogSourceName;
+            this.EventLog.Source = Constants.SingleAgentName;
 
         }
 
