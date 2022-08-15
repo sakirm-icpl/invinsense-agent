@@ -2,7 +2,6 @@
 using System.Configuration.Install;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 
 namespace SingleAgent
 {
@@ -20,15 +19,7 @@ namespace SingleAgent
         // Event handler for 'Committed' event.
         private void CommittedEventHandler(object sender, InstallEventArgs e)
         {
-            try
-            {
-                Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
-                Process.Start(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\SingleAgent.exe");
-            }
-            catch
-            {
-                // Do nothing... 
-            }
+            Process.Start(Path.GetDirectoryName(Context.Parameters["AssemblyPath"]) + @"\SingleAgent.exe");
         }
     }
 }

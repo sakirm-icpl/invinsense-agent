@@ -3,7 +3,7 @@
     public struct Constants
     {
         public const string LogGroupName = "Infopercept";
-        public const string SingleAgentName = "AgentService";
-        public const string SingleTrayName = "SingleTray";
+        public const string SingleAgentName = "IvsAgent";
+        public const string SingleTrayName = "IvsTray";
     }
 }

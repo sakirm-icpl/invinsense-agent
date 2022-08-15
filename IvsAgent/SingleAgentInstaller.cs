@@ -59,7 +59,7 @@ namespace AgentService
             ServiceInstaller serviceInstaller = (ServiceInstaller)sender;
             using (ServiceController sc = new ServiceController(serviceInstaller.ServiceName))
             {
-                //sc.Start();
+                sc.Start();
             }
         }
     }
