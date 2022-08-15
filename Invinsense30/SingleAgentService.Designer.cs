@@ -1,4 +1,6 @@
-﻿namespace Invinsense30
+﻿using Common;
+
+namespace Invinsense30
 {
     partial class SingleAgentService
     {
@@ -31,7 +33,7 @@
             // 
             // SingleAgentService
             // 
-            this.ServiceName = "Service1";
+            this.ServiceName = Constants.SingleAgentServiceName;
 
         }
 

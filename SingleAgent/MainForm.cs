@@ -42,7 +42,7 @@ namespace SingleAgent
             mouseFilter.FormClicked += FormClicked;
             Application.AddMessageFilter(mouseFilter);
 
-            var log = new EventLog("Invinsense")
+            var log = new EventLog(Constants.LogGroupName)
             {
                 EnableRaisingEvents = true
             };

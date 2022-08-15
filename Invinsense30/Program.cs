@@ -1,4 +1,8 @@
-﻿using Serilog;
+﻿using Common;
+using Serilog;
+using System;
+using System.IO;
+using System.ServiceProcess;
 
 namespace Invinsense30
 {
@@ -10,35 +14,25 @@ namespace Invinsense30
         static void Main()
         {
             Log.Logger = new LoggerConfiguration()
-               .MinimumLevel.Debug()
-               .WriteTo.File("logs/app.log", rollingInterval: RollingInterval.Day)
+               .MinimumLevel.Verbose()
+               .WriteTo.File(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "debug.log"), rollingInterval: RollingInterval.Day)
                .CreateLogger();
 
             Log.Logger.Information("Initializing program");
 
             try
             {
-#if (!DEBUG)
+                ServiceBase[] ServicesToRun;
+                ServicesToRun = new ServiceBase[]
+                {
+                    new SingleAgentService()
+                };
 
-            System.Console.WriteLine("Starting service");
-
-            ServiceBase[] ServicesToRun;
-            ServicesToRun = new ServiceBase[]
-            {
-                new SingleAgentService()
-            };
-
-            ServiceBase.Run(ServicesToRun);
-#else
-                var serviceCall = new SingleAgentService();
-
-                System.Console.ReadLine();
-#endif
-
+                ServiceBase.Run(ServicesToRun);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
-                System.Console.WriteLine(ex.StackTrace);
+                Console.WriteLine(ex.StackTrace);
                 Log.Logger.Error(ex.StackTrace);
             }
 

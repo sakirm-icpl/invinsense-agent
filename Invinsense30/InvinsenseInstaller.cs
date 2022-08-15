@@ -1,6 +1,9 @@
 ﻿using System.Configuration.Install;
 using System.ServiceProcess;
 using System.ComponentModel;
+using System.Collections;
+using Common;
+using System.Diagnostics;
 
 namespace Invinsense30
 {
@@ -24,8 +27,8 @@ namespace Invinsense30
             _serviceInstaller.StartType = ServiceStartMode.Automatic;
 
             // ServiceName must equal those on ServiceBase derived classes.
-            _serviceInstaller.ServiceName = "Invinsense 3.0";
-            _serviceInstaller.Description = "Invinsense 3.0 service";
+            _serviceInstaller.ServiceName = Constants.SingleAgentServiceName;
+            _serviceInstaller.Description = "Single Agent Servcie";
 
             _serviceInstaller.AfterInstall += RunServiceAfterInstall;
 
@@ -36,13 +39,31 @@ namespace Invinsense30
 
         private void RunServiceAfterInstall(object sender, InstallEventArgs e)
         {
-            System.Console.Write("Running service");
+            System.Console.WriteLine("Running service");
 
             ServiceInstaller serviceInstaller = (ServiceInstaller)sender;
             using (ServiceController sc = new ServiceController(serviceInstaller.ServiceName))
             {
                 //sc.Start();
             }
+
+            EventLogHelper.EnsureEventSource(Constants.SingleAgentLogSourceName);
+
+            EventLogHelper.AddEvent(EventLogEntryType.Information, Constants.SingleAgentLogSourceName, EventId.AvDisabled);
+        }
+
+        protected override void OnBeforeInstall(IDictionary savedState)
+        {
+            base.OnBeforeInstall(savedState);
+
+            //EventLogHelper.EnsureEventSource("SingleAgent");
+        }
+
+        protected override void OnAfterUninstall(IDictionary savedState)
+        {
+            base.OnAfterUninstall(savedState);
+
+          //  EventLog.DeleteEventSource("SingleAgent");
         }
     }
 }

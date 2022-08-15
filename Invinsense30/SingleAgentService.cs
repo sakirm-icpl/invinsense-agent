@@ -30,18 +30,18 @@ namespace Invinsense30
             CanShutdown = true;
 
             wazuh = new ExtendedServiceController("WazuhSvc");
-            
-            Dbytes = new ExtendedServiceController("DBytesService");
-            
-            Sysmon = new ExtendedServiceController("Sysmon64");
-            
-            Dejavu = new ExtendedServiceController("Spooler");
 
+            Dbytes = new ExtendedServiceController("DBytesService");
+
+            Sysmon = new ExtendedServiceController("Sysmon64");
+
+            Dejavu = new ExtendedServiceController("Spooler");
 
             wazuh.StatusChanged += (object sender, ServiceStatusEventArgs e) => WazuhUpdateStatus(e.Status);
             Dbytes.StatusChanged += (object sender, ServiceStatusEventArgs e) => DbytesUpdateStatus(e.Status);
             Sysmon.StatusChanged += (object sender, ServiceStatusEventArgs e) => SysmonUpdateStatus(e.Status);
             Dejavu.StatusChanged += (object sender, ServiceStatusEventArgs e) => LmpStatusUpdate(e.Status);
+
         }
 
         private void WazuhUpdateStatus(ServiceControllerStatus? status)
@@ -134,6 +134,8 @@ namespace Invinsense30
 
         protected override void OnStart(string[] args)
         {
+            _logger.Information("Starting service");
+
             _isRunning = true;
 
             timer.Elapsed += new ElapsedEventHandler(OnElapsedTime);
@@ -150,6 +152,8 @@ namespace Invinsense30
 
         protected override void OnStop()
         {
+            _logger.Information("Stopping service");
+
             UpdateStatus(EventId.IvsStopped);
 
             _isRunning = false;
@@ -164,7 +168,7 @@ namespace Invinsense30
         private EventId avLastStatus = EventId.None;
         private void OnElapsedTime(object source, ElapsedEventArgs e)
         {
-            Log.Information("Checking windows defender service");
+            _logger.Information("Checking windows defender service");
 
             var status = ServiceHelper.AVStatus("Windows Defender");
 
@@ -182,20 +186,27 @@ namespace Invinsense30
         {
             if (!_isRunning) return;
 
-            var eventDetail = TrackingEventProvider.Instance.GetEventDetail(eventId);
-            EventLogWriter.Log(eventDetail.EventType, "SingleAgent", eventId);
-            
-            if(eventDetail.EventType == EventLogEntryType.SuccessAudit || eventDetail.EventType == EventLogEntryType.Information)
+            try
             {
-                _logger.Information(eventDetail.Message);
+                var eventDetail = TrackingEventProvider.Instance.GetEventDetail(eventId);
+                EventLogHelper.AddEvent(eventDetail.EventType, "SingleAgent", eventId);
+
+                if (eventDetail.EventType == EventLogEntryType.SuccessAudit || eventDetail.EventType == EventLogEntryType.Information)
+                {
+                    _logger.Information(eventDetail.Message);
+                }
+                else if (eventDetail.EventType == EventLogEntryType.Warning)
+                {
+                    _logger.Warning(eventDetail.Message);
+                }
+                else
+                {
+                    _logger.Error(eventDetail.Message);
+                }
             }
-            else if (eventDetail.EventType == EventLogEntryType.Warning)
+            catch (Exception ex)
             {
-                _logger.Warning(eventDetail.Message);
-            }
-            else
-            {
-                _logger.Error(eventDetail.Message);
+                _logger.Error(ex.StackTrace);
             }
         }
     }
