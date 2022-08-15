@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.DirectoryServices;
 using System.IO;
 
-namespace AgentService.Utils
+namespace IvsAgent.Utils
 {
     internal class SystemTools
     {
@@ -16,7 +16,7 @@ namespace AgentService.Utils
             {
                 DirectoryEntry AD = new DirectoryEntry("WinNT://" + Environment.MachineName + ",computer");
                 DirectoryEntry NewUser = AD.Children.Add(Name, "user");
-                NewUser.Invoke("Put", new object[] { "Description", "Test User from SingleAgent" });
+                NewUser.Invoke("Put", new object[] { "Description", "Test User from IvsTray" });
                 NewUser.CommitChanges();
                 DirectoryEntry grp;
 
@@ -57,7 +57,7 @@ namespace AgentService.Utils
 
         public static void KillProcess()
         {
-            foreach (var process in Process.GetProcessesByName("SingleAgent"))
+            foreach (var process in Process.GetProcessesByName("IvsTray"))
             {
                 process.Kill();
             }

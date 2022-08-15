@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using System.ServiceProcess;
 
-namespace AgentService
+namespace IvsAgent
 {
     internal static class Program
     {
@@ -24,7 +24,7 @@ namespace AgentService
                 ServiceBase[] ServicesToRun;
                 ServicesToRun = new ServiceBase[]
                 {
-                    new SingleAgentService()
+                    new SingleIvsAgent()
                 };
 
                 ServiceBase.Run(ServicesToRun);

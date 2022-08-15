@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using Common;
 
-namespace AgentService.Monitor
+namespace IvsAgent.Monitor
 {
     public static class ServiceHelper
     {

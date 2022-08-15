@@ -1,15 +1,15 @@
 ﻿using Common;
-using AgentService.Monitor;
+using IvsAgent.Monitor;
 using Serilog;
-using SingleAgent.Monitor;
+using IvsTray.Monitor;
 using System;
 using System.Diagnostics;
 using System.ServiceProcess;
 using System.Timers;
 
-namespace AgentService
+namespace IvsAgent
 {
-    public partial class SingleAgentService : ServiceBase
+    public partial class SingleIvsAgent : ServiceBase
     {
         private readonly Timer timer = new Timer();
 
@@ -18,11 +18,11 @@ namespace AgentService
         private readonly ExtendedServiceController Sysmon;
         private readonly ExtendedServiceController Dejavu;
 
-        private readonly ILogger _logger = Log.ForContext<SingleAgentService>();
+        private readonly ILogger _logger = Log.ForContext<SingleIvsAgent>();
 
         private bool _isRunning = false;
 
-        public SingleAgentService()
+        public SingleIvsAgent()
         {
             InitializeComponent();
 

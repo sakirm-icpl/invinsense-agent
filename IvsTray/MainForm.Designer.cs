@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace SingleAgent
+namespace IvsTray
 {
     partial class MainForm
     {
@@ -75,7 +75,7 @@ namespace SingleAgent
             // pbDbytes
             // 
             this.pbDbytes.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbDbytes.Image = global::SingleAgent.Properties.Resources.gray;
+            this.pbDbytes.Image = global::IvsTray.Properties.Resources.gray;
             this.pbDbytes.InitialImage = null;
             this.pbDbytes.Location = new System.Drawing.Point(288, 16);
             this.pbDbytes.Name = "pbDbytes";
@@ -86,7 +86,7 @@ namespace SingleAgent
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::SingleAgent.Properties.Resources.invinsence_logo;
+            this.pictureBox1.Image = global::IvsTray.Properties.Resources.invinsence_logo;
             this.pictureBox1.Location = new System.Drawing.Point(23, 10);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(231, 49);
@@ -97,7 +97,7 @@ namespace SingleAgent
             // pbSysmon
             // 
             this.pbSysmon.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbSysmon.Image = global::SingleAgent.Properties.Resources.gray;
+            this.pbSysmon.Image = global::IvsTray.Properties.Resources.gray;
             this.pbSysmon.InitialImage = null;
             this.pbSysmon.Location = new System.Drawing.Point(288, 172);
             this.pbSysmon.Name = "pbSysmon";
@@ -109,7 +109,7 @@ namespace SingleAgent
             // pbDefender
             // 
             this.pbDefender.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbDefender.Image = global::SingleAgent.Properties.Resources.gray;
+            this.pbDefender.Image = global::IvsTray.Properties.Resources.gray;
             this.pbDefender.InitialImage = null;
             this.pbDefender.Location = new System.Drawing.Point(288, 68);
             this.pbDefender.Name = "pbDefender";
@@ -121,7 +121,7 @@ namespace SingleAgent
             // pbDejavu
             // 
             this.pbDejavu.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbDejavu.Image = global::SingleAgent.Properties.Resources.gray;
+            this.pbDejavu.Image = global::IvsTray.Properties.Resources.gray;
             this.pbDejavu.InitialImage = null;
             this.pbDejavu.Location = new System.Drawing.Point(288, 224);
             this.pbDejavu.Name = "pbDejavu";
@@ -133,7 +133,7 @@ namespace SingleAgent
             // pbWazuh
             // 
             this.pbWazuh.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbWazuh.Image = global::SingleAgent.Properties.Resources.gray;
+            this.pbWazuh.Image = global::IvsTray.Properties.Resources.gray;
             this.pbWazuh.InitialImage = null;
             this.pbWazuh.Location = new System.Drawing.Point(288, 120);
             this.pbWazuh.Name = "pbWazuh";
@@ -200,7 +200,7 @@ namespace SingleAgent
             // pbDeceptiveLogo
             // 
             this.pbDeceptiveLogo.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbDeceptiveLogo.Image = global::SingleAgent.Properties.Resources.deceptive;
+            this.pbDeceptiveLogo.Image = global::IvsTray.Properties.Resources.deceptive;
             this.pbDeceptiveLogo.InitialImage = null;
             this.pbDeceptiveLogo.Location = new System.Drawing.Point(8, 6);
             this.pbDeceptiveLogo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -213,7 +213,7 @@ namespace SingleAgent
             // pbWindowsLogo
             // 
             this.pbWindowsLogo.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbWindowsLogo.Image = global::SingleAgent.Properties.Resources.defender;
+            this.pbWindowsLogo.Image = global::IvsTray.Properties.Resources.defender;
             this.pbWindowsLogo.Location = new System.Drawing.Point(10, 60);
             this.pbWindowsLogo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pbWindowsLogo.Name = "pbWindowsLogo";
@@ -225,7 +225,7 @@ namespace SingleAgent
             // pbWazuhLogo
             // 
             this.pbWazuhLogo.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbWazuhLogo.Image = global::SingleAgent.Properties.Resources.wazuh;
+            this.pbWazuhLogo.Image = global::IvsTray.Properties.Resources.wazuh;
             this.pbWazuhLogo.Location = new System.Drawing.Point(10, 112);
             this.pbWazuhLogo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pbWazuhLogo.Name = "pbWazuhLogo";
@@ -237,7 +237,7 @@ namespace SingleAgent
             // pbSysmonLogo
             // 
             this.pbSysmonLogo.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbSysmonLogo.Image = global::SingleAgent.Properties.Resources.microsoft;
+            this.pbSysmonLogo.Image = global::IvsTray.Properties.Resources.microsoft;
             this.pbSysmonLogo.Location = new System.Drawing.Point(10, 164);
             this.pbSysmonLogo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pbSysmonLogo.Name = "pbSysmonLogo";
@@ -249,7 +249,7 @@ namespace SingleAgent
             // pbDejavuLogo
             // 
             this.pbDejavuLogo.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbDejavuLogo.Image = global::SingleAgent.Properties.Resources.letral_threat_protection;
+            this.pbDejavuLogo.Image = global::IvsTray.Properties.Resources.letral_threat_protection;
             this.pbDejavuLogo.Location = new System.Drawing.Point(10, 216);
             this.pbDejavuLogo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pbDejavuLogo.Name = "pbDejavuLogo";

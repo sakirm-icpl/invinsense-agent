@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace SingleAgent
+namespace IvsTray
 {
     internal class MouseDownFilter : IMessageFilter
     {

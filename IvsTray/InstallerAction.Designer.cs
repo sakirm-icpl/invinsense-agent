@@ -1,4 +1,4 @@
-﻿namespace SingleAgent
+﻿namespace IvsTray
 {
     partial class InstallerAction
     {

@@ -8,7 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace SingleAgent
+namespace IvsTray
 {
     public partial class MainForm : Form
     {

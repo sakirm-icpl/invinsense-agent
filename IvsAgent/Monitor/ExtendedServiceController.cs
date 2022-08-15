@@ -1,10 +1,10 @@
-﻿using SingleAgent.Monitor;
+﻿using IvsTray.Monitor;
 using System;
 using System.Collections.Generic;
 using System.ServiceProcess;
 using System.Threading.Tasks;
 
-namespace AgentService.Monitor
+namespace IvsAgent.Monitor
 {
     public class ExtendedServiceController : ServiceController
     {

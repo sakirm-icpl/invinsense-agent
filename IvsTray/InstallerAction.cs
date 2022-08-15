@@ -3,7 +3,7 @@ using System.Configuration.Install;
 using System.Diagnostics;
 using System.IO;
 
-namespace SingleAgent
+namespace IvsTray
 {
     [RunInstaller(true)]
     public partial class InstallerAction : Installer
@@ -19,7 +19,7 @@ namespace SingleAgent
         // Event handler for 'Committed' event.
         private void CommittedEventHandler(object sender, InstallEventArgs e)
         {
-            Process.Start(Path.GetDirectoryName(Context.Parameters["AssemblyPath"]) + @"\SingleAgent.exe");
+            Process.Start(Path.GetDirectoryName(Context.Parameters["AssemblyPath"]) + @"\IvsTray.exe");
         }
     }
 }

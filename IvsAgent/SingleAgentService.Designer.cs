@@ -1,8 +1,8 @@
 ﻿using Common;
 
-namespace AgentService
+namespace IvsAgent
 {
-    partial class SingleAgentService
+    partial class SingleIvsAgent
     {
         /// <summary> 
         /// Required designer variable.
@@ -31,11 +31,11 @@ namespace AgentService
         private void InitializeComponent()
         {
             // 
-            // SingleAgentService
+            // SingleIvsAgent
             // 
-            this.ServiceName = Constants.SingleAgentName;
+            this.ServiceName = Constants.IvsAgentName;
             this.EventLog.Log = Constants.LogGroupName;
-            this.EventLog.Source = Constants.SingleAgentName;
+            this.EventLog.Source = Constants.IvsAgentName;
 
         }
 

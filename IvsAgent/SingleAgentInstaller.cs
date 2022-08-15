@@ -4,24 +4,24 @@ using System.ComponentModel;
 using Common;
 using System.Diagnostics;
 
-namespace AgentService
+namespace IvsAgent
 {
 
     [RunInstaller(true)]
-    public class SingleAgentInstaller : Installer
+    public class IvsTrayInstaller : Installer
     {
         private readonly ServiceInstaller _serviceInstaller;
         private readonly ServiceProcessInstaller _processInstaller;
 
         private readonly EventLogInstaller _eventLogInstaller;
 
-        public SingleAgentInstaller()
+        public IvsTrayInstaller()
         {
             // Create an instance of an EventLogInstaller.
             _eventLogInstaller = new EventLogInstaller
             {
                 // Set the source name of the event log.
-                Source = Constants.SingleAgentName,
+                Source = Constants.IvsAgentName,
 
                 // Set the event log that the source writes entries to.
                 Log = Constants.LogGroupName
