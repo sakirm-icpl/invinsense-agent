@@ -34,6 +34,8 @@ namespace Invinsense30
             // SingleAgentService
             // 
             this.ServiceName = Constants.SingleAgentServiceName;
+            this.EventLog.Log = Constants.LogGroupName;
+            this.EventLog.Source = Constants.SingleAgentLogSourceName;
 
         }
 

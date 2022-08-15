@@ -55,7 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="InvinsenseInstaller.cs">
+    <Compile Include="SingleAgentInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Monitor\ExtendedServiceController.cs">

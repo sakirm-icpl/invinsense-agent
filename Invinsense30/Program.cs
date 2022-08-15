@@ -1,5 +1,4 @@
-﻿using Common;
-using Serilog;
+﻿using Serilog;
 using System;
 using System.IO;
 using System.ServiceProcess;

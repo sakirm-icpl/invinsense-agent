@@ -189,7 +189,8 @@ namespace Invinsense30
             try
             {
                 var eventDetail = TrackingEventProvider.Instance.GetEventDetail(eventId);
-                EventLogHelper.AddEvent(eventDetail.EventType, "SingleAgent", eventId);
+
+                EventLog.WriteEntry(eventDetail.Message, eventDetail.EventType, eventDetail.Id);
 
                 if (eventDetail.EventType == EventLogEntryType.SuccessAudit || eventDetail.EventType == EventLogEntryType.Information)
                 {

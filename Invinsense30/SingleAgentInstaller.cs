@@ -1,7 +1,6 @@
 ﻿using System.Configuration.Install;
 using System.ServiceProcess;
 using System.ComponentModel;
-using System.Collections;
 using Common;
 using System.Diagnostics;
 
@@ -9,13 +8,29 @@ namespace Invinsense30
 {
 
     [RunInstaller(true)]
-    public class InvinsenseInstaller : Installer
+    public class SingleAgentInstaller : Installer
     {
         private readonly ServiceInstaller _serviceInstaller;
         private readonly ServiceProcessInstaller _processInstaller;
 
-        public InvinsenseInstaller()
+        private readonly EventLogInstaller _eventLogInstaller;
+
+        public SingleAgentInstaller()
         {
+            // Create an instance of an EventLogInstaller.
+            _eventLogInstaller = new EventLogInstaller
+            {
+                // Set the source name of the event log.
+                Source = Constants.SingleAgentLogSourceName,
+
+                // Set the event log that the source writes entries to.
+                Log = Constants.LogGroupName
+            };
+
+            // Add myEventLogInstaller to the Installer collection.
+            Installers.Add(_eventLogInstaller);
+
+
             // Instantiate installers for process and services.
             _processInstaller = new ServiceProcessInstaller();
             _serviceInstaller = new ServiceInstaller();
@@ -46,24 +61,6 @@ namespace Invinsense30
             {
                 //sc.Start();
             }
-
-            EventLogHelper.EnsureEventSource(Constants.SingleAgentLogSourceName);
-
-            EventLogHelper.AddEvent(EventLogEntryType.Information, Constants.SingleAgentLogSourceName, EventId.AvDisabled);
-        }
-
-        protected override void OnBeforeInstall(IDictionary savedState)
-        {
-            base.OnBeforeInstall(savedState);
-
-            //EventLogHelper.EnsureEventSource("SingleAgent");
-        }
-
-        protected override void OnAfterUninstall(IDictionary savedState)
-        {
-            base.OnAfterUninstall(savedState);
-
-          //  EventLog.DeleteEventSource("SingleAgent");
         }
     }
 }
