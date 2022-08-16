@@ -19,6 +19,13 @@
   </a>
   </p>
    
+   - **What is wazuh? 🤔**
+  [Check out Website](https://wazuh.com/)
+  
+     
+   - **What is DeceptiveBytes? 🤔**
+  [Check out Website](https://deceptivebytes.com/)
+
   ## 📖 Prerequisites
   #### System Requirements (Invinsense 3.0)
 | Component | README |
