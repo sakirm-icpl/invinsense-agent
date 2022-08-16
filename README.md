@@ -3,8 +3,6 @@
   <h1>Invinsense Single Agent3.0</h1>
   <br>
   <img alt="Invinsense Single Agent3.0" src="https://user-images.githubusercontent.com/103485015/184890149-3bfa14b3-2443-4a0b-960f-582ddc39f07a.png" width="300px">
-
-  <strong>The path to your next Open Source contribution</strong>
 </div>
 
 ## Documentation
@@ -36,13 +34,14 @@
 | Memory | 8 GB RAM [16GB Recommended] |
 
 ## 🖥️ Local development using Commandline/Userinterface
+
 - Download `.msi` file https://github.com/Infopercept/invinsense-agent/blob/main/InvinsenseSingleAgentSetup%20(2).msi
 - copy file path and open on cmd(Administration)
 - run following command
 - **msiexec /i "C:\Users\Downloads\InvinsenseSingleAgentSetup.msi" ALLUSERS=1 /qn /l* "C:\Users\Downloads\app.log"**
 
 ## 🚧 Features
-![image](https://user-images.githubusercontent.com/103485015/184890785-116a3bc9-58d6-419b-9fe3-fabe0ae550be.png)
+![image](https://user-images.githubusercontent.com/103485015/184895267-8c8fd0af-c923-44b1-a470-b79012bdd45a.png)
 - System tray icon will turn green if all the services are running properly, if not then it will turn red.
 - Status icon turns Red, Green, Gray and Yellow depending on its status.
 - User will be prompted with notification depending on status of that specific tool.
