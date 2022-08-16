@@ -48,8 +48,7 @@
 - User will be prompted with notification depending on status of that specific tool.
 - Create log details for Invisense 3.0 services.
 
-### How to install Single Installer..(install wazuh,deceptiveBytes,Sysmon,SingleAgent)
-
+## How to install Single Installer..(install wazuh,deceptiveBytes,Sysmon,SingleAgent)
 
 - run the installation .msi file.
 - Once the installation wizard has opened, click on `install`.
@@ -63,8 +62,6 @@
 - Once finished, Single Agent 3.0 setup will appear.
 - Continue installation process.
 - Once finished, locate Single Agent icon in System Tray and click on it to open.
-
-#### Install single agent using commandline
 
 #### Install wazuh agent using commandline
 
@@ -82,6 +79,8 @@
 - Download `.msi` file https://download.sysinternals.com/files/Sysmon.zip
 - Open command prompt run as administration.
 - run following command to install sysmon64 `Sysmon64 -i`
+
+## ⚖️ LICENSE  
 
 ## Contributors ✨
 
