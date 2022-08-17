@@ -19,7 +19,6 @@
    
    - **What is wazuh? 🤔**
   [Check out Website](https://wazuh.com/)
-  
      
    - **What is DeceptiveBytes? 🤔**
   [Check out Website](https://deceptivebytes.com/)
@@ -37,7 +36,7 @@
 | CPU | Core 4 CPU or more |
 | Memory | 8 GB RAM [16GB Recommended] |
 
-## 🖥️ Local development using Commandline/Userinterface
+## 🖥️ Run agent using Commandline/Userinterface
 
 - Download `.msi` file https://github.com/Infopercept/invinsense-agent/blob/main/InvinsenseSingleAgentSetup%20(2).msi
 - copy file path and open on cmd(Administration)
@@ -45,6 +44,7 @@
 - **msiexec /i "C:\Users\Downloads\InvinsenseSingleAgentSetup.msi" ALLUSERS=1 /qn /l* "C:\Users\Downloads\app.log"**
 
 ## 🚧 Features
+
 ![image](https://user-images.githubusercontent.com/103485015/184895267-8c8fd0af-c923-44b1-a470-b79012bdd45a.png)
 - System tray icon will turn green if all the services are running properly, if not then it will turn red.
 - Status icon turns Red, Green, Gray and Yellow depending on its status.
@@ -66,24 +66,26 @@
 - Continue installation process.
 - Once finished, locate Single Agent icon in System Tray and click on it to open.
 
-#### Install wazuh agent using commandline
+## Install wazuh agent using commandline
 
 -download `.msi` file https://packages.wazuh.com/4.x/windows/wazuh-agent-4.2.5-1.msi
 - run following command 
 - wazuh-agent-4.2.5.msi; ./wazuh-agent-4.2.5.msi /q WAZUH_MANAGER='172.17.14.101' WAZUH_REGISTRATION_SERVER='172.17.14.101'
 
-#### Install deceptive bytes agent using commandline
+## Install deceptive bytes agent using commandline
 
 -download `.msi` file https://github.com/Infopercept/invinsense-agent/blob/main/DeceptiveBytes.EPS.x64%20(1).msi
 - run following command 
 - msiexec /i "DeceptiveBytes.EPS.x64.msi" ALLUSERS=1 /qn /norestart ServerAddress="3.18.202.216" ApiKey="9c208321ad917ef07680f485f6597e37b29ae53d23a62bc7e9ca4af97e0ad85b"
 
-#### Install Sysmon64
+## Install Sysmon64
 - Download `.msi` file https://download.sysinternals.com/files/Sysmon.zip
 - Open command prompt run as administration.
 - run following command to install sysmon64 `Sysmon64 -i`
 
-## ⚖️ LICENSE  
+## ⚖️License
+Licensed under the (https://www.infopercept.com/) License, Version 3.0.
+Copyright 2022 Infopercept. [Copy of the license](LICENSE.txt).
 
 ## Contributors ✨
 
@@ -97,3 +99,5 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><img src="https://avatars.githubusercontent.com/u/68695557?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Sunny rajwadi</b></sub></a><br /><a href="https://github.com/codenameone/CodenameOne/commits?author=Sunny rajwadir" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/vaibhavipinfopercept"><img src="https://avatars.githubusercontent.com/u/67953602?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Vaibhavi Pandya</b></sub></a><br /><a href="https://github.com/codenameone/CodenameOne/commits?author=Vaibhavi Pandya" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/sergeyCodenameOne"><img src="https://avatars.githubusercontent.com/u/69102702?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Dhara patel</b></sub></a><br /><a href="https://github.com/codenameone/CodenameOne/commits?author=Dhara patel" title="Code">💻</a></td>
+
+
