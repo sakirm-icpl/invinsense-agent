@@ -96,8 +96,8 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- markdownlint-disable -->
 <table>
   <tr>
-    <td align="center"><img src="https://avatars.githubusercontent.com/u/68695557?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Sunny rajwadi</b></sub></a><br /><a href="https://github.com/codenameone/CodenameOne/commits?author=Sunny rajwadir" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/sunnym-icpl"><img src="https://avatars.githubusercontent.com/u/68695557?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Sunny rajwadi</b></sub></a><br /><a href="https://github.com/codenameone/CodenameOne/commits?author=Sunny rajwadir" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/vaibhavipinfopercept"><img src="https://avatars.githubusercontent.com/u/67953602?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Vaibhavi Pandya</b></sub></a><br /><a href="https://github.com/codenameone/CodenameOne/commits?author=Vaibhavi Pandya" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/sergeyCodenameOne"><img src="https://avatars.githubusercontent.com/u/69102702?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Dhara patel</b></sub></a><br /><a href="https://github.com/codenameone/CodenameOne/commits?author=Dhara patel" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/Dhara-tech"><img src="https://avatars.githubusercontent.com/u/69102702?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Dhara patel</b></sub></a><br /><a href="https://github.com/codenameone/CodenameOne/commits?author=Dhara patel" title="Code">💻</a></td>
 
 
