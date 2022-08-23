@@ -90,7 +90,7 @@
 Licensed under the (https://www.infopercept.com/) License, Version 3.0.
 Copyright 2022 Infopercept. [Copy of the license](LICENSE.txt).
 
-## Contributors ✨
+## 🤝Contributors 
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
