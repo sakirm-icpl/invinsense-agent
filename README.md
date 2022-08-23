@@ -5,7 +5,7 @@
   <img alt="Invinsense Single Agent3.0" src="https://user-images.githubusercontent.com/103485015/184890149-3bfa14b3-2443-4a0b-960f-582ddc39f07a.png" width="300px">
 </div>
 
-## Documentation
+## 📙 Documentation
 
 - Single agent checks different tools (Wazuh, Deceptive Bytes, Microsoft Defender, Microsoft Sysmon and Lateral Moment Protection) status such like whether it is         Active, Connecting and Disconnected which will notify current status of agents with notification.
 - If tools services are active it will notify that services are running else  it will display service has been stopped and turn status dot as green.
@@ -49,7 +49,10 @@
 - System tray icon will turn green if all the services are running properly, if not then it will turn red.
 - Status icon turns Red, Green, Gray and Yellow depending on its status.
 - User will be prompted with notification depending on status of that specific tool.
-- Create log details for Invisense 3.0 services.
+- Log details for Invinsense single agent.
+- Display service Invinsense3.0 on serices and also diplay process under name of single agent
+- Create Window user name with single agent.
+
 
 ## How to install Single Installer..(install wazuh,deceptiveBytes,Sysmon,SingleAgent)
 
