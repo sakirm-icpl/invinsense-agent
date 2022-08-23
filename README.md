@@ -54,7 +54,7 @@
 - Create Window user name with single agent.
 
 
-## How to install Single Installer..(install wazuh,deceptiveBytes,Sysmon,SingleAgent)
+## ✅ How to install Single Installer..(install wazuh,deceptiveBytes,Sysmon,SingleAgent)
 
 - run the installation .msi file.
 - Once the installation wizard has opened, click on `install`.
@@ -69,19 +69,19 @@
 - Continue installation process.
 - Once finished, locate Single Agent icon in System Tray and click on it to open.
 
-## Install wazuh agent using commandline
+## ✅Install wazuh agent using commandline
 
 -download `.msi` file https://packages.wazuh.com/4.x/windows/wazuh-agent-4.2.5-1.msi
 - run following command 
 - wazuh-agent-4.2.5.msi; ./wazuh-agent-4.2.5.msi /q WAZUH_MANAGER='172.17.14.101' WAZUH_REGISTRATION_SERVER='172.17.14.101'
 
-## Install deceptive bytes agent using commandline
+## ✅Install deceptive bytes agent using commandline
 
 -download `.msi` file https://github.com/Infopercept/invinsense-agent/blob/main/DeceptiveBytes.EPS.x64%20(1).msi
 - run following command 
 - msiexec /i "DeceptiveBytes.EPS.x64.msi" ALLUSERS=1 /qn /norestart ServerAddress="3.18.202.216" ApiKey="9c208321ad917ef07680f485f6597e37b29ae53d23a62bc7e9ca4af97e0ad85b"
 
-## Install Sysmon64
+## ✅Install Sysmon64
 - Download `.msi` file https://download.sysinternals.com/files/Sysmon.zip
 - Open command prompt run as administration.
 - run following command to install sysmon64 `Sysmon64 -i`
