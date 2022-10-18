@@ -78,7 +78,7 @@ namespace IvsTray
             }
             else if (eventDetail.Id < 70)
             {
-                pb = pbDejavu;
+                pb = pbLmp;
             }
 
             ToolTipIcon icon;

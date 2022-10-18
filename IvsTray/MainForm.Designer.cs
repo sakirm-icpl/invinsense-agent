@@ -37,7 +37,7 @@ namespace IvsTray
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pbSysmon = new System.Windows.Forms.PictureBox();
             this.pbDefender = new System.Windows.Forms.PictureBox();
-            this.pbDejavu = new System.Windows.Forms.PictureBox();
+            this.pbLmp = new System.Windows.Forms.PictureBox();
             this.pbWazuh = new System.Windows.Forms.PictureBox();
             this.lblDeceptiveBytes = new System.Windows.Forms.Label();
             this.lblWindowsDefender = new System.Windows.Forms.Label();
@@ -48,20 +48,20 @@ namespace IvsTray
             this.pbWindowsLogo = new System.Windows.Forms.PictureBox();
             this.pbWazuhLogo = new System.Windows.Forms.PictureBox();
             this.pbSysmonLogo = new System.Windows.Forms.PictureBox();
-            this.pbDejavuLogo = new System.Windows.Forms.PictureBox();
+            this.pbLmpogo = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tlpMain = new System.Windows.Forms.TableLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.pbDbytes)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbSysmon)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbDefender)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbDejavu)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbLmp)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbWazuh)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbDeceptiveLogo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbWindowsLogo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbWazuhLogo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbSysmonLogo)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbDejavuLogo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbLmpogo)).BeginInit();
             this.tlpMain.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -118,17 +118,17 @@ namespace IvsTray
             this.pbDefender.TabIndex = 4;
             this.pbDefender.TabStop = false;
             // 
-            // pbDejavu
+            // pbLmp
             // 
-            this.pbDejavu.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbDejavu.Image = global::IvsTray.Properties.Resources.gray;
-            this.pbDejavu.InitialImage = null;
-            this.pbDejavu.Location = new System.Drawing.Point(288, 224);
-            this.pbDejavu.Name = "pbDejavu";
-            this.pbDejavu.Size = new System.Drawing.Size(20, 20);
-            this.pbDejavu.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbDejavu.TabIndex = 5;
-            this.pbDejavu.TabStop = false;
+            this.pbLmp.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.pbLmp.Image = global::IvsTray.Properties.Resources.gray;
+            this.pbLmp.InitialImage = null;
+            this.pbLmp.Location = new System.Drawing.Point(288, 224);
+            this.pbLmp.Name = "pbLmp";
+            this.pbLmp.Size = new System.Drawing.Size(20, 20);
+            this.pbLmp.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbLmp.TabIndex = 5;
+            this.pbLmp.TabStop = false;
             // 
             // pbWazuh
             // 
@@ -248,15 +248,15 @@ namespace IvsTray
             // 
             // pbDejavuLogo
             // 
-            this.pbDejavuLogo.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbDejavuLogo.Image = global::IvsTray.Properties.Resources.letral_threat_protection;
-            this.pbDejavuLogo.Location = new System.Drawing.Point(10, 216);
-            this.pbDejavuLogo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.pbDejavuLogo.Name = "pbDejavuLogo";
-            this.pbDejavuLogo.Size = new System.Drawing.Size(34, 35);
-            this.pbDejavuLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbDejavuLogo.TabIndex = 16;
-            this.pbDejavuLogo.TabStop = false;
+            this.pbLmpogo.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.pbLmpogo.Image = global::IvsTray.Properties.Resources.letral_threat_protection;
+            this.pbLmpogo.Location = new System.Drawing.Point(10, 216);
+            this.pbLmpogo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.pbLmpogo.Name = "pbDejavuLogo";
+            this.pbLmpogo.Size = new System.Drawing.Size(34, 35);
+            this.pbLmpogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbLmpogo.TabIndex = 16;
+            this.pbLmpogo.TabStop = false;
             // 
             // label1
             // 
@@ -276,7 +276,7 @@ namespace IvsTray
             this.tlpMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 55F));
             this.tlpMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 220F));
             this.tlpMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 46F));
-            this.tlpMain.Controls.Add(this.pbDejavuLogo, 0, 4);
+            this.tlpMain.Controls.Add(this.pbLmpogo, 0, 4);
             this.tlpMain.Controls.Add(this.pbSysmonLogo, 0, 3);
             this.tlpMain.Controls.Add(this.lblLmp, 1, 4);
             this.tlpMain.Controls.Add(this.pbDeceptiveLogo, 0, 0);
@@ -288,7 +288,7 @@ namespace IvsTray
             this.tlpMain.Controls.Add(this.pbDbytes, 2, 0);
             this.tlpMain.Controls.Add(this.lblDeceptiveBytes, 1, 0);
             this.tlpMain.Controls.Add(this.pbDefender, 2, 1);
-            this.tlpMain.Controls.Add(this.pbDejavu, 2, 4);
+            this.tlpMain.Controls.Add(this.pbLmp, 2, 4);
             this.tlpMain.Controls.Add(this.pbWazuh, 2, 2);
             this.tlpMain.Controls.Add(this.pbSysmon, 2, 3);
             this.tlpMain.Location = new System.Drawing.Point(23, 70);
@@ -320,13 +320,13 @@ namespace IvsTray
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbSysmon)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbDefender)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbDejavu)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbLmp)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbWazuh)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbDeceptiveLogo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbWindowsLogo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbWazuhLogo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbSysmonLogo)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbDejavuLogo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbLmpogo)).EndInit();
             this.tlpMain.ResumeLayout(false);
             this.tlpMain.PerformLayout();
             this.ResumeLayout(false);
@@ -341,7 +341,7 @@ namespace IvsTray
         private PictureBox pictureBox1;
         private PictureBox pbSysmon;
         private PictureBox pbDefender;
-        private PictureBox pbDejavu;
+        private PictureBox pbLmp;
         private PictureBox pbWazuh;
         private PictureBox pbInvinsense;
 
@@ -359,7 +359,7 @@ namespace IvsTray
         private PictureBox pbWindowsLogo;
         private PictureBox pbWazuhLogo;
         private PictureBox pbSysmonLogo;
-        private PictureBox pbDejavuLogo;
+        private PictureBox pbLmpogo;
         private Label label1;
         private TableLayoutPanel tlpMain;
     }
