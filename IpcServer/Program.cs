@@ -8,7 +8,7 @@ namespace IpcServer
 {
     internal class Program
     {
-        private static int numThreads = 4;
+        private static readonly int numThreads = 4;
 
         public static void Main()
         {
@@ -86,8 +86,8 @@ namespace IpcServer
     // Defines the data protocol for reading and writing strings on our stream
     public class StreamString
     {
-        private Stream ioStream;
-        private UnicodeEncoding streamEncoding;
+        private readonly Stream ioStream;
+        private readonly UnicodeEncoding streamEncoding;
 
         public StreamString(Stream ioStream)
         {
@@ -97,9 +97,7 @@ namespace IpcServer
 
         public string ReadString()
         {
-            int len = 0;
-
-            len = ioStream.ReadByte() * 256;
+            int len = ioStream.ReadByte() * 256;
             len += ioStream.ReadByte();
             byte[] inBuffer = new byte[len];
             ioStream.Read(inBuffer, 0, len);
@@ -127,8 +125,8 @@ namespace IpcServer
     // Contains the method executed in the context of the impersonated user
     public class ReadFileToStream
     {
-        private string fn;
-        private StreamString ss;
+        private readonly string fn;
+        private readonly StreamString ss;
 
         public ReadFileToStream(StreamString str, string filename)
         {

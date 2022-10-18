@@ -26,15 +26,15 @@ namespace EventLogPublisher
                 if (str.StartsWith("create"))
                 {
                     // Create the source, if it does not already exist.
-                    if (EventLog.SourceExists(Constants.SingleTrayAppName))
+                    if (EventLog.SourceExists(Constants.IvsAgentName))
                     {
-                        Console.WriteLine($"Source exists from {EventLog.LogNameFromSourceName(Constants.SingleTrayAppName, ".")}");
+                        Console.WriteLine($"Source exists from {EventLog.LogNameFromSourceName(Constants.IvsAgentName, ".")}");
 
-                        EventLog.WriteEntry(Constants.SingleTrayAppName, "Test message", EventLogEntryType.Warning);
+                        EventLog.WriteEntry(Constants.IvsAgentName, "Test message", EventLogEntryType.Warning);
 
                         EventLog log = new EventLog
                         {
-                            Source = Constants.SingleTrayAppName
+                            Source = Constants.IvsAgentName
                         };
 
                         log.WriteEntry("Test entry", EventLogEntryType.Information);
@@ -46,7 +46,7 @@ namespace EventLogPublisher
                     //There is a latency time to enable the source, it should be created
                     //prior to executing the application that uses the source.
                     //Execute this sample a second time to use the new source.
-                    EventLog.CreateEventSource(Constants.SingleTrayAppName, Constants.LogGroupName);
+                    EventLog.CreateEventSource(Constants.IvsAgentName, Constants.LogGroupName);
                     Console.WriteLine("CreatedEventSource");
                     Console.WriteLine("Exiting, execute the application a second time to use the source.");
                     return;
@@ -54,10 +54,10 @@ namespace EventLogPublisher
 
                 if (str.StartsWith("delete"))
                 {
-                    if (EventLog.SourceExists(Constants.SingleAgentLogSourceName))
+                    if (EventLog.SourceExists(Constants.IvsAgentName))
                     {
-                        Console.WriteLine($"Source exists from {EventLog.LogNameFromSourceName(Constants.SingleAgentLogSourceName, ".")}");
-                        EventLog.DeleteEventSource(Constants.SingleAgentLogSourceName);
+                        Console.WriteLine($"Source exists from {EventLog.LogNameFromSourceName(Constants.IvsAgentName, ".")}");
+                        EventLog.DeleteEventSource(Constants.IvsAgentName);
                     }
                     else
                     {
@@ -106,7 +106,7 @@ namespace EventLogPublisher
                 {
                     if (EventLog.SourceExists("MySource"))
                     {
-                        Console.WriteLine($"Source exists from {EventLog.LogNameFromSourceName(Constants.SingleAgentLogSourceName, ".")}");
+                        Console.WriteLine($"Source exists from {EventLog.LogNameFromSourceName("MySource", ".")}");
                         EventLog.DeleteEventSource("MySource");
                     }
                     else

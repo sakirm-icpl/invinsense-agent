@@ -10,7 +10,7 @@ namespace IpcClient
 {
     internal class Program
     {
-        private static int numClients = 4;
+        private static readonly int numClients = 4;
 
         public static void Main(string[] args)
         {
@@ -109,8 +109,8 @@ namespace IpcClient
     // Defines the data protocol for reading and writing strings on our stream.
     public class StreamString
     {
-        private Stream ioStream;
-        private UnicodeEncoding streamEncoding;
+        private readonly Stream ioStream;
+        private readonly UnicodeEncoding streamEncoding;
 
         public StreamString(Stream ioStream)
         {
@@ -137,6 +137,7 @@ namespace IpcClient
             {
                 len = (int)UInt16.MaxValue;
             }
+
             ioStream.WriteByte((byte)(len / 256));
             ioStream.WriteByte((byte)(len & 255));
             ioStream.Write(outBuffer, 0, len);
