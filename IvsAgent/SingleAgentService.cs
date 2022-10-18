@@ -16,7 +16,7 @@ namespace IvsAgent
         private readonly ExtendedServiceController Dbytes;
         private readonly ExtendedServiceController wazuh;
         private readonly ExtendedServiceController Sysmon;
-        private readonly ExtendedServiceController Dejavu;
+        private readonly ExtendedServiceController LmpService;
 
         private readonly ILogger _logger = Log.ForContext<SingleIvsAgent>();
 
@@ -35,12 +35,12 @@ namespace IvsAgent
 
             Sysmon = new ExtendedServiceController("Sysmon64");
 
-            Dejavu = new ExtendedServiceController("Spooler");
+            LmpService = new ExtendedServiceController("Spooler");
 
             wazuh.StatusChanged += (object sender, ServiceStatusEventArgs e) => WazuhUpdateStatus(e.Status);
             Dbytes.StatusChanged += (object sender, ServiceStatusEventArgs e) => DbytesUpdateStatus(e.Status);
             Sysmon.StatusChanged += (object sender, ServiceStatusEventArgs e) => SysmonUpdateStatus(e.Status);
-            Dejavu.StatusChanged += (object sender, ServiceStatusEventArgs e) => LmpStatusUpdate(e.Status);
+            LmpService.StatusChanged += (object sender, ServiceStatusEventArgs e) => LmpStatusUpdate(e.Status);
 
         }
 
@@ -147,7 +147,7 @@ namespace IvsAgent
             WazuhUpdateStatus(wazuh.Status);
             DbytesUpdateStatus(Dbytes.Status);
             SysmonUpdateStatus(Sysmon.Status);
-            LmpStatusUpdate(Dejavu.Status);
+            LmpStatusUpdate(LmpService.Status);
         }
 
         protected override void OnStop()

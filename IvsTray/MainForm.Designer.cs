@@ -43,7 +43,7 @@ namespace IvsTray
             this.lblWindowsDefender = new System.Windows.Forms.Label();
             this.lblWazuh = new System.Windows.Forms.Label();
             this.lblMicrosoftSysmon = new System.Windows.Forms.Label();
-            this.lblDejavu = new System.Windows.Forms.Label();
+            this.lblLmp = new System.Windows.Forms.Label();
             this.pbDeceptiveLogo = new System.Windows.Forms.PictureBox();
             this.pbWindowsLogo = new System.Windows.Forms.PictureBox();
             this.pbWazuhLogo = new System.Windows.Forms.PictureBox();
@@ -186,16 +186,16 @@ namespace IvsTray
             this.lblMicrosoftSysmon.TabIndex = 10;
             this.lblMicrosoftSysmon.Text = "Microsoft Sysmon";
             // 
-            // lblDejavu
+            // lblLmp
             // 
-            this.lblDejavu.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.lblDejavu.AutoSize = true;
-            this.lblDejavu.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.lblDejavu.Location = new System.Drawing.Point(58, 213);
-            this.lblDejavu.Name = "lblDejavu";
-            this.lblDejavu.Size = new System.Drawing.Size(153, 42);
-            this.lblDejavu.TabIndex = 11;
-            this.lblDejavu.Text = "Lateral Movement Protection";
+            this.lblLmp.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblLmp.AutoSize = true;
+            this.lblLmp.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.lblLmp.Location = new System.Drawing.Point(58, 213);
+            this.lblLmp.Name = "lblLmp";
+            this.lblLmp.Size = new System.Drawing.Size(153, 42);
+            this.lblLmp.TabIndex = 11;
+            this.lblLmp.Text = "Lateral Movement Protection";
             // 
             // pbDeceptiveLogo
             // 
@@ -278,7 +278,7 @@ namespace IvsTray
             this.tlpMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 46F));
             this.tlpMain.Controls.Add(this.pbDejavuLogo, 0, 4);
             this.tlpMain.Controls.Add(this.pbSysmonLogo, 0, 3);
-            this.tlpMain.Controls.Add(this.lblDejavu, 1, 4);
+            this.tlpMain.Controls.Add(this.lblLmp, 1, 4);
             this.tlpMain.Controls.Add(this.pbDeceptiveLogo, 0, 0);
             this.tlpMain.Controls.Add(this.lblMicrosoftSysmon, 1, 3);
             this.tlpMain.Controls.Add(this.pbWindowsLogo, 0, 1);
@@ -354,7 +354,7 @@ namespace IvsTray
         private Label lblWindowsDefender;
         private Label lblWazuh;
         private Label lblMicrosoftSysmon;
-        private Label lblDejavu;
+        private Label lblLmp;
         private PictureBox pbDeceptiveLogo;
         private PictureBox pbWindowsLogo;
         private PictureBox pbWazuhLogo;
