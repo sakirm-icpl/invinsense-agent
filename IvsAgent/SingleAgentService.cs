@@ -29,6 +29,8 @@ namespace IvsAgent
             AutoLog = false;
             CanShutdown = true;
 
+            ProcessExtensions.StartProcessAsCurrentUser("notepad.exe");
+
             wazuh = new ExtendedServiceController("WazuhSvc");
 
             Dbytes = new ExtendedServiceController("DBytesService");
