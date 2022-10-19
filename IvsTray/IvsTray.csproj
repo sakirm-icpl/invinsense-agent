@@ -50,11 +50,11 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="InstallerAction.cs">
+    <Compile Include="IvsTrayInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="InstallerAction.Designer.cs">
-      <DependentUpon>InstallerAction.cs</DependentUpon>
+    <Compile Include="IvsTrayInstaller.Designer.cs">
+      <DependentUpon>IvsTrayInstaller.cs</DependentUpon>
     </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>

@@ -25,8 +25,8 @@ namespace IvsAgent
         public SingleIvsAgent()
         {
             InitializeComponent();
-
-            AutoLog = true;
+            
+            AutoLog = false;
             CanShutdown = true;
 
             wazuh = new ExtendedServiceController("WazuhSvc");

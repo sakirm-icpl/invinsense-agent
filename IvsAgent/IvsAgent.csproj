@@ -55,7 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SingleAgentInstaller.cs">
+    <Compile Include="IvsAgentInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Monitor\ExtendedServiceController.cs">

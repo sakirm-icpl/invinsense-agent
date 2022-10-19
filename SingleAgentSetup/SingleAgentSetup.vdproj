@@ -475,6 +475,20 @@
     {
         "CustomAction"
         {
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_964929D1AB214D90846670D0B63ED7F1"
+            {
+            "Name" = "8:Primary output from IvsTray (Active)"
+            "Condition" = "8:"
+            "Object" = "8:_126DE95B12434FFAB4CCA05555EB8453"
+            "FileType" = "3:2"
+            "InstallAction" = "3:2"
+            "Arguments" = "8:"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:1"
+            "Identifier" = "8:_31CBBF71_0EC7_436D_84DB_ADF294C64D86"
+            "InstallerClass" = "11:TRUE"
+            "CustomActionData" = "8:"
+            }
             "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_DC8E2A74869641F8925FED948BB4C0F0"
             {
             "Name" = "8:Primary output from IvsTray (Active)"
@@ -1017,7 +1031,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Invinsense Single Agent 3.0"
         "ProductCode" = "8:{72F094CD-C55F-4214-8F4E-DA0EA55B1C68}"
-        "PackageCode" = "8:{1BD513F2-1A4A-4FFC-9F68-53CDBD9D159E}"
+        "PackageCode" = "8:{0CE0530F-E1FE-45BE-960F-7D17E37E5845}"
         "UpgradeCode" = "8:{FDA00883-6446-48D1-B78C-E49B8D0DE322}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -1137,6 +1151,20 @@
         }
         "Shortcut"
         {
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_AFC86C8180A54C09AE89ABBD37E1BC17"
+            {
+            "Name" = "8:Shortcut to Primary output from IvsTray (Active)"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_126DE95B12434FFAB4CCA05555EB8453"
+            "Folder" = "8:_CB1D73BB3DF84F8DBA10A3DF281953D2"
+            "WorkingFolder" = "8:_38BE5C203505423A92E6177E55D658C9"
+            "Icon" = "8:"
+            "Feature" = "8:"
+            }
         }
         "UserInterface"
         {

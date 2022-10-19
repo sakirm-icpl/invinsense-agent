@@ -1,6 +1,6 @@
 ﻿namespace IvsTray
 {
-    partial class InstallerAction
+    partial class IvsTrayInstaller
     {
         /// <summary>
         /// Required designer variable.

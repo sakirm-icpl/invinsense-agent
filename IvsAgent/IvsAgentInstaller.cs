@@ -3,19 +3,21 @@ using System.ServiceProcess;
 using System.ComponentModel;
 using Common;
 using System.Diagnostics;
+using System;
+using System.IO;
 
 namespace IvsAgent
 {
 
     [RunInstaller(true)]
-    public class IvsTrayInstaller : Installer
+    public class IvsAgentInstaller : Installer
     {
         private readonly ServiceInstaller _serviceInstaller;
         private readonly ServiceProcessInstaller _processInstaller;
 
         private readonly EventLogInstaller _eventLogInstaller;
 
-        public IvsTrayInstaller()
+        public IvsAgentInstaller()
         {
             // Create an instance of an EventLogInstaller.
             _eventLogInstaller = new EventLogInstaller
@@ -54,12 +56,22 @@ namespace IvsAgent
 
         private void RunServiceAfterInstall(object sender, InstallEventArgs e)
         {
-            System.Console.WriteLine("Running service");
-
-            ServiceInstaller serviceInstaller = (ServiceInstaller)sender;
-            using (ServiceController sc = new ServiceController(serviceInstaller.ServiceName))
+            try
             {
-                sc.Start();
+                foreach (System.Collections.DictionaryEntry item in Context.Parameters)
+                {
+                    File.AppendAllText("C:\\agenterror.log", $"Key: {item.Key}, Value: {item.Value} {Environment.NewLine}");
+                }
+
+                ServiceInstaller serviceInstaller = (ServiceInstaller)sender;
+                using (ServiceController sc = new ServiceController(serviceInstaller.ServiceName))
+                {
+                    sc.Start();
+                }
+            }
+            catch (Exception ex)
+            {
+                File.WriteAllText("C:\\agenterror.log", ex.StackTrace);
             }
         }
     }
