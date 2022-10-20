@@ -1,10 +1,15 @@
-﻿using System;
+﻿using Serilog;
+using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace IvsAgent
 {
     public static class ProcessExtensions
     {
+        private static readonly ILogger _logger = Log.ForContext(typeof(ProcessExtensions));
+
         #region Win32 Constants
 
         private const int CREATE_UNICODE_ENVIRONMENT = 0x00000400;
@@ -251,6 +256,10 @@ namespace IvsAgent
 
                 iResultOfCreateProcessAsUser = Marshal.GetLastWin32Error();
             }
+            catch(Exception ex)
+            {
+                _logger.Error("{Message}, Stack: {StackTrace}", ex.Message, ex.StackTrace);
+            }
             finally
             {
                 CloseHandle(hUserToken);
@@ -260,6 +269,31 @@ namespace IvsAgent
                 }
                 CloseHandle(procInfo.hThread);
                 CloseHandle(procInfo.hProcess);
+            }
+
+            return true;
+        }
+
+        public static bool CheckProcessAsCurrentUser(string appName)
+        {
+            var proc = Process.GetProcesses();
+
+            foreach (var procInfo in proc)
+            {
+                Console.WriteLine($"{procInfo.ProcessName}, {procInfo.StartInfo.FileName}");
+            }
+
+            Process myProc = Process.GetProcesses().FirstOrDefault(pp => pp.ProcessName.StartsWith(appName));
+            if(myProc == null)
+            {
+                return false;
+            }
+
+            Process myExplorer = Process.GetProcesses().FirstOrDefault(pp => pp.ProcessName == "explorer" && pp.SessionId == myProc.SessionId);
+
+            if (myExplorer == null)
+            {
+                return false;
             }
 
             return true;

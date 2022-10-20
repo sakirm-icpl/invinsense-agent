@@ -14,7 +14,7 @@ namespace IvsAgent
         {
             Log.Logger = new LoggerConfiguration()
                .MinimumLevel.Verbose()
-               .WriteTo.File(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "debug.log"), rollingInterval: RollingInterval.Day)
+               .WriteTo.File(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ivsagent.log"), rollingInterval: RollingInterval.Day)
                .CreateLogger();
 
             Log.Logger.Information("Initializing program");
@@ -31,7 +31,6 @@ namespace IvsAgent
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.StackTrace);
                 Log.Logger.Error(ex.StackTrace);
             }
 

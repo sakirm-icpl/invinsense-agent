@@ -1,6 +1,7 @@
 ﻿using Serilog;
 using System;
 using System.IO;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace IvsTray
@@ -18,10 +19,42 @@ namespace IvsTray
 
             Log.Logger = new LoggerConfiguration()
                .MinimumLevel.Debug()
-               .WriteTo.File(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "debug.log"), rollingInterval: RollingInterval.Day)
+               .WriteTo.File(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "IvsTray.log"), rollingInterval: RollingInterval.Day)
                .CreateLogger();
 
+            Log.Logger.Information("Initializing program");
+
+            AppDomain.CurrentDomain.UnhandledException += GlobalHandler;
+
+            Application.ThreadException += ApplicationThreadException;
+
             Application.Run(new MainForm());
+        }
+
+        private static void ApplicationThreadException(object sender, ThreadExceptionEventArgs e)
+        {
+            Exception ex = e.Exception;
+
+            string LF = Environment.NewLine + Environment.NewLine;
+            string infos = $"Message : {LF}{ex.Message}{LF}" +
+                           $"Source : {LF}{ex.Source}{LF}" +
+                           $"Stack : {LF}{ex.StackTrace}{LF}" +
+                           $"InnerException : {ex.InnerException}";
+
+            Log.Logger.Error(infos);
+        }
+
+        static void GlobalHandler(object sender, UnhandledExceptionEventArgs args)
+        {
+            Exception ex = (Exception)args.ExceptionObject;
+
+            string LF = Environment.NewLine + Environment.NewLine;
+            string infos = $"Message : {LF}{ex.Message}{LF}" +
+                           $"Source : {LF}{ex.Source}{LF}" +
+                           $"Stack : {LF}{ex.StackTrace}{LF}" +
+                           $"InnerException : {ex.InnerException}";
+
+            Log.Logger.Error(infos);
         }
     }
 }

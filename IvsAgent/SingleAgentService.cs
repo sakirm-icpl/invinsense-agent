@@ -6,6 +6,9 @@ using System;
 using System.Diagnostics;
 using System.ServiceProcess;
 using System.Timers;
+using System.IO;
+using Common.Persistance;
+using System.Reflection;
 
 namespace IvsAgent
 {
@@ -29,8 +32,6 @@ namespace IvsAgent
             AutoLog = false;
             CanShutdown = true;
 
-            ProcessExtensions.StartProcessAsCurrentUser("notepad.exe");
-
             wazuh = new ExtendedServiceController("WazuhSvc");
 
             Dbytes = new ExtendedServiceController("DBytesService");
@@ -43,7 +44,6 @@ namespace IvsAgent
             Dbytes.StatusChanged += (object sender, ServiceStatusEventArgs e) => DbytesUpdateStatus(e.Status);
             Sysmon.StatusChanged += (object sender, ServiceStatusEventArgs e) => SysmonUpdateStatus(e.Status);
             LmpService.StatusChanged += (object sender, ServiceStatusEventArgs e) => LmpStatusUpdate(e.Status);
-
         }
 
         private void WazuhUpdateStatus(ServiceControllerStatus? status)
@@ -136,9 +136,14 @@ namespace IvsAgent
 
         protected override void OnStart(string[] args)
         {
-            _logger.Information("Starting service");
-
             _isRunning = true;
+
+            if(_isRunning)
+            {
+                _logger.Information("Service is already running.");
+            }
+            
+            _logger.Information("Starting service");
 
             timer.Elapsed += new ElapsedEventHandler(OnElapsedTime);
             timer.Interval = 5000; //number in milisecinds  
@@ -170,6 +175,12 @@ namespace IvsAgent
         private EventId avLastStatus = EventId.None;
         private void OnElapsedTime(object source, ElapsedEventArgs e)
         {
+            if(ProcessExtensions.CheckProcessAsCurrentUser("IvsTray"))
+            {
+                var ivsTrayFile = Path.Combine(Assembly.GetEntryAssembly().Location, "IvsTray.exe");
+                ProcessExtensions.StartProcessAsCurrentUser(ivsTrayFile);
+            }
+
             _logger.Information("Checking windows defender service");
 
             var status = ServiceHelper.AVStatus("Windows Defender");

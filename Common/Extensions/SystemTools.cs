@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.DirectoryServices;
 using System.IO;
 
-namespace IvsAgent.Utils
+namespace Common.Extensions
 {
     internal class SystemTools
     {
