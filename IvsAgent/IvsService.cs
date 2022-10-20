@@ -182,8 +182,8 @@ namespace IvsAgent
             }
             else
             {
-                _logger.Information("IvsTray is not running. Starting...");
-                var ivsTrayFile = Path.Combine(Assembly.GetEntryAssembly().Location, "IvsTray.exe");
+                var ivsTrayFile = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "IvsTray.exe");
+                _logger.Information($"IvsTray is not running. Starting... {ivsTrayFile}");
                 ProcessExtensions.StartProcessAsCurrentUser(null, ivsTrayFile);
             }
 
