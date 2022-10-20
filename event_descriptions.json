@@ -43,9 +43,9 @@
   },
   {
     "Id": 20,
-    "ServiceName": "Wazuh",
-    "SvcName": "WazuhSvc",
-    "Message": "Wazuh is not found",
+    "ServiceName": "Windows Defender",
+    "SvcName": "Windows Defender",
+    "Message": "Windows Defender is disabled",
     "EventType": 16
   },
   {

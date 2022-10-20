@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.DirectoryServices;
 using System.IO;
+using System.Reflection;
 
 namespace Common.Extensions
 {

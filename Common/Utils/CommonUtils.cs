@@ -10,6 +10,8 @@ namespace Common.Utils
 
         public static string RootFolder => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + FilePathSlash;
 
+        public static string GetAbsoletePath(string path) => Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), path);
+
         public static string ConfigFolder => RootFolder + "configs" + FilePathSlash;
 
         public static string ReportFolder => RootFolder + "reports" + FilePathSlash;

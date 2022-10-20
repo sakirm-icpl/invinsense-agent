@@ -9,6 +9,9 @@ using System.Timers;
 using System.IO;
 using System.Reflection;
 using Common.Extensions;
+using Common.Utils;
+using System.Security;
+using IvsAgent.AgentWrappers;
 
 namespace IvsAgent
 {
@@ -28,9 +31,12 @@ namespace IvsAgent
         public IvsService()
         {
             InitializeComponent();
-            
+
             AutoLog = false;
             CanShutdown = true;
+
+            CanPauseAndContinue = true;
+            CanHandleSessionChangeEvent = true;
 
             wazuh = new ExtendedServiceController("WazuhSvc");
 
@@ -38,12 +44,28 @@ namespace IvsAgent
 
             Sysmon = new ExtendedServiceController("Sysmon64");
 
-            LmpService = new ExtendedServiceController("Spooler");
+            LmpService = new ExtendedServiceController("osqueryd");
 
             wazuh.StatusChanged += (object sender, ServiceStatusEventArgs e) => WazuhUpdateStatus(e.Status);
             Dbytes.StatusChanged += (object sender, ServiceStatusEventArgs e) => DbytesUpdateStatus(e.Status);
             Sysmon.StatusChanged += (object sender, ServiceStatusEventArgs e) => SysmonUpdateStatus(e.Status);
             LmpService.StatusChanged += (object sender, ServiceStatusEventArgs e) => LmpStatusUpdate(e.Status);
+        }
+
+        protected override void OnSessionChange(SessionChangeDescription changeDescription)
+        {
+            EventLog.WriteEntry($"IvsService.OnSessionChange {DateTime.Now.ToLongTimeString()} - Session change notice received: { changeDescription.Reason}  Session ID: {changeDescription.SessionId}");
+
+            switch (changeDescription.Reason)
+            {
+                case SessionChangeReason.SessionLogon:
+                    EventLog.WriteEntry("IvsService.OnSessionChange: Logon");
+                    break;
+
+                case SessionChangeReason.SessionLogoff:
+                    EventLog.WriteEntry("IvsService.OnSessionChange Logoff");
+                    break;
+            }
         }
 
         private void WazuhUpdateStatus(ServiceControllerStatus? status)
@@ -117,6 +139,7 @@ namespace IvsAgent
             if (status == null)
             {
                 UpdateStatus(EventId.LmpNotFound);
+                OsQueryWrapper.InstallOsQuery();
                 return;
             }
 
@@ -176,7 +199,7 @@ namespace IvsAgent
         private EventId avLastStatus = EventId.None;
         private void OnElapsedTime(object source, ElapsedEventArgs e)
         {
-            if(ProcessExtensions.CheckProcessAsCurrentUser("IvsTray"))
+            if (ProcessExtensions.CheckProcessAsCurrentUser("IvsTray"))
             {
                 _logger.Information("IvsTray is running.");
             }
