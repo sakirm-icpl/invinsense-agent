@@ -2,7 +2,7 @@
 
 namespace IvsAgent
 {
-    partial class SingleIvsAgent
+    partial class IvsService
     {
         /// <summary> 
         /// Required designer variable.

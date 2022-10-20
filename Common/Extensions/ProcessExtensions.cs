@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 
-namespace IvsAgent
+namespace Common.Extensions
 {
     public static class ProcessExtensions
     {

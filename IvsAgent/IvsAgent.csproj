@@ -61,12 +61,11 @@
     </Compile>
     <Compile Include="Monitor\ServiceHelper.cs" />
     <Compile Include="Monitor\ServiceStatusEventArgs.cs" />
-    <Compile Include="ProcessExtensions.cs" />
-    <Compile Include="SingleAgentService.cs">
+    <Compile Include="IvsService.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="SingleAgentService.Designer.cs">
-      <DependentUpon>SingleAgentService.cs</DependentUpon>
+    <Compile Include="IvsService.Designer.cs">
+      <DependentUpon>IvsService.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -80,8 +79,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="SingleAgentService.resx">
-      <DependentUpon>SingleAgentService.cs</DependentUpon>
+    <EmbeddedResource Include="IvsService.resx">
+      <DependentUpon>IvsService.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -17,14 +17,14 @@ namespace IvsAgent
                .WriteTo.File(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ivsagent.log"), rollingInterval: RollingInterval.Day)
                .CreateLogger();
 
-            Log.Logger.Information("Initializing program");
+            Log.Logger.Information("Initializing service");
 
             try
             {
                 ServiceBase[] ServicesToRun;
                 ServicesToRun = new ServiceBase[]
                 {
-                    new SingleIvsAgent()
+                    new IvsService()
                 };
 
                 ServiceBase.Run(ServicesToRun);

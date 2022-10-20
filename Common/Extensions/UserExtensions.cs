@@ -6,7 +6,7 @@ namespace Common.Extensions
 {
     public class UserExtensions
     {
-        public static string getUserName()
+        public static string GetCurrentUserName()
         {
             SelectQuery query = new SelectQuery(@"Select * from Win32_Process");
             using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(query))

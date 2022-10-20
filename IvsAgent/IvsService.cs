@@ -7,12 +7,12 @@ using System.Diagnostics;
 using System.ServiceProcess;
 using System.Timers;
 using System.IO;
-using Common.Persistance;
 using System.Reflection;
+using Common.Extensions;
 
 namespace IvsAgent
 {
-    public partial class SingleIvsAgent : ServiceBase
+    public partial class IvsService : ServiceBase
     {
         private readonly Timer timer = new Timer();
 
@@ -21,11 +21,11 @@ namespace IvsAgent
         private readonly ExtendedServiceController Sysmon;
         private readonly ExtendedServiceController LmpService;
 
-        private readonly ILogger _logger = Log.ForContext<SingleIvsAgent>();
+        private readonly ILogger _logger = Log.ForContext<IvsService>();
 
         private bool _isRunning = false;
 
-        public SingleIvsAgent()
+        public IvsService()
         {
             InitializeComponent();
             
@@ -136,14 +136,15 @@ namespace IvsAgent
 
         protected override void OnStart(string[] args)
         {
+            if (_isRunning)
+            {
+                _logger.Information("Invinsense service is already running.");
+                return;
+            }
+
             _isRunning = true;
 
-            if(_isRunning)
-            {
-                _logger.Information("Service is already running.");
-            }
-            
-            _logger.Information("Starting service");
+            _logger.Information("Starting Invinsense service...");
 
             timer.Elapsed += new ElapsedEventHandler(OnElapsedTime);
             timer.Interval = 5000; //number in milisecinds  
@@ -177,8 +178,13 @@ namespace IvsAgent
         {
             if(ProcessExtensions.CheckProcessAsCurrentUser("IvsTray"))
             {
+                _logger.Information("IvsTray is running.");
+            }
+            else
+            {
+                _logger.Information("IvsTray is not running. Starting...");
                 var ivsTrayFile = Path.Combine(Assembly.GetEntryAssembly().Location, "IvsTray.exe");
-                ProcessExtensions.StartProcessAsCurrentUser(ivsTrayFile);
+                ProcessExtensions.StartProcessAsCurrentUser(null, ivsTrayFile);
             }
 
             _logger.Information("Checking windows defender service");
@@ -189,6 +195,8 @@ namespace IvsAgent
             {
                 return;
             }
+
+            _logger.Information("Windows defender service status : Last: {avLastStatus}, New: {status}", avLastStatus, status);
 
             avLastStatus = status;
 

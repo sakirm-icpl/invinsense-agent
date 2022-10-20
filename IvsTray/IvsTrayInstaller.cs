@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Configuration.Install;
 using System.Diagnostics;
-using System.IO;
 
 namespace IvsTray
 {
@@ -21,18 +20,19 @@ namespace IvsTray
         private void CommittedEventHandler(object sender, InstallEventArgs e)
         {
             try
-            {
+            {                
+                string agentExecutable = Context.Parameters["assemblypath"];
+
                 foreach (System.Collections.DictionaryEntry item in Context.Parameters)
                 {
-                    File.AppendAllText("C:\\trayerror.log", $"Key: {item.Key}, Value: {item.Value} {Environment.NewLine}");
+                    Context.LogMessage($"Key: {item.Key}, Value: {item.Value} {Environment.NewLine}");
                 }
-
-                string agentExecutable = Context.Parameters["assemblypath"];
+                
                 Process.Start(agentExecutable);
             }
             catch (Exception ex)
             {
-                File.AppendAllText("C:\\trayerror.log", ex.StackTrace);
+                Context.LogMessage(ex.StackTrace);
             }
         }
     }

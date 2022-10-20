@@ -4,7 +4,6 @@ using System.ComponentModel;
 using Common;
 using System.Diagnostics;
 using System;
-using System.IO;
 
 namespace IvsAgent
 {
@@ -44,8 +43,8 @@ namespace IvsAgent
             _serviceInstaller.StartType = ServiceStartMode.Automatic;
 
             // ServiceName must equal those on ServiceBase derived classes.
-            _serviceInstaller.ServiceName = "Invinsense Agent";
-            _serviceInstaller.Description = "Invinsense Single Agent Servcie 3.0";
+            _serviceInstaller.ServiceName = "Invinsense";
+            _serviceInstaller.Description = "Invinsense 3.0";
 
             _serviceInstaller.AfterInstall += RunServiceAfterInstall;
 
@@ -60,7 +59,7 @@ namespace IvsAgent
             {
                 foreach (System.Collections.DictionaryEntry item in Context.Parameters)
                 {
-                    File.AppendAllText("C:\\agenterror.log", $"Key: {item.Key}, Value: {item.Value} {Environment.NewLine}");
+                    Context.LogMessage($"Key: {item.Key}, Value: {item.Value} {Environment.NewLine}");
                 }
 
                 ServiceInstaller serviceInstaller = (ServiceInstaller)sender;
@@ -71,7 +70,7 @@ namespace IvsAgent
             }
             catch (Exception ex)
             {
-                File.WriteAllText("C:\\agenterror.log", ex.StackTrace);
+                Context.LogMessage(ex.StackTrace);
             }
         }
     }
