@@ -7,48 +7,52 @@ using System.ServiceProcess;
 
 namespace IvsAgent.AgentWrappers
 {
+    /// <summary>
+    /// https://www.blumira.com/enable-sysmon/
+    /// 
+    /// </summary>
     internal static class SysmonWrapper
     {
         private static readonly ILogger _logger = Log.ForContext(typeof(SysmonWrapper));
 
         public static int Verify(bool isInstall = false)
         {
-            ServiceController ctl = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName == "Sysmon64");
-
-            if (ctl != null)
-            {
-                _logger.Information($"SYSMON found with status: {ctl.Status}");
-                return 0;
-            }
-
-            if (ctl == null && !isInstall)
-            {
-                _logger.Information("SYSMON not found and set for skip.");
-                return -1;
-            }
-
-            _logger.Information("SYSMON not found. Preparing installation");
-
-            var exePath = CommonUtils.GetAbsoletePath("artifacts\\Sysmon64.exe");
-
-            var logPath = CommonUtils.GetAbsoletePath("sysmonInstall.log");
-
-            _logger.Information($"PATH: {exePath}, Log: {logPath}");
-
-            Process installerProcess = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = exePath,
-                    Arguments = $"-accepteula -i",
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                    CreateNoWindow = true,
-                    WorkingDirectory = CommonUtils.RootFolder
-                }
-            };
-
             try
             {
+                ServiceController ctl = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName == "Sysmon64");
+
+                if (ctl != null)
+                {
+                    _logger.Information($"SYSMON found with status: {ctl.Status}");
+                    return 0;
+                }
+
+                if (ctl == null && !isInstall)
+                {
+                    _logger.Information("SYSMON not found and set for skip.");
+                    return -1;
+                }
+
+                _logger.Information("SYSMON not found. Preparing installation");
+
+                var exePath = CommonUtils.GetAbsoletePath("artifacts\\Sysmon64.exe");
+
+                var logPath = CommonUtils.GetAbsoletePath("sysmonInstall.log");
+
+                _logger.Information($"PATH: {exePath}, Log: {logPath}");
+
+                Process installerProcess = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = exePath,
+                        Arguments = $"-accepteula -i",
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        CreateNoWindow = true,
+                        WorkingDirectory = CommonUtils.RootFolder
+                    }
+                };
+
                 installerProcess.OutputDataReceived += InstallerProcess_OutputDataReceived;
                 installerProcess.ErrorDataReceived += InstallerProcess_ErrorDataReceived;
                 installerProcess.Exited += InstallerProcess_Exited;
@@ -60,16 +64,24 @@ namespace IvsAgent.AgentWrappers
 
                 installerProcess.WaitForExit();
 
-                _logger.Information($"Process Exit Code: {installerProcess.ExitCode}");
+                var exitCode = installerProcess.ExitCode;
+
+                if (exitCode == 0)
+                {
+                    _logger.Information("SYSMON installation completed");
+                    return 0;
+                }
+                else
+                {
+                    _logger.Information($"SYSMON installation fault: {exitCode}");
+                    return exitCode;
+                }
             }
             catch (Exception ex)
             {
                 _logger.Error(ex.Message);
                 return 1;
             }
-
-            _logger.Information("SYSMON installation completed");
-            return 0;
         }
 
         private static void InstallerProcess_OutputDataReceived(object sender, DataReceivedEventArgs e)
@@ -84,7 +96,7 @@ namespace IvsAgent.AgentWrappers
 
         private static void InstallerProcess_Exited(object sender, EventArgs e)
         {
-            _logger.Information("SYSMON installation completed");
+            _logger.Information("SYSMON installation process exited.");
         }
     }
 }

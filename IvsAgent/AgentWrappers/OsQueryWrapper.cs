@@ -1,5 +1,4 @@
 ﻿using Common.Utils;
-using IvsAgent.Monitor;
 using Serilog;
 using System;
 using System.Diagnostics;
@@ -14,42 +13,51 @@ namespace IvsAgent.AgentWrappers
 
         public static int Verify(bool isInstall = false)
         {
-            ServiceController ctl = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName == "osqueryd");
-            
-            if(ctl != null)
-            {
-                _logger.Information($"OSQUERY found with status: {ctl.Status}");
-                return 0;
-            }
-
-            if (ctl == null && !isInstall)
-            {
-                _logger.Information("OSQUERY not found and set for skip.");
-                return -1;
-            }
-
-            _logger.Information("OSQUERY not found. Preparing installation");
-
-            var msiPath = CommonUtils.GetAbsoletePath("artifacts\\osquery-5.5.1.msi");
-
-            var logPath = CommonUtils.GetAbsoletePath("osqueryInstall.log");
-
-            _logger.Information($"PATH: {msiPath}, Log: {logPath}");
-
-            Process installerProcess = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = "msiexec",
-                    Arguments = $"/I \"{msiPath}\" /QN /l*vx \"{logPath}\" ACCEPTEULA=1 ALLUSERS=1",
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                    CreateNoWindow = true,
-                    WorkingDirectory = CommonUtils.RootFolder
-                }
-            };
-
             try
             {
+
+                ServiceController ctl = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName == "osqueryd");
+
+                if (ctl != null)
+                {
+                    _logger.Information($"OSQUERY found with status: {ctl.Status}");
+                    return 0;
+                }
+
+                if (ctl == null && !isInstall)
+                {
+                    _logger.Information("OSQUERY not found and set for skip.");
+                    return -1;
+                }
+
+                _logger.Information("OSQUERY not found. Preparing installation");
+
+                if(!MsiWrapper.MsiPackage.IsMsiExecFree(TimeSpan.FromSeconds(2)))
+                {
+                    _logger.Information("MSI Installer is not free.");
+                    return 1618;
+                }
+
+                _logger.Information("OSQUERY installation is ready");
+
+                var msiPath = CommonUtils.GetAbsoletePath("artifacts\\osquery-5.5.1.msi");
+
+                var logPath = CommonUtils.GetAbsoletePath("osqueryInstall.log");
+
+                _logger.Information($"PATH: {msiPath}, Log: {logPath}");
+
+                Process installerProcess = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = "msiexec",
+                        Arguments = $"/I \"{msiPath}\" /QN /l*vx \"{logPath}\" ACCEPTEULA=1 ALLUSERS=1",
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        CreateNoWindow = true,
+                        WorkingDirectory = CommonUtils.RootFolder
+                    }
+                };
+
                 installerProcess.OutputDataReceived += InstallerProcess_OutputDataReceived;
                 installerProcess.ErrorDataReceived += InstallerProcess_ErrorDataReceived;
                 installerProcess.Exited += InstallerProcess_Exited;
@@ -61,17 +69,23 @@ namespace IvsAgent.AgentWrappers
 
                 installerProcess.WaitForExit();
 
-                _logger.Information($"Process Exit Code: {installerProcess.ExitCode}");
+                if (installerProcess.ExitCode == 0)
+                {
+                    _logger.Information("OSQUERY installation completed");
+                    return 0;
+                }
+                else
+                {
+                    _logger.Information($"OSQUERY installation fault: {installerProcess.ExitCode}");
+                    return installerProcess.ExitCode;
+
+                }
             }
             catch (Exception ex)
             {
                 _logger.Error(ex.Message);
                 return 1;
             }
-
-            _logger.Information("OSQUERY installation completed");
-
-            return 0;
         }
 
         private static void InstallerProcess_OutputDataReceived(object sender, DataReceivedEventArgs e)
@@ -86,7 +100,7 @@ namespace IvsAgent.AgentWrappers
 
         private static void InstallerProcess_Exited(object sender, EventArgs e)
         {
-            _logger.Information("OSQUERY installation completed");
+            _logger.Information("OSQUERY installation process exited.");
         }
     }
 }

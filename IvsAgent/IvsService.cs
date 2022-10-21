@@ -9,8 +9,6 @@ using System.Timers;
 using System.IO;
 using System.Reflection;
 using Common.Extensions;
-using Common.Utils;
-using System.Security;
 using IvsAgent.AgentWrappers;
 
 namespace IvsAgent
@@ -38,24 +36,18 @@ namespace IvsAgent
             CanPauseAndContinue = true;
             CanHandleSessionChangeEvent = true;
 
+
             wazuh = new ExtendedServiceController("WazuhSvc");
+            wazuh.StatusChanged += (object sender, ServiceStatusEventArgs e) => WazuhUpdateStatus(e.Status);
 
             Dbytes = new ExtendedServiceController("DBytesService");
-
-            if (SysmonWrapper.Verify(true) == 0)
-            {
-                Sysmon = new ExtendedServiceController("Sysmon64");
-                Sysmon.StatusChanged += (object sender, ServiceStatusEventArgs e) => SysmonUpdateStatus(e.Status);
-            }
-
-            if (OsQueryWrapper.Verify(true) == 0)
-            {
-                LmpService = new ExtendedServiceController("osqueryd");
-                LmpService.StatusChanged += (object sender, ServiceStatusEventArgs e) => LmpStatusUpdate(e.Status);
-            }
-
-            wazuh.StatusChanged += (object sender, ServiceStatusEventArgs e) => WazuhUpdateStatus(e.Status);
             Dbytes.StatusChanged += (object sender, ServiceStatusEventArgs e) => DbytesUpdateStatus(e.Status);
+
+            Sysmon = new ExtendedServiceController("Sysmon64");
+            Sysmon.StatusChanged += (object sender, ServiceStatusEventArgs e) => SysmonUpdateStatus(e.Status);
+
+            LmpService = new ExtendedServiceController("osqueryd");
+            LmpService.StatusChanged += (object sender, ServiceStatusEventArgs e) => LmpStatusUpdate(e.Status);
         }
 
         protected override void OnSessionChange(SessionChangeDescription changeDescription)
@@ -175,7 +167,7 @@ namespace IvsAgent
             _logger.Information("Starting Invinsense service...");
 
             timer.Elapsed += new ElapsedEventHandler(OnElapsedTime);
-            timer.Interval = 5000; //number in milisecinds  
+            timer.Interval = 15000; //number in milisecinds  
             timer.Enabled = true;
 
             UpdateStatus(EventId.IvsRunning);
@@ -184,7 +176,7 @@ namespace IvsAgent
             {
                 WazuhUpdateStatus(wazuh.Status);
             }
-         
+
             if (Dbytes != null)
             {
                 DbytesUpdateStatus(Dbytes.Status);
@@ -216,9 +208,17 @@ namespace IvsAgent
             _logger.Information("System is shutting down");
         }
 
+        private bool inTimer = false;
         private EventId avLastStatus = EventId.None;
         private void OnElapsedTime(object source, ElapsedEventArgs e)
         {
+            if (inTimer)
+            {
+                return;
+            }
+
+            inTimer = true;
+
             if (ProcessExtensions.CheckProcessAsCurrentUser("IvsTray"))
             {
                 _logger.Information("IvsTray is running.");
@@ -236,6 +236,7 @@ namespace IvsAgent
 
             if (avLastStatus == status)
             {
+                inTimer = false;
                 return;
             }
 
@@ -244,6 +245,26 @@ namespace IvsAgent
             avLastStatus = status;
 
             UpdateStatus(status);
+
+            if (SysmonWrapper.Verify(true) == 0)
+            {
+                _logger.Information("Sysmon verified");
+            }
+            else
+            {
+                _logger.Information("Sysmon not avaiable");
+            }
+
+            if (OsQueryWrapper.Verify(true) == 0)
+            {
+                _logger.Information("OSQuery verified");
+            }
+            else
+            {
+                _logger.Information("OSQuery not available");
+            }
+
+            inTimer = false;
         }
 
         private void UpdateStatus(EventId eventId)
