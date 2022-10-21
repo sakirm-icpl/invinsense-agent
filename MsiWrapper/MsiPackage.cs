@@ -8,6 +8,7 @@ namespace MsiWrapper
 {
     /// <summary>
     /// Encapsulates MSI package installation/uninstallation operations.
+    /// https://jonathancrozier.com/blog/how-to-install-msi-packages-using-msiexec-and-c-sharp
     /// </summary>
     public class MsiPackage
     {

@@ -1,5 +1,4 @@
 ﻿using Common.Utils;
-using IvsAgent.Monitor;
 using Serilog;
 using System;
 using System.Diagnostics;
@@ -8,40 +7,40 @@ using System.ServiceProcess;
 
 namespace IvsAgent.AgentWrappers
 {
-    internal static class OsQueryWrapper
+    internal static class SysmonWrapper
     {
-        private static readonly ILogger _logger = Log.ForContext(typeof(OsQueryWrapper));
+        private static readonly ILogger _logger = Log.ForContext(typeof(SysmonWrapper));
 
         public static int Verify(bool isInstall = false)
         {
-            ServiceController ctl = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName == "osqueryd");
-            
-            if(ctl != null)
+            ServiceController ctl = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName == "Sysmon64");
+
+            if (ctl != null)
             {
-                _logger.Information($"OSQUERY found with status: {ctl.Status}");
+                _logger.Information($"SYSMON found with status: {ctl.Status}");
                 return 0;
             }
 
             if (ctl == null && !isInstall)
             {
-                _logger.Information("OSQUERY not found and set for skip.");
+                _logger.Information("SYSMON not found and set for skip.");
                 return -1;
             }
 
-            _logger.Information("OSQUERY not found. Preparing installation");
+            _logger.Information("SYSMON not found. Preparing installation");
 
-            var msiPath = CommonUtils.GetAbsoletePath("artifacts\\osquery-5.5.1.msi");
+            var exePath = CommonUtils.GetAbsoletePath("artifacts\\Sysmon64.exe");
 
-            var logPath = CommonUtils.GetAbsoletePath("osqueryInstall.log");
+            var logPath = CommonUtils.GetAbsoletePath("sysmonInstall.log");
 
-            _logger.Information($"PATH: {msiPath}, Log: {logPath}");
+            _logger.Information($"PATH: {exePath}, Log: {logPath}");
 
             Process installerProcess = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
-                    FileName = "msiexec",
-                    Arguments = $"/I \"{msiPath}\" /QN /l*vx \"{logPath}\" ACCEPTEULA=1 ALLUSERS=1",
+                    FileName = exePath,
+                    Arguments = $"-accepteula -i",
                     WindowStyle = ProcessWindowStyle.Hidden,
                     CreateNoWindow = true,
                     WorkingDirectory = CommonUtils.RootFolder
@@ -57,7 +56,7 @@ namespace IvsAgent.AgentWrappers
                 installerProcess.Start();
 
 
-                _logger.Information("OSQUERY Installation started...");
+                _logger.Information("SYSMON Installation started...");
 
                 installerProcess.WaitForExit();
 
@@ -69,24 +68,23 @@ namespace IvsAgent.AgentWrappers
                 return 1;
             }
 
-            _logger.Information("OSQUERY installation completed");
-
+            _logger.Information("SYSMON installation completed");
             return 0;
         }
 
         private static void InstallerProcess_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            _logger.Information($"OSQUERY installation error data: {e.Data}");
+            _logger.Information($"SYSMON installation error data: {e.Data}");
         }
 
         private static void InstallerProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            _logger.Error($"OSQUERY installation error data: {e.Data}");
+            _logger.Error($"SYSMON installation error data: {e.Data}");
         }
 
         private static void InstallerProcess_Exited(object sender, EventArgs e)
         {
-            _logger.Information("OSQUERY installation completed");
+            _logger.Information("SYSMON installation completed");
         }
     }
 }

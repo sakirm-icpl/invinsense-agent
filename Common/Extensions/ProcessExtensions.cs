@@ -6,6 +6,9 @@ using System.Runtime.InteropServices;
 
 namespace Common.Extensions
 {
+    /// <summary>
+    /// https://github.com/murrayju/CreateProcessAsUser
+    /// </summary>
     public static class ProcessExtensions
     {
         private static readonly ILogger _logger = Log.ForContext(typeof(ProcessExtensions));

@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AgentWrappers\SysmonWrapper.cs" />
     <Compile Include="AgentWrappers\OsQueryWrapper.cs" />
     <Compile Include="IvsAgentInstaller.cs">
       <SubType>Component</SubType>

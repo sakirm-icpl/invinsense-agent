@@ -42,19 +42,25 @@ namespace IvsAgent
 
             Dbytes = new ExtendedServiceController("DBytesService");
 
-            Sysmon = new ExtendedServiceController("Sysmon64");
+            if (SysmonWrapper.Verify(true) == 0)
+            {
+                Sysmon = new ExtendedServiceController("Sysmon64");
+                Sysmon.StatusChanged += (object sender, ServiceStatusEventArgs e) => SysmonUpdateStatus(e.Status);
+            }
 
-            LmpService = new ExtendedServiceController("osqueryd");
+            if (OsQueryWrapper.Verify(true) == 0)
+            {
+                LmpService = new ExtendedServiceController("osqueryd");
+                LmpService.StatusChanged += (object sender, ServiceStatusEventArgs e) => LmpStatusUpdate(e.Status);
+            }
 
             wazuh.StatusChanged += (object sender, ServiceStatusEventArgs e) => WazuhUpdateStatus(e.Status);
             Dbytes.StatusChanged += (object sender, ServiceStatusEventArgs e) => DbytesUpdateStatus(e.Status);
-            Sysmon.StatusChanged += (object sender, ServiceStatusEventArgs e) => SysmonUpdateStatus(e.Status);
-            LmpService.StatusChanged += (object sender, ServiceStatusEventArgs e) => LmpStatusUpdate(e.Status);
         }
 
         protected override void OnSessionChange(SessionChangeDescription changeDescription)
         {
-            EventLog.WriteEntry($"IvsService.OnSessionChange {DateTime.Now.ToLongTimeString()} - Session change notice received: { changeDescription.Reason}  Session ID: {changeDescription.SessionId}");
+            EventLog.WriteEntry($"IvsService.OnSessionChange {DateTime.Now.ToLongTimeString()} - Session change notice received: {changeDescription.Reason}  Session ID: {changeDescription.SessionId}");
 
             switch (changeDescription.Reason)
             {
@@ -139,7 +145,6 @@ namespace IvsAgent
             if (status == null)
             {
                 UpdateStatus(EventId.LmpNotFound);
-                OsQueryWrapper.InstallOsQuery();
                 return;
             }
 
@@ -175,10 +180,25 @@ namespace IvsAgent
 
             UpdateStatus(EventId.IvsRunning);
 
-            WazuhUpdateStatus(wazuh.Status);
-            DbytesUpdateStatus(Dbytes.Status);
-            SysmonUpdateStatus(Sysmon.Status);
-            LmpStatusUpdate(LmpService.Status);
+            if (wazuh != null)
+            {
+                WazuhUpdateStatus(wazuh.Status);
+            }
+         
+            if (Dbytes != null)
+            {
+                DbytesUpdateStatus(Dbytes.Status);
+            }
+
+            if (Sysmon != null)
+            {
+                SysmonUpdateStatus(Sysmon.Status);
+            }
+
+            if (LmpService != null)
+            {
+                LmpStatusUpdate(LmpService.Status);
+            }
         }
 
         protected override void OnStop()
