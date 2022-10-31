@@ -5,9 +5,9 @@ using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Common.Utils;
+using Newtonsoft.Json;
 
 namespace Common.Net
 {
@@ -76,20 +76,22 @@ namespace Common.Net
         {
             var result = await InvokeAsync(methodType, path, postData);
 
+            var response = Encoding.UTF8.GetString(result.Response, 0, result.Response.Length);
+
             try
             {
                 if (result.IsSuccess)
                 {
-                    return ProcessResult<T, E>.Success(result.Response.Length > 0 ? JsonSerializer.Deserialize<T>(result.Response, SerializationExtension.DefaultOptions) : default);
+                    return ProcessResult<T, E>.Success(result.Response.Length > 0 ? JsonConvert.DeserializeObject<T>(response, SerializationExtension.DefaultOptions) : default);
                 }
                 else
                 {
-                    return ProcessResult<T, E>.Fail(result.Response.Length > 0 ? JsonSerializer.Deserialize<E>(result.Response, SerializationExtension.DefaultOptions) : default);
+                    return ProcessResult<T, E>.Fail(result.Response.Length > 0 ? JsonConvert.DeserializeObject<E>(response, SerializationExtension.DefaultOptions) : default);
                 }
             }
             catch (Exception ex)
             {
-                logger.Error("HTTP:{IsSuccess} - {Message} : payload: {Payload}", result.IsSuccess, ex.Message, Encoding.UTF8.GetString(result.Response, 0, result.Response.Length));
+                logger.Error("HTTP:{IsSuccess} - {Message} : payload: {Payload}", result.IsSuccess, ex.Message, response);
                 return ProcessResult<T, E>.Fail("Response", ex.Message);
             }
         }
@@ -98,13 +100,15 @@ namespace Common.Net
         {
             var result = await InvokeAsync(methodType, path, postData);
 
+            var response = Encoding.UTF8.GetString(result.Response, 0, result.Response.Length);
+
             try
             {
                 if (result.IsSuccess)
                 {
                     if (result.Response.Length > 0)
                     {
-                        return ProcessResult<T>.Success(JsonSerializer.Deserialize<T>(result.Response, SerializationExtension.DefaultOptions));
+                        return ProcessResult<T>.Success(JsonConvert.DeserializeObject<T>(response, SerializationExtension.DefaultOptions));
                     }
                     else
                     {
@@ -115,7 +119,7 @@ namespace Common.Net
                 {
                     if (result.Response.Length > 0)
                     {
-                        return ProcessResult<T>.Fail(JsonSerializer.Deserialize<Error>(result.Response, SerializationExtension.DefaultOptions));
+                        return ProcessResult<T>.Fail(JsonConvert.DeserializeObject<Error>(response, SerializationExtension.DefaultOptions));
                     }
                     else
                     {
@@ -125,7 +129,7 @@ namespace Common.Net
             }
             catch (Exception ex)
             {
-                logger.Error("HTTP:{IsSuccess} - {Message} : payload: {Payload}", result.IsSuccess, ex.Message, Encoding.UTF8.GetString(result.Response, 0, result.Response.Length));
+                logger.Error("HTTP:{IsSuccess} - {Message} : payload: {Payload}", result.IsSuccess, ex.Message, response);
                 return ProcessResult<T>.Fail("Response", ex.Message);
             }
         }
@@ -150,7 +154,7 @@ namespace Common.Net
 
                 if ((methodType == HttpMethod.Post || methodType == HttpMethod.Put) && postData != null)
                 {
-                    payload = JsonSerializer.Serialize(postData);
+                    payload = JsonConvert.SerializeObject(postData);
                     request.Content = new StringContent(payload, Encoding.UTF8, "application/json");
                 }
 

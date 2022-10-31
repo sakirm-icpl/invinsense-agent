@@ -1,26 +1,26 @@
-﻿using System.Collections.Generic;
-using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Common.Net
 {
     public class HttpClientConfig
     {
-        [JsonPropertyName("name")]
+        [JsonProperty("name")]
         public string Name { get; set; }
 
-        [JsonPropertyName("baseUrl")]
+        [JsonProperty("baseUrl")]
         public string BaseUrl { get; set; }
 
-        [JsonPropertyName("authRequired")]
+        [JsonProperty("authRequired")]
         public bool AuthRequired { get; set; }
 
-        [JsonPropertyName("timeout")]
+        [JsonProperty("timeout")]
         public int TimeOut { get; set; }
 
-        [JsonPropertyName("baseHeaders")]
+        [JsonProperty("baseHeaders")]
         public Dictionary<string, string> BaseHeaders { get; set; }
 
-        [JsonPropertyName("extraParams")]
+        [JsonProperty("extraParams")]
         public Dictionary<string, string> ExtraParams { get; set; }
 
         public override string ToString()

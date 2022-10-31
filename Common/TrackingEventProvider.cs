@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.Json;
 using Serilog;
 
 namespace Common
@@ -25,7 +24,7 @@ namespace Common
             using (StreamReader r = new StreamReader(path))
             {
                 string json = r.ReadToEnd();
-                List<TrackingEvent> items = JsonSerializer.Deserialize<List<TrackingEvent>>(json);
+                List<TrackingEvent> items = Newtonsoft.Json.JsonConvert.DeserializeObject<List<TrackingEvent>>(json);
                 return new TrackingEventProvider(items.ToDictionary(x => (EventId)x.Id, x => x));
             }
         });

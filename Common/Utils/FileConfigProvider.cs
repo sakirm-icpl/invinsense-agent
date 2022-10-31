@@ -35,7 +35,7 @@ namespace Common.Utils
                     throw new FileNotFoundException("File not found", name);
                 }
 
-                var obj = System.Text.Json.JsonSerializer.Deserialize<T>(File.ReadAllText(file));
+                var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(File.ReadAllText(file));
                 CachedConfig.Add(name, obj);
                 return obj;
             }
@@ -51,7 +51,7 @@ namespace Common.Utils
             var file = CommonUtils.ConfigFolder + name + ".json";
             lock (SyncObj)
             {
-                File.WriteAllText(file, System.Text.Json.JsonSerializer.Serialize(value));
+                File.WriteAllText(file, Newtonsoft.Json.JsonConvert.SerializeObject(value, Newtonsoft.Json.Formatting.Indented));
 
                 if (CachedConfig.ContainsKey(name))
                 {

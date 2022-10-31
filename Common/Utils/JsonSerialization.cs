@@ -1,17 +1,15 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
-
+﻿
 namespace Common.Utils
 {
     public static class SerializationExtension
     {
-        public static JsonSerializerOptions DefaultOptions
+        public static Newtonsoft.Json.JsonSerializerSettings DefaultOptions
         {
             get
             {
-                var options = new JsonSerializerOptions
+                var options = new Newtonsoft.Json.JsonSerializerSettings
                 {
-                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+                    NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore
                 };
 
                 return options;

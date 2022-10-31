@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace Common.Models
 {
@@ -20,10 +20,10 @@ namespace Common.Models
             return new Error(code, message);
         }
 
-        [JsonPropertyName("code")]
+        [JsonProperty("code")]
         public string Code { get; set; }
 
-        [JsonPropertyName("message")]
+        [JsonProperty("message")]
         public string Message { get; set; }
 
         public override int GetHashCode()

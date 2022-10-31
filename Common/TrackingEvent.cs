@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Text.Json.Serialization;
 
 namespace Common
 {
@@ -16,7 +15,7 @@ namespace Common
 
         public EventLogEntryType EventType { get; }
 
-        [JsonConstructor]
+        [Newtonsoft.Json.JsonConstructor]
         public TrackingEvent(int id, string serviceName, string svcName, EventLogEntryType eventType, string message) => (Id, ServiceName, SvcName, EventType, Message) = (id, serviceName, svcName, eventType, message);
 
         public override int GetHashCode() => Id;
