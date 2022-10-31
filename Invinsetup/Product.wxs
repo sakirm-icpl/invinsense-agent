@@ -88,20 +88,14 @@
 				<File Id="a14" Source="$(var.Agent_Service_TargetDir)\Serilog.Sinks.File.pdb" />
 				<File Id="a15" Source="$(var.Agent_Service_TargetDir)\System.Buffers.dll" />
 				<File Id="a16" Source="$(var.Agent_Service_TargetDir)\System.CodeDom.dll" />
-				<File Id="a17" Source="$(var.Agent_Service_TargetDir)\System.CodeDom.xml" />
-				<File Id="a18" Source="$(var.Agent_Service_TargetDir)\System.Diagnostics.EventLog.dll" />
-				<File Id="a19" Source="$(var.Agent_Service_TargetDir)\System.Diagnostics.EventLog.xml" />
-				<File Id="a20" Source="$(var.Agent_Service_TargetDir)\System.Memory.dll" />
-				<File Id="a21" Source="$(var.Agent_Service_TargetDir)\System.Numerics.Vectors.dll" />
-				<File Id="a22" Source="$(var.Agent_Service_TargetDir)\System.Runtime.CompilerServices.Unsafe.dll" />
-				<File Id="a23" Source="$(var.Agent_Service_TargetDir)\System.Security.Principal.Windows.dll" />
-				<File Id="a24" Source="$(var.Agent_Service_TargetDir)\System.Security.Principal.Windows.xml" />
-				<File Id="a25" Source="$(var.Agent_Service_TargetDir)\System.ServiceProcess.ServiceController.dll" />
-				<File Id="a26" Source="$(var.Agent_Service_TargetDir)\System.ServiceProcess.ServiceController.xml" />
-				<File Id="a27" Source="$(var.Agent_Service_TargetDir)\System.Text.Encodings.Web.dll" />
-				<File Id="a28" Source="$(var.Agent_Service_TargetDir)\System.Text.Json.dll" />
-				<File Id="a29" Source="$(var.Agent_Service_TargetDir)\System.Threading.Tasks.Extensions.dll" />
-				<File Id="a30" Source="$(var.Agent_Service_TargetDir)\System.ValueTuple.dll" />
+				<File Id="a17" Source="$(var.Agent_Service_TargetDir)\System.Memory.dll" />
+				<File Id="a18" Source="$(var.Agent_Service_TargetDir)\System.Numerics.Vectors.dll" />
+				<File Id="a19" Source="$(var.Agent_Service_TargetDir)\System.Runtime.CompilerServices.Unsafe.dll" />
+				<File Id="a20" Source="$(var.Agent_Service_TargetDir)\System.Security.Principal.Windows.dll" />
+				<File Id="a21" Source="$(var.Agent_Service_TargetDir)\System.Text.Encodings.Web.dll" />
+				<File Id="a22" Source="$(var.Agent_Service_TargetDir)\System.Text.Json.dll" />
+				<File Id="a23" Source="$(var.Agent_Service_TargetDir)\System.Threading.Tasks.Extensions.dll" />
+				<File Id="a24" Source="$(var.Agent_Service_TargetDir)\System.ValueTuple.dll" />
 			</Component>
 		</ComponentGroup>
 	</Fragment>
