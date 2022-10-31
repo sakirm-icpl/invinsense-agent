@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Management;
 
 namespace Common.Extensions
@@ -11,7 +12,7 @@ namespace Common.Extensions
             SelectQuery query = new SelectQuery(@"Select * from Win32_Process");
             using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(query))
             {
-                foreach (ManagementObject Process in searcher.Get())
+                foreach (ManagementObject Process in searcher.Get().Cast<ManagementObject>())
                 {
                     if (Process["ExecutablePath"] != null && string.Equals(Path.GetFileName(Process["ExecutablePath"].ToString()), "explorer.exe", StringComparison.OrdinalIgnoreCase))
                     {
