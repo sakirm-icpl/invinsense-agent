@@ -2,6 +2,7 @@
 using Serilog;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.ServiceProcess;
 
@@ -35,9 +36,9 @@ namespace IvsAgent.AgentWrappers
 
                 _logger.Information("SYSMON not found. Preparing installation");
 
-                var exePath = CommonUtils.GetAbsoletePath("artifacts\\Sysmon64.exe");
+                var exePath = Path.GetFullPath(new Uri(CommonUtils.GetAbsoletePath("..\\artifacts\\Sysmon64.exe")).LocalPath);
 
-                var logPath = CommonUtils.GetAbsoletePath("sysmonInstall.log");
+                var logPath = Path.GetFullPath(new Uri(CommonUtils.GetAbsoletePath("..\\artifacts\\sysmonInstall.log")).LocalPath);
 
                 _logger.Information($"PATH: {exePath}, Log: {logPath}");
 

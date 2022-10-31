@@ -2,6 +2,7 @@
 using Serilog;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.ServiceProcess;
 
@@ -40,9 +41,9 @@ namespace IvsAgent.AgentWrappers
 
                 _logger.Information("OSQUERY installation is ready");
 
-                var msiPath = CommonUtils.GetAbsoletePath("artifacts\\osquery-5.5.1.msi");
+                var msiPath = Path.GetFullPath(new Uri(CommonUtils.GetAbsoletePath("..\\artifacts\\osquery-5.5.1.msi")).LocalPath);
 
-                var logPath = CommonUtils.GetAbsoletePath("osqueryInstall.log");
+                var logPath = Path.GetFullPath(new Uri(CommonUtils.GetAbsoletePath("..\\artifacts\\osqueryInstall.log")).LocalPath);
 
                 _logger.Information($"PATH: {msiPath}, Log: {logPath}");
 

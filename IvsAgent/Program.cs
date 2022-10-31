@@ -1,5 +1,7 @@
-﻿using Serilog;
+﻿using Common;
+using Serilog;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.ServiceProcess;
 
@@ -21,6 +23,12 @@ namespace IvsAgent
 
             try
             {
+                //Check event log exists
+                if (!EventLog.SourceExists(Constants.IvsAgentName))
+                {
+                    EventLog.CreateEventSource(Constants.IvsAgentName, Constants.LogGroupName);
+                }
+
                 ServiceBase[] ServicesToRun;
                 ServicesToRun = new ServiceBase[]
                 {

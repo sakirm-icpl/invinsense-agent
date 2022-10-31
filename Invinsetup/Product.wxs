@@ -39,9 +39,11 @@
 
 		<!--Main Feature for this Setup which can be found in Fragment Tag with ComponentGroupRef Id-->
 		<Feature Id="ProductFeature" Title="$(var.Name)" Level="1">
+			<ComponentGroupRef Id="DbComponents" />
 			<ComponentGroupRef Id="AgentComponents" />
 			<ComponentGroupRef Id="TrayComponents" />
 			<ComponentGroupRef Id="ToolComponents" />
+			<ComponentGroupRef Id="PostInstallation"/>
 		</Feature>
 		
 	</Product>
@@ -60,13 +62,21 @@
 	</Fragment>
 
 	<Fragment>
+		<ComponentGroup Id="DbComponents" Directory="ManufacturerFolder">
+			<Component Id="d00" Guid="648BA540-9CBC-4A05-A3D1-4016437DB870" Win64="yes">
+				<File Id="d02" Source="..\artifacts\db" />
+			</Component>
+		</ComponentGroup>
+	</Fragment>
+	
+	<Fragment>
 		<ComponentGroup Id="AgentComponents" Directory="AGENTFOLDER">
 			<Component Id="a00" Guid="380bbddd-daa7-0744-517b-37da768f5570" Win64="yes">
 				<File Id="a02" Source="$(var.Agent_Service_TargetDir)\event_descriptions.json" />
 				<File Id="a03" Source="$(var.Agent_Service_TargetDir)\Common.dll" />
 				<File Id="a04" Source="$(var.Agent_Service_TargetDir)\Common.dll.config" />
 				<File Id="a05" Source="$(var.Agent_Service_TargetDir)\Common.pdb" />
-				<File Id="a06"  Source="$(var.IvsAgent.TargetPath)" />
+				<File Id="a06" Source="$(var.IvsAgent.TargetPath)" />
 				<File Id="a07" Source="$(var.Agent_Service_TargetDir)\IvsAgent.exe.config" />
 				<File Id="a08" Source="$(var.Agent_Service_TargetDir)\IvsAgent.pdb" />
 				<File Id="a09" Source="$(var.Agent_Service_TargetDir)\LiteDB.dll" />
@@ -104,7 +114,8 @@
 
 	<Fragment>
 		<ComponentGroup Id="PostInstallation" Directory="AGENTFOLDER">
-			<Component Id="s0" Guid="868F4F33-6851-4169-B814-F25842A2D414">
+			<Component Id="s0" Guid="868F4F33-6851-4169-B814-F25842A2D414" Win64="yes">
+				<File Id='AgentEXE' Name='IvsAgent' DiskId='1' Source='$(var.IvsAgent.TargetPath)' KeyPath='yes'/>
 				<ServiceInstall Id="s1" Name="IvsAgent" DisplayName="Invinsense 3.0" Description="Invinsense Service" ErrorControl="normal" Start="auto" Type="ownProcess" />
 				<ServiceControl Id="s2" Name="IvsAgent" Start="install" Stop="both" Remove="both" Wait="yes" />
 			</Component>
@@ -119,14 +130,41 @@
 				<File Id="b04" Source="$(var.Tray_Application_TargetDir)\Common.dll.config" />
 				<File Id="b05" Source="$(var.Tray_Application_TargetDir)\Common.pdb" />
 				<File Id="b06" Source="$(var.IvsTray.TargetPath)" />
+				<File Id="b07" Source="$(var.Tray_Application_TargetDir)\IvsTray.exe.config" />
+				<File Id="b08" Source="$(var.Tray_Application_TargetDir)\IvsTray.pdb" />
+				<File Id="b09" Source="$(var.Tray_Application_TargetDir)\LiteDB.dll" />
+				<File Id="b10" Source="$(var.Tray_Application_TargetDir)\LiteDB.xml" />
+				<File Id="b11" Source="$(var.Tray_Application_TargetDir)\Microsoft.Bcl.AsyncInterfaces.dll" />
+				<File Id="b12" Source="$(var.Tray_Application_TargetDir)\Microsoft.Bcl.AsyncInterfaces.xml" />
+				<File Id="b17" Source="$(var.Tray_Application_TargetDir)\Serilog.dll" />
+				<File Id="b18" Source="$(var.Tray_Application_TargetDir)\Serilog.Sinks.File.dll" />
+				<File Id="b19" Source="$(var.Tray_Application_TargetDir)\Serilog.Sinks.File.pdb" />
+				<File Id="b22" Source="$(var.Tray_Application_TargetDir)\System.Buffers.dll" />
+				<File Id="b23" Source="$(var.Tray_Application_TargetDir)\System.Buffers.xml" />
+				<File Id="b24" Source="$(var.Tray_Application_TargetDir)\System.Memory.dll" />
+				<File Id="b25" Source="$(var.Tray_Application_TargetDir)\System.Memory.xml" />
+				<File Id="b26" Source="$(var.Tray_Application_TargetDir)\System.Numerics.Vectors.dll" />
+				<File Id="b27" Source="$(var.Tray_Application_TargetDir)\System.Numerics.Vectors.xml" />
+				<File Id="b28" Source="$(var.Tray_Application_TargetDir)\System.Runtime.CompilerServices.Unsafe.dll" />
+				<File Id="b29" Source="$(var.Tray_Application_TargetDir)\System.Runtime.CompilerServices.Unsafe.xml" />
+				<File Id="b30" Source="$(var.Tray_Application_TargetDir)\System.Text.Encodings.Web.dll" />
+				<File Id="b31" Source="$(var.Tray_Application_TargetDir)\System.Text.Encodings.Web.xml" />
+				<File Id="b32" Source="$(var.Tray_Application_TargetDir)\System.Text.Json.dll" />
+				<File Id="b33" Source="$(var.Tray_Application_TargetDir)\System.Text.Json.xml" />
+				<File Id="b34" Source="$(var.Tray_Application_TargetDir)\System.Threading.Tasks.Extensions.dll" />
+				<File Id="b35" Source="$(var.Tray_Application_TargetDir)\System.Threading.Tasks.Extensions.xml" />
+				<File Id="b36" Source="$(var.Tray_Application_TargetDir)\System.ValueTuple.dll" />
+				<File Id="b37" Source="$(var.Tray_Application_TargetDir)\System.ValueTuple.xml" />
 			</Component>
 		</ComponentGroup>
 	</Fragment>
 
 	<Fragment>
 		<ComponentGroup Id="ToolComponents" Directory="ARTIFACTSFOLDER">
-			<Component Win64="yes">
-				<File Source="..\artifacts\LiteDB.Studio.exe" />
+			<Component Id="c00" Guid="DEF1F99A-A721-4F70-87BC-92E13E47B0B1" Win64="yes">
+				<File Id="c01" Source="..\artifacts\LiteDB.Studio.exe" />
+				<File Id="c02" Source="..\artifacts\Sysmon\Sysmon64.exe" />
+				<File Id="c03" Source="..\artifacts\osquery-5.5.1.msi" />
 			</Component>
 		</ComponentGroup>
 	</Fragment>
