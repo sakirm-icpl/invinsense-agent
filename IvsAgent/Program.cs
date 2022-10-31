@@ -1,9 +1,12 @@
 ﻿using Common;
 using Serilog;
+using Serilog.Core;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.ServiceProcess;
+using System.Text.Json;
 
 namespace IvsAgent
 {
@@ -14,6 +17,15 @@ namespace IvsAgent
         /// </summary>
         static void Main()
         {
+
+            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "event_descriptions.json");
+            using (StreamReader r = new StreamReader(path))
+            {
+                string json = r.ReadToEnd();
+                List<TrackingEvent> items = JsonSerializer.Deserialize<List<TrackingEvent>>(json);
+                var total = items.Count;
+            }
+
             Log.Logger = new LoggerConfiguration()
                .MinimumLevel.Verbose()
                .WriteTo.File(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ivsagent.log"), rollingInterval: RollingInterval.Day)
@@ -24,9 +36,9 @@ namespace IvsAgent
             try
             {
                 //Check event log exists
-                if (!EventLog.SourceExists(Constants.IvsAgentName))
+                if (!EventLog.SourceExists(Common.Constants.IvsAgentName))
                 {
-                    EventLog.CreateEventSource(Constants.IvsAgentName, Constants.LogGroupName);
+                    EventLog.CreateEventSource(Common.Constants.IvsAgentName, Common.Constants.LogGroupName);
                 }
 
                 ServiceBase[] ServicesToRun;

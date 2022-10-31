@@ -1,5 +1,4 @@
 ﻿using Serilog;
-using Microsoft.Deployment.WindowsInstaller;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -50,41 +49,6 @@ namespace MsiWrapper
         #region Methods
 
         /// <summary>
-        /// Gets the product code of the MSI package.
-        /// </summary>
-        /// <returns>The product code as a string, or an empty string if the installer file does not exist</returns>
-        private string GetProductCode()
-        {
-            Log.Information("Getting product code from MSI package: {0}", _pathToInstallerFile);
-            
-            try
-            {
-                if (File.Exists(_pathToInstallerFile))
-                {
-                    using (var db = new Database(_pathToInstallerFile, DatabaseOpenMode.ReadOnly))
-                    {
-                        // Note: The 'grave accents' instead of normal single quotes in the query string are essential.
-                        string productCode = (string)db.ExecuteScalar("SELECT `Value` FROM `Property` WHERE `Property` = 'ProductCode'");
-
-                        Log.Information("Retrieved product code '{0}' from MSI package: {1}", productCode, _pathToInstallerFile);
-
-                        return productCode;
-                    }
-                }
-                else
-                {
-                    Log.Warning("An MSI package does not exist at the specified location, returning an empty string");
-                    return string.Empty;
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "An exception occurred.");
-                throw;
-            }
-        }
-
-        /// <summary>
         /// Installs the program.
         /// </summary>
         /// <returns>True if the installation succeeded, otherwise false</returns>
@@ -122,7 +86,7 @@ namespace MsiWrapper
                     string installResultDescription = ((MsiExitCode)p.ExitCode).GetEnumDescription();
                     Log.Information("MSI package install result: ({0}) {1}", p.ExitCode, installResultDescription);
 
-                    if (p.ExitCode != 0) throw new InstallerException(installResultDescription);
+                    if (p.ExitCode != 0) throw new Exception(installResultDescription);
                 }
 
                 Log.Information("Installation completed");
@@ -148,10 +112,9 @@ namespace MsiWrapper
             {
                 Log.Information("Beginning MSI package uninstallation");
 
-                // We need to use the product code to uninstall the program.
-                // Using the MSI package doesn't work, even though the documentation says that it should.
-                string productCode = GetProductCode();
-                string arguments   = $"/x {productCode} /quiet";
+                Log.Information("Beginning MSI package installation");
+
+                string arguments = $"/x \"{_pathToInstallerFile}\" /quiet";
 
                 if (!string.IsNullOrEmpty(_pathToUninstallLogFile))
                 {
@@ -179,7 +142,7 @@ namespace MsiWrapper
                     string uninstallResultDescription = ((MsiExitCode)p.ExitCode).GetEnumDescription();
                     Log.Information("MSI package uninstall result: ({0}) {1}", p.ExitCode, uninstallResultDescription);
 
-                    if (p.ExitCode != 0) throw new InstallerException(uninstallResultDescription);
+                    if (p.ExitCode != 0) throw new Exception(uninstallResultDescription);
                 }
 
                 Log.Information("Uninstallation completed");
