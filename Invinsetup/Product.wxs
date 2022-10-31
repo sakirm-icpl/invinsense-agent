@@ -61,16 +61,64 @@
 
 	<Fragment>
 		<ComponentGroup Id="AgentComponents" Directory="AGENTFOLDER">
-			<Component Win64="yes">
-				<File Source="$(var.IvsAgent.TargetPath)" />
+			<Component Id="a00" Guid="380bbddd-daa7-0744-517b-37da768f5570" Win64="yes">
+				<File Id="a02" Source="$(var.Agent_Service_TargetDir)\event_descriptions.json" />
+				<File Id="a03" Source="$(var.Agent_Service_TargetDir)\Common.dll" />
+				<File Id="a04" Source="$(var.Agent_Service_TargetDir)\Common.dll.config" />
+				<File Id="a05" Source="$(var.Agent_Service_TargetDir)\Common.pdb" />
+				<File Id="a06"  Source="$(var.IvsAgent.TargetPath)" />
+				<File Id="a07" Source="$(var.Agent_Service_TargetDir)\IvsAgent.exe.config" />
+				<File Id="a08" Source="$(var.Agent_Service_TargetDir)\IvsAgent.pdb" />
+				<File Id="a09" Source="$(var.Agent_Service_TargetDir)\LiteDB.dll" />
+				<File Id="a10" Source="$(var.Agent_Service_TargetDir)\LiteDB.xml" />
+				<File Id="a11" Source="$(var.Agent_Service_TargetDir)\Microsoft.Bcl.AsyncInterfaces.dll" />
+				<File Id="a12" Source="$(var.Agent_Service_TargetDir)\Microsoft.Bcl.AsyncInterfaces.xml" />
+				<File Id="a13" Source="$(var.Agent_Service_TargetDir)\Microsoft.Deployment.WindowsInstaller.dll" />
+				<File Id="a14" Source="$(var.Agent_Service_TargetDir)\Microsoft.Deployment.WindowsInstaller.xml" />
+				<File Id="a15" Source="$(var.Agent_Service_TargetDir)\MsiWrapper.dll" />
+				<File Id="a16" Source="$(var.Agent_Service_TargetDir)\MsiWrapper.pdb" />
+				<File Id="a17" Source="$(var.Agent_Service_TargetDir)\Serilog.dll" />
+				<File Id="a18" Source="$(var.Agent_Service_TargetDir)\Serilog.Sinks.File.dll" />
+				<File Id="a19" Source="$(var.Agent_Service_TargetDir)\Serilog.Sinks.File.pdb" />
+				<File Id="a20" Source="$(var.Agent_Service_TargetDir)\Serilog.Sinks.File.xml" />
+				<File Id="a21" Source="$(var.Agent_Service_TargetDir)\Serilog.xml" />
+				<File Id="a22" Source="$(var.Agent_Service_TargetDir)\System.Buffers.dll" />
+				<File Id="a23" Source="$(var.Agent_Service_TargetDir)\System.Buffers.xml" />
+				<File Id="a24" Source="$(var.Agent_Service_TargetDir)\System.Memory.dll" />
+				<File Id="a25" Source="$(var.Agent_Service_TargetDir)\System.Memory.xml" />
+				<File Id="a26" Source="$(var.Agent_Service_TargetDir)\System.Numerics.Vectors.dll" />
+				<File Id="a27" Source="$(var.Agent_Service_TargetDir)\System.Numerics.Vectors.xml" />
+				<File Id="a28" Source="$(var.Agent_Service_TargetDir)\System.Runtime.CompilerServices.Unsafe.dll" />
+				<File Id="a29" Source="$(var.Agent_Service_TargetDir)\System.Runtime.CompilerServices.Unsafe.xml" />
+				<File Id="a30" Source="$(var.Agent_Service_TargetDir)\System.Text.Encodings.Web.dll" />
+				<File Id="a31" Source="$(var.Agent_Service_TargetDir)\System.Text.Encodings.Web.xml" />
+				<File Id="a32" Source="$(var.Agent_Service_TargetDir)\System.Text.Json.dll" />
+				<File Id="a33" Source="$(var.Agent_Service_TargetDir)\System.Text.Json.xml" />
+				<File Id="a34" Source="$(var.Agent_Service_TargetDir)\System.Threading.Tasks.Extensions.dll" />
+				<File Id="a35" Source="$(var.Agent_Service_TargetDir)\System.Threading.Tasks.Extensions.xml" />
+				<File Id="a36" Source="$(var.Agent_Service_TargetDir)\System.ValueTuple.dll" />
+				<File Id="a37" Source="$(var.Agent_Service_TargetDir)\System.ValueTuple.xml" />
+			</Component>
+		</ComponentGroup>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="PostInstallation" Directory="AGENTFOLDER">
+			<Component Id="s0" Guid="868F4F33-6851-4169-B814-F25842A2D414">
+				<ServiceInstall Id="s1" Name="IvsAgent" DisplayName="Invinsense 3.0" Description="Invinsense Service" ErrorControl="normal" Start="auto" Type="ownProcess" />
+				<ServiceControl Id="s2" Name="IvsAgent" Start="install" Stop="both" Remove="both" Wait="yes" />
 			</Component>
 		</ComponentGroup>
 	</Fragment>
 
 	<Fragment>
 		<ComponentGroup Id="TrayComponents" Directory="TRAYFOLDER">
-			<Component Win64="yes">
-				<File Source="$(var.IvsTray.TargetPath)" />
+			<Component Id="b00" Guid="7E588662-AE80-401C-B2DE-29BB4CF1ECF3" Win64="yes">
+				<File Id="b02" Source="$(var.Tray_Application_TargetDir)\event_descriptions.json" />
+				<File Id="b03" Source="$(var.Tray_Application_TargetDir)\Common.dll" />
+				<File Id="b04" Source="$(var.Tray_Application_TargetDir)\Common.dll.config" />
+				<File Id="b05" Source="$(var.Tray_Application_TargetDir)\Common.pdb" />
+				<File Id="b06" Source="$(var.IvsTray.TargetPath)" />
 			</Component>
 		</ComponentGroup>
 	</Fragment>
