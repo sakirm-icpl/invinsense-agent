@@ -234,17 +234,15 @@ namespace IvsAgent
 
             var status = ServiceHelper.AVStatus("Windows Defender");
 
-            if (avLastStatus == status)
+            if (avLastStatus != status)
             {
-                inTimer = false;
-                return;
+                _logger.Information("Windows defender service status : Last: {avLastStatus}, New: {status}", avLastStatus, status);
+
+                avLastStatus = status;
+
+                UpdateStatus(status);
+
             }
-
-            _logger.Information("Windows defender service status : Last: {avLastStatus}, New: {status}", avLastStatus, status);
-
-            avLastStatus = status;
-
-            UpdateStatus(status);
 
             if (SysmonWrapper.Verify(true) == 0)
             {
