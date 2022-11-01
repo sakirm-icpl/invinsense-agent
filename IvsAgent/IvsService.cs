@@ -172,8 +172,6 @@ namespace IvsAgent
             timer.Interval = 15000; //number in milisecinds  
             timer.Enabled = true;
 
-            toolRepository.CaptureEvent(ToolName.Wazuuh, InstallStatus.Installed, RunningStatus.Running);
-
             if (wazuh != null)
             {
                 WazuhUpdateStatus(wazuh.Status);
