@@ -39,7 +39,6 @@
 
 		<!--Main Feature for this Setup which can be found in Fragment Tag with ComponentGroupRef Id-->
 		<Feature Id="ProductFeature" Title="$(var.Name)" Level="1">
-			<ComponentGroupRef Id="DbComponents" />
 			<ComponentGroupRef Id="AgentComponents" />
 			<ComponentGroupRef Id="TrayComponents" />
 			<ComponentGroupRef Id="ToolComponents" />
@@ -61,14 +60,6 @@
 		</Directory>
 	</Fragment>
 
-	<Fragment>
-		<ComponentGroup Id="DbComponents" Directory="ManufacturerFolder">
-			<Component Id="d00" Guid="648BA540-9CBC-4A05-A3D1-4016437DB870" Win64="yes">
-				<File Id="d02" Source="..\artifacts\db" />
-			</Component>
-		</ComponentGroup>
-	</Fragment>
-	
 	<Fragment>
 		<ComponentGroup Id="AgentComponents" Directory="AGENTFOLDER">
 			<Component Id="a00" Guid="380bbddd-daa7-0744-517b-37da768f5570" Win64="yes">
