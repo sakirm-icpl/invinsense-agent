@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using Common.Utils;
+using Serilog;
 using System;
 using System.IO;
 using System.Threading;
@@ -19,7 +20,7 @@ namespace IvsTray
 
             Log.Logger = new LoggerConfiguration()
                .MinimumLevel.Debug()
-               .WriteTo.File(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "IvsTray.log"), rollingInterval: RollingInterval.Day)
+               .WriteTo.File(CommonUtils.GetAbsoletePath("IvsTray.log"), rollingInterval: RollingInterval.Day)
                .CreateLogger();
 
             Log.Logger.Information("Initializing program");

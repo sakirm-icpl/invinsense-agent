@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Utils;
 using Serilog;
 using System;
 using System.Diagnostics;
@@ -16,7 +17,7 @@ namespace IvsAgent
         {
             Log.Logger = new LoggerConfiguration()
                .MinimumLevel.Verbose()
-               .WriteTo.File(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ivsagent.log"), rollingInterval: RollingInterval.Day)
+               .WriteTo.File(CommonUtils.GetAbsoletePath("ivsagent.log"), rollingInterval: RollingInterval.Day)
                .CreateLogger();
 
             Log.Logger.Information("Initializing service");

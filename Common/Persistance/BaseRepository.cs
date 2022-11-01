@@ -1,7 +1,7 @@
-﻿using LiteDB;
+﻿using Common.Utils;
+using LiteDB;
 using Serilog;
 using System.IO;
-using System.Reflection;
 
 namespace Common.Persistance
 {
@@ -11,14 +11,12 @@ namespace Common.Persistance
 
         public LiteDatabase GetDatabase()
         {
-            var path = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "db");
-            return new LiteDatabase(path);
+            return new LiteDatabase(CommonUtils.DbPath);
         }
 
         public bool IsExists()
         {
-            var path = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "db");
-            return File.Exists(path);
+            return File.Exists(CommonUtils.DbPath);
         }
 
         protected abstract string CollectionName { get; }

@@ -36,9 +36,9 @@ namespace IvsAgent.AgentWrappers
 
                 _logger.Information("SYSMON not found. Preparing installation");
 
-                var exePath = Path.GetFullPath(new Uri(CommonUtils.GetAbsoletePath("..\\artifacts\\Sysmon64.exe")).LocalPath);
+                var exePath = CommonUtils.GetAbsoletePath("..\\artifacts\\Sysmon64.exe");
 
-                var logPath = Path.GetFullPath(new Uri(CommonUtils.GetAbsoletePath("..\\artifacts\\sysmonInstall.log")).LocalPath);
+                var logPath = CommonUtils.GetAbsoletePath("..\\artifacts\\sysmonInstall.log");
 
                 _logger.Information($"PATH: {exePath}, Log: {logPath}");
 

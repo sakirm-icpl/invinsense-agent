@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using Serilog;
+using Common.Utils;
 
 namespace Common
 {
@@ -19,7 +20,7 @@ namespace Common
 
         private static readonly Lazy<TrackingEventProvider> lazy = new Lazy<TrackingEventProvider>(() => 
         {
-            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "event_descriptions.json");
+            var path = CommonUtils.GetAbsoletePath("event_descriptions.json");
             Logger.Information($"Loading schema from : {path}");
             using (StreamReader r = new StreamReader(path))
             {

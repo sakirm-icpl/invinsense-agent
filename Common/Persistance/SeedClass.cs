@@ -1,9 +1,9 @@
-﻿using LiteDB;
+﻿using Common.Utils;
+using LiteDB;
 using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 
 namespace Common.Persistance
 {
@@ -13,8 +13,7 @@ namespace Common.Persistance
 
         public static void SeedData()
         {
-            var path = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "db");
-
+            var path = CommonUtils.DbPath;
             if (File.Exists(path))
             {
                 Logger.Information("Db already exists");

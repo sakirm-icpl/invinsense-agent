@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -8,15 +9,13 @@ namespace Common.Utils
     {
         public static string FilePathSlash => RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "\\" : "/";
 
-        public static string RootFolder => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + FilePathSlash;
+        public static string RootFolder => Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 
-        public static string GetAbsoletePath(string path) => Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), path);
+        public static string GetAbsoletePath(string path) => Path.GetFullPath(new Uri(Path.Combine(RootFolder, path)).LocalPath);
 
-        public static string ConfigFolder => RootFolder + "configs" + FilePathSlash;
+        public static string ConfigFolder => Path.Combine(RootFolder, "configs");
 
-        public static string ReportFolder => RootFolder + "reports" + FilePathSlash;
-
-        public static string QueryFolder => RootFolder + "queries" + FilePathSlash;
+        public static string DbPath = GetAbsoletePath("..\\db");
 
     }
 }

@@ -10,6 +10,7 @@ using System.IO;
 using System.Reflection;
 using Common.Extensions;
 using IvsAgent.AgentWrappers;
+using Common.Utils;
 
 namespace IvsAgent
 {
@@ -225,7 +226,7 @@ namespace IvsAgent
             }
             else
             {
-                var ivsTrayFile = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "..\\IvsTray" ,"IvsTray.exe");
+                var ivsTrayFile = CommonUtils.GetAbsoletePath("..\\IvsTray\\IvsTray.exe");
                 _logger.Information($"IvsTray is not running. Starting... {ivsTrayFile}");
                 ProcessExtensions.StartProcessAsCurrentUser(null, ivsTrayFile);
             }

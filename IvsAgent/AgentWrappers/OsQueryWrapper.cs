@@ -41,9 +41,9 @@ namespace IvsAgent.AgentWrappers
 
                 _logger.Information("OSQUERY installation is ready");
 
-                var msiPath = Path.GetFullPath(new Uri(CommonUtils.GetAbsoletePath("..\\artifacts\\osquery-5.5.1.msi")).LocalPath);
+                var msiPath = CommonUtils.GetAbsoletePath("..\\artifacts\\osquery-5.5.1.msi");
 
-                var logPath = Path.GetFullPath(new Uri(CommonUtils.GetAbsoletePath("..\\artifacts\\osqueryInstall.log")).LocalPath);
+                var logPath = CommonUtils.GetAbsoletePath("..\\artifacts\\osqueryInstall.log");
 
                 _logger.Information($"PATH: {msiPath}, Log: {logPath}");
 
@@ -127,9 +127,9 @@ namespace IvsAgent.AgentWrappers
 
                 _logger.Information("OSQUERY installation is ready");
 
-                var msiPath = CommonUtils.GetAbsoletePath("artifacts\\osquery-5.5.1.msi");
+                var msiPath = CommonUtils.GetAbsoletePath("..\\artifacts\\osquery-5.5.1.msi");
 
-                var logPath = CommonUtils.GetAbsoletePath("osqueryInstall.log");
+                var logPath = CommonUtils.GetAbsoletePath("..\\artifacts\\osqueryInstall.log");
 
                 _logger.Information($"PATH: {msiPath}, Log: {logPath}");
 
