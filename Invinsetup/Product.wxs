@@ -18,7 +18,7 @@
 <!-- The name of the Cabinet -->
 <?define CabName = "Invinsense.cab" ?>
 
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
 
 	<!--Variable for Agent Service Directory-->
 	<?define Agent_Service_TargetDir=$(var.IvsAgent.TargetDir)?>
@@ -44,7 +44,8 @@
 			<ComponentGroupRef Id="ToolComponents" />
 			<ComponentGroupRef Id="PostInstallation"/>
 		</Feature>
-		
+		<Property Id="MSIRESTARTMANAGERCONTROL" Value="Disable" />
+		<util:CloseApplication Id="CloseTray" Target="IvsTray.exe" CloseMessage="yes" RebootPrompt="no"></util:CloseApplication>
 	</Product>
 
 	<!--Fragment with details of installation directory-->
@@ -119,5 +120,6 @@
 			</Component>
 		</ComponentGroup>
 	</Fragment>
+
 	
 </Wix>
