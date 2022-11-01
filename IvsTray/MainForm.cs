@@ -2,10 +2,8 @@ using Common;
 using Common.Persistance;
 using Serilog;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -51,7 +49,7 @@ namespace IvsTray
         /// <param name="e"></param>
         private void Log_EntryWritten(object sender, EntryWrittenEventArgs e)
         {
-            var toolStatus = toolRepository.GetToolStatus(e.Entry.InstanceId);
+            var toolStatus = new ToolStatus(e.Entry.InstanceId);
 
             var pb = pbInvinsense;
 

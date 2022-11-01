@@ -3,7 +3,6 @@ using Common.Utils;
 using Serilog;
 using System;
 using System.Diagnostics;
-using System.IO;
 using System.ServiceProcess;
 
 namespace IvsAgent

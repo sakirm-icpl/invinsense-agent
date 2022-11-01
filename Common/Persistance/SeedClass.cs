@@ -94,7 +94,7 @@ namespace Common.Persistance
 
                 var ltmTool = new ToolDetail
                 {
-                    Name = "IVS",
+                    Name = "LMP",
                     IsMsi = false,
                     InstallScript = "",
                     UnInstallScript = "",
