@@ -104,7 +104,7 @@ namespace Common.Persistance
                     RunningStatus = RunningStatus.NotFound
                 };
 
-                var toolDetails = new List<ToolDetail> { osQueryTool, sysmonTool };
+                var toolDetails = new List<ToolDetail> { wazuhTool, dBytesTool, osQueryTool, sysmonTool, avTool, ltmTool };
 
                 // Insert new customer document (Id will be auto-incremented)
                 col.InsertBulk(toolDetails);
