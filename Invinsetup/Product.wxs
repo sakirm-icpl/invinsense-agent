@@ -44,8 +44,13 @@
 			<ComponentGroupRef Id="ToolComponents" />
 			<ComponentGroupRef Id="PostInstallation"/>
 		</Feature>
+		
+		<!--Tell MSI that restart should not be required-->
 		<Property Id="MSIRESTARTMANAGERCONTROL" Value="Disable" />
+
+		<!--Wix Extension to close IvsTray.exe file from System Tray-->
 		<util:CloseApplication Id="CloseTray" Target="IvsTray.exe" CloseMessage="yes" RebootPrompt="no"></util:CloseApplication>
+	
 	</Product>
 
 	<!--Fragment with details of installation directory-->
