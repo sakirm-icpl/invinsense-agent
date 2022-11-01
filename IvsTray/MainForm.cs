@@ -50,7 +50,20 @@ namespace IvsTray
         private void Log_EntryWritten(object sender, EntryWrittenEventArgs e)
         {
             var toolStatus = new ToolStatus(e.Entry.InstanceId);
+            UpdateToolStatus(toolStatus);            
+        }
 
+        private void MainFormOnLoad(object sender, EventArgs e)
+        {
+            foreach (var toolDetail in toolRepository.GetTools())
+            {
+                var toolStatus = new ToolStatus(toolDetail.Name, toolDetail.InstallStatus, toolDetail.RunningStatus);
+                UpdateToolStatus(toolStatus);
+            }
+        }
+
+        private void UpdateToolStatus(ToolStatus toolStatus)
+        {
             var pb = pbInvinsense;
 
             switch (toolStatus.Name)

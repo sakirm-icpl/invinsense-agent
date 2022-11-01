@@ -72,20 +72,20 @@ namespace IvsAgent
         {
             if (status == null)
             {
-                toolRepository.CaptureInstallationEvent(ToolName.Wazuuh, InstallStatus.NotFound);
+                toolRepository.CaptureEvent(ToolName.Wazuuh, InstallStatus.NotFound, RunningStatus.NotFound);
                 return;
             }
 
             switch (status.Value)
             {
                 case ServiceControllerStatus.Running:
-                    toolRepository.CaptureRunningEvent(ToolName.Wazuuh, RunningStatus.Running);
+                    toolRepository.CaptureEvent(ToolName.Wazuuh, InstallStatus.Installed, RunningStatus.Running);
                     return;
                 case ServiceControllerStatus.Stopped:
-                    toolRepository.CaptureRunningEvent(ToolName.Wazuuh, RunningStatus.Stopped);
+                    toolRepository.CaptureEvent(ToolName.Wazuuh, InstallStatus.Installed, RunningStatus.Stopped);
                     return;
                 default:
-                    toolRepository.CaptureRunningEvent(ToolName.Wazuuh, RunningStatus.Warning);
+                    toolRepository.CaptureEvent(ToolName.Wazuuh, InstallStatus.Installed, RunningStatus.Warning);
                     return;
             }
         }
@@ -94,20 +94,20 @@ namespace IvsAgent
         {
             if (status == null)
             {
-                toolRepository.CaptureInstallationEvent(ToolName.Dbytes, InstallStatus.NotFound);
+                toolRepository.CaptureEvent(ToolName.Dbytes, InstallStatus.NotFound, RunningStatus.NotFound);
                 return;
             }
 
             switch (status.Value)
             {
                 case ServiceControllerStatus.Running:
-                    toolRepository.CaptureRunningEvent(ToolName.Dbytes, RunningStatus.Running);
+                    toolRepository.CaptureEvent(ToolName.Dbytes, InstallStatus.Installed, RunningStatus.Running);
                     return;
                 case ServiceControllerStatus.Stopped:
-                    toolRepository.CaptureRunningEvent(ToolName.Dbytes, RunningStatus.Stopped);
+                    toolRepository.CaptureEvent(ToolName.Dbytes, InstallStatus.Installed, RunningStatus.Stopped);
                     return;
                 default:
-                    toolRepository.CaptureRunningEvent(ToolName.Dbytes, RunningStatus.Error);
+                    toolRepository.CaptureEvent(ToolName.Dbytes, InstallStatus.Installed, RunningStatus.Error);
                     return;
             }
         }
@@ -116,20 +116,20 @@ namespace IvsAgent
         {
             if (status == null)
             {
-                toolRepository.CaptureInstallationEvent(ToolName.Sysmon, InstallStatus.NotFound);
+                toolRepository.CaptureEvent(ToolName.Sysmon, InstallStatus.NotFound, RunningStatus.NotFound);
                 return;
             }
 
             switch (status.Value)
             {
                 case ServiceControllerStatus.Running:
-                    toolRepository.CaptureRunningEvent(ToolName.Sysmon, RunningStatus.Running);
+                    toolRepository.CaptureEvent(ToolName.Sysmon, InstallStatus.Installed, RunningStatus.Running);
                     return;
                 case ServiceControllerStatus.Stopped:
-                    toolRepository.CaptureRunningEvent(ToolName.Sysmon, RunningStatus.Stopped);
+                    toolRepository.CaptureEvent(ToolName.Sysmon, InstallStatus.Installed, RunningStatus.Stopped);
                     return;
                 default:
-                    toolRepository.CaptureRunningEvent(ToolName.Sysmon, RunningStatus.Error);
+                    toolRepository.CaptureEvent(ToolName.Sysmon, InstallStatus.Installed, RunningStatus.Error);
                     return;
             }
         }
@@ -138,20 +138,20 @@ namespace IvsAgent
         {
             if (status == null)
             {
-                toolRepository.CaptureInstallationEvent(ToolName.Lmp, InstallStatus.NotFound);
+                toolRepository.CaptureEvent(ToolName.Lmp, InstallStatus.NotFound, RunningStatus.NotFound);
                 return;
             }
 
             switch (status.Value)
             {
                 case ServiceControllerStatus.Running:
-                    toolRepository.CaptureRunningEvent(ToolName.Lmp, RunningStatus.Running);
+                    toolRepository.CaptureEvent(ToolName.Lmp, InstallStatus.Installed, RunningStatus.Running);
                     return;
                 case ServiceControllerStatus.Stopped:
-                    toolRepository.CaptureRunningEvent(ToolName.Lmp, RunningStatus.Stopped);
+                    toolRepository.CaptureEvent(ToolName.Lmp, InstallStatus.Installed, RunningStatus.Stopped);
                     return;
                 default:
-                    toolRepository.CaptureRunningEvent(ToolName.Lmp, RunningStatus.Error);
+                    toolRepository.CaptureEvent(ToolName.Lmp, InstallStatus.Installed, RunningStatus.Error);
                     return;
             }
         }
@@ -172,7 +172,7 @@ namespace IvsAgent
             timer.Interval = 15000; //number in milisecinds  
             timer.Enabled = true;
 
-            toolRepository.CaptureRunningEvent(ToolName.Wazuuh, RunningStatus.Running);
+            toolRepository.CaptureEvent(ToolName.Wazuuh, InstallStatus.Installed, RunningStatus.Running);
 
             if (wazuh != null)
             {
@@ -199,11 +199,9 @@ namespace IvsAgent
         {
             _logger.Information("Stopping service");
 
-            toolRepository.CaptureRunningEvent(ToolName.Wazuuh, RunningStatus.Stopped);
+            toolRepository.CaptureEvent(ToolName.Wazuuh, InstallStatus.Installed, RunningStatus.Stopped);
 
             _isRunning = false;
-
-            
         }
 
         protected override void OnShutdown()
@@ -245,7 +243,7 @@ namespace IvsAgent
 
                 avLastStatus = status;
 
-                toolRepository.CaptureInstallationEvent(ToolName.Av, status);
+                toolRepository.CaptureEvent(ToolName.Av, status, status == InstallStatus.Installed ? RunningStatus.Running : RunningStatus.Warning);
             }
 
             if (SysmonWrapper.Verify(true) == 0)

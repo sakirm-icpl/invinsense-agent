@@ -315,6 +315,7 @@ namespace IvsTray
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Invinsense 3.0";
+            this.Load += MainFormOnLoad;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainFormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.pbDbytes)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();

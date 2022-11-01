@@ -30,20 +30,26 @@ namespace Common.Persistance
             }
         }
 
-        public void CaptureInstallationEvent(string name, InstallStatus toolInstallStatus)
+        public void CaptureEvent(string name, InstallStatus installStatus, RunningStatus runningStatus)
         {
-            Logger.Information($"{name}-{toolInstallStatus}");
+            var toolStatus = new ToolStatus(name, installStatus, runningStatus);
+
+            Logger.Information($"{toolStatus}");
 
             var log = new EventLog(Constants.LogGroupName) { Source = Constants.IvsAgentName };
 
-            var eventInstance = new EventInstance(100, 1, EventLogEntryType.Information);
+            var eventInstance = new EventInstance(toolStatus.GetHashCode(), 0, EventLogEntryType.Information);
 
-            log.WriteEvent(eventInstance, $"{name} Install: {toolInstallStatus}");
-        }
+            log.WriteEvent(eventInstance, $"{name} Install: {installStatus}");
 
-        public void CaptureRunningEvent(string name, RunningStatus toolRunningStatus)
-        {
-            Logger.Information($"{name}-{toolRunningStatus}");
+            using (var db = GetDatabase())
+            {
+                var col = GetCollection(db);
+                var toolEntry = col.FindOne(x => x.Name == name);
+                toolEntry.InstallStatus = installStatus;
+                toolEntry.RunningStatus = runningStatus;
+                col.Update(toolEntry);
+            }
         }
 
         public bool IsAllOk()

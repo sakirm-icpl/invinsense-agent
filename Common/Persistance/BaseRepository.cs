@@ -11,7 +11,7 @@ namespace Common.Persistance
 
         public LiteDatabase GetDatabase()
         {
-            return new LiteDatabase(CommonUtils.DbPath);
+            return new LiteDatabase($"Filename={CommonUtils.DbPath};Connection=Shared") { UtcDate = true };
         }
 
         public bool IsExists()
