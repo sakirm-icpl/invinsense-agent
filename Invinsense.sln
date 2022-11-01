@@ -10,9 +10,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{0698EB58-DEE6-4285-BAEF-872887FF15CB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6089DA97-C5D7-49BB-BA04-BF1F9413896F}"
-	ProjectSection(SolutionItems) = preProject
-		event_descriptions.json = event_descriptions.json
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsiWrapper", "MsiWrapper\MsiWrapper.csproj", "{4D1299C9-5507-41F7-94BD-FDEB008F98B7}"
 EndProject

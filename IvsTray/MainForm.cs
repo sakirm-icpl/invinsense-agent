@@ -1,4 +1,5 @@
 using Common;
+using Common.Persistance;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -17,17 +18,9 @@ namespace IvsTray
         private readonly Image WarnImage = Properties.Resources.yellow;
         private readonly Image OkImage = Properties.Resources.green;
 
-        private readonly Dictionary<string, bool> _healthStatus = new Dictionary<string, bool>
-        {
-            {"Invinsense3.0",true },
-            {"Windows Defender", true },
-            {"Wazuh", true },
-            {"Deceptive Bytes", true },
-            {"Microsoft Sysmon", true },
-            {"Lateral Movement Protection", true }
-        };
-
         private readonly ILogger _logger = Log.ForContext<MainForm>();
+
+        private readonly ToolRepository toolRepository;
 
         public MainForm()
         {
@@ -40,6 +33,8 @@ namespace IvsTray
             MouseDownFilter mouseFilter = new MouseDownFilter(this);
             mouseFilter.FormClicked += FormClicked;
             Application.AddMessageFilter(mouseFilter);
+
+            toolRepository = new ToolRepository();
 
             var log = new EventLog(Constants.LogGroupName)
             {
@@ -56,66 +51,59 @@ namespace IvsTray
         /// <param name="e"></param>
         private void Log_EntryWritten(object sender, EntryWrittenEventArgs e)
         {
-            var eventDetail = TrackingEventProvider.Instance.GetEventDetail((EventId)e.Entry.InstanceId);
+            var toolStatus = toolRepository.GetToolStatus(e.Entry.InstanceId);
 
             var pb = pbInvinsense;
 
-            if (eventDetail.Id < 30)
+            switch (toolStatus.Name)
             {
-                pb = pbDefender;
-            }
-            else if (eventDetail.Id < 40)
-            {
-                pb = pbWazuh;
-            }
-            else if (eventDetail.Id < 50)
-            {
-                pb = pbDbytes;
-            }
-            else if (eventDetail.Id < 60)
-            {
-                pb = pbSysmon;
-            }
-            else if (eventDetail.Id < 70)
-            {
-                pb = pbLmp;
+                case ToolName.Wazuuh:
+                    pb = pbWazuh;
+                    break;
+                case ToolName.Dbytes:
+                    pb = pbDbytes;
+                    break;
+                case ToolName.Sysmon:
+                    pb = pbSysmon;
+                    break;
+                case ToolName.Av:
+                    pb = pbDefender;
+                    break;
+                case ToolName.OsQuery:
+                case ToolName.Lmp:
+                    pb = pbLmp;
+                    break;
             }
 
             ToolTipIcon icon;
-            if (eventDetail.EventType == EventLogEntryType.FailureAudit)
+            if (toolStatus.RunningStatus == RunningStatus.NotFound)
             {
                 icon = ToolTipIcon.Error;
                 pb.Image = NotFoundImage;
-                _logger.Fatal(eventDetail.Message);
+                _logger.Fatal($"{toolStatus.Name} not found");
             }
-            else if (eventDetail.EventType == EventLogEntryType.SuccessAudit || eventDetail.EventType == EventLogEntryType.Information)
+            else if (toolStatus.RunningStatus == RunningStatus.Running)
             {
                 icon = ToolTipIcon.Info;
                 pb.Image = OkImage;
-                _logger.Information(eventDetail.Message);
+                _logger.Fatal($"{toolStatus.Name} running");
             }
-            else if (eventDetail.EventType == EventLogEntryType.Warning)
+            else if (toolStatus.RunningStatus == RunningStatus.Warning)
             {
                 icon = ToolTipIcon.Warning;
                 pb.Image = WarnImage;
-                _logger.Warning(eventDetail.Message);
+                _logger.Fatal($"{toolStatus.Name} warning state");
             }
             else
             {
                 icon = ToolTipIcon.Error;
                 pb.Image = ErrorImage;
-                _logger.Error(eventDetail.Message);
+                _logger.Fatal($"{toolStatus.Name} error state");
             }
 
-            notifyIcon.ShowBalloonTip(5000, eventDetail.ServiceName, eventDetail.Message, icon);
-            UpdateNotificationIcon(eventDetail.ServiceName, icon == ToolTipIcon.Info);
-        }
+            notifyIcon.ShowBalloonTip(5000, toolStatus.Name, $"Status: {toolStatus.RunningStatus}", icon);
 
-        private void UpdateNotificationIcon(string name, bool status)
-        {
-            _healthStatus[name] = status;
-
-            if (_healthStatus.Any(x => !x.Value))
+            if (toolRepository.IsAllOk())
             {
                 notifyIcon.Icon = Properties.Resources.red_logo_22_22;
                 notifyIcon.Text = "Invinsense 3.0 - Not all services are healthy";
@@ -125,6 +113,7 @@ namespace IvsTray
                 notifyIcon.Icon = Properties.Resources.green_logo_22_22;
                 notifyIcon.Text = "Invinsense 3.0 - Healthy";
             }
+
         }
 
         private void MainFormClosing(object sender, FormClosingEventArgs e)

@@ -2,7 +2,7 @@
 using System.Management;
 using System;
 using System.Linq;
-using Common;
+using Common.Persistance;
 
 namespace IvsAgent.Monitor
 {
@@ -14,7 +14,7 @@ namespace IvsAgent.Monitor
             return sc.Status.ToString();
         }
 
-        public static EventId AVStatus(string avName)
+        public static InstallStatus AVStatus(string avName)
         {
             //Windows Defender
             //393472 (060100) = disabled and up to date
@@ -30,15 +30,15 @@ namespace IvsAgent.Monitor
                 {
                     if (mo["productState"].ToString() == "393472")
                     {
-                        return EventId.AvDisabled;
+                        return InstallStatus.NotFound;
                     }
                     else if (mo["productState"].ToString() == "397584")
                     {
-                        return EventId.AvEnabledOutDated;
+                        return InstallStatus.Outdated;
                     }
                     else if (mo["productState"].ToString() == "397568")
                     {
-                        return EventId.AvEnabledUpToDate;
+                        return InstallStatus.Installed;
                     }
                 }
 
@@ -50,7 +50,7 @@ namespace IvsAgent.Monitor
                 Console.WriteLine(mo["timestamp"]);
             }
 
-            return EventId.AvNotFound;
+            return InstallStatus.NotFound;
         }
 
         public static void RunManagementEventWatcherForWindowsServices()

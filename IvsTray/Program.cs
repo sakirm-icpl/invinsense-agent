@@ -1,7 +1,6 @@
 ﻿using Common.Utils;
 using Serilog;
 using System;
-using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -24,6 +23,8 @@ namespace IvsTray
                .CreateLogger();
 
             Log.Logger.Information("Initializing program");
+
+            Common.Persistance.SeedClass.SeedData();
 
             AppDomain.CurrentDomain.UnhandledException += GlobalHandler;
 

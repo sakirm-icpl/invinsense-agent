@@ -32,29 +32,76 @@ namespace Common.Persistance
                 col.EnsureIndex(x => x.Name, true);
 
                 // Create your new customer instance
+                var wazuhTool = new ToolDetail
+                {
+                    Name = "WAZUH",
+                    IsMsi = true,
+                    InstallScript = "",
+                    UnInstallScript = "",
+                    AppName = "wazuh",
+                    IsService = true,
+                    InstallStatus = InstallStatus.NotFound,
+                    RunningStatus = RunningStatus.NotFound
+                };
+
+                var dBytesTool = new ToolDetail
+                {
+                    Name = "DBYTES",
+                    IsMsi = true,
+                    InstallScript = "",
+                    UnInstallScript = "",
+                    AppName = "",
+                    IsService = true,
+                    InstallStatus = InstallStatus.NotFound,
+                    RunningStatus = RunningStatus.NotFound
+                };
+
                 var osQueryTool = new ToolDetail
                 {
                     Name = "OSQUERY",
-                    IsInstalled = false,
                     IsMsi = true,
                     InstallScript = "osquery-5.5.1.msi",
                     UnInstallScript = "",
-                    AppName = "osquery",
+                    AppName = "osqueryd",
                     IsService = true,
-
-                    IsActive = true
+                    InstallStatus = InstallStatus.NotFound,
+                    RunningStatus = RunningStatus.NotFound
                 };
 
                 var sysmonTool = new ToolDetail
                 {
                     Name = "SYSMON",
-                    IsInstalled = false,
                     IsMsi = false,
                     InstallScript = "Sysmon64 -i",
                     UnInstallScript = "",
-                    AppName = "osquery",
+                    AppName = "Sysmon64",
                     IsService = true,
-                    IsActive = true
+                    InstallStatus= InstallStatus.NotFound,
+                    RunningStatus= RunningStatus.NotFound
+                };
+
+                var avTool = new ToolDetail
+                {
+                    Name = "AV",
+                    IsMsi = false,
+                    InstallScript = "",
+                    UnInstallScript = "",
+                    AppName = "",
+                    IsService = true,
+                    InstallStatus = InstallStatus.NotFound,
+                    RunningStatus = RunningStatus.NotFound
+                };
+
+                var ltmTool = new ToolDetail
+                {
+                    Name = "IVS",
+                    IsMsi = false,
+                    InstallScript = "",
+                    UnInstallScript = "",
+                    AppName = "",
+                    IsService = true,
+                    InstallStatus = InstallStatus.NotFound,
+                    RunningStatus = RunningStatus.NotFound
                 };
 
                 var toolDetails = new List<ToolDetail> { osQueryTool, sysmonTool };

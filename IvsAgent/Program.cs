@@ -25,10 +25,12 @@ namespace IvsAgent
             try
             {
                 //Check event log exists
-                if (!EventLog.SourceExists(Common.Constants.IvsAgentName))
+                if (!EventLog.SourceExists(Constants.IvsAgentName))
                 {
-                    EventLog.CreateEventSource(Common.Constants.IvsAgentName, Common.Constants.LogGroupName);
+                    EventLog.CreateEventSource(Constants.IvsAgentName, Common.Constants.LogGroupName);
                 }
+
+                Common.Persistance.SeedClass.SeedData();
 
                 ServiceBase[] ServicesToRun;
                 ServicesToRun = new ServiceBase[]

@@ -1,16 +1,14 @@
-﻿using Common;
-using IvsAgent.Monitor;
+﻿using IvsAgent.Monitor;
 using Serilog;
 using IvsTray.Monitor;
 using System;
 using System.Diagnostics;
 using System.ServiceProcess;
 using System.Timers;
-using System.IO;
-using System.Reflection;
 using Common.Extensions;
 using IvsAgent.AgentWrappers;
 using Common.Utils;
+using Common.Persistance;
 
 namespace IvsAgent
 {
@@ -25,6 +23,8 @@ namespace IvsAgent
 
         private readonly ILogger _logger = Log.ForContext<IvsService>();
 
+        private readonly ToolRepository toolRepository;
+
         private bool _isRunning = false;
 
         public IvsService()
@@ -37,6 +37,7 @@ namespace IvsAgent
             CanPauseAndContinue = true;
             CanHandleSessionChangeEvent = true;
 
+            toolRepository = new ToolRepository();
 
             wazuh = new ExtendedServiceController("WazuhSvc");
             wazuh.StatusChanged += (object sender, ServiceStatusEventArgs e) => WazuhUpdateStatus(e.Status);
@@ -71,20 +72,20 @@ namespace IvsAgent
         {
             if (status == null)
             {
-                UpdateStatus(EventId.WazuhNotFound);
+                toolRepository.CaptureInstallationEvent(ToolName.Wazuuh, InstallStatus.NotFound);
                 return;
             }
 
             switch (status.Value)
             {
                 case ServiceControllerStatus.Running:
-                    UpdateStatus(EventId.WazuhRunning);
+                    toolRepository.CaptureRunningEvent(ToolName.Wazuuh, RunningStatus.Running);
                     return;
                 case ServiceControllerStatus.Stopped:
-                    UpdateStatus(EventId.WazuhStopped);
+                    toolRepository.CaptureRunningEvent(ToolName.Wazuuh, RunningStatus.Stopped);
                     return;
                 default:
-                    UpdateStatus(EventId.WazuhWarning);
+                    toolRepository.CaptureRunningEvent(ToolName.Wazuuh, RunningStatus.Warning);
                     return;
             }
         }
@@ -93,20 +94,20 @@ namespace IvsAgent
         {
             if (status == null)
             {
-                UpdateStatus(EventId.DbytesNotFound);
+                toolRepository.CaptureInstallationEvent(ToolName.Dbytes, InstallStatus.NotFound);
                 return;
             }
 
             switch (status.Value)
             {
                 case ServiceControllerStatus.Running:
-                    UpdateStatus(EventId.DbytesRunning);
+                    toolRepository.CaptureRunningEvent(ToolName.Dbytes, RunningStatus.Running);
                     return;
                 case ServiceControllerStatus.Stopped:
-                    UpdateStatus(EventId.DbytesStopped);
+                    toolRepository.CaptureRunningEvent(ToolName.Dbytes, RunningStatus.Stopped);
                     return;
                 default:
-                    UpdateStatus(EventId.DbytesWarning);
+                    toolRepository.CaptureRunningEvent(ToolName.Dbytes, RunningStatus.Error);
                     return;
             }
         }
@@ -115,20 +116,20 @@ namespace IvsAgent
         {
             if (status == null)
             {
-                UpdateStatus(EventId.SysmonNotFound);
+                toolRepository.CaptureInstallationEvent(ToolName.Sysmon, InstallStatus.NotFound);
                 return;
             }
 
             switch (status.Value)
             {
                 case ServiceControllerStatus.Running:
-                    UpdateStatus(EventId.SysmonRunning);
+                    toolRepository.CaptureRunningEvent(ToolName.Sysmon, RunningStatus.Running);
                     return;
                 case ServiceControllerStatus.Stopped:
-                    UpdateStatus(EventId.SysmonStopped);
+                    toolRepository.CaptureRunningEvent(ToolName.Sysmon, RunningStatus.Stopped);
                     return;
                 default:
-                    UpdateStatus(EventId.SysmonWarning);
+                    toolRepository.CaptureRunningEvent(ToolName.Sysmon, RunningStatus.Error);
                     return;
             }
         }
@@ -137,20 +138,20 @@ namespace IvsAgent
         {
             if (status == null)
             {
-                UpdateStatus(EventId.LmpNotFound);
+                toolRepository.CaptureInstallationEvent(ToolName.Lmp, InstallStatus.NotFound);
                 return;
             }
 
             switch (status.Value)
             {
                 case ServiceControllerStatus.Running:
-                    UpdateStatus(EventId.LmpRunning);
+                    toolRepository.CaptureRunningEvent(ToolName.Lmp, RunningStatus.Running);
                     return;
                 case ServiceControllerStatus.Stopped:
-                    UpdateStatus(EventId.LmpStopped);
+                    toolRepository.CaptureRunningEvent(ToolName.Lmp, RunningStatus.Stopped);
                     return;
                 default:
-                    UpdateStatus(EventId.LmpWarning);
+                    toolRepository.CaptureRunningEvent(ToolName.Lmp, RunningStatus.Error);
                     return;
             }
         }
@@ -171,7 +172,7 @@ namespace IvsAgent
             timer.Interval = 15000; //number in milisecinds  
             timer.Enabled = true;
 
-            UpdateStatus(EventId.IvsRunning);
+            toolRepository.CaptureRunningEvent(ToolName.Wazuuh, RunningStatus.Running);
 
             if (wazuh != null)
             {
@@ -198,7 +199,7 @@ namespace IvsAgent
         {
             _logger.Information("Stopping service");
 
-            UpdateStatus(EventId.IvsStopped);
+            toolRepository.CaptureRunningEvent(ToolName.Wazuuh, RunningStatus.Stopped);
 
             _isRunning = false;
         }
@@ -210,7 +211,8 @@ namespace IvsAgent
         }
 
         private bool inTimer = false;
-        private EventId avLastStatus = EventId.None;
+        private InstallStatus avLastStatus = InstallStatus.NotFound;
+
         private void OnElapsedTime(object source, ElapsedEventArgs e)
         {
             if (inTimer)
@@ -241,8 +243,7 @@ namespace IvsAgent
 
                 avLastStatus = status;
 
-                UpdateStatus(status);
-
+                toolRepository.CaptureInstallationEvent(ToolName.Av, status);
             }
 
             if (SysmonWrapper.Verify(true) == 0)
@@ -264,35 +265,6 @@ namespace IvsAgent
             }
 
             inTimer = false;
-        }
-
-        private void UpdateStatus(EventId eventId)
-        {
-            if (!_isRunning) return;
-
-            try
-            {
-                var eventDetail = TrackingEventProvider.Instance.GetEventDetail(eventId);
-
-                EventLog.WriteEntry(eventDetail.Message, eventDetail.EventType, eventDetail.Id);
-
-                if (eventDetail.EventType == EventLogEntryType.SuccessAudit || eventDetail.EventType == EventLogEntryType.Information)
-                {
-                    _logger.Information(eventDetail.Message);
-                }
-                else if (eventDetail.EventType == EventLogEntryType.Warning)
-                {
-                    _logger.Warning(eventDetail.Message);
-                }
-                else
-                {
-                    _logger.Error(eventDetail.Message);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex.StackTrace);
-            }
         }
     }
 }

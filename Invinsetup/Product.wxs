@@ -72,7 +72,6 @@
 	<Fragment>
 		<ComponentGroup Id="AgentComponents" Directory="AGENTFOLDER">
 			<Component Id="a00" Guid="380bbddd-daa7-0744-517b-37da768f5570" Win64="yes">
-				<File Id="a01" Source="$(var.Agent_Service_TargetDir)\event_descriptions.json" />
 				<File Id="a02" Source="$(var.Agent_Service_TargetDir)\Common.dll" />
 				<File Id="a03" Source="$(var.Agent_Service_TargetDir)\Common.pdb" />
 				<File Id="a04" Source="$(var.IvsAgent.TargetPath)" />
@@ -104,7 +103,6 @@
 	<Fragment>
 		<ComponentGroup Id="TrayComponents" Directory="TRAYFOLDER">
 			<Component Id="b00" Guid="7E588662-AE80-401C-B2DE-29BB4CF1ECF3" Win64="yes">
-				<File Id="b01" Source="$(var.Tray_Application_TargetDir)\event_descriptions.json" />
 				<File Id="b02" Source="$(var.Tray_Application_TargetDir)\Common.dll" />
 				<File Id="b03" Source="$(var.Tray_Application_TargetDir)\Common.pdb" />
 				<File Id="b04" Source="$(var.IvsTray.TargetPath)" />
