@@ -202,6 +202,8 @@ namespace IvsAgent
             toolRepository.CaptureRunningEvent(ToolName.Wazuuh, RunningStatus.Stopped);
 
             _isRunning = false;
+
+            
         }
 
         protected override void OnShutdown()
