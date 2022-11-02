@@ -24,8 +24,6 @@ namespace IvsTray
 
             Log.Logger.Information("Initializing program");
 
-            Common.Persistance.SeedClass.SeedData();
-
             AppDomain.CurrentDomain.UnhandledException += GlobalHandler;
 
             Application.ThreadException += ApplicationThreadException;

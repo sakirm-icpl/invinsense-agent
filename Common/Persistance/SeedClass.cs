@@ -26,15 +26,15 @@ namespace Common.Persistance
             using (var db = new LiteDatabase(path))
             {
                 // Get customer collection
-                var col = db.GetCollection<ToolDetail>("tool_details");
+                var toolsCollection = db.GetCollection<ToolDetail>("tool_details", BsonAutoId.Int32);
 
                 // Create unique index in Name field
-                col.EnsureIndex(x => x.Name, true);
+                toolsCollection.EnsureIndex(x => x.Name, true);
 
                 // Create your new customer instance
                 var wazuhTool = new ToolDetail
                 {
-                    Name = "WAZUH",
+                    Name = ToolName.Wazuuh,
                     IsMsi = true,
                     InstallScript = "",
                     UnInstallScript = "",
@@ -46,7 +46,7 @@ namespace Common.Persistance
 
                 var dBytesTool = new ToolDetail
                 {
-                    Name = "DBYTES",
+                    Name = ToolName.Dbytes,
                     IsMsi = true,
                     InstallScript = "",
                     UnInstallScript = "",
@@ -58,7 +58,7 @@ namespace Common.Persistance
 
                 var osQueryTool = new ToolDetail
                 {
-                    Name = "OSQUERY",
+                    Name = ToolName.OsQuery,
                     IsMsi = true,
                     InstallScript = "osquery-5.5.1.msi",
                     UnInstallScript = "",
@@ -70,7 +70,7 @@ namespace Common.Persistance
 
                 var sysmonTool = new ToolDetail
                 {
-                    Name = "SYSMON",
+                    Name = ToolName.Sysmon,
                     IsMsi = false,
                     InstallScript = "Sysmon64 -i",
                     UnInstallScript = "",
@@ -82,23 +82,23 @@ namespace Common.Persistance
 
                 var avTool = new ToolDetail
                 {
-                    Name = "AV",
+                    Name = ToolName.Av,
                     IsMsi = false,
                     InstallScript = "",
                     UnInstallScript = "",
                     AppName = "",
-                    IsService = true,
+                    IsService = false,
                     InstallStatus = InstallStatus.NotFound,
                     RunningStatus = RunningStatus.NotFound
                 };
 
                 var ltmTool = new ToolDetail
                 {
-                    Name = "LMP",
+                    Name = ToolName.Lmp,
                     IsMsi = false,
                     InstallScript = "",
                     UnInstallScript = "",
-                    AppName = "",
+                    AppName = "IvsAgent",
                     IsService = true,
                     InstallStatus = InstallStatus.NotFound,
                     RunningStatus = RunningStatus.NotFound
@@ -107,7 +107,7 @@ namespace Common.Persistance
                 var toolDetails = new List<ToolDetail> { wazuhTool, dBytesTool, osQueryTool, sysmonTool, avTool, ltmTool };
 
                 // Insert new customer document (Id will be auto-incremented)
-                col.InsertBulk(toolDetails);
+                toolsCollection.InsertBulk(toolDetails);
             }
         }
 

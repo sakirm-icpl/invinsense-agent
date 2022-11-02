@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Common.Persistance
 {
@@ -32,6 +33,22 @@ namespace Common.Persistance
 
         public void CaptureEvent(string name, InstallStatus installStatus, RunningStatus runningStatus)
         {
+            using (var db = GetDatabase())
+            {
+                var col = GetCollection(db);
+                var toolEntry = col.FindOne(x => x.Name == name);
+
+                if (toolEntry == null)
+                {
+                    Logger.Error($"Tool not found: {name}");
+                    return;
+                }
+
+                toolEntry.InstallStatus = installStatus;
+                toolEntry.RunningStatus = runningStatus;
+                col.Update(toolEntry);
+            }
+
             var toolStatus = new ToolStatus(name, installStatus, runningStatus);
 
             Logger.Information($"{toolStatus}");
@@ -41,15 +58,6 @@ namespace Common.Persistance
             var eventInstance = new EventInstance(toolStatus.GetHashCode(), 0, EventLogEntryType.Information);
 
             log.WriteEvent(eventInstance, $"{name} Install: {installStatus}");
-
-            using (var db = GetDatabase())
-            {
-                var col = GetCollection(db);
-                var toolEntry = col.FindOne(x => x.Name == name);
-                toolEntry.InstallStatus = installStatus;
-                toolEntry.RunningStatus = runningStatus;
-                col.Update(toolEntry);
-            }
         }
 
         public bool IsAllOk()

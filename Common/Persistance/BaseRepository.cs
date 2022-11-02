@@ -23,7 +23,16 @@ namespace Common.Persistance
 
         protected ILiteCollection<T> GetCollection(LiteDatabase db)
         {
-            return db.GetCollection<T>();
+            return db.GetCollection<T>(CollectionName, BsonAutoId.Int32);
+        }
+
+        public int Insert(T data)
+        {
+            using (var db = GetDatabase())
+            {
+                var col = GetCollection(db);
+                return col.Insert(data);
+            }
         }
     }
 }

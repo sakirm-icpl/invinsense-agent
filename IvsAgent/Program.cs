@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Persistance;
 using Common.Utils;
 using Serilog;
 using System;
@@ -29,7 +30,9 @@ namespace IvsAgent
                     EventLog.CreateEventSource(Constants.IvsAgentName, Common.Constants.LogGroupName);
                 }
 
-                Common.Persistance.SeedClass.SeedData();
+                SeedClass.SeedData();
+
+                //new ToolRepository().CaptureEvent(ToolName.Wazuuh, InstallStatus.NotFound, RunningStatus.NotFound);
 
                 ServiceBase[] ServicesToRun;
                 ServicesToRun = new ServiceBase[]
