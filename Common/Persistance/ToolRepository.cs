@@ -60,7 +60,7 @@ namespace Common.Persistance
             log.WriteEvent(eventInstance, $"{name} Install: {installStatus}");
         }
 
-        public bool IsAllOk()
+        public bool IsAnyError()
         {
             using (var db = GetDatabase())
             {

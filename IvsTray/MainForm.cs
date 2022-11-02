@@ -4,6 +4,7 @@ using Serilog;
 using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -55,7 +56,11 @@ namespace IvsTray
 
         private void MainFormOnLoad(object sender, EventArgs e)
         {
-            foreach (var toolDetail in toolRepository.GetTools())
+            _logger.Information("Loading all tools from db");
+            var allTools = toolRepository.GetTools();
+            _logger.Information($"Tools loaded: {allTools.Count()}");
+            
+            foreach (var toolDetail in allTools)
             {
                 var toolStatus = new ToolStatus(toolDetail.Name, toolDetail.InstallStatus, toolDetail.RunningStatus);
                 UpdateToolStatus(toolStatus);
@@ -114,7 +119,7 @@ namespace IvsTray
 
             notifyIcon.ShowBalloonTip(5000, toolStatus.Name, $"Status: {toolStatus.RunningStatus}", icon);
 
-            if (toolRepository.IsAllOk())
+            if (toolRepository.IsAnyError())
             {
                 notifyIcon.Icon = Properties.Resources.red_logo_22_22;
                 notifyIcon.Text = "Invinsense 3.0 - Not all services are healthy";
