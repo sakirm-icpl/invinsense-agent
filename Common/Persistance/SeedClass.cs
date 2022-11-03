@@ -36,9 +36,9 @@ namespace Common.Persistance
                 {
                     Name = ToolName.Wazuuh,
                     IsMsi = true,
-                    InstallScript = "",
+                    InstallScript = "wazuh-agent-4.3.9-1",
                     UnInstallScript = "",
-                    AppName = "wazuh",
+                    AppName = "WazuhSvc",
                     IsService = true,
                     InstallStatus = InstallStatus.NotFound,
                     RunningStatus = RunningStatus.NotFound
@@ -48,7 +48,7 @@ namespace Common.Persistance
                 {
                     Name = ToolName.Dbytes,
                     IsMsi = true,
-                    InstallScript = "",
+                    InstallScript = "DeceptiveBytes.EPS.x64",
                     UnInstallScript = "",
                     AppName = "",
                     IsService = true,

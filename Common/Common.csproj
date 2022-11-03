@@ -63,6 +63,7 @@
     <Compile Include="Utils\CommonUtils.cs" />
     <Compile Include="Utils\FileConfigProvider.cs" />
     <Compile Include="Utils\JsonSerialization.cs" />
+    <Compile Include="Utils\ToolProperties.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

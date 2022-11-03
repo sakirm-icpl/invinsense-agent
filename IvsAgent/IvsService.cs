@@ -197,7 +197,7 @@ namespace IvsAgent
         {
             _logger.Information("Stopping service");
 
-            toolRepository.CaptureEvent(ToolName.Wazuuh, InstallStatus.Installed, RunningStatus.Stopped);
+            toolRepository.CaptureEvent(ToolName.Lmp, InstallStatus.Installed, RunningStatus.Stopped);
 
             _isRunning = false;
         }
@@ -260,6 +260,15 @@ namespace IvsAgent
             else
             {
                 _logger.Information("OSQuery not available");
+            }
+
+            if (WazuhWrapper.Verify(true) == 0)
+            {
+                _logger.Information("Wazuh verified");
+            }
+            else
+            {
+                _logger.Information("Wazuh not avaiable");
             }
 
             inTimer = false;
