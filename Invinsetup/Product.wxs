@@ -17,7 +17,6 @@
 <?define UpgradeCode = "{38ECE878-1645-4310-BD9A-B9CA57FE0DF0}" ?>
 <!-- The name of the Cabinet -->
 <?define CabName = "Invinsense.cab" ?>
-<!--<?define rememberproperty="Remember"?>-->
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
 
@@ -37,110 +36,80 @@
 
 		<!--Embed Cabinet into single msi file-->
 		<MediaTemplate EmbedCab="yes" />
-		
+
 		<!--User provided Property values in registry keys and use a RegistrySearch to read them back out for repair, upgrade and uninstall-->
+
 		<!--Fetch property of WAZUH_MANAGER-->
 		<Property Id='WAZUH_MANAGER'>
-		    <RegistrySearch Id='RememberProperty1' Root='HKLM'
+			<RegistrySearch Id='WazuhManagerIp' Root='HKLM'
 							Key='SOFTWARE\infopercxept'
 							Name='WAZUH_MANAGER' Type='raw' />
 		</Property>
-		
+
 		<!--Fetch property of WAZUH_REGISTRATION_SERVER-->
 		<Property Id='WAZUH_REGISTRATION_SERVER'>
-		    <RegistrySearch Id='RememberProperty2' Root='HKLM'
+			<RegistrySearch Id='WazuhRegistrationIp' Root='HKLM'
 							Key='SOFTWARE\infopercxept'
 							Name='WAZUH_REGISTRATION_SERVER' Type='raw' />
 		</Property>
-		
+
 		<!--Fetch property of DBYTES_SERVER-->
 		<Property Id='DBYTES_SERVER'>
-		    <RegistrySearch Id='RememberProperty3' Root='HKLM'
+			<RegistrySearch Id='DeceptiveBytesIp' Root='HKLM'
 							Key='SOFTWARE\infopercxept'
 							Name='DBYTES_SERVER' Type='raw' />
 		</Property>
-		
+
 		<!--Fetch property of DBYTES_APIKEY-->
 		<Property Id='DBYTES_APIKEY'>
-		    <RegistrySearch Id='RememberProperty4' Root='HKLM'
+			<RegistrySearch Id='DeceptiveBytesApiKey' Root='HKLM'
 							Key='SOFTWARE\infopercxept'
 							Name='DBYTES_APIKEY' Type='raw' />
 		</Property>
-		<!--add property of WAZUH_MANAGER with value and place it to "SOFTWARE\infopercept" -->
-		<Feature Id="MainFeature1"  Level="1">
-			<Component Directory='ManufacturerFolder' Win64='yes'>
-			     <RegistryValue Root='HKLM' Key='SOFTWARE\Infopercept'
-								Name='WAZUH_MANAGER' Value='[WAZUH_MANAGER]'
-								Type='string' />
-				     <RemoveFolder Id='CleanupApplicationFolder1' On='uninstall' />
-			</Component>
-		</Feature>
-		
-		<!--add property of WAZUH_REGISTRATION_SERVER with value and place it to "SOFTWARE\infopercept" -->
-		<Feature Id="MainFeature2"  Level="1">
-			<Component Directory='ManufacturerFolder' Win64='yes'>
-			     <RegistryValue Root='HKLM' Key='SOFTWARE\Infopercept'
-								Name='WAZUH_REGISTRATION_SERVER' Value='[WAZUH_REGISTRATION_SERVER]'
-								Type='string' />
-				     <RemoveFolder Id='CleanupApplicationFolder2' On='uninstall' />
-			</Component>
-		</Feature>
-								
-		<!--add property of DBYTES_SERVER with value and place it to "SOFTWARE\infopercept" -->
-		<Feature Id="MainFeature3"  Level="1">
-			<Component Directory='ManufacturerFolder' Win64='yes'>
-			     <RegistryValue Root='HKLM' Key='SOFTWARE\Infopercept'
-								Name='DBYTES_SERVER' Value='[DBYTES_SERVER]'
-								Type='string' />
-				     <RemoveFolder Id='CleanupApplicationFolder3' On='uninstall' />
-			</Component>
-		</Feature>
-	
-		<!--add property of DBYTES_APIKEY with value and place it to "SOFTWARE\infopercept" -->
-		<Feature Id="MainFeature4"  Level="1">
-			<Component Directory='ManufacturerFolder' Win64='yes'>
-				<RegistryValue Root='HKLM' Key='SOFTWARE\Infopercept'
-							   Name='DBYTES_APIKEY' Value='[DBYTES_APIKEY]'
-							   Type='string' />
-					<RemoveFolder Id='CleanupApplicationFolder4' On='uninstall' />
-				</Component>
-			</Feature>
 
 		<!--Main Feature for this Setup which can be found in Fragment Tag with ComponentGroupRef Id-->
 		<Feature Id="ProductFeature" Title="$(var.Name)" Level="1">
+			<ComponentRef Id="ConfigurationValues"/>
 			<ComponentGroupRef Id="AgentComponents" />
 			<ComponentGroupRef Id="TrayComponents" />
 			<ComponentGroupRef Id="ToolComponents" />
 			<ComponentGroupRef Id="PostInstallation"/>
 		</Feature>
-		
+
 		<!--Tell MSI that restart should not be required-->
 		<Property Id="MSIRESTARTMANAGERCONTROL" Value="Disable" />
 
 		<!--Wix Extension to close IvsTray.exe file from System Tray-->
 		<util:CloseApplication Id="CloseTray" Target="IvsTray.exe" CloseMessage="yes" RebootPrompt="no"></util:CloseApplication>
-		<!--<CustomActionRef Id='SaveCmdLineValue' />-->
+
 	</Product>
-	
-	<!-- add custom actions to save the Property value if it set from the command line
+
+	<!--Fragment to save properties-->
 	<Fragment>
-		<CustomAction Id='SaveCmdLineValue' Property='CMDLINE_REMEMBERME'
-	            Value='[REMEMBERME]' Execute='firstSequence' />
-		<CustomAction Id='SetFromCmdLineValue' Property='REMEMBERME'
-	                Value='[CMDLINE_REMEMBERME]' Execute='firstSequence' />
-			<InstallUISequence>
-				    <Custom Action='SaveCmdLineValue' Before='AppSearch' />
-				    <Custom Action='SetFromCmdLineValue' After='AppSearch'>
-					CMDLINE_REMEMBERME
-			</Custom>
-		</InstallUISequence>
-			<InstallExecuteSequence> 
-				<Custom Action='SaveCmdLineValue' Before='AppSearch' />   
-				<Custom Action='SetFromCmdLineValue' After='AppSearch'>      
-					CMDLINE_REMEMBERME
-			</Custom>
-		</InstallExecuteSequence>
-	</Fragment>-->
+		<Component Id="ConfigurationValues" Directory="ManufacturerFolder" Win64="yes">
+
+			<!--add property of WAZUH_MANAGER with value and place it to "SOFTWARE\infopercept" -->
+			<RegistryValue Root='HKLM' Key='SOFTWARE\Infopercept'
+						   Name='WAZUH_MANAGER' Value='[WAZUH_MANAGER]'
+						   Type='string' />
+
+			<!--add property of WAZUH_REGISTRATION_SERVER with value and place it to "SOFTWARE\infopercept" -->
+			<RegistryValue Root='HKLM' Key='SOFTWARE\Infopercept'
+						   Name='WAZUH_REGISTRATION_SERVER' Value='[WAZUH_REGISTRATION_SERVER]'
+						   Type='string' />
+
+			<!--add property of DBYTES_SERVER with value and place it to "SOFTWARE\infopercept" -->
+			<RegistryValue Root='HKLM' Key='SOFTWARE\Infopercept'
+						   Name='DBYTES_SERVER' Value='[DBYTES_SERVER]'
+						   Type='string' />
+
+			<!--add property of DBYTES_APIKEY with value and place it to "SOFTWARE\infopercept" -->
+			<RegistryValue Root='HKLM' Key='SOFTWARE\Infopercept'
+						   Name='DBYTES_APIKEY' Value='[DBYTES_APIKEY]'
+						   Type='string' />
+
+		</Component>
+	</Fragment>
 
 	<!--Fragment with details of installation directory-->
 	<Fragment>
@@ -151,9 +120,6 @@
 					<Directory Id="TRAYFOLDER" Name="$(var.TrayName)" />
 					<Directory Id="ARTIFACTSFOLDER" Name="$(var.ArtifactsName)" />
 				</Directory>
-			<!--<Directory Id="LocalAppDataFolder" Name="AppData">
-				<Directory Id='ApplicationFolder' Name='Demo Remember Property' />	
-			</Directory>-->
 			</Directory>
 		</Directory>
 	</Fragment>
@@ -175,16 +141,6 @@
 				<File Id="a13" Source="$(var.Agent_Service_TargetDir)\Serilog.Sinks.File.pdb" />
 				<File Id="a14" Source="$(var.Agent_Service_TargetDir)\System.CodeDom.dll" />
 				<File Id="a15" Source="$(var.Agent_Service_TargetDir)\System.Security.Principal.Windows.dll" />
-			</Component>
-		</ComponentGroup>
-	</Fragment>
-
-	<Fragment>
-		<ComponentGroup Id="PostInstallation" Directory="AGENTFOLDER">
-			<Component Id="s0" Guid="868F4F33-6851-4169-B814-F25842A2D414" Win64="yes">
-				<File Id='AgentEXE' Name='IvsAgent' DiskId='1' Source='$(var.IvsAgent.TargetPath)' KeyPath='yes'/>
-				<ServiceInstall Id="s1" Name="IvsAgent" DisplayName="Invinsense 3.0" Description="Invinsense Service" ErrorControl="normal" Start="auto" Type="ownProcess" />
-				<ServiceControl Id="s2" Name="IvsAgent" Start="install" Stop="both" Remove="both" Wait="yes" />
 			</Component>
 		</ComponentGroup>
 	</Fragment>
@@ -214,7 +170,20 @@
 				<File Id="c01" Source="..\artifacts\LiteDB.Studio.exe" />
 				<File Id="c02" Source="..\artifacts\Sysmon\Sysmon64.exe" />
 				<File Id="c03" Source="..\artifacts\osquery-5.5.1.msi" />
+				<File Id="c04" Source="..\artifacts\wazuh-agent-4.3.9-1.msi" />
+				<File Id="c05" Source="..\artifacts\DeceptiveBytes.EPS.x64.msi" />
 			</Component>
 		</ComponentGroup>
 	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="PostInstallation" Directory="AGENTFOLDER">
+			<Component Id="s0" Guid="868F4F33-6851-4169-B814-F25842A2D414" Win64="yes">
+				<File Id='AgentEXE' Name='IvsAgent' DiskId='1' Source='$(var.IvsAgent.TargetPath)' KeyPath='yes'/>
+				<ServiceInstall Id="s1" Name="IvsAgent" DisplayName="Invinsense 3.0" Description="Invinsense Service" ErrorControl="normal" Start="auto" Type="ownProcess" />
+				<ServiceControl Id="s2" Name="IvsAgent" Start="install" Stop="both" Remove="both" Wait="yes" />
+			</Component>
+		</ComponentGroup>
+	</Fragment>
+
 </Wix>
