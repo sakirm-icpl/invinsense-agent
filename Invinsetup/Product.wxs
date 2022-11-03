@@ -17,6 +17,7 @@
 <?define UpgradeCode = "{38ECE878-1645-4310-BD9A-B9CA57FE0DF0}" ?>
 <!-- The name of the Cabinet -->
 <?define CabName = "Invinsense.cab" ?>
+<!--<?define rememberproperty="Remember"?>-->
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
 
@@ -36,6 +37,74 @@
 
 		<!--Embed Cabinet into single msi file-->
 		<MediaTemplate EmbedCab="yes" />
+		
+		<!--User provided Property values in registry keys and use a RegistrySearch to read them back out for repair, upgrade and uninstall-->
+		<!--Fetch property of WAZUH_MANAGER-->
+		<Property Id='WAZUH_MANAGER'>
+		    <RegistrySearch Id='RememberProperty1' Root='HKLM'
+							Key='SOFTWARE\infopercxept'
+							Name='WAZUH_MANAGER' Type='raw' />
+		</Property>
+		
+		<!--Fetch property of WAZUH_REGISTRATION_SERVER-->
+		<Property Id='WAZUH_REGISTRATION_SERVER'>
+		    <RegistrySearch Id='RememberProperty2' Root='HKLM'
+							Key='SOFTWARE\infopercxept'
+							Name='WAZUH_REGISTRATION_SERVER' Type='raw' />
+		</Property>
+		
+		<!--Fetch property of DBYTES_SERVER-->
+		<Property Id='DBYTES_SERVER'>
+		    <RegistrySearch Id='RememberProperty3' Root='HKLM'
+							Key='SOFTWARE\infopercxept'
+							Name='DBYTES_SERVER' Type='raw' />
+		</Property>
+		
+		<!--Fetch property of DBYTES_APIKEY-->
+		<Property Id='DBYTES_APIKEY'>
+		    <RegistrySearch Id='RememberProperty4' Root='HKLM'
+							Key='SOFTWARE\infopercxept'
+							Name='DBYTES_APIKEY' Type='raw' />
+		</Property>
+		<!--add property of WAZUH_MANAGER with value and place it to "SOFTWARE\infopercept" -->
+		<Feature Id="MainFeature1"  Level="1">
+			<Component Directory='ManufacturerFolder' Win64='yes'>
+			     <RegistryValue Root='HKLM' Key='SOFTWARE\Infopercept'
+								Name='WAZUH_MANAGER' Value='[WAZUH_MANAGER]'
+								Type='string' />
+				     <RemoveFolder Id='CleanupApplicationFolder1' On='uninstall' />
+			</Component>
+		</Feature>
+		
+		<!--add property of WAZUH_REGISTRATION_SERVER with value and place it to "SOFTWARE\infopercept" -->
+		<Feature Id="MainFeature2"  Level="1">
+			<Component Directory='ManufacturerFolder' Win64='yes'>
+			     <RegistryValue Root='HKLM' Key='SOFTWARE\Infopercept'
+								Name='WAZUH_REGISTRATION_SERVER' Value='[WAZUH_REGISTRATION_SERVER]'
+								Type='string' />
+				     <RemoveFolder Id='CleanupApplicationFolder2' On='uninstall' />
+			</Component>
+		</Feature>
+								
+		<!--add property of DBYTES_SERVER with value and place it to "SOFTWARE\infopercept" -->
+		<Feature Id="MainFeature3"  Level="1">
+			<Component Directory='ManufacturerFolder' Win64='yes'>
+			     <RegistryValue Root='HKLM' Key='SOFTWARE\Infopercept'
+								Name='DBYTES_SERVER' Value='[DBYTES_SERVER]'
+								Type='string' />
+				     <RemoveFolder Id='CleanupApplicationFolder3' On='uninstall' />
+			</Component>
+		</Feature>
+	
+		<!--add property of DBYTES_APIKEY with value and place it to "SOFTWARE\infopercept" -->
+		<Feature Id="MainFeature4"  Level="1">
+			<Component Directory='ManufacturerFolder' Win64='yes'>
+				<RegistryValue Root='HKLM' Key='SOFTWARE\Infopercept'
+							   Name='DBYTES_APIKEY' Value='[DBYTES_APIKEY]'
+							   Type='string' />
+					<RemoveFolder Id='CleanupApplicationFolder4' On='uninstall' />
+				</Component>
+			</Feature>
 
 		<!--Main Feature for this Setup which can be found in Fragment Tag with ComponentGroupRef Id-->
 		<Feature Id="ProductFeature" Title="$(var.Name)" Level="1">
@@ -50,8 +119,28 @@
 
 		<!--Wix Extension to close IvsTray.exe file from System Tray-->
 		<util:CloseApplication Id="CloseTray" Target="IvsTray.exe" CloseMessage="yes" RebootPrompt="no"></util:CloseApplication>
-	
+		<!--<CustomActionRef Id='SaveCmdLineValue' />-->
 	</Product>
+	
+	<!-- add custom actions to save the Property value if it set from the command line
+	<Fragment>
+		<CustomAction Id='SaveCmdLineValue' Property='CMDLINE_REMEMBERME'
+	            Value='[REMEMBERME]' Execute='firstSequence' />
+		<CustomAction Id='SetFromCmdLineValue' Property='REMEMBERME'
+	                Value='[CMDLINE_REMEMBERME]' Execute='firstSequence' />
+			<InstallUISequence>
+				    <Custom Action='SaveCmdLineValue' Before='AppSearch' />
+				    <Custom Action='SetFromCmdLineValue' After='AppSearch'>
+					CMDLINE_REMEMBERME
+			</Custom>
+		</InstallUISequence>
+			<InstallExecuteSequence> 
+				<Custom Action='SaveCmdLineValue' Before='AppSearch' />   
+				<Custom Action='SetFromCmdLineValue' After='AppSearch'>      
+					CMDLINE_REMEMBERME
+			</Custom>
+		</InstallExecuteSequence>
+	</Fragment>-->
 
 	<!--Fragment with details of installation directory-->
 	<Fragment>
@@ -62,6 +151,9 @@
 					<Directory Id="TRAYFOLDER" Name="$(var.TrayName)" />
 					<Directory Id="ARTIFACTSFOLDER" Name="$(var.ArtifactsName)" />
 				</Directory>
+			<!--<Directory Id="LocalAppDataFolder" Name="AppData">
+				<Directory Id='ApplicationFolder' Name='Demo Remember Property' />	
+			</Directory>-->
 			</Directory>
 		</Directory>
 	</Fragment>
@@ -125,6 +217,4 @@
 			</Component>
 		</ComponentGroup>
 	</Fragment>
-
-	
 </Wix>
