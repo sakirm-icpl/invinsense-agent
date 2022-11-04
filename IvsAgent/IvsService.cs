@@ -48,7 +48,7 @@ namespace IvsAgent
             Sysmon = new ExtendedServiceController("Sysmon64");
             Sysmon.StatusChanged += (object sender, ServiceStatusEventArgs e) => SysmonUpdateStatus(e.Status);
 
-            LmpService = new ExtendedServiceController("osqueryd");
+            LmpService = new ExtendedServiceController("IvsAgent");
             LmpService.StatusChanged += (object sender, ServiceStatusEventArgs e) => LmpStatusUpdate(e.Status);
         }
 
