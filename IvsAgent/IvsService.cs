@@ -42,7 +42,7 @@ namespace IvsAgent
 
             wazuh = new ExtendedServiceController("WazuhSvc");
             wazuh.StatusChanged += (object sender, ServiceStatusEventArgs e) => WazuhUpdateStatus(e.Status);
-
+            
             Dbytes = new ExtendedServiceController("DBytesService");
             Dbytes.StatusChanged += (object sender, ServiceStatusEventArgs e) => DbytesUpdateStatus(e.Status);
 
@@ -239,6 +239,8 @@ namespace IvsAgent
         private bool inTimer = false;
         private InstallStatus avLastStatus = InstallStatus.NotFound;
 
+        private bool isFirstTime = true;
+
         private void OnElapsedTime(object source, ElapsedEventArgs e)
         {
             if (inTimer)
@@ -272,18 +274,23 @@ namespace IvsAgent
                 toolRepository.CaptureEvent(ToolName.Av, status, status == InstallStatus.Installed ? RunningStatus.Running : RunningStatus.Warning);
             }
 
-            if(Sysmon.Status == null)
+            if (isFirstTime)
             {
-                if(SysmonWrapper.Verify(true) == 0)
-                {
-                    _logger.Information($"Sysmon verified with status: {Sysmon.Status}");
-                }
-                else
-                {
-                    _logger.Error("Error in Sysmon installer");
-                }
+                isFirstTime = false;
+                return;
             }
 
+            if (SysmonWrapper.Verify(true) == 0)
+            {
+                _logger.Information($"Sysmon verified with status: {Sysmon.Status}");
+            }
+            else
+            {
+                _logger.Error("Error in Sysmon installer");
+            }
+
+            Sysmon.Refresh();
+            
             if (OsQueryWrapper.Verify(true) == 0)
             {
                 _logger.Information("OSQuery verified");
@@ -293,6 +300,8 @@ namespace IvsAgent
                 _logger.Information("OSQuery not available");
             }
 
+            OsQuery.Refresh();
+            
             if (WazuhWrapper.Verify(true) == 0)
             {
                 _logger.Information("Wazuh verified");
@@ -302,7 +311,9 @@ namespace IvsAgent
                 _logger.Information("Wazuh not avaiable");
             }
 
-            if(DBytesWrapper.Verify(true) == 0)
+            wazuh.Refresh();
+            
+            if (DBytesWrapper.Verify(true) == 0)
             {
                 _logger.Information("Deceptive Bytes verified");
             }
@@ -310,6 +321,8 @@ namespace IvsAgent
             {
                 _logger.Information("Deceptive Bytes not avaiable");
             }
+
+            Dbytes.Refresh();
 
             inTimer = false;
         }
