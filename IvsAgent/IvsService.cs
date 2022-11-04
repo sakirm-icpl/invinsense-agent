@@ -274,11 +274,12 @@ namespace IvsAgent
                 toolRepository.CaptureEvent(ToolName.Av, status, status == InstallStatus.Installed ? RunningStatus.Running : RunningStatus.Warning);
             }
 
-            if (isFirstTime)
+            if (!isFirstTime)
             {
-                isFirstTime = false;
                 return;
             }
+
+            isFirstTime = false;
 
             if (SysmonWrapper.Verify(true) == 0)
             {
