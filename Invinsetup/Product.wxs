@@ -169,9 +169,12 @@
 			<Component Id="c00" Guid="DEF1F99A-A721-4F70-87BC-92E13E47B0B1" Win64="yes">
 				<File Id="c01" Source="..\artifacts\LiteDB.Studio.exe" />
 				<File Id="c02" Source="..\artifacts\Sysmon\Sysmon64.exe" />
-				<File Id="c03" Source="..\artifacts\osquery-5.5.1.msi" />
-				<File Id="c04" Source="..\artifacts\wazuh-agent-4.3.9-1.msi" />
-				<File Id="c05" Source="..\artifacts\DeceptiveBytes.EPS.x64.msi" />
+				<File Id="c03" Source="..\artifacts\osquery\osquery-5.5.1.msi" />
+				<File Id="c04" Source="..\artifacts\osquery\osquery.conf" />
+				<File Id="c05" Source="..\artifacts\osquery\packs.zip" />
+				<File Id="c06" Source="..\artifacts\wazuh\wazuh-agent-4.3.9-1.msi" />
+				<File Id="c07" Source="..\artifacts\wazuh\local_internal_options.conf" />
+				<File Id="c08" Source="..\artifacts\DeceptiveBytes.EPS.x64.msi" />
 			</Component>
 		</ComponentGroup>
 	</Fragment>

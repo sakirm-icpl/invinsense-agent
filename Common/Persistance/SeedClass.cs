@@ -36,9 +36,12 @@ namespace Common.Persistance
                 {
                     Name = ToolName.Wazuuh,
                     IsMsi = true,
-                    InstallScript = "wazuh-agent-4.3.9-1",
-                    UnInstallScript = "",
+                    SetupFileName = "wazuh-agent-4.3.9-1",
+                    InstallArgs = "/I \"{msiPath}\" /QN /l*vx \"{LOG_PATH}\" ACCEPTEULA=1 ALLUSERS=1 WAZUH_MANAGER=\"{WAZUH_MANAGER}\" WAZUH_REGISTRATION_SERVER=\"{WAZUH_REGISTRATION_SERVER}\"",
+                    UpdateArgs = "",
+                    UninstallArgs = "/X \"{msiPath}\" /QN /l*vx \"{LOG_PATH}\" /QN",
                     AppName = "WazuhSvc",
+                    IsWin64 = false,
                     IsService = true,
                     InstallStatus = InstallStatus.NotFound,
                     RunningStatus = RunningStatus.NotFound
@@ -48,9 +51,12 @@ namespace Common.Persistance
                 {
                     Name = ToolName.Dbytes,
                     IsMsi = true,
-                    InstallScript = "DeceptiveBytes.EPS.x64",
-                    UnInstallScript = "",
-                    AppName = "",
+                    SetupFileName = "DeceptiveBytes.EPS.x64",
+                    InstallArgs = "/I \"{msiPath}\" /l*vx \"{LOG_PATH}\" /QN ALLUSERS=1 /norestart ServerAddress=\"{DBYTES_SERVER}\" ApiKey=\"{DBYTES_APIKEY}\"",
+                    UpdateArgs = "",
+                    UninstallArgs = "/X \"{msiPath}\" /l*vx \"{LOG_PATH}\" /QN",
+                    AppName = "DBytesService",
+                    IsWin64 = true,
                     IsService = true,
                     InstallStatus = InstallStatus.NotFound,
                     RunningStatus = RunningStatus.NotFound
@@ -60,9 +66,12 @@ namespace Common.Persistance
                 {
                     Name = ToolName.OsQuery,
                     IsMsi = true,
-                    InstallScript = "osquery-5.5.1.msi",
-                    UnInstallScript = "",
+                    SetupFileName = "osquery-5.5.1.msi",
+                    InstallArgs = "/I \"{msiPath}\" /QN /l*vx \"{LOG_PATH}\" ACCEPTEULA=1 ALLUSERS=1",
+                    UpdateArgs = "",
+                    UninstallArgs = "/X \"{msiPath}\" /QN /l*vx \"{LOG_PATH}\" /QN",
                     AppName = "osqueryd",
+                    IsWin64 = true,
                     IsService = true,
                     InstallStatus = InstallStatus.NotFound,
                     RunningStatus = RunningStatus.NotFound
@@ -72,9 +81,12 @@ namespace Common.Persistance
                 {
                     Name = ToolName.Sysmon,
                     IsMsi = false,
-                    InstallScript = "Sysmon64 -i",
-                    UnInstallScript = "",
+                    SetupFileName = "Sysmon64.exe",
+                    InstallArgs = "-accepteula -i",
+                    UpdateArgs = "",
+                    UninstallArgs = "-u force",
                     AppName = "Sysmon64",
+                    IsWin64 = true,
                     IsService = true,
                     InstallStatus= InstallStatus.NotFound,
                     RunningStatus= RunningStatus.NotFound
@@ -84,9 +96,11 @@ namespace Common.Persistance
                 {
                     Name = ToolName.Av,
                     IsMsi = false,
-                    InstallScript = "",
-                    UnInstallScript = "",
-                    AppName = "",
+                    InstallArgs = "",
+                    UpdateArgs = "",
+                    UninstallArgs = "",
+                    AppName = "Windows Defender",
+                    IsWin64 = true,
                     IsService = false,
                     InstallStatus = InstallStatus.NotFound,
                     RunningStatus = RunningStatus.NotFound
@@ -95,10 +109,13 @@ namespace Common.Persistance
                 var ltmTool = new ToolDetail
                 {
                     Name = ToolName.Lmp,
-                    IsMsi = false,
-                    InstallScript = "",
-                    UnInstallScript = "",
+                    IsMsi = true,
+                    SetupFileName = "invinsetup.msi", 
+                    InstallArgs = "",
+                    UpdateArgs = "",
+                    UninstallArgs = "",
                     AppName = "IvsAgent",
+                    IsWin64 = true,
                     IsService = true,
                     InstallStatus = InstallStatus.NotFound,
                     RunningStatus = RunningStatus.NotFound

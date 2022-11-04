@@ -2,6 +2,7 @@ using Common;
 using Common.Persistance;
 using Serilog;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -20,6 +21,8 @@ namespace IvsTray
         private readonly ILogger _logger = Log.ForContext<MainForm>();
 
         private readonly ToolRepository toolRepository;
+
+        private readonly IDictionary<string, RunningStatus> toolStatuses = new Dictionary<string, RunningStatus>();
 
         public MainForm()
         {
@@ -51,7 +54,7 @@ namespace IvsTray
         private void Log_EntryWritten(object sender, EntryWrittenEventArgs e)
         {
             var toolStatus = new ToolStatus(e.Entry.InstanceId);
-            UpdateToolStatus(toolStatus);            
+            UpdateToolStatus(toolStatus, true);            
         }
 
         private void MainFormOnLoad(object sender, EventArgs e)
@@ -59,16 +62,22 @@ namespace IvsTray
             _logger.Information("Loading all tools from db");
             var allTools = toolRepository.GetTools();
             _logger.Information($"Tools loaded: {allTools.Count()}");
-            
+
+            toolStatuses.Clear();
             foreach (var toolDetail in allTools)
             {
-                var toolStatus = new ToolStatus(toolDetail.Name, toolDetail.InstallStatus, toolDetail.RunningStatus);
-                UpdateToolStatus(toolStatus);
+                toolStatuses.Add(toolDetail.Name, toolDetail.RunningStatus);
+                UpdateToolStatus(new ToolStatus(toolDetail.Name, toolDetail.InstallStatus, toolDetail.RunningStatus));
             }
         }
 
-        private void UpdateToolStatus(ToolStatus toolStatus)
+        private void UpdateToolStatus(ToolStatus toolStatus, bool showNotification = false)
         {
+            if(toolStatuses.ContainsKey(toolStatus.Name))
+            {
+                toolStatuses[toolStatus.Name] = toolStatus.RunningStatus;
+            }
+
             var pb = pbInvinsense;
 
             switch (toolStatus.Name)
@@ -117,9 +126,7 @@ namespace IvsTray
                 _logger.Fatal($"{toolStatus.Name} error state");
             }
 
-            notifyIcon.ShowBalloonTip(5000, toolStatus.Name, $"Status: {toolStatus.RunningStatus}", icon);
-
-            if (toolRepository.IsAnyError())
+            if (toolStatuses.Any(x=>x.Value != RunningStatus.Running))
             {
                 notifyIcon.Icon = Properties.Resources.red_logo_22_22;
                 notifyIcon.Text = "Invinsense 3.0 - Not all services are healthy";
@@ -130,6 +137,10 @@ namespace IvsTray
                 notifyIcon.Text = "Invinsense 3.0 - Healthy";
             }
 
+            if(showNotification)
+            {
+                notifyIcon.ShowBalloonTip(5000, toolStatus.Name, $"Status: {toolStatus.RunningStatus}", icon);
+            }
         }
 
         private void MainFormClosing(object sender, FormClosingEventArgs e)
