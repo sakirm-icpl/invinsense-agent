@@ -36,6 +36,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AgentWrappers\DBytesWrapper.cs" />
     <Compile Include="AgentWrappers\WazuhWrapper.cs" />
     <Compile Include="AgentWrappers\SysmonWrapper.cs" />
     <Compile Include="AgentWrappers\OsQueryWrapper.cs" />

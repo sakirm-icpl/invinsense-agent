@@ -68,7 +68,6 @@ namespace IvsAgent.AgentWrappers
 
                 installerProcess.Start();
 
-
                 _logger.Information("WAZUH Installation started...");
 
                 installerProcess.WaitForExit();

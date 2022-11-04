@@ -302,6 +302,15 @@ namespace IvsAgent
                 _logger.Information("Wazuh not avaiable");
             }
 
+            if(DBytesWrapper.Verify(true) == 0)
+            {
+                _logger.Information("Deceptive Bytes verified");
+            }
+            else
+            {
+                _logger.Information("Deceptive Bytes not avaiable");
+            }
+
             inTimer = false;
         }
     }
