@@ -57,7 +57,7 @@ namespace Common.Persistance
 
             var eventInstance = new EventInstance(toolStatus.GetHashCode(), 0, EventLogEntryType.Information);
 
-            log.WriteEvent(eventInstance, $"{name} Install: {installStatus}");
+            log.WriteEvent(eventInstance, $"{name} Install: {installStatus}, Running: {runningStatus}");
         }
 
         public bool IsAnyError()

@@ -16,8 +16,9 @@ namespace IvsAgent
     {
         private readonly Timer timer = new Timer();
 
-        private readonly ExtendedServiceController Dbytes;
         private readonly ExtendedServiceController wazuh;
+        private readonly ExtendedServiceController Dbytes;
+        private readonly ExtendedServiceController OsQuery;
         private readonly ExtendedServiceController Sysmon;
         private readonly ExtendedServiceController LmpService;
 
@@ -44,6 +45,9 @@ namespace IvsAgent
 
             Dbytes = new ExtendedServiceController("DBytesService");
             Dbytes.StatusChanged += (object sender, ServiceStatusEventArgs e) => DbytesUpdateStatus(e.Status);
+
+            OsQuery = new ExtendedServiceController("osqueryd");
+            OsQuery.StatusChanged += (object sender, ServiceStatusEventArgs e) => OsQueryUpdateStatus(e.Status);
 
             Sysmon = new ExtendedServiceController("Sysmon64");
             Sysmon.StatusChanged += (object sender, ServiceStatusEventArgs e) => SysmonUpdateStatus(e.Status);
@@ -112,6 +116,28 @@ namespace IvsAgent
             }
         }
 
+        private void OsQueryUpdateStatus(ServiceControllerStatus? status)
+        {
+            if (status == null)
+            {
+                toolRepository.CaptureEvent(ToolName.OsQuery, InstallStatus.NotFound, RunningStatus.NotFound);
+                return;
+            }
+
+            switch (status.Value)
+            {
+                case ServiceControllerStatus.Running:
+                    toolRepository.CaptureEvent(ToolName.OsQuery, InstallStatus.Installed, RunningStatus.Running);
+                    return;
+                case ServiceControllerStatus.Stopped:
+                    toolRepository.CaptureEvent(ToolName.OsQuery, InstallStatus.Installed, RunningStatus.Stopped);
+                    return;
+                default:
+                    toolRepository.CaptureEvent(ToolName.OsQuery, InstallStatus.Installed, RunningStatus.Error);
+                    return;
+            }
+        }
+
         private void SysmonUpdateStatus(ServiceControllerStatus? status)
         {
             if (status == null)
@@ -169,7 +195,7 @@ namespace IvsAgent
             _logger.Information("Starting Invinsense service...");
 
             timer.Elapsed += new ElapsedEventHandler(OnElapsedTime);
-            timer.Interval = 15000; //number in milisecinds  
+            timer.Interval = 60000; //number in milisecinds  
             timer.Enabled = true;
 
             if (wazuh != null)
@@ -196,6 +222,8 @@ namespace IvsAgent
         protected override void OnStop()
         {
             _logger.Information("Stopping service");
+
+            timer.Stop();
 
             toolRepository.CaptureEvent(ToolName.Lmp, InstallStatus.Installed, RunningStatus.Stopped);
 
@@ -244,13 +272,16 @@ namespace IvsAgent
                 toolRepository.CaptureEvent(ToolName.Av, status, status == InstallStatus.Installed ? RunningStatus.Running : RunningStatus.Warning);
             }
 
-            if (SysmonWrapper.Verify(true) == 0)
+            if(Sysmon.Status == null)
             {
-                _logger.Information("Sysmon verified");
-            }
-            else
-            {
-                _logger.Information("Sysmon not avaiable");
+                if(SysmonWrapper.Verify(true) == 0)
+                {
+                    _logger.Information($"Sysmon verified with status: {Sysmon.Status}");
+                }
+                else
+                {
+                    _logger.Error("Error in Sysmon installer");
+                }
             }
 
             if (OsQueryWrapper.Verify(true) == 0)

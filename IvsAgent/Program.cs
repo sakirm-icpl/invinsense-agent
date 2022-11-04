@@ -5,6 +5,7 @@ using Serilog;
 using System;
 using System.Diagnostics;
 using System.ServiceProcess;
+using System.Xml;
 
 namespace IvsAgent
 {

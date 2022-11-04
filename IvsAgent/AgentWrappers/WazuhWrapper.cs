@@ -3,7 +3,10 @@ using Serilog;
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime;
 using System.ServiceProcess;
+using System.Xml;
+using System.Xml.XPath;
 
 namespace IvsAgent.AgentWrappers
 {
@@ -75,13 +78,26 @@ namespace IvsAgent.AgentWrappers
                 if (installerProcess.ExitCode == 0)
                 {
                     _logger.Information("WAZUH installation completed");
+
+                    //Copying local_internal_options.conf file to wazuh installed directory
+                    System.IO.File.Copy(CommonUtils.GetAbsoletePath("..\\artifacts\\local_internal_options.conf"), "C:\\Program Files (x86)\\ossec-agent\\local_internal_options.conf", true);
+
+                    //enable osquery for wazuh
+                    var confFile = "C:\\Program Files (x86)\\ossec-agent\\ossec.conf";
+                    XmlDocument document = new XmlDocument();
+                    document.Load(confFile);
+                    XmlNodeList nodeItems = document.SelectNodes("/ossec_config/wodle[@name='osquery']/disabled");
+                    if (nodeItems.Count > 0)
+                    {
+                        nodeItems[0].InnerText = "no";
+                    }
+                    document.Save(confFile); 
                     return 0;
                 }
                 else
                 {
                     _logger.Information($"WAZUH installation fault: {installerProcess.ExitCode}");
                     return installerProcess.ExitCode;
-
                 }
             }
             catch (Exception ex)

@@ -66,10 +66,10 @@
                 case ToolName.Dbytes:
                     code += 200;
                     break;
-                case ToolName.Sysmon:
+                case ToolName.OsQuery:
                     code += 300;
                     break;
-                case ToolName.OsQuery:
+                case ToolName.Sysmon:
                     code += 400;
                     break;
                 case ToolName.Av:
