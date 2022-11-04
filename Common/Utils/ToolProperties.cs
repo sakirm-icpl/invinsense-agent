@@ -8,7 +8,8 @@ namespace Common.Utils
         {
             try
             {
-                using (var key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Infopercept", false)) // False is important!
+                using (var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
+                using (var key = hklm.OpenSubKey("SOFTWARE\\Infopercept", false)) // False is important!
                 {
                     var value = key?.GetValue(name) as string;
                     return value;
