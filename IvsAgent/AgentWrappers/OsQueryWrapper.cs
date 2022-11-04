@@ -2,6 +2,8 @@
 using Serilog;
 using System;
 using System.Diagnostics;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.ServiceProcess;
 
@@ -72,6 +74,12 @@ namespace IvsAgent.AgentWrappers
                 if (installerProcess.ExitCode == 0)
                 {
                     _logger.Information("OSQUERY installation completed");
+
+                    _logger.Information("Copying osquery.conf file to osquery installed directory");
+                    File.Copy(CommonUtils.GetAbsoletePath("..\\artifacts\\osquery.conf"), "C:\\Program Files\\osquery\\osquery.conf", true);
+
+                    _logger.Information("Extract packs to osquery");
+                    ZipFile.ExtractToDirectory(CommonUtils.GetAbsoletePath("..\\artifacts\\osquery-packs.zip"), "C:\\Program Files\\osquery\\packs");
                     return 0;
                 }
                 else

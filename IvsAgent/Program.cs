@@ -5,7 +5,6 @@ using Serilog;
 using System;
 using System.Diagnostics;
 using System.ServiceProcess;
-using System.Xml;
 
 namespace IvsAgent
 {
@@ -32,8 +31,6 @@ namespace IvsAgent
                 }
 
                 SeedClass.SeedData();
-
-                //new ToolRepository().CaptureEvent(ToolName.Wazuuh, InstallStatus.NotFound, RunningStatus.NotFound);
 
                 ServiceBase[] ServicesToRun;
                 ServicesToRun = new ServiceBase[]

@@ -3,10 +3,8 @@ using Serilog;
 using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime;
 using System.ServiceProcess;
 using System.Xml;
-using System.Xml.XPath;
 
 namespace IvsAgent.AgentWrappers
 {
@@ -79,10 +77,10 @@ namespace IvsAgent.AgentWrappers
                 {
                     _logger.Information("WAZUH installation completed");
 
-                    //Copying local_internal_options.conf file to wazuh installed directory
+                    _logger.Information("Copying local_internal_options.conf file to wazuh installed directory");
                     System.IO.File.Copy(CommonUtils.GetAbsoletePath("..\\artifacts\\local_internal_options.conf"), "C:\\Program Files (x86)\\ossec-agent\\local_internal_options.conf", true);
 
-                    //enable osquery for wazuh
+                    _logger.Information("enable osquery for wazuh");
                     var confFile = "C:\\Program Files (x86)\\ossec-agent\\ossec.conf";
                     XmlDocument document = new XmlDocument();
                     document.Load(confFile);
@@ -91,7 +89,21 @@ namespace IvsAgent.AgentWrappers
                     {
                         nodeItems[0].InnerText = "no";
                     }
-                    document.Save(confFile); 
+                    document.Save(confFile);
+
+                    _logger.Information("wazuh is ready to start...");
+
+                    ctl = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName == "WazuhSvc");
+
+                    if (ctl == null)
+                    {
+                        _logger.Information($"WAZUH installed but service not registered. Please check installation logs.");
+                    }
+                    else
+                    {
+                        ctl.Start();
+                    }
+
                     return 0;
                 }
                 else
