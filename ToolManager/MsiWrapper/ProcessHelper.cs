@@ -1,7 +1,7 @@
 ﻿using Serilog;
 using System.Diagnostics;
 
-namespace MsiWrapper
+namespace ToolManager.MsiWrapper
 {
     /// <summary>
     /// Provides methods to help with interacting with processes.
@@ -9,7 +9,7 @@ namespace MsiWrapper
     public class ProcessHelper
     {
         #region Methods
-        
+
         /// <summary>
         /// Creates a process that runs in the background with no UI.
         /// </summary>
@@ -20,10 +20,10 @@ namespace MsiWrapper
         {
             Log.Information("Creating hidden process '{0}' with arguments '{1}'", processFilePath, processArguments);
 
-            var process                   = new Process();
+            var process = new Process();
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            process.StartInfo.FileName    = processFilePath;
-            process.StartInfo.Arguments   = processArguments;
+            process.StartInfo.FileName = processFilePath;
+            process.StartInfo.Arguments = processArguments;
 
             Log.Information("Hidden process '{0}' with arguments '{1}' created", processFilePath, processArguments);
 

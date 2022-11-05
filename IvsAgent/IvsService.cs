@@ -6,9 +6,9 @@ using System.Diagnostics;
 using System.ServiceProcess;
 using System.Timers;
 using Common.Extensions;
-using IvsAgent.AgentWrappers;
 using Common.Utils;
 using Common.Persistance;
+using ToolManager.AgentWrappers;
 
 namespace IvsAgent
 {

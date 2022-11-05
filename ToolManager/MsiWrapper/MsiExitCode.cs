@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace MsiWrapper
+namespace ToolManager.MsiWrapper
 {
     #region Enums
 

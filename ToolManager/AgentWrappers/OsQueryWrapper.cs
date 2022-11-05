@@ -1,4 +1,5 @@
 ﻿using Common.Utils;
+using ToolManager.MsiWrapper;
 using Serilog;
 using System;
 using System.Diagnostics;
@@ -7,9 +8,9 @@ using System.IO.Compression;
 using System.Linq;
 using System.ServiceProcess;
 
-namespace IvsAgent.AgentWrappers
+namespace ToolManager.AgentWrappers
 {
-    internal static class OsQueryWrapper
+    public static class OsQueryWrapper
     {
         private static readonly ILogger _logger = Log.ForContext(typeof(OsQueryWrapper));
 
@@ -34,7 +35,7 @@ namespace IvsAgent.AgentWrappers
 
                 _logger.Information("OSQUERY not found. Preparing installation");
 
-                if(!MsiWrapper.MsiPackage.IsMsiExecFree(TimeSpan.FromSeconds(2)))
+                if (!MsiPackage.IsMsiExecFree(TimeSpan.FromSeconds(2)))
                 {
                     _logger.Information("MSI Installer is not free.");
                     return 1618;
@@ -126,7 +127,7 @@ namespace IvsAgent.AgentWrappers
 
                 _logger.Information("OSQUERY not found. Preparing uninstallation");
 
-                if (!MsiWrapper.MsiPackage.IsMsiExecFree(TimeSpan.FromSeconds(2)))
+                if (!MsiPackage.IsMsiExecFree(TimeSpan.FromSeconds(2)))
                 {
                     _logger.Information("MSI Installer is not free.");
                     return 1618;

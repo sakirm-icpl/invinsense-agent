@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 
-namespace MsiWrapper
+namespace ToolManager.MsiWrapper
 {
     /// <summary>
     /// Encapsulates MSI package installation/uninstallation operations.
@@ -36,11 +36,11 @@ namespace MsiWrapper
         /// <param name="pathToUninstallLogFile">Path to the uninstall log file (optional)</param>
         public MsiPackage(
             string pathToInstallerFile,
-            string pathToInstallLogFile   = null,
+            string pathToInstallLogFile = null,
             string pathToUninstallLogFile = null)
         {
-            _pathToInstallerFile    = pathToInstallerFile;
-            _pathToInstallLogFile   = pathToInstallLogFile;
+            _pathToInstallerFile = pathToInstallerFile;
+            _pathToInstallLogFile = pathToInstallLogFile;
             _pathToUninstallLogFile = pathToUninstallLogFile;
         }
 

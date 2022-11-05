@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Linq;
 
-namespace MsiWrapper
+namespace ToolManager.MsiWrapper
 {
     /// <summary>
     /// Provides Enum Extension Methods.
@@ -21,7 +21,7 @@ namespace MsiWrapper
         {
             try
             {
-                var fieldInfo  = value.GetType().GetField(value.ToString());
+                var fieldInfo = value.GetType().GetField(value.ToString());
                 var attributes = (DescriptionAttribute[])fieldInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);
 
                 if (attributes?.Any() == true) return attributes.First().Description;

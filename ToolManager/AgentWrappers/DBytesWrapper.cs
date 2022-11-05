@@ -1,13 +1,14 @@
 ﻿using Common.Utils;
+using ToolManager.MsiWrapper;
 using Serilog;
 using System;
 using System.Diagnostics;
 using System.Linq;
 using System.ServiceProcess;
 
-namespace IvsAgent.AgentWrappers
+namespace ToolManager.AgentWrappers
 {
-    internal static class DBytesWrapper
+    public static class DBytesWrapper
     {
         private static readonly ILogger _logger = Log.ForContext(typeof(DBytesWrapper));
 
@@ -32,7 +33,7 @@ namespace IvsAgent.AgentWrappers
 
                 _logger.Information("DBYTES not found. Preparing installation");
 
-                if(!MsiWrapper.MsiPackage.IsMsiExecFree(TimeSpan.FromSeconds(2)))
+                if (!MsiPackage.IsMsiExecFree(TimeSpan.FromSeconds(2)))
                 {
                     _logger.Information("MSI Installer is not free.");
                     return 1618;
@@ -119,7 +120,7 @@ namespace IvsAgent.AgentWrappers
 
                 _logger.Information("DBYTES not found. Preparing uninstallation");
 
-                if (!MsiWrapper.MsiPackage.IsMsiExecFree(TimeSpan.FromSeconds(2)))
+                if (!MsiPackage.IsMsiExecFree(TimeSpan.FromSeconds(2)))
                 {
                     _logger.Information("MSI Installer is not free.");
                     return 1618;

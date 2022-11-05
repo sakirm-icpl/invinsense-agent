@@ -5,13 +5,13 @@ using System.Diagnostics;
 using System.Linq;
 using System.ServiceProcess;
 
-namespace IvsAgent.AgentWrappers
+namespace ToolManager.AgentWrappers
 {
     /// <summary>
     /// https://www.blumira.com/enable-sysmon/
     /// 
     /// </summary>
-    internal static class SysmonWrapper
+    public static class SysmonWrapper
     {
         private static readonly ILogger _logger = Log.ForContext(typeof(SysmonWrapper));
 

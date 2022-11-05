@@ -36,10 +36,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AgentWrappers\DBytesWrapper.cs" />
-    <Compile Include="AgentWrappers\WazuhWrapper.cs" />
-    <Compile Include="AgentWrappers\SysmonWrapper.cs" />
-    <Compile Include="AgentWrappers\OsQueryWrapper.cs" />
     <Compile Include="Monitor\ExtendedServiceController.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -77,9 +73,9 @@
       <Project>{0698eb58-dee6-4285-baef-872887ff15cb}</Project>
       <Name>Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MsiWrapper\MsiWrapper.csproj">
-      <Project>{4d1299c9-5507-41f7-94bd-fdeb008f98b7}</Project>
-      <Name>MsiWrapper</Name>
+    <ProjectReference Include="..\ToolManager\ToolManager.csproj">
+      <Project>{b04124ba-1758-4aa2-8d3c-9bc0fb9c0e33}</Project>
+      <Name>ToolManager</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

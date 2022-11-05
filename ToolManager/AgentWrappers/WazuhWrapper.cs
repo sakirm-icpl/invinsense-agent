@@ -1,4 +1,5 @@
 ﻿using Common.Utils;
+using ToolManager.MsiWrapper;
 using Serilog;
 using System;
 using System.Diagnostics;
@@ -6,9 +7,9 @@ using System.Linq;
 using System.ServiceProcess;
 using System.Xml;
 
-namespace IvsAgent.AgentWrappers
+namespace ToolManager.AgentWrappers
 {
-    internal static class WazuhWrapper
+    public static class WazuhWrapper
     {
         private static readonly ILogger _logger = Log.ForContext(typeof(WazuhWrapper));
 
@@ -33,7 +34,7 @@ namespace IvsAgent.AgentWrappers
 
                 _logger.Information("WAZUH not found. Preparing installation");
 
-                if(!MsiWrapper.MsiPackage.IsMsiExecFree(TimeSpan.FromSeconds(2)))
+                if (!MsiPackage.IsMsiExecFree(TimeSpan.FromSeconds(2)))
                 {
                     _logger.Information("MSI Installer is not free.");
                     return 1618;
@@ -83,10 +84,16 @@ namespace IvsAgent.AgentWrappers
                     var confFile = "C:\\Program Files (x86)\\ossec-agent\\ossec.conf";
                     XmlDocument document = new XmlDocument();
                     document.Load(confFile);
-                    XmlNodeList nodeItems = document.SelectNodes("/ossec_config/wodle[@name='osquery']/disabled");
-                    if (nodeItems.Count > 0)
+                    XmlNodeList osQueryDisableNodeItems = document.SelectNodes("/ossec_config/wodle[@name='osquery']/disabled");
+                    if (osQueryDisableNodeItems.Count > 0)
                     {
-                        nodeItems[0].InnerText = "no";
+                        osQueryDisableNodeItems[0].InnerText = "no";
+                    }
+
+                    XmlNodeList osQueryRunDaemonNodeItems = document.SelectNodes("/ossec_config/wodle[@name='osquery']/run_daemon");
+                    if (osQueryRunDaemonNodeItems.Count > 0)
+                    {
+                        osQueryRunDaemonNodeItems[0].InnerText = "no";
                     }
                     document.Save(confFile);
 
