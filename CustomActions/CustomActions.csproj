@@ -4,14 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B04124BA-1758-4AA2-8D3C-9BC0FB9C0E33}</ProjectGuid>
+    <ProjectGuid>{52F2AF5C-722C-4BCE-A438-DD4896E1EF5F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ToolManager</RootNamespace>
-    <AssemblyName>ToolManager</AssemblyName>
+    <RootNamespace>CustomActions</RootNamespace>
+    <AssemblyName>CustomActions</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
+    <WixCATargetsPath Condition=" '$(WixCATargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.CA.targets</WixCATargetsPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,38 +31,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AgentWrappers\DBytesWrapper.cs" />
-    <Compile Include="AgentWrappers\OsQueryWrapper.cs" />
-    <Compile Include="AgentWrappers\SysmonWrapper.cs" />
-    <Compile Include="AgentWrappers\WazuhWrapper.cs" />
-    <Compile Include="MsiWrapper\EnumExtensions.cs" />
-    <Compile Include="MsiWrapper\MsiExitCode.cs" />
-    <Compile Include="MsiWrapper\MsiPackage.cs" />
-    <Compile Include="MsiWrapper\ProcessHelper.cs" />
+    <Compile Include="CustomActions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{0698eb58-dee6-4285-baef-872887ff15cb}</Project>
-      <Name>Common</Name>
+    <ProjectReference Include="..\ToolManager\ToolManager.csproj">
+      <Project>{b04124ba-1758-4aa2-8d3c-9bc0fb9c0e33}</Project>
+      <Name>ToolManager</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System" />
-    <Reference Include="System.ServiceProcess" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Serilog">
-      <Version>2.12.0</Version>
-    </PackageReference>
-    <PackageReference Include="System.IO.Compression.ZipFile">
-      <Version>4.3.0</Version>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
+    <Reference Include="Microsoft.Deployment.WindowsInstaller, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ce35f76fcda82bad, processorArchitecture=MSIL" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(WixCATargetsPath)" />
 </Project>

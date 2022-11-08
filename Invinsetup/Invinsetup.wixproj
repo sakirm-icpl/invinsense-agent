@@ -22,6 +22,14 @@
     <Compile Include="Product.wxs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CustomActions\CustomActions.csproj">
+      <Name>CustomActions</Name>
+      <Project>{52f2af5c-722c-4bce-a438-dd4896e1ef5f}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
     <ProjectReference Include="..\IvsAgent\IvsAgent.csproj">
       <Name>IvsAgent</Name>
       <Project>{8256e95f-31d8-4f30-9cd3-b7d0c3d3ce74}</Project>

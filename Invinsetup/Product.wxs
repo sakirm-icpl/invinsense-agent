@@ -82,6 +82,14 @@
 		<!--Wix Extension to close IvsTray.exe file from System Tray-->
 		<util:CloseApplication Id="CloseTray" Target="IvsTray.exe" CloseMessage="yes" RebootPrompt="no"></util:CloseApplication>
 
+		<Binary Id="CustomActionBinary" SourceFile="$(var.CustomActions.TargetDir)$(var.CustomActions.TargetName).CA.dll" />
+		<CustomAction Id="CheckSessionVariables" BinaryKey="CustomActionBinary" DllEntry="CheckSessionParameters" Execute="immediate" Return="check" />
+		<CustomAction Id="RemoveTools" BinaryKey="CustomActionBinary" DllEntry="RemoveTools" Execute="immediate" Return="check" />
+
+		<InstallExecuteSequence>
+			<Custom Action="RemoveTools" Before="InstallInitialize">Installed AND ( REMOVE = "ALL" OR AI_INSTALL_MODE = "Remove" ) AND NOT UPGRADINGPRODUCTCODE</Custom>
+		</InstallExecuteSequence>
+
 	</Product>
 
 	<!--Fragment to save properties-->
@@ -135,7 +143,6 @@
 				<File Id="a06" Source="$(var.Agent_Service_TargetDir)\ToolManager.dll" />
 				<File Id="a17" Source="$(var.Agent_Service_TargetDir)\ToolManager.pdb" />
 				<File Id="a08" Source="$(var.Agent_Service_TargetDir)\LiteDB.dll" />
-				<File Id="a09" Source="$(var.Agent_Service_TargetDir)\Microsoft.Deployment.WindowsInstaller.dll" />
 				<File Id="a10" Source="$(var.Agent_Service_TargetDir)\Newtonsoft.Json.dll" />
 				<File Id="a11" Source="$(var.Agent_Service_TargetDir)\Serilog.dll" />
 				<File Id="a12" Source="$(var.Agent_Service_TargetDir)\Serilog.Sinks.File.dll" />
