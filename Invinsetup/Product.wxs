@@ -87,6 +87,7 @@
 		<CustomAction Id="RemoveTools" BinaryKey="CustomActionBinary" DllEntry="RemoveTools" Execute="immediate" Return="check" />
 
 		<InstallExecuteSequence>
+			<Custom Action="CheckSessionVariables" Before="LaunchConditions"/>
 			<Custom Action="RemoveTools" Before="InstallInitialize">Installed AND ( REMOVE = "ALL" OR AI_INSTALL_MODE = "Remove" ) AND NOT UPGRADINGPRODUCTCODE</Custom>
 		</InstallExecuteSequence>
 
