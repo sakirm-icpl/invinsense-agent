@@ -32,12 +32,15 @@ namespace ServiceMonitorTest.Monitor
             {
                 _tasks.Add(status, null);
             }
-
-            StartListening();
         }
 
-        private void StartListening()
+        public void StartListening()
         {
+            if(Status == null)
+            {
+                return;
+            }
+
             foreach (ServiceControllerStatus status in Enum.GetValues(typeof(ServiceControllerStatus)))
             {
                 if (Status != status && (_tasks[status] == null || _tasks[status].IsCompleted))
@@ -58,11 +61,6 @@ namespace ServiceMonitorTest.Monitor
                     });
                 }
             }
-        }
-
-        private void StopListening()
-        {
-
         }
 
         protected virtual void OnStatusChanged(ServiceStatusEventArgs e)
