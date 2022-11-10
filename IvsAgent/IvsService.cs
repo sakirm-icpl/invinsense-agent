@@ -15,7 +15,7 @@ namespace IvsAgent
 {
     public partial class IvsService : ServiceBase
     {
-        private readonly Timer avTimer = new Timer(60000);
+        private readonly Timer avTimer = new Timer(15000);
 
         private readonly ExtendedServiceController wazuh;
         private readonly ExtendedServiceController Dbytes;
@@ -203,15 +203,15 @@ namespace IvsAgent
             avTimer.Elapsed += new ElapsedEventHandler(OnElapsedTime);
             avTimer.Start();
 
-            WazuhUpdateStatus(wazuh.Status);
-            DbytesUpdateStatus(Dbytes.Status);
-            SysmonUpdateStatus(Sysmon.Status);
-            LmpStatusUpdate(LmpService.Status);
+            _logger.Information("Scheduling dependency after 5 sec...");
 
-            Task task = Task.Delay(5000)
-                .ContinueWith(t => VerifyDependencyAndInstall());
+            Task.Factory.StartNew(async () =>
+            {
+                await Task.Delay(5000);
+                VerifyDependencyAndInstall();
+            });
 
-            task.Start();
+            _logger.Information("Task added...");
         }
 
         protected override void OnStop()
@@ -276,6 +276,7 @@ namespace IvsAgent
             {
                 _logger.Information($"Sysmon verified with status: {Sysmon.Status}");
                 Sysmon.StartListening();
+                SysmonUpdateStatus(Sysmon.Status);
                 _logger.Information($"Sysmon service listening: {Sysmon.Status}");
             }
             else
@@ -287,6 +288,7 @@ namespace IvsAgent
             {
                 _logger.Information($"OSQuery verified with status: {OsQuery.Status}");
                 OsQuery.StartListening();
+                LmpStatusUpdate(LmpService.Status);
                 _logger.Information($"OSQuery service listening: {OsQuery.Status}");
             }
             else
@@ -298,6 +300,7 @@ namespace IvsAgent
             {
                 _logger.Information($"Wazuh verified with status: {wazuh.Status}");
                 wazuh.StartListening();
+                WazuhUpdateStatus(wazuh.Status);
                 _logger.Information($"Wazuh service listening: {wazuh.Status}");
             }
             else
@@ -309,6 +312,7 @@ namespace IvsAgent
             {
                 _logger.Information($"dBytes verified with status: {Dbytes.Status}");
                 Dbytes.StartListening();
+                DbytesUpdateStatus(Dbytes.Status);
                 _logger.Information($"dBytes service listening: {Dbytes.Status}");
             }
             else
