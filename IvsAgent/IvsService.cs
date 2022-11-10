@@ -9,12 +9,13 @@ using Common.Extensions;
 using Common.Utils;
 using Common.Persistance;
 using ToolManager.AgentWrappers;
+using System.Threading.Tasks;
 
 namespace IvsAgent
 {
     public partial class IvsService : ServiceBase
     {
-        private readonly Timer timer = new Timer();
+        private readonly Timer avTimer = new Timer(60000);
 
         private readonly ExtendedServiceController wazuh;
         private readonly ExtendedServiceController Dbytes;
@@ -42,7 +43,7 @@ namespace IvsAgent
 
             wazuh = new ExtendedServiceController("WazuhSvc");
             wazuh.StatusChanged += (object sender, ServiceStatusEventArgs e) => WazuhUpdateStatus(e.Status);
-            
+
             Dbytes = new ExtendedServiceController("DBytesService");
             Dbytes.StatusChanged += (object sender, ServiceStatusEventArgs e) => DbytesUpdateStatus(e.Status);
 
@@ -82,6 +83,7 @@ namespace IvsAgent
 
             switch (status.Value)
             {
+                case ServiceControllerStatus.StartPending:
                 case ServiceControllerStatus.Running:
                     toolRepository.CaptureEvent(ToolName.Wazuuh, InstallStatus.Installed, RunningStatus.Running);
                     return;
@@ -104,6 +106,7 @@ namespace IvsAgent
 
             switch (status.Value)
             {
+                case ServiceControllerStatus.StartPending:
                 case ServiceControllerStatus.Running:
                     toolRepository.CaptureEvent(ToolName.Dbytes, InstallStatus.Installed, RunningStatus.Running);
                     return;
@@ -126,6 +129,7 @@ namespace IvsAgent
 
             switch (status.Value)
             {
+                case ServiceControllerStatus.StartPending:
                 case ServiceControllerStatus.Running:
                     toolRepository.CaptureEvent(ToolName.OsQuery, InstallStatus.Installed, RunningStatus.Running);
                     return;
@@ -148,6 +152,7 @@ namespace IvsAgent
 
             switch (status.Value)
             {
+                case ServiceControllerStatus.StartPending:
                 case ServiceControllerStatus.Running:
                     toolRepository.CaptureEvent(ToolName.Sysmon, InstallStatus.Installed, RunningStatus.Running);
                     return;
@@ -170,6 +175,7 @@ namespace IvsAgent
 
             switch (status.Value)
             {
+                case ServiceControllerStatus.StartPending:
                 case ServiceControllerStatus.Running:
                     toolRepository.CaptureEvent(ToolName.Lmp, InstallStatus.Installed, RunningStatus.Running);
                     return;
@@ -194,36 +200,25 @@ namespace IvsAgent
 
             _logger.Information("Starting Invinsense service...");
 
-            timer.Elapsed += new ElapsedEventHandler(OnElapsedTime);
-            timer.Interval = 60000; //number in milisecinds  
-            timer.Enabled = true;
+            avTimer.Elapsed += new ElapsedEventHandler(OnElapsedTime);
+            avTimer.Start();
 
-            if (wazuh != null)
-            {
-                WazuhUpdateStatus(wazuh.Status);
-            }
+            WazuhUpdateStatus(wazuh.Status);
+            DbytesUpdateStatus(Dbytes.Status);
+            SysmonUpdateStatus(Sysmon.Status);
+            LmpStatusUpdate(LmpService.Status);
 
-            if (Dbytes != null)
-            {
-                DbytesUpdateStatus(Dbytes.Status);
-            }
+            Task task = Task.Delay(5000)
+                .ContinueWith(t => VerifyDependencyAndInstall());
 
-            if (Sysmon != null)
-            {
-                SysmonUpdateStatus(Sysmon.Status);
-            }
-
-            if (LmpService != null)
-            {
-                LmpStatusUpdate(LmpService.Status);
-            }
+            task.Start();
         }
 
         protected override void OnStop()
         {
             _logger.Information("Stopping service");
 
-            timer.Stop();
+            avTimer.Stop();
 
             toolRepository.CaptureEvent(ToolName.Lmp, InstallStatus.Installed, RunningStatus.Stopped);
 
@@ -238,8 +233,6 @@ namespace IvsAgent
 
         private bool inTimer = false;
         private InstallStatus avLastStatus = InstallStatus.NotFound;
-
-        private bool isFirstTime = true;
 
         private void OnElapsedTime(object source, ElapsedEventArgs e)
         {
@@ -274,58 +267,54 @@ namespace IvsAgent
                 toolRepository.CaptureEvent(ToolName.Av, status, status == InstallStatus.Installed ? RunningStatus.Running : RunningStatus.Warning);
             }
 
-            if (!isFirstTime)
-            {
-                return;
-            }
+            inTimer = false;
+        }
 
-            isFirstTime = false;
-
+        private void VerifyDependencyAndInstall()
+        {
             if (SysmonWrapper.Verify(true) == 0)
             {
                 _logger.Information($"Sysmon verified with status: {Sysmon.Status}");
+                Sysmon.StartListening();
+                _logger.Information($"Sysmon service listening: {Sysmon.Status}");
             }
             else
             {
                 _logger.Error("Error in Sysmon installer");
             }
 
-            Sysmon.Refresh();
-            
             if (OsQueryWrapper.Verify(true) == 0)
             {
-                _logger.Information("OSQuery verified");
+                _logger.Information($"OSQuery verified with status: {OsQuery.Status}");
+                OsQuery.StartListening();
+                _logger.Information($"OSQuery service listening: {OsQuery.Status}");
             }
             else
             {
-                _logger.Information("OSQuery not available");
+                _logger.Error("Error in OSQuery installer");
             }
 
-            OsQuery.Refresh();
-            
             if (WazuhWrapper.Verify(true) == 0)
             {
-                _logger.Information("Wazuh verified");
+                _logger.Information($"Wazuh verified with status: {wazuh.Status}");
+                wazuh.StartListening();
+                _logger.Information($"Wazuh service listening: {wazuh.Status}");
             }
             else
             {
-                _logger.Information("Wazuh not avaiable");
+                _logger.Error("Error in Wazuh installer");
             }
 
-            wazuh.Refresh();
-            
             if (DBytesWrapper.Verify(true) == 0)
             {
-                _logger.Information("Deceptive Bytes verified");
+                _logger.Information($"dBytes verified with status: {Dbytes.Status}");
+                Dbytes.StartListening();
+                _logger.Information($"dBytes service listening: {Dbytes.Status}");
             }
             else
             {
-                _logger.Information("Deceptive Bytes not avaiable");
+                _logger.Error("Error in dBytes installer");
             }
-
-            Dbytes.Refresh();
-
-            inTimer = false;
         }
     }
 }

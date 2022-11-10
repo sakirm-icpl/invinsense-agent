@@ -43,6 +43,12 @@ namespace Common.Persistance
                     return;
                 }
 
+                if(toolEntry.InstallStatus == installStatus && toolEntry.RunningStatus == runningStatus)
+                {
+                    Logger.Information($"Status not changed. Skipping.: Install:{installStatus}, Running:{runningStatus}");
+                    return;
+                }
+
                 toolEntry.InstallStatus = installStatus;
                 toolEntry.RunningStatus = runningStatus;
                 col.Update(toolEntry);
