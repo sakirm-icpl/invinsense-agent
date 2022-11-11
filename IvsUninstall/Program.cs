@@ -12,7 +12,7 @@ namespace IvsUninstall
         {
             Log.Logger = new LoggerConfiguration()
                .MinimumLevel.Verbose()
-               .WriteTo.File(CommonUtils.GetAbsoletePath("ivsuninstall.log"), rollingInterval: RollingInterval.Day)
+               .WriteTo.File(CommonUtils.GetAbsoletePath("ivsuninstall.log"), rollingInterval: RollingInterval.Day, retainedFileCountLimit: 3)
                .WriteTo.Console()
                .CreateLogger();
 
