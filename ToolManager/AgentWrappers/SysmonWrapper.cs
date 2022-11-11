@@ -111,7 +111,7 @@ namespace ToolManager.AgentWrappers
                     return 0;
                 }
 
-                _logger.Information("SYSMON not found. Preparing installation");
+                _logger.Information("SYSMON found. Preparing Uninstallation");
 
                 var exePath = CommonUtils.GetAbsoletePath("..\\artifacts\\Sysmon64.exe");
 
