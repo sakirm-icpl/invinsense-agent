@@ -18,6 +18,15 @@ namespace IvsUninstall
 
             Log.Logger.Information("Uninstalling Invinsense 3.0 components");
 
+            /*
+            var listPrograms = ListPrograms();
+
+            foreach (var item in listPrograms)
+            {
+                Log.Logger.Information($"{item}");
+            }
+            */
+
             Thread.Sleep(1000);
 
             Log.Logger.Information("Uninstalling Deceptive Bytes...");
@@ -30,20 +39,23 @@ namespace IvsUninstall
 
             var wazuhExitCode = ToolManager.AgentWrappers.WazuhWrapper.Remove();
 
-            Log.Logger.Information($"Wazuh Bytes remove exit code={wazuhExitCode}");
+            Log.Logger.Information($"Wazuh remove exit code={wazuhExitCode}");
 
             Thread.Sleep(1000);
 
             var osQueryExitCode = ToolManager.AgentWrappers.OsQueryWrapper.Remove();
 
-            Log.Logger.Information($"OSQUERY Bytes remove exit code={osQueryExitCode}");
+            Log.Logger.Information($"OSQUERY remove exit code={osQueryExitCode}");
 
             Thread.Sleep(1000);
 
             var sysmonExitCode = ToolManager.AgentWrappers.SysmonWrapper.Remove();
 
-            Log.Logger.Information($"SYSMON Bytes remove exit code={sysmonExitCode}");
+            Log.Logger.Information($"SYSMON remove exit code={sysmonExitCode}");
 
+            var uninstallInvinsense = UninstallProgram("Invinsense");
+
+            Log.Logger.Information($"Invinsense remove exit code={uninstallInvinsense}");
         }
 
         private static List<string> ListPrograms()
