@@ -98,5 +98,68 @@ namespace ToolManager.AgentWrappers
         {
             _logger.Information("SYSMON installation process exited.");
         }
+
+        public static int Remove()
+        {
+            try
+            {
+                ServiceController ctl = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName == "Sysmon64");
+
+                if (ctl == null)
+                {
+                    _logger.Information($"SYSMON not found. Skipping");
+                    return 0;
+                }
+
+                _logger.Information("SYSMON not found. Preparing installation");
+
+                var exePath = CommonUtils.GetAbsoletePath("..\\artifacts\\Sysmon64.exe");
+
+                var logPath = CommonUtils.GetAbsoletePath("..\\artifacts\\sysmonInstall.log");
+
+                _logger.Information($"PATH: {exePath}, Log: {logPath}");
+
+                Process installerProcess = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = exePath,
+                        Arguments = $"-accepteula -u",
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        CreateNoWindow = true,
+                        WorkingDirectory = CommonUtils.RootFolder
+                    }
+                };
+
+                installerProcess.OutputDataReceived += InstallerProcess_OutputDataReceived;
+                installerProcess.ErrorDataReceived += InstallerProcess_ErrorDataReceived;
+                installerProcess.Exited += InstallerProcess_Exited;
+
+                installerProcess.Start();
+
+
+                _logger.Information("SYSMON Uninstallation started...");
+
+                installerProcess.WaitForExit();
+
+                var exitCode = installerProcess.ExitCode;
+
+                if (exitCode == 0)
+                {
+                    _logger.Information("SYSMON Uninstallation completed");
+                }
+                else
+                {
+                    _logger.Information($"SYSMON Uninstallation fault: {exitCode}");
+                }
+
+                return exitCode;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex.Message);
+                return 1;
+            }
+        }
     }
 }

@@ -139,5 +139,74 @@ namespace ToolManager.AgentWrappers
         {
             _logger.Information("WAZUH process exited.");
         }
+
+        public static int Remove()
+        {
+            try
+            {
+
+                ServiceController ctl = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName == "WazuhSvc");
+
+                if (ctl == null)
+                {
+                    _logger.Information($"WAZUH not found. Skipping...");
+                    return 0;
+                }
+
+                _logger.Information("WAZUH found. Preparing uninstallation");
+
+                if (!MsiPackage.IsMsiExecFree(TimeSpan.FromSeconds(2)))
+                {
+                    _logger.Information("MSI Installer is not free.");
+                    return 1618;
+                }
+
+                _logger.Information("WAZUH uninstallation is ready");
+
+                var msiPath = CommonUtils.GetAbsoletePath("..\\artifacts\\wazuh-agent-4.3.9-1.msi");
+
+                var logPath = CommonUtils.GetAbsoletePath("..\\artifacts\\wazuhInstall.log");
+
+                _logger.Information($"PATH: {msiPath}, Log: {logPath}");
+
+                Process installerProcess = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = "msiexec",
+                        Arguments = $"/X \"{msiPath}\" /QN /l*vx \"{logPath}\"",
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        CreateNoWindow = true,
+                        WorkingDirectory = CommonUtils.RootFolder
+                    }
+                };
+
+                installerProcess.OutputDataReceived += InstallerProcess_OutputDataReceived;
+                installerProcess.ErrorDataReceived += InstallerProcess_ErrorDataReceived;
+                installerProcess.Exited += InstallerProcess_Exited;
+
+                installerProcess.Start();
+
+                _logger.Information("WAZUH Uninstallation started...");
+
+                installerProcess.WaitForExit();
+
+                if (installerProcess.ExitCode == 0)
+                {
+                    _logger.Information("WAZUH Uninstallation completed");
+                }
+                else
+                {
+                    _logger.Information($"WAZUH Uninstallation fault: {installerProcess.ExitCode}");
+                }
+
+                return installerProcess.ExitCode;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex.Message);
+                return 1;
+            }
+        }
     }
 }

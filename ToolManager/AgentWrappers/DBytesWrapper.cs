@@ -109,7 +109,6 @@ namespace ToolManager.AgentWrappers
         {
             try
             {
-
                 ServiceController ctl = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName == "DBytesService");
 
                 if (ctl == null)
@@ -118,7 +117,7 @@ namespace ToolManager.AgentWrappers
                     return -1;
                 }
 
-                _logger.Information("DBYTES not found. Preparing uninstallation");
+                _logger.Information("DBYTES found. Preparing uninstallation");
 
                 if (!MsiPackage.IsMsiExecFree(TimeSpan.FromSeconds(2)))
                 {
@@ -126,20 +125,23 @@ namespace ToolManager.AgentWrappers
                     return 1618;
                 }
 
-                _logger.Information("DBYTES installation is ready");
+                _logger.Information("DBYTES Uninstallation is ready");
 
                 var msiPath = CommonUtils.GetAbsoletePath("..\\artifacts\\DeceptiveBytes.EPS.x64.msi");
 
                 var logPath = CommonUtils.GetAbsoletePath("..\\artifacts\\DBYTESInstall.log");
 
-                _logger.Information($"PATH: {msiPath}, Log: {logPath}");
+                var toolPath = CommonUtils.GetAbsoletePath("..\\artifacts\\DeceptiveBytes.EPS.RemovalTool.exe");
+
+                _logger.Information($"PATH: {msiPath}, Log: {logPath}, Tool: {toolPath}");
 
                 Process installerProcess = new Process
                 {
                     StartInfo = new ProcessStartInfo
                     {
-                        FileName = "msiexec",
-                        Arguments = $"/X \"{msiPath}\" /QN /l*vx \"{logPath}\"",
+                        //FileName = "msiexec",
+                        //Arguments = $"/X \"{msiPath}\" /QN /l*vx \"{logPath}\"",
+                        FileName = toolPath,
                         WindowStyle = ProcessWindowStyle.Hidden,
                         CreateNoWindow = true,
                         WorkingDirectory = CommonUtils.RootFolder

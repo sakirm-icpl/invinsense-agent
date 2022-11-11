@@ -125,7 +125,7 @@ namespace ToolManager.AgentWrappers
                     return -1;
                 }
 
-                _logger.Information("OSQUERY not found. Preparing uninstallation");
+                _logger.Information("OSQUERY found. Preparing uninstallation");
 
                 if (!MsiPackage.IsMsiExecFree(TimeSpan.FromSeconds(2)))
                 {
@@ -133,7 +133,7 @@ namespace ToolManager.AgentWrappers
                     return 1618;
                 }
 
-                _logger.Information("OSQUERY installation is ready");
+                _logger.Information("OSQUERY Uninstallation is ready");
 
                 var msiPath = CommonUtils.GetAbsoletePath("..\\artifacts\\osquery-5.5.1.msi");
 
@@ -167,14 +167,13 @@ namespace ToolManager.AgentWrappers
                 if (installerProcess.ExitCode == 0)
                 {
                     _logger.Information("OSQUERY uninstall completed");
-                    return 0;
                 }
                 else
                 {
                     _logger.Information($"OSQUERY uninstall fault: {installerProcess.ExitCode}");
-                    return installerProcess.ExitCode;
-
                 }
+
+                return installerProcess.ExitCode;
             }
             catch (Exception ex)
             {
