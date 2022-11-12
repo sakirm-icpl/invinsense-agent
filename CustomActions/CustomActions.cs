@@ -1,4 +1,5 @@
 ﻿using Microsoft.Deployment.WindowsInstaller;
+using System.Windows;
 
 namespace ToolManager
 {
@@ -15,7 +16,20 @@ namespace ToolManager
         public static ActionResult RemoveTools(Session session)
         {
             session.Log("Hello World! from Uninstall");
-            return ActionResult.Success;
+            //   session["DBYTES_PASS"]=null;
+            if (!string.IsNullOrEmpty(session["DBYTES_PASS"] as string))
+            {
+                //The code
+                MessageBox.Show("Uninstall successfully");
+                return ActionResult.Success;
+
+            }
+            else
+            {
+                MessageBox.Show("Stop uninstallation");
+                return ActionResult.Failure;
+
+            }
         }
     }
 }

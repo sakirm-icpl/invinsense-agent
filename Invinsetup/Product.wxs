@@ -67,6 +67,13 @@
 							Name='DBYTES_APIKEY' Type='raw' />
 		</Property>
 
+		<!--Fetch property of DBYTES_PASS-->
+		<Property Id='DBYTES_PASS'>
+			<RegistrySearch Id='DeceptiveBytesPassword' Root='HKLM'
+							Key='SOFTWARE\infopercxept'
+							Name='DBYTES_PASS' Type='raw' />
+		</Property>
+
 		<!--Main Feature for this Setup which can be found in Fragment Tag with ComponentGroupRef Id-->
 		<Feature Id="ProductFeature" Title="$(var.Name)" Level="1">
 			<ComponentRef Id="ConfigurationValues"/>
@@ -116,6 +123,11 @@
 			<!--add property of DBYTES_APIKEY with value and place it to "SOFTWARE\infopercept" -->
 			<RegistryValue Root='HKLM' Key='SOFTWARE\Infopercept'
 						   Name='DBYTES_APIKEY' Value='[DBYTES_APIKEY]'
+						   Type='string' />
+
+			<!--add property of DBYTES_PASS with value and place it to "SOFTWARE\infopercept" -->
+			<RegistryValue Root='HKLM' Key='SOFTWARE\Infopercept'
+						   Name='DBYTES_PASS' Value='[DBYTES_PASS]'
 						   Type='string' />
 
 		</Component>
