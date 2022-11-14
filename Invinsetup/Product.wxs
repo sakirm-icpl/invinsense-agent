@@ -68,10 +68,10 @@
 		</Property>
 
 		<!--Fetch property of DBYTES_PASS-->
-		<Property Id='DBYTES_PASS'>
+		<Property Id='UNINSTALL_KEY'>
 			<RegistrySearch Id='DeceptiveBytesPassword' Root='HKLM'
 							Key='SOFTWARE\infopercxept'
-							Name='DBYTES_PASS' Type='raw' />
+							Name='UNINSTALL_KEY' Type='raw' />
 		</Property>
 
 		<!--Main Feature for this Setup which can be found in Fragment Tag with ComponentGroupRef Id-->
@@ -127,7 +127,7 @@
 
 			<!--add property of DBYTES_PASS with value and place it to "SOFTWARE\infopercept" -->
 			<RegistryValue Root='HKLM' Key='SOFTWARE\Infopercept'
-						   Name='DBYTES_PASS' Value='[DBYTES_PASS]'
+						   Name='UNINSTALL_KEY' Value='[UNINSTALL_KEY]'
 						   Type='string' />
 
 		</Component>

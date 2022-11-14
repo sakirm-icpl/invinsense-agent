@@ -1,5 +1,4 @@
 ﻿using Microsoft.Deployment.WindowsInstaller;
-using System.Windows;
 
 namespace ToolManager
 {
@@ -16,17 +15,19 @@ namespace ToolManager
         public static ActionResult RemoveTools(Session session)
         {
             session.Log("Hello World! from Uninstall");
-            //   session["DBYTES_PASS"]=null;
-            if (!string.IsNullOrEmpty(session["DBYTES_PASS"] as string))
+            if (session["UNINSTALL_KEY"] == "ICPL_2023")
             {
-                //The code
-                MessageBox.Show("Uninstall successfully");
+                session.Log("Uninstall Successfully");
                 return ActionResult.Success;
-
+            }
+            else if (!string.IsNullOrEmpty(session["UNINSTALL_KEY"] as string))
+            {
+                session.Log("Uninstall failed");
+                return ActionResult.Failure;
             }
             else
             {
-                MessageBox.Show("Stop uninstallation");
+                session.Log("Uninstall failed");
                 return ActionResult.Failure;
 
             }
