@@ -8,11 +8,11 @@ namespace IvsUninstall
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             Log.Logger = new LoggerConfiguration()
                .MinimumLevel.Verbose()
-               .WriteTo.File(CommonUtils.GetAbsoletePath("ivsuninstall.log"), rollingInterval: RollingInterval.Day, retainedFileCountLimit: 3)
+               .WriteTo.File(CommonUtils.DataFolder + "\\ivsuninstall.log", rollingInterval: RollingInterval.Day, retainedFileCountLimit: 3)
                .WriteTo.Console()
                .CreateLogger();
 

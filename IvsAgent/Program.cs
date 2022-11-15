@@ -17,7 +17,7 @@ namespace IvsAgent
         {
             Log.Logger = new LoggerConfiguration()
                .MinimumLevel.Verbose()
-               .WriteTo.File(CommonUtils.GetAbsoletePath("ivsagent.log"), rollingInterval: RollingInterval.Day, retainedFileCountLimit: 3)
+               .WriteTo.File(CommonUtils.DataFolder + "\\ivsagent.log", rollingInterval: RollingInterval.Day, retainedFileCountLimit: 3)
                .CreateLogger();
 
             Log.Logger.Information("Initializing service");
@@ -29,8 +29,6 @@ namespace IvsAgent
                 {
                     EventLog.CreateEventSource(Constants.IvsAgentName, Common.Constants.LogGroupName);
                 }
-
-                SeedClass.SeedData();
 
                 ServiceBase[] ServicesToRun;
                 ServicesToRun = new ServiceBase[]

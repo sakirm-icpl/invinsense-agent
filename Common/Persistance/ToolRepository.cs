@@ -1,77 +1,101 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Win32;
+using Serilog;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Common.Persistance
 {
-    public sealed class ToolRepository : BaseRepository<ToolDetail>
+    public sealed class ToolRepository
     {
-        protected override string CollectionName => "tool_details";
+        private static readonly ILogger _logger = Log.ForContext<ToolRepository>();
 
         public ToolRepository()
         {
 
         }
 
-        public IEnumerable<ToolDetail> GetTools()
+        public IEnumerable<ToolStatus> GetAllStatuses()
         {
-            using (var db = GetDatabase())
+            var wazuhStatus = GetStatus(ToolName.Wazuuh);
+            var sysmonStatus = GetStatus(ToolName.Sysmon);
+            var dBytesStatus = GetStatus(ToolName.Dbytes);
+            var osQueryStatus = GetStatus(ToolName.OsQuery);
+            var avStatus = GetStatus(ToolName.Av);
+            var lmpStatus = GetStatus(ToolName.Lmp);
+            return new[] { wazuhStatus, sysmonStatus, dBytesStatus, osQueryStatus, avStatus, lmpStatus };
+        }
+
+        public ToolStatus GetStatus(string name)
+        {
+            try
             {
-                var col = GetCollection(db);
-                return col.FindAll();
+                using (var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
+                using (var key = hklm.OpenSubKey($"SOFTWARE\\Infopercept\\{name}", false)) // False is important!
+                {
+                    var installStatus = (InstallStatus) Enum.Parse(typeof(InstallStatus), (key?.GetValue("INSTALL_STATUS") as string) ?? "NotFound");
+                    var runningStatus = (RunningStatus) Enum.Parse(typeof(RunningStatus), (key?.GetValue("RUNNING_STATUS") as string) ?? "NotFound");
+
+                    return new ToolStatus(name, installStatus, runningStatus);
+                }
+            }
+            catch(Exception ex)
+            {
+                _logger.Error($"Error in reading tool status. {ex}");
+            }
+
+            return new ToolStatus(name, InstallStatus.NotFound, RunningStatus.NotFound);
+        }
+
+        public static string GetPropertyByName(string path, string name)
+        {
+            try
+            {
+                using (var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
+                using (var key = hklm.OpenSubKey($"SOFTWARE\\Infopercept\\{path}", false)) // False is important!
+                {
+                    var value = key?.GetValue(name) as string;
+                    return value;
+                }
+            }
+            catch
+            {
+                return null;
             }
         }
 
-        public ToolDetail GetDetail(string name)
+        public static void SetPropertyByName(string path, string name, string value)
         {
-            using (var db = GetDatabase())
+            try
             {
-                var col = GetCollection(db);
-                return col.FindOne(x => x.Name == name);
+                using (var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
+                using (var key = hklm.OpenSubKey($"SOFTWARE\\Infopercept\\{path}", true))
+                {
+                    key?.SetValue(name, value);
+                }
+            }
+            catch
+            {
+                _logger.Error($"Error in set registry value:{path} {name} {value}");
             }
         }
 
-        public void CaptureEvent(string name, InstallStatus installStatus, RunningStatus runningStatus)
+        public void CaptureEvent(ToolStatus toolStatus)
         {
-            using (var db = GetDatabase())
+            _logger.Information($"{toolStatus}");
+
+            var oldStatus = GetStatus(toolStatus.Name);
+
+            if(oldStatus.InstallStatus != toolStatus.InstallStatus)
             {
-                var col = GetCollection(db);
-                var toolEntry = col.FindOne(x => x.Name == name);
 
-                if (toolEntry == null)
-                {
-                    Logger.Error($"Tool not found: {name}");
-                    return;
-                }
-
-                if(toolEntry.InstallStatus == installStatus && toolEntry.RunningStatus == runningStatus)
-                {
-                    Logger.Information($"Status not changed. Skipping.: Install:{installStatus}, Running:{runningStatus}");
-                    return;
-                }
-
-                toolEntry.InstallStatus = installStatus;
-                toolEntry.RunningStatus = runningStatus;
-                col.Update(toolEntry);
             }
-
-            var toolStatus = new ToolStatus(name, installStatus, runningStatus);
-
-            Logger.Information($"{toolStatus}");
 
             var log = new EventLog(Constants.LogGroupName) { Source = Constants.IvsAgentName };
 
             var eventInstance = new EventInstance(toolStatus.GetHashCode(), 0, EventLogEntryType.Information);
 
-            log.WriteEvent(eventInstance, $"{name} Install: {installStatus}, Running: {runningStatus}");
-        }
-
-        public bool IsAnyError()
-        {
-            using (var db = GetDatabase())
-            {
-                var col = GetCollection(db);
-                return col.Exists(x => x.InstallStatus != InstallStatus.Installed || x.RunningStatus != RunningStatus.Running);
-            }
+            log.WriteEvent(eventInstance, $"{toolStatus.Name} Install: {toolStatus.InstallStatus}, Running: {toolStatus.RunningStatus}");
         }
     }
 }

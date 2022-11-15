@@ -53,6 +53,13 @@
 							Name='WAZUH_REGISTRATION_SERVER' Type='raw' />
 		</Property>
 
+		<!--Fetch property of WAZUH_AGENT_GROUP-->
+		<Property Id='WAZUH_AGENT_GROUP'>
+			<RegistrySearch Id='WazuhAgentGroup' Root='HKLM'
+							Key='SOFTWARE\infopercxept'
+							Name='WAZUH_AGENT_GROUP' Type='raw' />
+		</Property>
+
 		<!--Fetch property of DBYTES_SERVER-->
 		<Property Id='DBYTES_SERVER'>
 			<RegistrySearch Id='DeceptiveBytesIp' Root='HKLM'
@@ -65,13 +72,6 @@
 			<RegistrySearch Id='DeceptiveBytesApiKey' Root='HKLM'
 							Key='SOFTWARE\infopercxept'
 							Name='DBYTES_APIKEY' Type='raw' />
-		</Property>
-
-		<!--Fetch property of DBYTES_PASS-->
-		<Property Id='UNINSTALL_KEY'>
-			<RegistrySearch Id='DeceptiveBytesPassword' Root='HKLM'
-							Key='SOFTWARE\infopercxept'
-							Name='UNINSTALL_KEY' Type='raw' />
 		</Property>
 
 		<!--Main Feature for this Setup which can be found in Fragment Tag with ComponentGroupRef Id-->
@@ -105,31 +105,55 @@
 	<Fragment>
 		<Component Id="ConfigurationValues" Directory="ManufacturerFolder" Win64="yes">
 
-			<!--add property of WAZUH_MANAGER with value and place it to "SOFTWARE\infopercept" -->
-			<RegistryValue Root='HKLM' Key='SOFTWARE\Infopercept'
-						   Name='WAZUH_MANAGER' Value='[WAZUH_MANAGER]'
-						   Type='string' />
+			<RegistryKey Root="HKLM" Key="SOFTWARE\Infopercept">
 
-			<!--add property of WAZUH_REGISTRATION_SERVER with value and place it to "SOFTWARE\infopercept" -->
-			<RegistryValue Root='HKLM' Key='SOFTWARE\Infopercept'
-						   Name='WAZUH_REGISTRATION_SERVER' Value='[WAZUH_REGISTRATION_SERVER]'
-						   Type='string' />
+				<RegistryKey Key="WAZUH">
 
-			<!--add property of DBYTES_SERVER with value and place it to "SOFTWARE\infopercept" -->
-			<RegistryValue Root='HKLM' Key='SOFTWARE\Infopercept'
-						   Name='DBYTES_SERVER' Value='[DBYTES_SERVER]'
-						   Type='string' />
+					<!--add property of WAZUH_MANAGER with value and place it to "SOFTWARE\infopercept" -->
+					<RegistryValue Name="MANAGER_ADDR" Value='[WAZUH_MANAGER]' Type='string' ></RegistryValue>
 
-			<!--add property of DBYTES_APIKEY with value and place it to "SOFTWARE\infopercept" -->
-			<RegistryValue Root='HKLM' Key='SOFTWARE\Infopercept'
-						   Name='DBYTES_APIKEY' Value='[DBYTES_APIKEY]'
-						   Type='string' />
+					<!--add property of WAZUH_REGISTRATION_SERVER with value and place it to "SOFTWARE\infopercept" -->
+					<RegistryValue Name="REGISTRATION_SERVER_ADDR" Value='[WAZUH_REGISTRATION_SERVER]' Type='string' ></RegistryValue>
 
-			<!--add property of DBYTES_PASS with value and place it to "SOFTWARE\infopercept" -->
-			<RegistryValue Root='HKLM' Key='SOFTWARE\Infopercept'
-						   Name='UNINSTALL_KEY' Value='[UNINSTALL_KEY]'
-						   Type='string' />
+					<!--add property of WAZUH_AGENT_GROUP with value and place it to "SOFTWARE\infopercept" -->
+					<RegistryValue Name="AGENT_GROUP" Value='[WAZUH_AGENT_GROUP]' Type='string' ></RegistryValue>
 
+					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string" ></RegistryValue>
+					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string" ></RegistryValue>
+				</RegistryKey>
+
+				<RegistryKey Key="SYSMON">
+					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string" ></RegistryValue>
+					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string" ></RegistryValue>
+				</RegistryKey>
+
+				<RegistryKey Key="OSQUERY">
+					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string" ></RegistryValue>
+					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string" ></RegistryValue>
+				</RegistryKey>
+
+				<RegistryKey Key="DBYTES">
+					<!--add property of DBYTES_SERVER with value and place it to "SOFTWARE\infopercept" -->
+					<RegistryValue Name='SERVER_ADDR' Value='[DBYTES_SERVER]' Type='string' />
+
+					<!--add property of DBYTES_APIKEY with value and place it to "SOFTWARE\infopercept" -->
+					<RegistryValue Name='APIKEY' Value='[DBYTES_APIKEY]' Type='string' />
+					
+					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string" ></RegistryValue>
+					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string" ></RegistryValue>
+				</RegistryKey>
+
+				<RegistryKey Key="AV">
+					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string" ></RegistryValue>
+					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string" ></RegistryValue>
+				</RegistryKey>
+
+				<RegistryKey Key="LMP">
+					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string" ></RegistryValue>
+					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string" ></RegistryValue>
+				</RegistryKey>
+
+			</RegistryKey>
 		</Component>
 	</Fragment>
 
@@ -157,7 +181,6 @@
 				<File Id="a05" Source="$(var.Agent_Service_TargetDir)\IvsAgent.pdb" />
 				<File Id="a06" Source="$(var.Agent_Service_TargetDir)\ToolManager.dll" />
 				<File Id="a17" Source="$(var.Agent_Service_TargetDir)\ToolManager.pdb" />
-				<File Id="a08" Source="$(var.Agent_Service_TargetDir)\LiteDB.dll" />
 				<File Id="a10" Source="$(var.Agent_Service_TargetDir)\Newtonsoft.Json.dll" />
 				<File Id="a11" Source="$(var.Agent_Service_TargetDir)\Serilog.dll" />
 				<File Id="a12" Source="$(var.Agent_Service_TargetDir)\Serilog.Sinks.File.dll" />
@@ -176,7 +199,6 @@
 				<File Id="b03" Source="$(var.IvsTray.TargetPath)" />
 				<File Id="b04" Source="$(var.Tray_Application_TargetDir)\IvsTray.exe.config" />
 				<File Id="b05" Source="$(var.Tray_Application_TargetDir)\IvsTray.pdb" />
-				<File Id="b06" Source="$(var.Tray_Application_TargetDir)\LiteDB.dll" />
 				<File Id="b07" Source="$(var.Tray_Application_TargetDir)\Newtonsoft.Json.dll" />
 				<File Id="b08" Source="$(var.Tray_Application_TargetDir)\Serilog.dll" />
 				<File Id="b09" Source="$(var.Tray_Application_TargetDir)\Serilog.Sinks.File.dll" />
@@ -190,7 +212,6 @@
 	<Fragment>
 		<ComponentGroup Id="ToolComponents" Directory="ARTIFACTSFOLDER">
 			<Component Id="c00" Guid="DEF1F99A-A721-4F70-87BC-92E13E47B0B1" Win64="yes">
-				<File Id="c01" Source="..\artifacts\LiteDB.Studio.exe" />
 				<File Id="c02" Source="..\artifacts\Sysmon\Sysmon64.exe" />
 				<File Id="c03" Source="..\artifacts\osquery\osquery-5.5.1.msi" />
 				<File Id="c04" Source="..\artifacts\osquery\osquery.conf" />

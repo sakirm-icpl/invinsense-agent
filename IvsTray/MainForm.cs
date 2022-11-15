@@ -60,7 +60,7 @@ namespace IvsTray
         private void MainFormOnLoad(object sender, EventArgs e)
         {
             _logger.Information("Loading all tools from db");
-            var allTools = toolRepository.GetTools();
+            var allTools = toolRepository.GetAllStatuses();
             _logger.Information($"Tools loaded: {allTools.Count()}");
 
             toolStatuses.Clear();

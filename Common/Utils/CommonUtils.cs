@@ -13,9 +13,21 @@ namespace Common.Utils
 
         public static string GetAbsoletePath(string path) => Path.GetFullPath(new Uri(Path.Combine(RootFolder, path)).LocalPath);
 
-        public static string ConfigFolder => Path.Combine(RootFolder, "configs");
+        public static string ConfigFolder => Path.Combine(DataFolder, "configs");
 
-        public static string DbPath = GetAbsoletePath("..\\db");
+        public static string DataFolder => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Infopercept");
 
+        public static void EnsureFolders()
+        {
+            if (!Directory.Exists(DataFolder))
+            {
+                Directory.CreateDirectory(DataFolder);
+            }
+
+            if (Directory.Exists(ConfigFolder)) 
+            { 
+                Directory.CreateDirectory(ConfigFolder); 
+            }
+        }
     }
 }

@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.ServiceProcess;
 using System.Xml;
+using Common.Persistance;
 
 namespace ToolManager.AgentWrappers
 {
@@ -48,15 +49,16 @@ namespace ToolManager.AgentWrappers
 
                 _logger.Information($"PATH: {msiPath}, Log: {logPath}");
 
-                var managerIp = ToolProperties.GetPropertyByName("WAZUH_MANAGER");
-                var registrationIp = ToolProperties.GetPropertyByName("WAZUH_REGISTRATION_SERVER");
-
+                var managerIp = ToolRepository.GetPropertyByName(ToolName.Wazuuh, "MANAGER_ADDR");
+                var registrationIp = ToolRepository.GetPropertyByName(ToolName.Wazuuh, "REGISTRATION_SERVER_ADDR");
+                var agentGroup = ToolRepository.GetPropertyByName(ToolName.Wazuuh, "AGENT_GROUP");
+                
                 Process installerProcess = new Process
                 {
                     StartInfo = new ProcessStartInfo
                     {
                         FileName = "msiexec",
-                        Arguments = $"/I \"{msiPath}\" /QN /l*vx \"{logPath}\" ACCEPTEULA=1 ALLUSERS=1 WAZUH_MANAGER=\"{managerIp}\" WAZUH_REGISTRATION_SERVER=\"{registrationIp}\"",
+                        Arguments = $"/I \"{msiPath}\" /QN /l*vx \"{logPath}\" ACCEPTEULA=1 ALLUSERS=1 WAZUH_MANAGER=\"{managerIp}\" WAZUH_REGISTRATION_SERVER=\"{registrationIp}\" WAZUH_AGENT_GROUP=\"{agentGroup}\"",
                         WindowStyle = ProcessWindowStyle.Hidden,
                         CreateNoWindow = true,
                         WorkingDirectory = CommonUtils.RootFolder

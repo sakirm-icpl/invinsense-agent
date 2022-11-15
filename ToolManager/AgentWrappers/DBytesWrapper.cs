@@ -5,6 +5,7 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.ServiceProcess;
+using Common.Persistance;
 
 namespace ToolManager.AgentWrappers
 {
@@ -16,7 +17,6 @@ namespace ToolManager.AgentWrappers
         {
             try
             {
-
                 ServiceController ctl = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName == "DBytesService");
 
                 if (ctl != null)
@@ -47,8 +47,8 @@ namespace ToolManager.AgentWrappers
 
                 _logger.Information($"PATH: {msiPath}, Log: {logPath}");
 
-                var serverIp = ToolProperties.GetPropertyByName("DBYTES_SERVER");
-                var apiKey = ToolProperties.GetPropertyByName("DBYTES_APIKEY");
+                var serverIp = ToolRepository.GetPropertyByName(ToolName.Dbytes, "SERVER_ADDR");
+                var apiKey = ToolRepository.GetPropertyByName(ToolName.Dbytes, "APIKEY");
 
                 Process installerProcess = new Process
                 {
