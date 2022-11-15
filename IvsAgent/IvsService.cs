@@ -114,7 +114,7 @@ namespace IvsAgent
                     toolRepository.CaptureEvent(new ToolStatus(ToolName.Dbytes, InstallStatus.Installed, RunningStatus.Stopped));
                     return;
                 default:
-                    toolRepository.CaptureEvent(new ToolStatus(ToolName.Dbytes, InstallStatus.Installed, RunningStatus.Error));
+                    toolRepository.CaptureEvent(new ToolStatus(ToolName.Dbytes, InstallStatus.Installed, RunningStatus.Warning));
                     return;
             }
         }
@@ -137,7 +137,7 @@ namespace IvsAgent
                     toolRepository.CaptureEvent(new ToolStatus(ToolName.OsQuery, InstallStatus.Installed, RunningStatus.Stopped));
                     return;
                 default:
-                    toolRepository.CaptureEvent(new ToolStatus(ToolName.OsQuery, InstallStatus.Installed, RunningStatus.Error));
+                    toolRepository.CaptureEvent(new ToolStatus(ToolName.OsQuery, InstallStatus.Installed, RunningStatus.Warning));
                     return;
             }
         }
@@ -160,7 +160,7 @@ namespace IvsAgent
                     toolRepository.CaptureEvent(new ToolStatus(ToolName.Sysmon, InstallStatus.Installed, RunningStatus.Stopped));
                     return;
                 default:
-                    toolRepository.CaptureEvent(new ToolStatus(ToolName.Sysmon, InstallStatus.Installed, RunningStatus.Error));
+                    toolRepository.CaptureEvent(new ToolStatus(ToolName.Sysmon, InstallStatus.Installed, RunningStatus.Warning));
                     return;
             }
         }
@@ -183,7 +183,7 @@ namespace IvsAgent
                     toolRepository.CaptureEvent(new ToolStatus(ToolName.Lmp, InstallStatus.Installed, RunningStatus.Stopped));
                     return;
                 default:
-                    toolRepository.CaptureEvent(new ToolStatus(ToolName.Lmp, InstallStatus.Installed, RunningStatus.Error));
+                    toolRepository.CaptureEvent(new ToolStatus(ToolName.Lmp, InstallStatus.Installed, RunningStatus.Warning));
                     return;
             }
         }

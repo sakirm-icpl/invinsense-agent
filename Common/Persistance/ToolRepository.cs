@@ -91,12 +91,12 @@ namespace Common.Persistance
                 SetPropertyByName(toolStatus.Name, "INSTALL_STATUS", toolStatus.InstallStatus.ToString());
             }
 
-            if (oldStatus.InstallStatus != toolStatus.InstallStatus)
+            if (oldStatus.RunningStatus != toolStatus.RunningStatus)
             {
                 SetPropertyByName(toolStatus.Name, "RUNNING_STATUS", toolStatus.RunningStatus.ToString());
             }
 
-            if (oldStatus.InstallStatus == toolStatus.InstallStatus && oldStatus.RunningStatus != toolStatus.RunningStatus)
+            if (oldStatus.InstallStatus == toolStatus.InstallStatus && oldStatus.RunningStatus == toolStatus.RunningStatus)
             {
                 _logger.Information($"{toolStatus} not changed. Skipping...");
                 return;
