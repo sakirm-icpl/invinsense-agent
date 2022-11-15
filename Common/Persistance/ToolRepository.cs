@@ -88,8 +88,21 @@ namespace Common.Persistance
 
             if(oldStatus.InstallStatus != toolStatus.InstallStatus)
             {
-
+                SetPropertyByName(toolStatus.Name, "INSTALL_STATUS", toolStatus.InstallStatus.ToString());
             }
+
+            if (oldStatus.InstallStatus != toolStatus.InstallStatus)
+            {
+                SetPropertyByName(toolStatus.Name, "RUNNING_STATUS", toolStatus.RunningStatus.ToString());
+            }
+
+            if (oldStatus.InstallStatus == toolStatus.InstallStatus && oldStatus.RunningStatus != toolStatus.RunningStatus)
+            {
+                _logger.Information($"{toolStatus} not changed. Skipping...");
+                return;
+            }
+
+            _logger.Information($"Status changed. Old: {oldStatus}, New: {toolStatus}");
 
             var log = new EventLog(Constants.LogGroupName) { Source = Constants.IvsAgentName };
 
