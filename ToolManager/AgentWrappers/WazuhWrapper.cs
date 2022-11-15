@@ -45,7 +45,7 @@ namespace ToolManager.AgentWrappers
 
                 var msiPath = CommonUtils.GetAbsoletePath("..\\artifacts\\wazuh-agent-4.3.9-1.msi");
 
-                var logPath = CommonUtils.GetAbsoletePath("..\\artifacts\\wazuhInstall.log");
+                var logPath = CommonUtils.DataFolder + "\\wazuhInstall.log";
 
                 _logger.Information($"PATH: {msiPath}, Log: {logPath}");
 
@@ -167,7 +167,7 @@ namespace ToolManager.AgentWrappers
 
                 var msiPath = CommonUtils.GetAbsoletePath("..\\artifacts\\wazuh-agent-4.3.9-1.msi");
 
-                var logPath = CommonUtils.GetAbsoletePath("..\\artifacts\\wazuhInstall.log");
+                var logPath = CommonUtils.DataFolder + "\\wazuhInstall.log";
 
                 _logger.Information($"PATH: {msiPath}, Log: {logPath}");
 

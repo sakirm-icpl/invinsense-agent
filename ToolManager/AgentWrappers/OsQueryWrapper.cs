@@ -45,7 +45,7 @@ namespace ToolManager.AgentWrappers
 
                 var msiPath = CommonUtils.GetAbsoletePath("..\\artifacts\\osquery-5.5.1.msi");
 
-                var logPath = CommonUtils.GetAbsoletePath("..\\artifacts\\osqueryInstall.log");
+                var logPath = CommonUtils.DataFolder + "\\osqueryInstall.log";
 
                 _logger.Information($"PATH: {msiPath}, Log: {logPath}");
 
@@ -137,7 +137,7 @@ namespace ToolManager.AgentWrappers
 
                 var msiPath = CommonUtils.GetAbsoletePath("..\\artifacts\\osquery-5.5.1.msi");
 
-                var logPath = CommonUtils.GetAbsoletePath("..\\artifacts\\osqueryInstall.log");
+                var logPath = CommonUtils.DataFolder + "\\osqueryInstall.log";
 
                 _logger.Information($"PATH: {msiPath}, Log: {logPath}");
 

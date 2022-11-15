@@ -37,7 +37,7 @@ namespace ToolManager.AgentWrappers
 
                 var exePath = CommonUtils.GetAbsoletePath("..\\artifacts\\Sysmon64.exe");
 
-                var logPath = CommonUtils.GetAbsoletePath("..\\artifacts\\sysmonInstall.log");
+                var logPath = CommonUtils.DataFolder + "\\sysmonInstall.log";
 
                 _logger.Information($"PATH: {exePath}, Log: {logPath}");
 
@@ -115,7 +115,7 @@ namespace ToolManager.AgentWrappers
 
                 var exePath = CommonUtils.GetAbsoletePath("..\\artifacts\\Sysmon64.exe");
 
-                var logPath = CommonUtils.GetAbsoletePath("..\\artifacts\\sysmonInstall.log");
+                var logPath = CommonUtils.DataFolder + "\\sysmonInstall.log";
 
                 _logger.Information($"PATH: {exePath}, Log: {logPath}");
 

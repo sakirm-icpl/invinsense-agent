@@ -43,7 +43,7 @@ namespace ToolManager.AgentWrappers
 
                 var msiPath = CommonUtils.GetAbsoletePath("..\\artifacts\\DeceptiveBytes.EPS.x64.msi");
 
-                var logPath = CommonUtils.GetAbsoletePath("..\\artifacts\\dbytesInstall.log");
+                var logPath = CommonUtils.DataFolder + "\\dbytesInstall.log";
 
                 _logger.Information($"PATH: {msiPath}, Log: {logPath}");
 
@@ -129,7 +129,7 @@ namespace ToolManager.AgentWrappers
 
                 var msiPath = CommonUtils.GetAbsoletePath("..\\artifacts\\DeceptiveBytes.EPS.x64.msi");
 
-                var logPath = CommonUtils.GetAbsoletePath("..\\artifacts\\DBYTESInstall.log");
+                var logPath = CommonUtils.DataFolder + "\\DBYTESInstall.log";
 
                 var toolPath = CommonUtils.GetAbsoletePath("..\\artifacts\\DeceptiveBytes.EPS.RemovalTool.exe");
 
