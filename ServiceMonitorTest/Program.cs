@@ -3,7 +3,6 @@ using System;
 using ServiceMonitorTest.Monitor;
 using System.ServiceProcess;
 using ServiceMonitorTest.Helper;
-using System.Linq;
 
 namespace ServiceMonitorTest
 {

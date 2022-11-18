@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemManagementTest", "Sys
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleService", "SampleService\SampleService.csproj", "{F668676B-A8DD-48DF-A750-16E802A9C325}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileWatcherSample", "FileWatcherSample\FileWatcherSample.csproj", "{D94C5350-C0B8-471B-92BD-52A8BC43FE2B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,10 @@ Global
 		{F668676B-A8DD-48DF-A750-16E802A9C325}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F668676B-A8DD-48DF-A750-16E802A9C325}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F668676B-A8DD-48DF-A750-16E802A9C325}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D94C5350-C0B8-471B-92BD-52A8BC43FE2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D94C5350-C0B8-471B-92BD-52A8BC43FE2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D94C5350-C0B8-471B-92BD-52A8BC43FE2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D94C5350-C0B8-471B-92BD-52A8BC43FE2B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
