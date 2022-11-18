@@ -35,7 +35,7 @@ namespace ToolManager.AgentWrappers
 
                 _logger.Information("WAZUH not found. Preparing installation");
 
-                if (!MsiPackage.IsMsiExecFree(TimeSpan.FromSeconds(2)))
+                if (!MsiPackage.IsMsiExecFree(TimeSpan.FromMinutes(5)))
                 {
                     _logger.Information("MSI Installer is not free.");
                     return 1618;
@@ -157,7 +157,7 @@ namespace ToolManager.AgentWrappers
 
                 _logger.Information("WAZUH found. Preparing uninstallation");
 
-                if (!MsiPackage.IsMsiExecFree(TimeSpan.FromSeconds(2)))
+                if (!MsiPackage.IsMsiExecFree(TimeSpan.FromMinutes(5)))
                 {
                     _logger.Information("MSI Installer is not free.");
                     return 1618;

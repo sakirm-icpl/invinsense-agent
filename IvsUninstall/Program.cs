@@ -18,14 +18,12 @@ namespace IvsUninstall
 
             Log.Logger.Information("Uninstalling Invinsense 3.0 components");
 
-            /*
             var listPrograms = ListPrograms();
 
             foreach (var item in listPrograms)
             {
-                Log.Logger.Information($"{item}");
+                Log.Logger.Information($"Program: {item}");
             }
-            */
 
             Thread.Sleep(1000);
 
@@ -102,6 +100,9 @@ namespace IvsUninstall
                         if (mo["Name"].ToString() == ProgramName)
                         {
                             object hr = mo.InvokeMethod("Uninstall", null);
+
+                            Log.Logger.Information($"Uninstall invoke return code: {hr}");
+
                             return (bool)hr;
                         }
                     }
