@@ -6,7 +6,7 @@
     <ProductVersion>3.10</ProductVersion>
     <ProjectGuid>ea0bf198-f9bd-4244-99dc-5135b0f45d74</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>Invinsetup</OutputName>
+    <OutputName>InvinSetup</OutputName>
     <OutputType>Package</OutputType>
     <Name>InvinSetup</Name>
   </PropertyGroup>
