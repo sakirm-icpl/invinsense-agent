@@ -95,6 +95,8 @@ namespace IvsTray
                     pb = pbDefender;
                     break;
                 case ToolName.OsQuery:
+                    pb = pbOsquery;
+                    break;
                 case ToolName.Lmp:
                     pb = pbLmp;
                     break;
@@ -192,6 +194,5 @@ namespace IvsTray
            int nWidthEllipse, // width of ellipse
            int nHeightEllipse // height of ellipse
         );
-
     }
 }

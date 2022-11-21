@@ -89,6 +89,7 @@
     <Content Include="Assets\green_logo.ico" />
     <Content Include="Assets\green_logo_22_22.ico" />
     <EmbeddedResource Include="Assets\microsoft.png" />
+    <Content Include="Assets\osquery.png" />
     <Content Include="Assets\red_logo.ico" />
     <Content Include="Assets\red_logo_22_22.ico" />
     <EmbeddedResource Include="Assets\wazuh.png" />
@@ -109,7 +110,11 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

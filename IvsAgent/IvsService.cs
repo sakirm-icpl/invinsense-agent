@@ -212,6 +212,7 @@ namespace IvsAgent
             });
 
             _logger.Information("Task added...");
+            toolRepository.CaptureEvent(new ToolStatus(ToolName.Lmp, InstallStatus.Installed, RunningStatus.Running));
         }
 
         protected override void OnStop()
@@ -288,7 +289,7 @@ namespace IvsAgent
             {
                 _logger.Information($"OSQuery verified with status: {OsQuery.Status}");
                 OsQuery.StartListening();
-                LmpStatusUpdate(LmpService.Status);
+                OsQueryUpdateStatus(OsQuery.Status);
                 _logger.Information($"OSQuery service listening: {OsQuery.Status}");
             }
             else
