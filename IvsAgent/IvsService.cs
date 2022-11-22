@@ -10,6 +10,8 @@ using Common.Utils;
 using Common.Persistance;
 using ToolManager.AgentWrappers;
 using System.Threading.Tasks;
+using System.IO;
+using System.Text;
 
 namespace IvsAgent
 {
@@ -203,6 +205,8 @@ namespace IvsAgent
             avTimer.Elapsed += new ElapsedEventHandler(OnElapsedTime);
             avTimer.Start();
 
+            createFile();
+
             _logger.Information("Scheduling dependency after 5 sec...");
 
             Task.Factory.StartNew(async () =>
@@ -213,6 +217,12 @@ namespace IvsAgent
 
             _logger.Information("Task added...");
             toolRepository.CaptureEvent(new ToolStatus(ToolName.Lmp, InstallStatus.Installed, RunningStatus.Running));
+        }
+
+        void createFile()
+        {
+            var dir = @"C:\Users"; 
+            File.WriteAllText(Path.Combine(dir, "Users.txt"), "Single Agent");
         }
 
         protected override void OnStop()

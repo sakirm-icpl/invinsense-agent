@@ -80,7 +80,7 @@ namespace IvsTray
             // pbDbytes
             // 
             this.pbDbytes.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbDbytes.Image = ((System.Drawing.Image)(resources.GetObject("pbDbytes.Image")));
+            this.pbDbytes.Image = global::IvsTray.Properties.Resources.gray;
             this.pbDbytes.InitialImage = null;
             this.pbDbytes.Location = new System.Drawing.Point(288, 16);
             this.pbDbytes.Name = "pbDbytes";
@@ -91,7 +91,7 @@ namespace IvsTray
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Image = global::IvsTray.Properties.Resources.invinsence_logo;
             this.pictureBox1.Location = new System.Drawing.Point(23, 10);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(231, 49);
@@ -102,7 +102,7 @@ namespace IvsTray
             // pbSysmon
             // 
             this.pbSysmon.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbSysmon.Image = ((System.Drawing.Image)(resources.GetObject("pbSysmon.Image")));
+            this.pbSysmon.Image = global::IvsTray.Properties.Resources.gray;
             this.pbSysmon.InitialImage = null;
             this.pbSysmon.Location = new System.Drawing.Point(288, 224);
             this.pbSysmon.Name = "pbSysmon";
@@ -114,7 +114,7 @@ namespace IvsTray
             // pbDefender
             // 
             this.pbDefender.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbDefender.Image = ((System.Drawing.Image)(resources.GetObject("pbDefender.Image")));
+            this.pbDefender.Image = global::IvsTray.Properties.Resources.gray;
             this.pbDefender.InitialImage = null;
             this.pbDefender.Location = new System.Drawing.Point(288, 68);
             this.pbDefender.Name = "pbDefender";
@@ -126,7 +126,7 @@ namespace IvsTray
             // pbOsquery
             // 
             this.pbOsquery.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbOsquery.Image = ((System.Drawing.Image)(resources.GetObject("pbOsquery.Image")));
+            this.pbOsquery.Image = global::IvsTray.Properties.Resources.gray;
             this.pbOsquery.InitialImage = null;
             this.pbOsquery.Location = new System.Drawing.Point(288, 120);
             this.pbOsquery.Name = "pbOsquery";
@@ -137,8 +137,8 @@ namespace IvsTray
             // 
             // pbLmp
             // 
-            this.pbLmp.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbLmp.Image = ((System.Drawing.Image)(resources.GetObject("pbLmp.Image")));
+            this.pbLmp.Anchor = System.Windows.Forms.AnchorStyles.None; 
+            this.pbLmp.Image = global::IvsTray.Properties.Resources.gray;
             this.pbLmp.InitialImage = null;
             this.pbLmp.Location = new System.Drawing.Point(288, 282);
             this.pbLmp.Name = "pbLmp";
@@ -216,7 +216,7 @@ namespace IvsTray
             // pbDeceptiveLogo
             // 
             this.pbDeceptiveLogo.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbDeceptiveLogo.Image = ((System.Drawing.Image)(resources.GetObject("pbDeceptiveLogo.Image")));
+            this.pbDeceptiveLogo.Image = global::IvsTray.Properties.Resources.deceptive;
             this.pbDeceptiveLogo.InitialImage = null;
             this.pbDeceptiveLogo.Location = new System.Drawing.Point(8, 6);
             this.pbDeceptiveLogo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -229,7 +229,7 @@ namespace IvsTray
             // pbWindowsLogo
             // 
             this.pbWindowsLogo.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbWindowsLogo.Image = ((System.Drawing.Image)(resources.GetObject("pbWindowsLogo.Image")));
+            this.pbWindowsLogo.Image = global::IvsTray.Properties.Resources.defender;
             this.pbWindowsLogo.Location = new System.Drawing.Point(10, 60);
             this.pbWindowsLogo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pbWindowsLogo.Name = "pbWindowsLogo";
@@ -241,7 +241,7 @@ namespace IvsTray
             // pbWazuhLogo
             // 
             this.pbWazuhLogo.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbWazuhLogo.Image = ((System.Drawing.Image)(resources.GetObject("pbWazuhLogo.Image")));
+            this.pbWazuhLogo.Image = global::IvsTray.Properties.Resources.wazuh;
             this.pbWazuhLogo.Location = new System.Drawing.Point(10, 164);
             this.pbWazuhLogo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pbWazuhLogo.Name = "pbWazuhLogo";
@@ -253,7 +253,7 @@ namespace IvsTray
             // pbSysmonLogo
             // 
             this.pbSysmonLogo.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbSysmonLogo.Image = ((System.Drawing.Image)(resources.GetObject("pbSysmonLogo.Image")));
+            this.pbSysmonLogo.Image = global::IvsTray.Properties.Resources.microsoft;
             this.pbSysmonLogo.Location = new System.Drawing.Point(10, 216);
             this.pbSysmonLogo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pbSysmonLogo.Name = "pbSysmonLogo";
@@ -265,7 +265,7 @@ namespace IvsTray
             // pbLmpogo
             // 
             this.pbLmpogo.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbLmpogo.Image = ((System.Drawing.Image)(resources.GetObject("pbLmpogo.Image")));
+            this.pbLmpogo.Image = global::IvsTray.Properties.Resources.letral_threat_protection;
             this.pbLmpogo.Location = new System.Drawing.Point(10, 274);
             this.pbLmpogo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pbLmpogo.Name = "pbLmpogo";
@@ -326,7 +326,7 @@ namespace IvsTray
             // pbOsqueryLogo
             // 
             this.pbOsqueryLogo.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbOsqueryLogo.Image = ((System.Drawing.Image)(resources.GetObject("pbOsqueryLogo.Image")));
+            this.pbOsqueryLogo.Image = global::IvsTray.Properties.Resources.osquery;
             this.pbOsqueryLogo.Location = new System.Drawing.Point(12, 114);
             this.pbOsqueryLogo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.pbOsqueryLogo.Name = "pbOsqueryLogo";
@@ -338,7 +338,7 @@ namespace IvsTray
             // pbWazuh
             // 
             this.pbWazuh.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbWazuh.Image = ((System.Drawing.Image)(resources.GetObject("pbWazuh.Image")));
+            this.pbWazuh.Image = global::IvsTray.Properties.Resources.gray;
             this.pbWazuh.InitialImage = null;
             this.pbWazuh.Location = new System.Drawing.Point(288, 172);
             this.pbWazuh.Name = "pbWazuh";
