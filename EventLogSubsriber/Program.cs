@@ -18,7 +18,7 @@ namespace EventLogSubscriber
         /// </summary>
         static void Main()
         {
-            var log = new EventLog("Invinsense")
+            var log = new EventLog(Common.Constants.LogGroupName)
             {
                 EnableRaisingEvents = true
             };
