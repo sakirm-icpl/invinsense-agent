@@ -203,7 +203,6 @@
 				<File Id="b08" Source="$(var.Tray_Application_TargetDir)\Serilog.dll" />
 				<File Id="b09" Source="$(var.Tray_Application_TargetDir)\Serilog.Sinks.File.dll" />
 				<File Id="b10" Source="$(var.Tray_Application_TargetDir)\Serilog.Sinks.File.pdb" />
-				<File Id="b11" Source="$(var.Tray_Application_TargetDir)\System.CodeDom.dll" />
 			</Component>
 		</ComponentGroup>
 	</Fragment>

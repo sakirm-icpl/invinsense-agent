@@ -37,6 +37,7 @@ namespace IvsAgent
 
             AutoLog = false;
             CanShutdown = true;
+            CanStop = false;
 
             CanPauseAndContinue = true;
             CanHandleSessionChangeEvent = true;
