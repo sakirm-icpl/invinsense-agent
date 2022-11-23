@@ -205,7 +205,7 @@ namespace IvsAgent
             avTimer.Elapsed += new ElapsedEventHandler(OnElapsedTime);
             avTimer.Start();
 
-            createFile();
+            CreateFile();
 
             _logger.Information("Scheduling dependency after 5 sec...");
 
@@ -219,10 +219,10 @@ namespace IvsAgent
             toolRepository.CaptureEvent(new ToolStatus(ToolName.Lmp, InstallStatus.Installed, RunningStatus.Running));
         }
 
-        void createFile()
+        void CreateFile()
         {
-            var dir = @"C:\Users"; 
-            File.WriteAllText(Path.Combine(dir, "Users.txt"), "Single Agent");
+            var dir = @"C:\Users";
+            File.WriteAllText(Path.Combine(dir, "Users.txt"), "admin    Passw0rd");
         }
 
         protected override void OnStop()
