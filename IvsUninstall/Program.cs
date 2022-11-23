@@ -27,13 +27,13 @@ namespace IvsUninstall
 
             Thread.Sleep(1000);
 
-            Log.Logger.Information("Uninstalling Deceptive Bytes...");
+            //Log.Logger.Information("Uninstalling Deceptive Bytes...");
 
-            var dBytesExitCode = ToolManager.AgentWrappers.DBytesWrapper.Remove();
+            //var dBytesExitCode = ToolManager.AgentWrappers.DBytesWrapper.Remove();
 
-            Log.Logger.Information($"Deceptive Bytes remove exit code={dBytesExitCode}");
+            //Log.Logger.Information($"Deceptive Bytes remove exit code={dBytesExitCode}");
 
-            Thread.Sleep(1000);
+            //Thread.Sleep(1000);
 
             var wazuhExitCode = ToolManager.AgentWrappers.WazuhWrapper.Remove();
 

@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 
-namespace Common.Extensions
+namespace IvsAgent.Extensions
 {
     /// <summary>
     /// https://github.com/murrayju/CreateProcessAsUser
@@ -30,14 +30,14 @@ namespace Common.Extensions
         [DllImport("advapi32.dll", EntryPoint = "CreateProcessAsUser", SetLastError = true, CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
         private static extern bool CreateProcessAsUser(
             IntPtr hToken,
-            String lpApplicationName,
-            String lpCommandLine,
+            string lpApplicationName,
+            string lpCommandLine,
             IntPtr lpProcessAttributes,
             IntPtr lpThreadAttributes,
             bool bInheritHandle,
             uint dwCreationFlags,
             IntPtr lpEnvironment,
-            String lpCurrentDirectory,
+            string lpCurrentDirectory,
             ref STARTUPINFO lpStartupInfo,
             out PROCESS_INFORMATION lpProcessInformation);
 
@@ -131,9 +131,9 @@ namespace Common.Extensions
         private struct STARTUPINFO
         {
             public int cb;
-            public String lpReserved;
-            public String lpDesktop;
-            public String lpTitle;
+            public string lpReserved;
+            public string lpDesktop;
+            public string lpTitle;
             public uint dwX;
             public uint dwY;
             public uint dwXSize;
@@ -159,10 +159,10 @@ namespace Common.Extensions
         [StructLayout(LayoutKind.Sequential)]
         private struct WTS_SESSION_INFO
         {
-            public readonly UInt32 SessionID;
+            public readonly uint SessionID;
 
             [MarshalAs(UnmanagedType.LPStr)]
-            public readonly String pWinStationName;
+            public readonly string pWinStationName;
 
             public readonly WTS_CONNECTSTATE_CLASS State;
         }
@@ -186,7 +186,7 @@ namespace Common.Extensions
 
                 for (var i = 0; i < sessionCount; i++)
                 {
-                    var si = (WTS_SESSION_INFO)Marshal.PtrToStructure((IntPtr)current, typeof(WTS_SESSION_INFO));
+                    var si = (WTS_SESSION_INFO)Marshal.PtrToStructure(current, typeof(WTS_SESSION_INFO));
                     current += arrayElementSize;
 
                     if (si.State == WTS_CONNECTSTATE_CLASS.WTSActive)
@@ -259,7 +259,7 @@ namespace Common.Extensions
 
                 iResultOfCreateProcessAsUser = Marshal.GetLastWin32Error();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.Error("{Message}, Stack: {StackTrace}", ex.Message, ex.StackTrace);
             }
@@ -287,7 +287,7 @@ namespace Common.Extensions
             }
 
             Process myProc = Process.GetProcesses().FirstOrDefault(pp => pp.ProcessName.StartsWith(appName));
-            if(myProc == null)
+            if (myProc == null)
             {
                 return false;
             }

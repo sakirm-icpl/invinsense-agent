@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleService", "SampleServ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileWatcherSample", "FileWatcherSample\FileWatcherSample.csproj", "{D94C5350-C0B8-471B-92BD-52A8BC43FE2B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinUserManagementTest", "WinUserManagementTest\WinUserManagementTest.csproj", "{A316AA11-C40A-4B40-A855-3597209E22FB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,10 @@ Global
 		{D94C5350-C0B8-471B-92BD-52A8BC43FE2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D94C5350-C0B8-471B-92BD-52A8BC43FE2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D94C5350-C0B8-471B-92BD-52A8BC43FE2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A316AA11-C40A-4B40-A855-3597209E22FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A316AA11-C40A-4B40-A855-3597209E22FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A316AA11-C40A-4B40-A855-3597209E22FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A316AA11-C40A-4B40-A855-3597209E22FB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

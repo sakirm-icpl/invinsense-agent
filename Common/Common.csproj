@@ -40,8 +40,6 @@
   <ItemGroup>
     <Compile Include="Encryption\FileEncryptDecrypt.cs" />
     <Compile Include="Enumeration.cs" />
-    <Compile Include="Extensions\ProcessExtensions.cs" />
-    <Compile Include="Extensions\UserExtensions.cs" />
     <Compile Include="Models\ApiResponse.cs" />
     <Compile Include="Models\Error.cs" />
     <Compile Include="Models\IModel.cs" />
