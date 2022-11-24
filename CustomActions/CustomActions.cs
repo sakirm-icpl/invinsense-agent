@@ -50,7 +50,7 @@ namespace ToolManager
             if (session["UNINSTALL_KEY"] != "ICPL_2023")
             {
                 session.Log("Uninstall key not supplied. Uninstall process failed...");
-            //    return ActionResult.Failure;
+                return ActionResult.Failure;
             }
 
             session.Log("Uninstall key verified. Proceeding further...");

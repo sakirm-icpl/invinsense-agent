@@ -33,7 +33,7 @@ namespace ToolManager.AgentWrappers
 
                 _logger.Information("DBYTES not found. Preparing installation");
 
-                if (!MsiPackage.IsMsiExecFree(TimeSpan.FromMinutes(5)))
+                if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
                 {
                     _logger.Information("MSI Installer is not free.");
                     return 1618;
@@ -119,7 +119,7 @@ namespace ToolManager.AgentWrappers
 
                 _logger.Information("DBYTES found. Preparing uninstallation");
 
-                if (!MsiPackage.IsMsiExecFree(TimeSpan.FromMinutes(5)))
+                if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
                 {
                     _logger.Information("MSI Installer is not free.");
                     return 1618;

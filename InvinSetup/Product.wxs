@@ -80,7 +80,6 @@
 			<ComponentGroupRef Id="AgentComponents" />
 			<ComponentGroupRef Id="TrayComponents" />
 			<ComponentGroupRef Id="ToolComponents" />
-			<ComponentGroupRef Id="UninstallComponents" />
 			<ComponentGroupRef Id="PostInstallation"/>
 		</Feature>
 
@@ -165,7 +164,6 @@
 					<Directory Id="AGENTFOLDER" Name="$(var.AgentName)" />
 					<Directory Id="TRAYFOLDER" Name="$(var.TrayName)" />
 					<Directory Id="ARTIFACTSFOLDER" Name="$(var.ArtifactsName)" />
-					<Directory Id="UNINSTALLFOLDER" Name="Uninstall" />
 				</Directory>
 			</Directory>
 		</Directory>
@@ -218,15 +216,6 @@
 				<File Id="c07" Source="..\artifacts\wazuh\local_internal_options.conf" />
 				<File Id="c08" Source="..\artifacts\dbytes\DeceptiveBytes.EPS.x64.msi" />
 				<File Id="c09" Source="..\artifacts\dbytes\DeceptiveBytes.EPS.RemovalTool.exe" />
-			</Component>
-		</ComponentGroup>
-	</Fragment>
-
-	<Fragment>
-		<ComponentGroup Id="UninstallComponents" Directory="UNINSTALLFOLDER">
-			<Component Id="u00" Guid="C08EF647-6E16-4BE6-9CDC-7339881D6EEC" Win64="yes">
-				<File Id="u01" Source="Uninstall\IvsUninstall01.exe" />
-				<File Id="u02" Source="Uninstall\IvsUninstall01.exe.config" />
 			</Component>
 		</ComponentGroup>
 	</Fragment>

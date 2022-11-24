@@ -1,5 +1,4 @@
 ﻿using Common.Utils;
-using ToolManager.MsiWrapper;
 using Serilog;
 using System;
 using System.Diagnostics;
@@ -7,6 +6,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.ServiceProcess;
+using ToolManager.MsiWrapper;
 
 namespace ToolManager.AgentWrappers
 {
@@ -35,7 +35,7 @@ namespace ToolManager.AgentWrappers
 
                 _logger.Information("OSQUERY not found. Preparing installation");
 
-                if (!MsiPackage.IsMsiExecFree(TimeSpan.FromMinutes(5)))
+                if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
                 {
                     _logger.Information("MSI Installer is not free.");
                     return 1618;
@@ -127,7 +127,7 @@ namespace ToolManager.AgentWrappers
 
                 _logger.Information("OSQUERY found. Preparing uninstallation");
 
-                if (!MsiPackage.IsMsiExecFree(TimeSpan.FromMinutes(5)))
+                if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
                 {
                     _logger.Information("MSI Installer is not free.");
                     return 1618;
@@ -135,45 +135,14 @@ namespace ToolManager.AgentWrappers
 
                 _logger.Information("OSQUERY Uninstallation is ready");
 
-                var msiPath = CommonUtils.GetAbsoletePath("..\\artifacts\\osquery-5.5.1.msi");
-
                 var logPath = CommonUtils.DataFolder + "\\osqueryInstall.log";
 
-                _logger.Information($"PATH: {msiPath}, Log: {logPath}");
-
-                Process installerProcess = new Process
-                {
-                    StartInfo = new ProcessStartInfo
-                    {
-                        FileName = "msiexec",
-                        Arguments = $"/X \"{msiPath}\" /QN /l*vx \"{logPath}\"",
-                        WindowStyle = ProcessWindowStyle.Hidden,
-                        CreateNoWindow = true,
-                        WorkingDirectory = CommonUtils.RootFolder
-                    }
-                };
-
-                installerProcess.OutputDataReceived += InstallerProcess_OutputDataReceived;
-                installerProcess.ErrorDataReceived += InstallerProcess_ErrorDataReceived;
-                installerProcess.Exited += InstallerProcess_Exited;
-
-                installerProcess.Start();
-
+                var status = MsiPackageWrapper.Uninstall("osquery", logPath);
 
                 _logger.Information("OSQUERY uninstall started...");
 
-                installerProcess.WaitForExit();
+                return status ? 0 : 1;
 
-                if (installerProcess.ExitCode == 0)
-                {
-                    _logger.Information("OSQUERY uninstall completed");
-                }
-                else
-                {
-                    _logger.Information($"OSQUERY uninstall fault: {installerProcess.ExitCode}");
-                }
-
-                return installerProcess.ExitCode;
             }
             catch (Exception ex)
             {

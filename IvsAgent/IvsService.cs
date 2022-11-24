@@ -249,6 +249,11 @@ namespace IvsAgent
         {
             _logger.Information($"Agent cuustom command: {command}");
             base.OnCustomCommand(command);
+
+            if(command == 130)
+            {
+                Stop();
+            }
         }
 
         protected override void OnShutdown()

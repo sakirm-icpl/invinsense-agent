@@ -1,7 +1,7 @@
 ﻿using Serilog;
 using System;
 using System.Diagnostics;
-using System.IO;
+using System.Management;
 using System.Threading;
 
 namespace ToolManager.MsiWrapper
@@ -10,39 +10,11 @@ namespace ToolManager.MsiWrapper
     /// Encapsulates MSI package installation/uninstallation operations.
     /// https://jonathancrozier.com/blog/how-to-install-msi-packages-using-msiexec-and-c-sharp
     /// </summary>
-    public class MsiPackage
+    public static class MsiPackageWrapper
     {
         #region Constants
 
         private const string WindowsInstallerProgramName = "msiexec";
-
-        #endregion
-
-        #region Readonlys
-
-        private readonly string _pathToInstallerFile;
-        private readonly string _pathToInstallLogFile;
-        private readonly string _pathToUninstallLogFile;
-
-        #endregion
-
-        #region Constructor
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="pathToInstallerFile">Path to the installer file</param>
-        /// <param name="pathToInstallLogFile">Path to the install log file (optional)</param>
-        /// <param name="pathToUninstallLogFile">Path to the uninstall log file (optional)</param>
-        public MsiPackage(
-            string pathToInstallerFile,
-            string pathToInstallLogFile = null,
-            string pathToUninstallLogFile = null)
-        {
-            _pathToInstallerFile = pathToInstallerFile;
-            _pathToInstallLogFile = pathToInstallLogFile;
-            _pathToUninstallLogFile = pathToUninstallLogFile;
-        }
 
         #endregion
 
@@ -52,29 +24,23 @@ namespace ToolManager.MsiWrapper
         /// Installs the program.
         /// </summary>
         /// <returns>True if the installation succeeded, otherwise false</returns>
-        public bool Install()
+        public static bool Install(string installerFile, string logFile, params string[] args)
         {
             try
             {
                 Log.Information("Beginning MSI package installation");
 
-                string arguments = $"/i \"{_pathToInstallerFile}\" /quiet";
+                string arguments = $"/i \"{installerFile}\" /quiet";
 
-                if (!string.IsNullOrEmpty(_pathToInstallLogFile))
+                // /l = Logging enabled.
+                //  * = Log everything.
+                //  v = Verbose output.
+                //  x = Extra debugging information.
+                arguments += $" /l*vx \"{logFile}\"";
+
+                foreach (var arg in args)
                 {
-                    // Create the install log directory if it doesn't already exist.
-                    string pathToInstallLogDirectory = Path.GetDirectoryName(_pathToInstallLogFile);
-
-                    if (!Directory.Exists(pathToInstallLogDirectory))
-                    {
-                        Directory.CreateDirectory(pathToInstallLogDirectory);
-                    }
-
-                    // /l = Logging enabled.
-                    //  * = Log everything.
-                    //  v = Verbose output.
-                    //  x = Extra debugging information.
-                    arguments += $" /l*vx \"{_pathToInstallLogFile}\"";
+                    arguments += $" {arg}";
                 }
 
                 using (Process p = ProcessHelper.CreateHiddenProcess(WindowsInstallerProgramName, arguments))
@@ -104,33 +70,32 @@ namespace ToolManager.MsiWrapper
         /// Uninstalls the program.
         /// </summary>
         /// <returns>True if the uninstallation succeeded, otherwise false</returns>
-        public bool Uninstall()
+        public static bool Uninstall(string packageName, string logFile, params string[] args)
         {
-            bool uninstallResult = false;
+            var uninstallResult = false;
 
             try
             {
                 Log.Information("Beginning MSI package uninstallation");
 
-                Log.Information("Beginning MSI package installation");
+                string identifier = MoWrapper.GetPackageIdentifier(packageName);
 
-                string arguments = $"/x \"{_pathToInstallerFile}\" /quiet";
-
-                if (!string.IsNullOrEmpty(_pathToUninstallLogFile))
+                if(string.IsNullOrEmpty(identifier))
                 {
-                    // Create the uninstall log directory if it doesn't already exist.
-                    string pathToUninstallLogDirectory = Path.GetDirectoryName(_pathToUninstallLogFile);
+                    return false;
+                }
 
-                    if (!Directory.Exists(pathToUninstallLogDirectory))
-                    {
-                        Directory.CreateDirectory(pathToUninstallLogDirectory);
-                    }
+                string arguments = $"/x \"{identifier}\" /quiet";
 
-                    // /l = Logging enabled
-                    //  * = Log everything
-                    //  v = Verbose output
-                    //  x = Extra debugging information
-                    arguments += $" /l*vx \"{_pathToUninstallLogFile}\"";
+                // /l = Logging enabled
+                //  * = Log everything
+                //  v = Verbose output
+                //  x = Extra debugging information
+                arguments += $" /l*vx \"{logFile}\"";
+
+                foreach (var arg in args)
+                {
+                    arguments += $" {arg}";
                 }
 
                 using (Process p = ProcessHelper.CreateHiddenProcess(WindowsInstallerProgramName, arguments))

@@ -2,7 +2,9 @@
 using Serilog;
 using System.Collections.Generic;
 using System.Management;
+using System.ServiceProcess;
 using System.Threading;
+using ToolManager;
 
 namespace IvsUninstall
 {
@@ -18,7 +20,7 @@ namespace IvsUninstall
 
             Log.Logger.Information("Uninstalling Invinsense 3.0 components");
 
-            var listPrograms = ListPrograms();
+            var listPrograms = MoWrapper.ListPrograms();
 
             foreach (var item in listPrograms)
             {
@@ -27,13 +29,24 @@ namespace IvsUninstall
 
             Thread.Sleep(1000);
 
-            //Log.Logger.Information("Uninstalling Deceptive Bytes...");
+            /*
 
-            //var dBytesExitCode = ToolManager.AgentWrappers.DBytesWrapper.Remove();
+            Log.Logger.Information("Stopping Invinsense service");
+            
+            var service = new ServiceController("Invinsense");
+            service.ExecuteCommand(130);
+            Thread.Sleep(2000);
 
-            //Log.Logger.Information($"Deceptive Bytes remove exit code={dBytesExitCode}");
+            */
 
-            //Thread.Sleep(1000);
+            /*
+            Log.Logger.Information("Uninstalling Deceptive Bytes...");
+
+            var dBytesExitCode = ToolManager.AgentWrappers.DBytesWrapper.Remove();
+
+            Log.Logger.Information($"Deceptive Bytes remove exit code={dBytesExitCode}");
+
+            Thread.Sleep(1000);
 
             var wazuhExitCode = ToolManager.AgentWrappers.WazuhWrapper.Remove();
 
@@ -41,7 +54,11 @@ namespace IvsUninstall
 
             Thread.Sleep(1000);
 
-            var osQueryExitCode = ToolManager.AgentWrappers.OsQueryWrapper.Remove();
+            */
+
+            //var osQueryExitCode = ToolManager.AgentWrappers.OsQueryWrapper.Remove();
+
+            /*
 
             Log.Logger.Information($"OSQUERY remove exit code={osQueryExitCode}");
 
@@ -54,72 +71,8 @@ namespace IvsUninstall
             var uninstallInvinsense = UninstallProgram("Invinsense");
 
             Log.Logger.Information($"Invinsense remove exit code={uninstallInvinsense}");
-        }
 
-        private static List<string> ListPrograms()
-        {
-            List<string> programs = new List<string>();
-
-            try
-            {
-                ManagementObjectSearcher mos = new ManagementObjectSearcher("SELECT * FROM Win32_Product");
-                foreach (ManagementObject mo in mos.Get())
-                {
-                    try
-                    {
-                        //more properties:
-                        //http://msdn.microsoft.com/en-us/library/windows/desktop/aa394378(v=vs.85).aspx
-                        programs.Add(mo["Name"].ToString());
-
-                    }
-                    catch 
-                    {
-                        //this program may not have a name property
-                    }
-                }
-
-                return programs;
-
-            }
-            catch
-            {
-                return programs;
-            }
-        }
-
-        private static bool UninstallProgram(string ProgramName)
-        {
-            try
-            {
-                ManagementObjectSearcher mos = new ManagementObjectSearcher("SELECT * FROM Win32_Product WHERE Name = '" + ProgramName + "'");
-                
-                foreach (ManagementObject mo in mos.Get())
-                {
-                    try
-                    {
-                        if (mo["Name"].ToString() == ProgramName)
-                        {
-                            object hr = mo.InvokeMethod("Uninstall", null);
-
-                            Log.Logger.Information($"Uninstall invoke return code: {hr}");
-
-                            return (bool)hr;
-                        }
-                    }
-                    catch
-                    {
-                        //this program may not have a name property, so an exception will be thrown
-                    }
-                }
-
-                //was not found...
-                return false;
-
-            }
-            catch
-            {
-                return false;
-            }
+            */
         }
     }
 }

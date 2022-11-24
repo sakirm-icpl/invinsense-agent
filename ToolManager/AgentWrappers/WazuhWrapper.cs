@@ -1,5 +1,4 @@
 ﻿using Common.Utils;
-using ToolManager.MsiWrapper;
 using Serilog;
 using System;
 using System.Diagnostics;
@@ -7,6 +6,7 @@ using System.Linq;
 using System.ServiceProcess;
 using System.Xml;
 using Common.Persistance;
+using ToolManager.MsiWrapper;
 
 namespace ToolManager.AgentWrappers
 {
@@ -35,7 +35,7 @@ namespace ToolManager.AgentWrappers
 
                 _logger.Information("WAZUH not found. Preparing installation");
 
-                if (!MsiPackage.IsMsiExecFree(TimeSpan.FromMinutes(5)))
+                if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
                 {
                     _logger.Information("MSI Installer is not free.");
                     return 1618;
@@ -157,7 +157,7 @@ namespace ToolManager.AgentWrappers
 
                 _logger.Information("WAZUH found. Preparing uninstallation");
 
-                if (!MsiPackage.IsMsiExecFree(TimeSpan.FromMinutes(5)))
+                if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
                 {
                     _logger.Information("MSI Installer is not free.");
                     return 1618;
