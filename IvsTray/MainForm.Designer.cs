@@ -137,7 +137,7 @@ namespace IvsTray
             // 
             // pbLmp
             // 
-            this.pbLmp.Anchor = System.Windows.Forms.AnchorStyles.None; 
+            this.pbLmp.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pbLmp.Image = global::IvsTray.Properties.Resources.gray;
             this.pbLmp.InitialImage = null;
             this.pbLmp.Location = new System.Drawing.Point(288, 282);
@@ -154,9 +154,9 @@ namespace IvsTray
             this.lblDeceptiveBytes.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.lblDeceptiveBytes.Location = new System.Drawing.Point(58, 15);
             this.lblDeceptiveBytes.Name = "lblDeceptiveBytes";
-            this.lblDeceptiveBytes.Size = new System.Drawing.Size(132, 21);
+            this.lblDeceptiveBytes.Size = new System.Drawing.Size(167, 21);
             this.lblDeceptiveBytes.TabIndex = 7;
-            this.lblDeceptiveBytes.Text = "Deceptive Bytes";
+            this.lblDeceptiveBytes.Text = "End Point Deception";
             // 
             // lblWindowsDefender
             // 
@@ -165,20 +165,21 @@ namespace IvsTray
             this.lblWindowsDefender.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.lblWindowsDefender.Location = new System.Drawing.Point(58, 67);
             this.lblWindowsDefender.Name = "lblWindowsDefender";
-            this.lblWindowsDefender.Size = new System.Drawing.Size(156, 21);
+            this.lblWindowsDefender.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.lblWindowsDefender.Size = new System.Drawing.Size(168, 21);
             this.lblWindowsDefender.TabIndex = 8;
-            this.lblWindowsDefender.Text = "Windows Defender";
+            this.lblWindowsDefender.Text = "End Point Protection";
             // 
             // lblWazuh
             // 
             this.lblWazuh.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblWazuh.AutoSize = true;
             this.lblWazuh.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.lblWazuh.Location = new System.Drawing.Point(58, 171);
+            this.lblWazuh.Location = new System.Drawing.Point(58, 161);
             this.lblWazuh.Name = "lblWazuh";
-            this.lblWazuh.Size = new System.Drawing.Size(62, 21);
+            this.lblWazuh.Size = new System.Drawing.Size(200, 42);
             this.lblWazuh.TabIndex = 9;
-            this.lblWazuh.Text = "Wazuh";
+            this.lblWazuh.Text = "End Point Detection and Response";
             // 
             // lblMicrosoftSysmon
             // 
@@ -187,9 +188,9 @@ namespace IvsTray
             this.lblMicrosoftSysmon.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.lblMicrosoftSysmon.Location = new System.Drawing.Point(58, 223);
             this.lblMicrosoftSysmon.Name = "lblMicrosoftSysmon";
-            this.lblMicrosoftSysmon.Size = new System.Drawing.Size(147, 21);
+            this.lblMicrosoftSysmon.Size = new System.Drawing.Size(157, 21);
             this.lblMicrosoftSysmon.TabIndex = 10;
-            this.lblMicrosoftSysmon.Text = "Microsoft Sysmon";
+            this.lblMicrosoftSysmon.Text = "Advance Telemetry";
             // 
             // lblLmp
             // 
@@ -209,9 +210,9 @@ namespace IvsTray
             this.lblOsquery.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.lblOsquery.Location = new System.Drawing.Point(58, 119);
             this.lblOsquery.Name = "lblOsquery";
-            this.lblOsquery.Size = new System.Drawing.Size(78, 21);
+            this.lblOsquery.Size = new System.Drawing.Size(200, 21);
             this.lblOsquery.TabIndex = 9;
-            this.lblOsquery.Text = "OSQuery";
+            this.lblOsquery.Text = "User Behaviour Analytics";
             // 
             // pbDeceptiveLogo
             // 
@@ -379,6 +380,7 @@ namespace IvsTray
             ((System.ComponentModel.ISupportInitialize)(this.pbWazuh)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion

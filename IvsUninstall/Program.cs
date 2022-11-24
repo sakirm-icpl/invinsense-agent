@@ -1,10 +1,10 @@
 ﻿using Common.Utils;
 using Serilog;
-using System.Collections.Generic;
-using System.Management;
+using System;
 using System.ServiceProcess;
 using System.Threading;
 using ToolManager;
+using ToolManager.MsiWrapper;
 
 namespace IvsUninstall
 {
@@ -29,17 +29,12 @@ namespace IvsUninstall
 
             Thread.Sleep(1000);
 
-            /*
-
             Log.Logger.Information("Stopping Invinsense service");
-            
+
             var service = new ServiceController("Invinsense");
             service.ExecuteCommand(130);
             Thread.Sleep(2000);
 
-            */
-
-            /*
             Log.Logger.Information("Uninstalling Deceptive Bytes...");
 
             var dBytesExitCode = ToolManager.AgentWrappers.DBytesWrapper.Remove();
@@ -54,11 +49,7 @@ namespace IvsUninstall
 
             Thread.Sleep(1000);
 
-            */
-
-            //var osQueryExitCode = ToolManager.AgentWrappers.OsQueryWrapper.Remove();
-
-            /*
+            var osQueryExitCode = ToolManager.AgentWrappers.OsQueryWrapper.Remove();
 
             Log.Logger.Information($"OSQUERY remove exit code={osQueryExitCode}");
 
@@ -68,11 +59,24 @@ namespace IvsUninstall
 
             Log.Logger.Information($"SYSMON remove exit code={sysmonExitCode}");
 
-            var uninstallInvinsense = UninstallProgram("Invinsense");
+            try
+            {
+                if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
+                {
+                    Log.Logger.Information("MSI Installer is not free.");
+                    return;
+                }
 
-            Log.Logger.Information($"Invinsense remove exit code={uninstallInvinsense}");
+                Log.Logger.Information("Agent Uninstallation is ready");
 
-            */
+                var logPath = CommonUtils.DataFolder + "\\agentUninstall.log";
+
+                var status = MsiPackageWrapper.Uninstall("Invinsense", logPath, "UNINSTALL_KEY=\"ICPL_2023\"");
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error(ex.Message);
+            }
         }
     }
 }

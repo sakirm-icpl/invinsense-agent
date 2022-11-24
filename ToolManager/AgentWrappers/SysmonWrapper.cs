@@ -113,11 +113,9 @@ namespace ToolManager.AgentWrappers
 
                 _logger.Information("SYSMON found. Preparing Uninstallation");
 
-                var exePath = CommonUtils.GetAbsoletePath("..\\artifacts\\Sysmon64.exe");
+                var exePath = CommonUtils.GetAbsoletePath("C:\\Windows\\Sysmon64.exe");
 
-                var logPath = CommonUtils.DataFolder + "\\sysmonInstall.log";
-
-                _logger.Information($"PATH: {exePath}, Log: {logPath}");
+                _logger.Information($"PATH: {exePath}");
 
                 Process installerProcess = new Process
                 {

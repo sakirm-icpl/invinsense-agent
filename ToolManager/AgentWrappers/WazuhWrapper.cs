@@ -152,7 +152,7 @@ namespace ToolManager.AgentWrappers
                 if (ctl == null)
                 {
                     _logger.Information($"WAZUH not found. Skipping...");
-                    return 0;
+                    return -1;
                 }
 
                 _logger.Information("WAZUH found. Preparing uninstallation");
@@ -163,46 +163,15 @@ namespace ToolManager.AgentWrappers
                     return 1618;
                 }
 
-                _logger.Information("WAZUH uninstallation is ready");
-
-                var msiPath = CommonUtils.GetAbsoletePath("..\\artifacts\\wazuh-agent-4.3.9-1.msi");
+                _logger.Information("WAZUH Uninstallation is ready");
 
                 var logPath = CommonUtils.DataFolder + "\\wazuhInstall.log";
 
-                _logger.Information($"PATH: {msiPath}, Log: {logPath}");
+                var status = MsiPackageWrapper.Uninstall("Wazuh Agent", logPath);
 
-                Process installerProcess = new Process
-                {
-                    StartInfo = new ProcessStartInfo
-                    {
-                        FileName = "msiexec",
-                        Arguments = $"/X \"{msiPath}\" /QN /l*vx \"{logPath}\"",
-                        WindowStyle = ProcessWindowStyle.Hidden,
-                        CreateNoWindow = true,
-                        WorkingDirectory = CommonUtils.RootFolder
-                    }
-                };
+                
+                return status ? 0 : 1;
 
-                installerProcess.OutputDataReceived += InstallerProcess_OutputDataReceived;
-                installerProcess.ErrorDataReceived += InstallerProcess_ErrorDataReceived;
-                installerProcess.Exited += InstallerProcess_Exited;
-
-                installerProcess.Start();
-
-                _logger.Information("WAZUH Uninstallation started...");
-
-                installerProcess.WaitForExit();
-
-                if (installerProcess.ExitCode == 0)
-                {
-                    _logger.Information("WAZUH Uninstallation completed");
-                }
-                else
-                {
-                    _logger.Information($"WAZUH Uninstallation fault: {installerProcess.ExitCode}");
-                }
-
-                return installerProcess.ExitCode;
             }
             catch (Exception ex)
             {

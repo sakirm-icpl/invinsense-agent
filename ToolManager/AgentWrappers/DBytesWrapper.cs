@@ -113,11 +113,11 @@ namespace ToolManager.AgentWrappers
 
                 if (ctl == null)
                 {
-                    _logger.Information("DBYTES not found and set for skip.");
+                    _logger.Information("Dbytes not found and set for skip.");
                     return -1;
                 }
 
-                _logger.Information("DBYTES found. Preparing uninstallation");
+                _logger.Information("Dbytes found. Preparing uninstallation");
 
                 if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
                 {
@@ -125,51 +125,15 @@ namespace ToolManager.AgentWrappers
                     return 1618;
                 }
 
-                _logger.Information("DBYTES Uninstallation is ready");
+                _logger.Information("Dbytes Uninstallation is ready");
 
-                var msiPath = CommonUtils.GetAbsoletePath("..\\artifacts\\DeceptiveBytes.EPS.x64.msi");
+                var logPath = CommonUtils.DataFolder + "\\dytesInstall.log";
 
-                var logPath = CommonUtils.DataFolder + "\\DBYTESInstall.log";
+                var status = MsiPackageWrapper.Uninstall("Deceptive Bytes - Active Endpoint Deception", logPath);
 
-                var toolPath = CommonUtils.GetAbsoletePath("..\\artifacts\\DeceptiveBytes.EPS.RemovalTool.exe");
+                
+                return status ? 0 : 1;
 
-                _logger.Information($"PATH: {msiPath}, Log: {logPath}, Tool: {toolPath}");
-
-                Process installerProcess = new Process
-                {
-                    StartInfo = new ProcessStartInfo
-                    {
-                        //FileName = "msiexec",
-                        //Arguments = $"/X \"{msiPath}\" /QN /l*vx \"{logPath}\"",
-                        FileName = toolPath,
-                        WindowStyle = ProcessWindowStyle.Hidden,
-                        CreateNoWindow = true,
-                        WorkingDirectory = CommonUtils.RootFolder
-                    }
-                };
-
-                installerProcess.OutputDataReceived += InstallerProcess_OutputDataReceived;
-                installerProcess.ErrorDataReceived += InstallerProcess_ErrorDataReceived;
-                installerProcess.Exited += InstallerProcess_Exited;
-
-                installerProcess.Start();
-
-
-                _logger.Information("DBYTES uninstall started...");
-
-                installerProcess.WaitForExit();
-
-                if (installerProcess.ExitCode == 0)
-                {
-                    _logger.Information("DBYTES uninstall completed");
-                    return 0;
-                }
-                else
-                {
-                    _logger.Information($"DBYTES uninstall fault: {installerProcess.ExitCode}");
-                    return installerProcess.ExitCode;
-
-                }
             }
             catch (Exception ex)
             {

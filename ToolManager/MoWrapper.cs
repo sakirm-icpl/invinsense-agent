@@ -50,7 +50,7 @@ namespace ToolManager
                 {
                     if (mo["Name"].ToString().Contains(packageName))
                     {
-                        return mo["Name"].ToString();
+                        return mo["IdentifyingNumber"].ToString();
                     }
                 }
                 catch
@@ -61,6 +61,41 @@ namespace ToolManager
             }
 
             return null;
+        }
+
+        public static bool UninstallProgram(string programName)
+        {
+            try
+            {
+                ManagementObjectSearcher mos = new ManagementObjectSearcher("SELECT * FROM Win32_Product WHERE Name = '" + programName + "'");
+
+                foreach (ManagementObject mo in mos.Get())
+                {
+                    try
+                    {
+                        if (mo["Name"].ToString() == programName)
+                        {
+                            object hr = mo.InvokeMethod("Uninstall", null);
+
+                            Console.WriteLine($"Uninstall invoke return code: {hr}");
+
+                            return (bool)hr;
+                        }
+                    }
+                    catch
+                    {
+                        //this program may not have a name property, so an exception will be thrown
+                    }
+                }
+
+                //was not found...
+                return false;
+
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
