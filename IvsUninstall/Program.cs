@@ -31,7 +31,7 @@ namespace IvsUninstall
 
             Log.Logger.Information("Stopping Invinsense service");
 
-            var service = new ServiceController("Invinsense");
+            var service = new ServiceController("IvsAgent");
             service.ExecuteCommand(130);
             Thread.Sleep(2000);
 
@@ -59,6 +59,7 @@ namespace IvsUninstall
 
             Log.Logger.Information($"SYSMON remove exit code={sysmonExitCode}");
 
+            //Removing Agent
             try
             {
                 if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
