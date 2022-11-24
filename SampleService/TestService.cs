@@ -54,12 +54,10 @@ namespace SampleService
         {
             EventLog.WriteEntry($"Service command: {command}");
 
-            /*
             if(command == 130)
             {
                 Stop();
             }
-            */
 
             if(command == 131)
             {
