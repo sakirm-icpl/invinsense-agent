@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Management;
 
 namespace ProcessMonitorTest
@@ -19,6 +20,8 @@ namespace ProcessMonitorTest
         /// <param name="args"></param>
         static void Main()
         {
+            DateTime start = DateTime.Now;
+
             ManagementEventWatcher startWatch = new ManagementEventWatcher(new WqlEventQuery("SELECT * FROM Win32_ProcessStartTrace"));
             startWatch.EventArrived += new EventArrivedEventHandler(StartWatchEventArrived);
             startWatch.Start();
@@ -26,9 +29,32 @@ namespace ProcessMonitorTest
             stopWatch.EventArrived += new EventArrivedEventHandler(StopWatchEventArrived);
             stopWatch.Start();
             Console.WriteLine("Press any key to exit");
-            while (!Console.KeyAvailable) System.Threading.Thread.Sleep(50);
+
+            Process currentProcess = Process.GetCurrentProcess();
+
+            while (!Console.KeyAvailable)
+            {
+                System.Threading.Thread.Sleep(1000);
+
+                long usedMemory = currentProcess.PrivateMemorySize64;
+                
+                Console.WriteLine($"Used Memory: {usedMemory}, Processor Time: {currentProcess.TotalProcessorTime.TotalSeconds} / {(DateTime.Now-start).TotalSeconds}");
+            }
+
             startWatch.Stop();
             stopWatch.Stop();
+        }
+
+        public static TimeSpan UpTime
+        {
+            get
+            {
+                using (var uptime = new PerformanceCounter("System", "System Up Time"))
+                {
+                    uptime.NextValue();       //Call this an extra time before reading its value
+                    return TimeSpan.FromSeconds(uptime.NextValue());
+                }
+            }
         }
 
         /// <summary>
