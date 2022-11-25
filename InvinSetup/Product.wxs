@@ -215,7 +215,6 @@
 				<File Id="c06" Source="..\artifacts\wazuh\wazuh-agent-4.3.9-1.msi" />
 				<File Id="c07" Source="..\artifacts\wazuh\local_internal_options.conf" />
 				<File Id="c08" Source="..\artifacts\dbytes\DeceptiveBytes.EPS.x64.msi" />
-				<File Id="c09" Source="..\artifacts\dbytes\DeceptiveBytes.EPS.RemovalTool.exe" />
 			</Component>
 		</ComponentGroup>
 	</Fragment>
