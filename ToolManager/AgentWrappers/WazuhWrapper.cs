@@ -23,17 +23,17 @@ namespace ToolManager.AgentWrappers
 
                 if (ctl != null)
                 {
-                    _logger.Information($"WAZUH found with status: {ctl.Status}");
+                    _logger.Information($"END_POINT_DETECTION_AND_RESPONSE found with status: {ctl.Status}");
                     return 0;
                 }
 
                 if (ctl == null && !isInstall)
                 {
-                    _logger.Information("WAZUH not found and set for skip.");
+                    _logger.Information("END_POINT_DETECTION_AND_RESPONSE not found and set for skip.");
                     return -1;
                 }
 
-                _logger.Information("WAZUH not found. Preparing installation");
+                _logger.Information("END_POINT_DETECTION_AND_RESPONSE not found. Preparing installation");
 
                 if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
                 {
@@ -41,7 +41,7 @@ namespace ToolManager.AgentWrappers
                     return 1618;
                 }
 
-                _logger.Information("WAZUH installation is ready");
+                _logger.Information("END_POINT_DETECTION_AND_RESPONSE installation is ready");
 
                 var msiPath = CommonUtils.GetAbsoletePath("..\\artifacts\\wazuh-agent-4.3.9-1.msi");
 
@@ -71,18 +71,18 @@ namespace ToolManager.AgentWrappers
 
                 installerProcess.Start();
 
-                _logger.Information("WAZUH Installation started...");
+                _logger.Information("END_POINT_DETECTION_AND_RESPONSE Installation started...");
 
                 installerProcess.WaitForExit();
 
                 if (installerProcess.ExitCode == 0)
                 {
-                    _logger.Information("WAZUH installation completed");
+                    _logger.Information("END_POINT_DETECTION_AND_RESPONSE installation completed");
 
                     _logger.Information("Copying local_internal_options.conf file to wazuh installed directory");
                     System.IO.File.Copy(CommonUtils.GetAbsoletePath("..\\artifacts\\local_internal_options.conf"), "C:\\Program Files (x86)\\ossec-agent\\local_internal_options.conf", true);
 
-                    _logger.Information("enable osquery for wazuh");
+                    _logger.Information("enable osquery for END_POINT_DETECTION_AND_RESPONSE");
                     var confFile = "C:\\Program Files (x86)\\ossec-agent\\ossec.conf";
                     XmlDocument document = new XmlDocument();
                     document.Load(confFile);
@@ -99,13 +99,13 @@ namespace ToolManager.AgentWrappers
                     }
                     document.Save(confFile);
 
-                    _logger.Information("wazuh is ready to start...");
+                    _logger.Information("END_POINT_DETECTION_AND_RESPONSE is ready to start...");
 
                     ctl = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName == "WazuhSvc");
 
                     if (ctl == null)
                     {
-                        _logger.Information($"WAZUH installed but service not registered. Please check installation logs.");
+                        _logger.Information($"END_POINT_DETECTION_AND_RESPONSE installed but service not registered. Please check installation logs.");
                     }
                     else
                     {
@@ -116,7 +116,7 @@ namespace ToolManager.AgentWrappers
                 }
                 else
                 {
-                    _logger.Information($"WAZUH installation fault: {installerProcess.ExitCode}");
+                    _logger.Information($"END_POINT_DETECTION_AND_RESPONSE installation fault: {installerProcess.ExitCode}");
                     return installerProcess.ExitCode;
                 }
             }
@@ -129,17 +129,17 @@ namespace ToolManager.AgentWrappers
 
         private static void InstallerProcess_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            _logger.Information($"WAZUH installation error data: {e.Data}");
+            _logger.Information($"END_POINT_DETECTION_AND_RESPONSE installation error data: {e.Data}");
         }
 
         private static void InstallerProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            _logger.Error($"WAZUH error data: {e.Data}");
+            _logger.Error($"END_POINT_DETECTION_AND_RESPONSE error data: {e.Data}");
         }
 
         private static void InstallerProcess_Exited(object sender, EventArgs e)
         {
-            _logger.Information("WAZUH process exited.");
+            _logger.Information("END_POINT_DETECTION process exited.");
         }
 
         public static int Remove()
@@ -151,11 +151,11 @@ namespace ToolManager.AgentWrappers
 
                 if (ctl == null)
                 {
-                    _logger.Information($"WAZUH not found. Skipping...");
+                    _logger.Information($"END_POINT_DETECTION_AND_RESPONSE not found. Skipping...");
                     return -1;
                 }
 
-                _logger.Information("WAZUH found. Preparing uninstallation");
+                _logger.Information("END_POINT_DETECTION_AND_RESPONSE found. Preparing uninstallation");
 
                 if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
                 {
@@ -163,7 +163,7 @@ namespace ToolManager.AgentWrappers
                     return 1618;
                 }
 
-                _logger.Information("WAZUH Uninstallation is ready");
+                _logger.Information("END_POINT_DETECTION_AND_RESPONSE Uninstallation is ready");
 
                 var logPath = CommonUtils.DataFolder + "\\wazuhInstall.log";
 

@@ -21,17 +21,17 @@ namespace ToolManager.AgentWrappers
 
                 if (ctl != null)
                 {
-                    _logger.Information($"DBYTES found with status: {ctl.Status}");
+                    _logger.Information($"END_POINT_DETECTION found with status: {ctl.Status}");
                     return 0;
                 }
 
                 if (ctl == null && !isInstall)
                 {
-                    _logger.Information("DBYTES not found and set for skip.");
+                    _logger.Information("END_POINT_DETECTION not found and set for skip.");
                     return -1;
                 }
 
-                _logger.Information("DBYTES not found. Preparing installation");
+                _logger.Information("END_POINT_DETECTION not found. Preparing installation");
 
                 if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
                 {
@@ -39,7 +39,7 @@ namespace ToolManager.AgentWrappers
                     return 1618;
                 }
 
-                _logger.Information("DBYTES installation is ready");
+                _logger.Information("END_POINT_DETECTION installation is ready");
 
                 var msiPath = CommonUtils.GetAbsoletePath("..\\artifacts\\DeceptiveBytes.EPS.x64.msi");
 
@@ -68,17 +68,17 @@ namespace ToolManager.AgentWrappers
 
                 installerProcess.Start();
 
-                _logger.Information("DBYTES Installation started...");
+                _logger.Information("END_POINT_DETECTION Installation started...");
 
                 installerProcess.WaitForExit();
 
                 if (installerProcess.ExitCode == 0)
                 {
-                    _logger.Information("DBYTES installation completed");
+                    _logger.Information("END_POINT_DETECTION installation completed");
                 }
                 else
                 {
-                    _logger.Information($"DBYTES installation fault: {installerProcess.ExitCode}");
+                    _logger.Information($"END_POINT_DETECTION installation fault: {installerProcess.ExitCode}");
                 }
 
                 return installerProcess.ExitCode;
@@ -92,17 +92,17 @@ namespace ToolManager.AgentWrappers
 
         private static void InstallerProcess_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            _logger.Information($"DBYTES installation error data: {e.Data}");
+            _logger.Information($"END_POINT_DETECTION installation error data: {e.Data}");
         }
 
         private static void InstallerProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            _logger.Error($"DBYTES error data: {e.Data}");
+            _logger.Error($"END_POINT_DETECTION error data: {e.Data}");
         }
 
         private static void InstallerProcess_Exited(object sender, EventArgs e)
         {
-            _logger.Information("DBYTES process exited.");
+            _logger.Information("END_POINT_DETECTION process exited.");
         }
 
         public static int Remove()
@@ -113,11 +113,11 @@ namespace ToolManager.AgentWrappers
 
                 if (ctl == null)
                 {
-                    _logger.Information("Dbytes not found and set for skip.");
+                    _logger.Information("END_POINT_DETECTION not found and set for skip.");
                     return -1;
                 }
 
-                _logger.Information("Dbytes found. Preparing uninstallation");
+                _logger.Information("END_POINT_DETECTION found. Preparing uninstallation");
 
                 if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
                 {
@@ -125,7 +125,7 @@ namespace ToolManager.AgentWrappers
                     return 1618;
                 }
 
-                _logger.Information("Dbytes Uninstallation is ready");
+                _logger.Information("END_POINT_DETECTION Uninstallation is ready");
 
                 var logPath = CommonUtils.DataFolder + "\\dytesInstall.log";
 

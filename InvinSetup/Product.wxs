@@ -106,7 +106,7 @@
 
 			<RegistryKey Root="HKLM" Key="SOFTWARE\Infopercept">
 
-				<RegistryKey Key="WAZUH">
+				<RegistryKey Key="ENDPOINT_DETECTION_AND_RESPONSE">
 
 					<!--add property of WAZUH_MANAGER with value and place it to "SOFTWARE\infopercept" -->
 					<RegistryValue Name="MANAGER_ADDR" Value='[WAZUH_MANAGER]' Type='string' ></RegistryValue>
@@ -121,17 +121,17 @@
 					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string" ></RegistryValue>
 				</RegistryKey>
 
-				<RegistryKey Key="SYSMON">
+				<RegistryKey Key="ADVANCE_TELEMETRY">
 					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string" ></RegistryValue>
 					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string" ></RegistryValue>
 				</RegistryKey>
 
-				<RegistryKey Key="OSQUERY">
+				<RegistryKey Key="USER_BEHAVIOUR_ANALYTICS">
 					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string" ></RegistryValue>
 					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string" ></RegistryValue>
 				</RegistryKey>
 
-				<RegistryKey Key="DBYTES">
+				<RegistryKey Key="ENDPOINT_DETECTION">
 					<!--add property of DBYTES_SERVER with value and place it to "SOFTWARE\infopercept" -->
 					<RegistryValue Name='SERVER_ADDR' Value='[DBYTES_SERVER]' Type='string' />
 
@@ -142,7 +142,7 @@
 					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string" ></RegistryValue>
 				</RegistryKey>
 
-				<RegistryKey Key="AV">
+				<RegistryKey Key="ENDPOINT_PROTECTION">
 					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string" ></RegistryValue>
 					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string" ></RegistryValue>
 				</RegistryKey>
