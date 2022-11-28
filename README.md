@@ -25,7 +25,7 @@
    - **What is Microsoft sysmon? 🤔**
   [Check out Website](https://docs.microsoft.com/en-us/sysinternals/downloads/sysmon/)
   
-    - **What is Microsoft osquery? 🤔**
+   - **What is Microsoft osquery? 🤔**
   [Check out Website](https://osquery.readthedocs.io/en/latest/)
   
 
