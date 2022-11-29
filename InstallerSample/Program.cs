@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Management;
 using System.ServiceProcess;
 
@@ -21,7 +22,7 @@ namespace InstallerSample
             try
             {
 
-                List<string> programs = new List<string>();
+             /*   List<string> programs = new List<string>();
 
                 ManagementObjectSearcher mos = new ManagementObjectSearcher("SELECT * FROM Win32_Product");
                 foreach (ManagementObject mo in mos.Get())
@@ -30,26 +31,32 @@ namespace InstallerSample
                     {
                         var name = mo["Name"].ToString();
                         programs.Add(name);
-                        logger.Info($"Progra: {name}");
+                        logger.Info($"Program: {name}");
                     }
                     catch
                     {
                         //this program may not have a name property
                     }
-                }
+                }*/
 
-                Console.ReadLine();
-
-                Console.ReadLine();
 
                 logger.Info("Stopping Invinsense service");
 
-                var service = new ServiceController("Invinsense");
+                var service = new ServiceController("Invinsense Agent");
                 service.Stop();
 
                 service.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(5));
 
                 logger.Info("Service is stopped");
+
+               // Console.ReadLine();
+
+                /*
+                foreach (var process in Process.GetProcesses())
+                {
+                    logger.Info($"Process: {process.Id}, Name: {process.ProcessName}");
+                }
+                */
 
                 logger.Info("Trying to stop IvsTray");
 
@@ -59,17 +66,19 @@ namespace InstallerSample
                     process.Kill();
                 }
 
+               // Console.ReadLine();
+
                 logger.Info("Uninstalling Invinsense Agent");
 
-                var unInstallStatus = UninstallWrapper.UninstallProgram("Invinsense");
+                var unInstallStatus = UninstallWrapper.UninstallProgram("Invinsense Single Agent 3.0");
 
                 logger.Info($"Agent uninstall status: {unInstallStatus}");
 
-                logger.Info($"Removing Startup");
+               // logger.Info($"Removing Startup");
 
-                SetStartup("IvsTray", "C:\\ProgramFiles\\Invinsense\\IvsTray.exe", false);
+               // SetStartup("IvsTray", "C:\\ProgramFiles\\Invinsense\\IvsTray.exe", false);
 
-                logger.Info("Startup removed");
+               // logger.Info("Startup removed");
             }
             catch (Exception ex)
             {
@@ -81,6 +90,9 @@ namespace InstallerSample
             }
 
             Console.WriteLine("Done.");
+
+           // Console.ReadLine();
+
         }
 
 
