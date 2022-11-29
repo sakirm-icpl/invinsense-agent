@@ -1,6 +1,7 @@
 ﻿using Common.Utils;
 using Serilog;
 using System;
+using System.Linq;
 using System.ServiceProcess;
 using System.Threading;
 using ToolManager;
@@ -29,11 +30,18 @@ namespace IvsUninstall
 
             Thread.Sleep(1000);
 
-            Log.Logger.Information("Stopping Invinsense service");
 
-            var service = new ServiceController("IvsAgent");
-            service.ExecuteCommand(130);
-            Thread.Sleep(2000);
+            if (ServiceController.GetServices().Any(serviceController => serviceController.ServiceName.Equals("IvsAgent")))
+            {
+                Log.Logger.Information("Stopping Invinsense service");
+                var service = new ServiceController("IvsAgent");
+                service.ExecuteCommand(130);
+                Thread.Sleep(2000);
+            }
+            else
+            {
+                Log.Logger.Information("Invinsense service does not exists...");
+            }
 
             Log.Logger.Information("Uninstalling Deceptive Bytes...");
 
