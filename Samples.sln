@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstallerSample", "Installe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceInstallerTest", "ServiceInstallerTest\ServiceInstallerTest.csproj", "{C1555CA3-373E-4D8A-9C60-606FCD795AB1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinUserLogOffTest", "WinUserLogOffTest\WinUserLogOffTest.csproj", "{A963993C-447D-49AF-9F4B-5BB0F53E5590}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -99,6 +101,10 @@ Global
 		{C1555CA3-373E-4D8A-9C60-606FCD795AB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1555CA3-373E-4D8A-9C60-606FCD795AB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1555CA3-373E-4D8A-9C60-606FCD795AB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A963993C-447D-49AF-9F4B-5BB0F53E5590}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A963993C-447D-49AF-9F4B-5BB0F53E5590}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A963993C-447D-49AF-9F4B-5BB0F53E5590}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A963993C-447D-49AF-9F4B-5BB0F53E5590}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
