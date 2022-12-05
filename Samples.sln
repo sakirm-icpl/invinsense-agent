@@ -35,8 +35,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceInstallerTest", "Ser
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinUserLogOffTest", "WinUserLogOffTest\WinUserLogOffTest.csproj", "{A963993C-447D-49AF-9F4B-5BB0F53E5590}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessMonitoring", "ProcessMonitoring\ProcessMonitoring.csproj", "{081B48BE-86E1-44B1-8FE0-C8DE064B8150}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -107,10 +105,6 @@ Global
 		{A963993C-447D-49AF-9F4B-5BB0F53E5590}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A963993C-447D-49AF-9F4B-5BB0F53E5590}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A963993C-447D-49AF-9F4B-5BB0F53E5590}.Release|Any CPU.Build.0 = Release|Any CPU
-		{081B48BE-86E1-44B1-8FE0-C8DE064B8150}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{081B48BE-86E1-44B1-8FE0-C8DE064B8150}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{081B48BE-86E1-44B1-8FE0-C8DE064B8150}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{081B48BE-86E1-44B1-8FE0-C8DE064B8150}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

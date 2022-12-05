@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Management;
+using System.Threading;
 
 namespace ProcessMonitorTest
 {
@@ -91,6 +93,39 @@ namespace ProcessMonitorTest
 
             Console.WriteLine("Process started: {0}", e.NewEvent.Properties["ProcessName"].Value);
             Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        static void RunProcessWithoutParent()
+        {
+            ProcessStartInfo psi = new ProcessStartInfo
+            {
+                FileName = @"cmd",
+                Arguments = "/C start notepad.exe",
+                WindowStyle = ProcessWindowStyle.Hidden
+            };
+
+            Process.Start(psi);
+        }
+
+        static void ShowProcessUsage()
+        {
+            foreach (var process in Process.GetProcesses())
+            {
+                Process[] localAll = Process.GetProcesses();
+                Console.WriteLine($"Process: {process.Id}, Name: {process.ProcessName}");
+            }
+
+            var processes = Process.GetProcessesByName("msedge");
+
+            Console.ReadLine();
+
+            // Process p= msedge; /*get the desired process here*/
+            PerformanceCounter ramCounter = new PerformanceCounter("Process", "Working Set", "msedge");
+            PerformanceCounter cpuCounter = new PerformanceCounter("Process", "% Processor Time", "msedge");
+
+            double ram = ramCounter.NextValue();
+            double cpu = cpuCounter.NextValue();
+            Console.WriteLine("Microsoft edge RAM: " + (ram / 1024 / 1024) + " MB; CPU: " + (cpu) + " " + (processes.Sum(x => x.TotalProcessorTime.TotalSeconds)));
         }
     }
 }
