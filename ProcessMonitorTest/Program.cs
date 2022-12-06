@@ -45,6 +45,7 @@ namespace ProcessMonitorTest
 
             startWatch.Stop();
             stopWatch.Stop();
+            ShowProcessUsage("notepad");
         }
 
         public static TimeSpan UpTime
@@ -107,7 +108,7 @@ namespace ProcessMonitorTest
             Process.Start(psi);
         }
 
-        static void ShowProcessUsage()
+        static void ShowProcessUsage(string processname)
         {
             foreach (var process in Process.GetProcesses())
             {
@@ -115,17 +116,13 @@ namespace ProcessMonitorTest
                 Console.WriteLine($"Process: {process.Id}, Name: {process.ProcessName}");
             }
 
-            var processes = Process.GetProcessesByName("msedge");
-
-            Console.ReadLine();
-
-            // Process p= msedge; /*get the desired process here*/
-            PerformanceCounter ramCounter = new PerformanceCounter("Process", "Working Set", "msedge");
-            PerformanceCounter cpuCounter = new PerformanceCounter("Process", "% Processor Time", "msedge");
-
-            double ram = ramCounter.NextValue();
-            double cpu = cpuCounter.NextValue();
-            Console.WriteLine("Microsoft edge RAM: " + (ram / 1024 / 1024) + " MB; CPU: " + (cpu) + " " + (processes.Sum(x => x.TotalProcessorTime.TotalSeconds)));
+            PerformanceCounter ramCounter = new PerformanceCounter("Process", "Private Bytes", processname, true);
+            PerformanceCounter cpuCounter = new PerformanceCounter("Process", "% Processor Time", processname, true);
+            Thread.Sleep(500);
+            float ram = ramCounter.NextValue();
+            float cpu = cpuCounter.NextValue();
+            Console.WriteLine("RAM: " + (ram) + " MB; CPU: " + (cpu));
+          
         }
     }
 }
