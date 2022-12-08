@@ -351,9 +351,6 @@ namespace IvsAgent
                 _logger.Error("Error in dBytes installer");
             }
 
-            _logger.Information("Adding fake file");
-            FileFaker.CreateFile();
-
             _logger.Information("Adding fake user");
             UserExtensions.EnsureFakeUser("maintenance", "P@$$w0rd");
         }
