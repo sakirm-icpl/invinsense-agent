@@ -24,6 +24,9 @@ namespace ProcessMonitorTest
         {
             DateTime start = DateTime.Now;
 
+            var monitor = new ProcessMonitor("msedge");
+            monitor.Monitor();
+
             ManagementEventWatcher startWatch = new ManagementEventWatcher(new WqlEventQuery("SELECT * FROM Win32_ProcessStartTrace"));
             startWatch.EventArrived += new EventArrivedEventHandler(StartWatchEventArrived);
             startWatch.Start();
