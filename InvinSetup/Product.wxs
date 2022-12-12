@@ -91,11 +91,13 @@
 
 		<Binary Id="CustomActionBinary" SourceFile="$(var.CustomActions.TargetDir)$(var.CustomActions.TargetName).CA.dll" />
 		<CustomAction Id="CheckSessionVariables" BinaryKey="CustomActionBinary" DllEntry="CheckSessionParameters" Execute="immediate" Return="check" />
-		<CustomAction Id="RemoveTools" BinaryKey="CustomActionBinary" DllEntry="RemoveTools" Execute="immediate" Return="check" />
+		<CustomAction Id="StopAgentService" BinaryKey="CustomActionBinary" DllEntry="StopAgentService" Execute="immediate" Return="check" />
+		<CustomAction Id="VerifyRemoveKey" BinaryKey="CustomActionBinary" DllEntry="VerifyRemoveKey" Execute="immediate" Return="check" />
 
 		<InstallExecuteSequence>
 			<Custom Action="CheckSessionVariables" Before="LaunchConditions">NOT Installed</Custom>
-			<Custom Action="RemoveTools" Before="LaunchConditions">Installed AND ( REMOVE = "ALL" OR AI_INSTALL_MODE = "Remove" ) AND NOT UPGRADINGPRODUCTCODE</Custom>
+			<Custom Action="StopAgentService" Before="LaunchConditions">Installed</Custom>
+			<Custom Action="VerifyRemoveKey" Before="LaunchConditions">Installed AND ( REMOVE = "ALL" OR AI_INSTALL_MODE = "Remove" ) AND NOT UPGRADINGPRODUCTCODE</Custom>
 		</InstallExecuteSequence>
 
 	</Product>

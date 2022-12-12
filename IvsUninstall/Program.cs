@@ -67,7 +67,7 @@ namespace IvsUninstall
 
             Log.Logger.Information($"SYSMON remove exit code={sysmonExitCode}");
 
-            //Removing Agent
+            //Removing Agent with uninstall key
             try
             {
                 if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))

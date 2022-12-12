@@ -1,4 +1,6 @@
 ﻿using Microsoft.Deployment.WindowsInstaller;
+using System.Linq;
+using System.ServiceProcess;
 
 namespace ToolManager
 {
@@ -43,7 +45,33 @@ namespace ToolManager
         }
 
         [CustomAction]
-        public static ActionResult RemoveTools(Session session)
+        public static ActionResult StopAgentService(Session session)
+        {
+            session.Log("Trying to stop agent service...");
+
+            if (ServiceController.GetServices().Any(serviceController => serviceController.ServiceName.Equals("IvsAgent")))
+            {
+                session.Log("Stopping Invinsense service");
+                var service = new ServiceController("IvsAgent");
+                if(service.Status == ServiceControllerStatus.Running)
+                {
+                    service.ExecuteCommand(130);
+                    session.Log("Stopping Invinsense service. Wait for Status Stopped");
+                    service.WaitForStatus(ServiceControllerStatus.Stopped);
+                }
+
+                session.Log($"Invinsense service stauts: {service.Status}");
+            }
+            else
+            {
+                session.Log("Invinsense service does not exists... No action required...");
+            }
+
+            return ActionResult.Success;
+        }
+
+        [CustomAction]
+        public static ActionResult VerifyRemoveKey(Session session)
         {
             session.Log("Preparing Uninstall. Checking required parameters...");
 
