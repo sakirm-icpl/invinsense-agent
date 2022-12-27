@@ -4,11 +4,16 @@ namespace AvMonitorTest
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            var status = AvMonitor.AVStatus("Windows Defender");
+            var avStatuses = AvMonitor.ListAvStatuses();
 
-            Console.WriteLine($"Antivirus status: {status}");
+            foreach (var avStatus in avStatuses)
+            {
+                Console.WriteLine($"Antivirus status: {avStatus}");
+            }
+
+            Console.ReadLine();
         }
     }
 }

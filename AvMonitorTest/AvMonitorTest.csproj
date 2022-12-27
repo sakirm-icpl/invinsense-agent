@@ -41,9 +41,13 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AVStatusFlags.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AvMonitor.cs" />
+    <Compile Include="ProviderFlags.cs" />
+    <Compile Include="ProviderStatus.cs" />
+    <Compile Include="SignatureStatusFlags.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

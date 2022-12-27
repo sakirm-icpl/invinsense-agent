@@ -1,14 +1,13 @@
 ﻿using System.Management;
 using System;
 using System.Linq;
-using Common.Persistance;
-using System.Runtime.InteropServices;
+using System.Collections.Generic;
 
 namespace AvMonitorTest
 {
     public static class AvMonitor
     {
-        public static InstallStatus AVStatus(string avName)
+        public static IEnumerable<AvStatus> ListAvStatuses()
         {
             //Windows Defender
             //393472 (060100) = disabled and up to date
@@ -18,85 +17,53 @@ namespace AvMonitorTest
             ManagementObjectSearcher wmiData = new ManagementObjectSearcher(@"root\SecurityCenter2", "SELECT * FROM AntiVirusProduct");
             ManagementObjectCollection data = wmiData.Get();
 
+            List<AvStatus> avStatuses = new List<AvStatus>();
+
             foreach (ManagementObject mo in data.OfType<ManagementObject>())
             {
-                if (avName == mo["displayName"].ToString())
-                {
-                    if (mo["productState"].ToString() == "393472")
-                    {
-                        return InstallStatus.NotFound;
-                    }
-                    else if (mo["productState"].ToString() == "397584")
-                    {
-                        return InstallStatus.Outdated;
-                    }
-                    else if (mo["productState"].ToString() == "397568")
-                    {
-                        return InstallStatus.Installed;
-                    }
-                }
-
-                //We can have separate AV Object for better reporting
-                Console.WriteLine(mo["displayName"]);
-                Console.WriteLine(mo["instanceGuid"]);
-                Console.WriteLine(mo["pathToSignedProductExe"]);
-                Console.WriteLine(mo["productState"]);
-                Console.WriteLine(mo["timestamp"]);
+                avStatuses.Add(new AvStatus(mo));
             }
 
-            var av_searcher = new ManagementObjectSearcher(@"root\SecurityCenter2", "SELECT * FROM AntivirusProduct");
-            foreach (ManagementObject info in av_searcher.Get())
-            {
-                Console.WriteLine(info.Properties["displayName"].Value.ToString());
+            return avStatuses;
+        }
+    }
 
-                var ps = ConvertToProviderStatus((uint)info.Properties["ProductState"].Value);
-                Console.WriteLine(ps.SecurityProvider.ToString());
-                Console.WriteLine(ps.AVStatus.HasFlag(AVStatusFlags.Enabled) ? "Enabled" : "Disabled");
-                Console.Write("Signatures are ");
-                Console.WriteLine(ps.SignatureStatus.HasFlag(SignatureStatusFlags.UpToDate) ? "up to date" : "out of date");
-                Console.WriteLine();
-            }
-
-
-            return InstallStatus.NotFound;
+    public struct AvStatus
+    {
+        public AvStatus(ManagementObject mo)
+        {
+            //We can have separate AV Object for better reporting
+            AvName = mo["displayName"].ToString();
+            InstanceGuid = mo["instanceGuid"].ToString();
+            PathToSignedProductExe = mo["pathToSignedProductExe"].ToString();
+            ProviderStatus = ConvertToProviderStatus((uint)mo.Properties["ProductState"].Value);
+            TimeStamp = mo["timestamp"].ToString();
         }
 
+
+        public string AvName { get; set; }
+
+        public string InstanceGuid { get; set; }
+
+        public string PathToSignedProductExe { get; set; }
+
+        public ProviderStatus ProviderStatus { get; private set; }
+
+        public string TimeStamp { get; set; }
+
         public static unsafe ProviderStatus ConvertToProviderStatus(uint val) => *(ProviderStatus*)&val;
-    }
 
-    [Flags]
-    public enum ProviderFlags : byte
-    {
-        FIREWALL = 1,
-        AUTOUPDATE_SETTINGS = 2,
-        ANTIVIRUS = 4,
-        ANTISPYWARE = 8,
-        INTERNET_SETTINGS = 16,
-        USER_ACCOUNT_CONTROL = 32,
-        SERVICE = 64,
-        NONE = 0,
-    }
-
-    [Flags]
-    public enum AVStatusFlags : byte
-    {
-        Unknown = 1,
-        Enabled = 16
-    }
-
-    [Flags]
-    public enum SignatureStatusFlags : byte
-    {
-        UpToDate = 0,
-        OutOfDate = 16
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct ProviderStatus
-    {
-        public SignatureStatusFlags SignatureStatus;
-        public AVStatusFlags AVStatus;
-        public ProviderFlags SecurityProvider;
-        public byte unused;
+        public override string ToString()
+        {
+            return $"{nameof(AvName)}: {AvName} {Environment.NewLine}" +
+                $"{nameof(InstanceGuid)}: {InstanceGuid} {Environment.NewLine}" +
+                $"{nameof(PathToSignedProductExe)}: {PathToSignedProductExe} {Environment.NewLine}" +
+                $"{ProviderStatus}: {Environment.NewLine}" +
+                $"\t {nameof(ProviderStatus.SignatureStatus)}: {(ProviderStatus.SignatureStatus.HasFlag(SignatureStatusFlags.UpToDate) ? "up to date" : "out of date")}{Environment.NewLine}" +
+                $"\t {nameof(ProviderStatus.AVStatus)}: {(ProviderStatus.AVStatus.HasFlag(AVStatusFlags.Enabled) ? "Enabled" : "Disabled")}{Environment.NewLine}" +
+                $"\t {nameof(ProviderStatus.SecurityProvider)}: {ProviderStatus.SecurityProvider}{Environment.NewLine}" +
+                $"\t {nameof(ProviderStatus.unused)}: {ProviderStatus.unused}{Environment.NewLine}" +
+                $"{nameof(TimeStamp)}: {TimeStamp} {Environment.NewLine}";
+        }
     }
 }
