@@ -12,7 +12,7 @@
 <!-- The manufacturer, for other tools and folder info -->
 <?define ArtifactsName = "Artifacts" ?>
 <!-- The version number of this setup package-->
-<?define Version = "1.0.0" ?>
+<?define Version = "1.0.1" ?>
 <!-- UpgradeCode must be unique and not changed once the first version of the program is installed. -->
 <?define UpgradeCode = "{38ECE878-1645-4310-BD9A-B9CA57FE0DF0}" ?>
 <!-- The name of the Cabinet -->
@@ -60,6 +60,13 @@
 							Name='WAZUH_AGENT_GROUP' Type='raw' />
 		</Property>
 
+		<!--Fetch property of SKIP_ENDPOINT_DECEPTION-->
+		<Property Id='SKIP_ENDPOINT_DECEPTION'>
+			<RegistrySearch Id='SkipEndPointDeception' Root='HKLM'
+							Key='SOFTWARE\infopercxept'
+							Name='SKIP_ENDPOINT_DECEPTION' Type='raw' />
+		</Property>
+		
 		<!--Fetch property of DBYTES_SERVER-->
 		<Property Id='DBYTES_SERVER'>
 			<RegistrySearch Id='DeceptiveBytesIp' Root='HKLM'
@@ -95,9 +102,9 @@
 		<CustomAction Id="VerifyRemoveKey" BinaryKey="CustomActionBinary" DllEntry="VerifyRemoveKey" Execute="immediate" Return="check" />
 
 		<InstallExecuteSequence>
-			<Custom Action="CheckSessionVariables" Before="LaunchConditions">NOT Installed</Custom>
-			<Custom Action="StopAgentService" Before="LaunchConditions">Installed</Custom>
-			<Custom Action="VerifyRemoveKey" Before="LaunchConditions">Installed AND ( REMOVE = "ALL" OR AI_INSTALL_MODE = "Remove" ) AND NOT UPGRADINGPRODUCTCODE</Custom>
+			<Custom Action="CheckSessionVariables" Before="InstallInitialize">NOT Installed</Custom>
+			<Custom Action="StopAgentService" Before="DeleteServices">Installed</Custom>
+			<Custom Action="VerifyRemoveKey" Before="DeleteServices">Installed AND ( REMOVE = "ALL" OR AI_INSTALL_MODE = "Remove" ) AND NOT UPGRADINGPRODUCTCODE</Custom>
 		</InstallExecuteSequence>
 
 	</Product>
@@ -111,47 +118,51 @@
 				<RegistryKey Key="ENDPOINT_DETECTION_AND_RESPONSE">
 
 					<!--add property of WAZUH_MANAGER with value and place it to "SOFTWARE\infopercept" -->
-					<RegistryValue Name="MANAGER_ADDR" Value='[WAZUH_MANAGER]' Type='string' ></RegistryValue>
+					<RegistryValue Name="MANAGER_ADDR" Value='[WAZUH_MANAGER]' Type='string' />
 
 					<!--add property of WAZUH_REGISTRATION_SERVER with value and place it to "SOFTWARE\infopercept" -->
-					<RegistryValue Name="REGISTRATION_SERVER_ADDR" Value='[WAZUH_REGISTRATION_SERVER]' Type='string' ></RegistryValue>
+					<RegistryValue Name="REGISTRATION_SERVER_ADDR" Value='[WAZUH_REGISTRATION_SERVER]' Type='string' />
 
 					<!--add property of WAZUH_AGENT_GROUP with value and place it to "SOFTWARE\infopercept" -->
-					<RegistryValue Name="AGENT_GROUP" Value='[WAZUH_AGENT_GROUP]' Type='string' ></RegistryValue>
+					<RegistryValue Name="AGENT_GROUP" Value='[WAZUH_AGENT_GROUP]' Type='string' />
 
-					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string" ></RegistryValue>
-					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string" ></RegistryValue>
+					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string" />
+					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string" />
 				</RegistryKey>
 
 				<RegistryKey Key="ADVANCE_TELEMETRY">
-					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string" ></RegistryValue>
-					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string" ></RegistryValue>
+					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string" />
+					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string" />
 				</RegistryKey>
 
 				<RegistryKey Key="USER_BEHAVIOUR_ANALYTICS">
-					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string" ></RegistryValue>
-					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string" ></RegistryValue>
+					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string" />
+					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string" />
 				</RegistryKey>
 
-				<RegistryKey Key="ENDPOINT_DETECTION">
+				<RegistryKey Key="ENDPOINT_DETECEPTION">
+					
+					<!--add property of SKIP_INSTALL with value and place it to "SOFTWARE\infopercept" -->
+					<RegistryValue Name='SKIP_INSTALL' Value='[SKIP_ENDPOINT_DECEPTION]' Type='string' />
+					
 					<!--add property of DBYTES_SERVER with value and place it to "SOFTWARE\infopercept" -->
 					<RegistryValue Name='SERVER_ADDR' Value='[DBYTES_SERVER]' Type='string' />
 
 					<!--add property of DBYTES_APIKEY with value and place it to "SOFTWARE\infopercept" -->
 					<RegistryValue Name='APIKEY' Value='[DBYTES_APIKEY]' Type='string' />
 					
-					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string" ></RegistryValue>
-					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string" ></RegistryValue>
+					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string" />
+					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string" />
 				</RegistryKey>
 
 				<RegistryKey Key="ENDPOINT_PROTECTION">
-					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string" ></RegistryValue>
-					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string" ></RegistryValue>
+					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string" />
+					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string" />
 				</RegistryKey>
 
 				<RegistryKey Key="LMP">
-					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string" ></RegistryValue>
-					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string" ></RegistryValue>
+					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string" />
+					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string" />
 				</RegistryKey>
 
 			</RegistryKey>

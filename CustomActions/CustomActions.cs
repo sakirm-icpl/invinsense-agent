@@ -32,6 +32,12 @@ namespace ToolManager
                 return ActionResult.Failure;
             }
 
+            var skipEndpointDeception = session["SKIP_ENDPOINT_DECEPTION"];
+            if(skipEndpointDeception == "Y" || skipEndpointDeception == "y")
+            {
+                return ActionResult.Success;
+            }
+
             if (string.IsNullOrEmpty(session["DBYTES_SERVER"]))
             {
                 session.Log($"Required parameter 'DBYTES_SERVER' is missing. Installer will exit.");

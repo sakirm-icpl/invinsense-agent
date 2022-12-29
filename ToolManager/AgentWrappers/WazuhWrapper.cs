@@ -49,9 +49,9 @@ namespace ToolManager.AgentWrappers
 
                 _logger.Information($"PATH: {msiPath}, Log: {logPath}");
 
-                var managerIp = ToolRepository.GetPropertyByName(ToolName.Wazuuh, "MANAGER_ADDR");
-                var registrationIp = ToolRepository.GetPropertyByName(ToolName.Wazuuh, "REGISTRATION_SERVER_ADDR");
-                var agentGroup = ToolRepository.GetPropertyByName(ToolName.Wazuuh, "AGENT_GROUP");
+                var managerIp = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "MANAGER_ADDR");
+                var registrationIp = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "REGISTRATION_SERVER_ADDR");
+                var agentGroup = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "AGENT_GROUP");
                 
                 Process installerProcess = new Process
                 {

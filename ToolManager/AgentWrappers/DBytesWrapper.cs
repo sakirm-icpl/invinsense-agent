@@ -31,6 +31,14 @@ namespace ToolManager.AgentWrappers
                     return -1;
                 }
 
+                var skipInstall = ToolRepository.GetPropertyByName(ToolName.EndpointDeception, "SKIP_INSTALL");
+
+                if (skipInstall == "Y" || skipInstall == "y")
+                {
+                    _logger.Information("END_POINT_DETECTION not found and set for skip.");
+                    return -1;
+                }
+
                 _logger.Information("END_POINT_DETECTION not found. Preparing installation");
 
                 if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
@@ -47,8 +55,8 @@ namespace ToolManager.AgentWrappers
 
                 _logger.Information($"PATH: {msiPath}, Log: {logPath}");
 
-                var serverIp = ToolRepository.GetPropertyByName(ToolName.Dbytes, "SERVER_ADDR");
-                var apiKey = ToolRepository.GetPropertyByName(ToolName.Dbytes, "APIKEY");
+                var serverIp = ToolRepository.GetPropertyByName(ToolName.EndpointDeception, "SERVER_ADDR");
+                var apiKey = ToolRepository.GetPropertyByName(ToolName.EndpointDeception, "APIKEY");
 
                 Process installerProcess = new Process
                 {
