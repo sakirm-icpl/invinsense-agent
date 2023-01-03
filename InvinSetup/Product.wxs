@@ -62,6 +62,13 @@
 							Name='WAZUH_AGENT_GROUP' Type='raw' />
 		</Property>
 
+		<!--Fetch property of SKIP_INSTALL-->
+		<Property Id='SKIP_DBYTES'>
+			<RegistrySearch Id='SkipDbytesId' Root='HKLM'
+							Key='SOFTWARE\infopercxept'
+							Name='SKIP_DBYTES' Type='raw' />
+		</Property>
+		
 		<!--Fetch property of DBYTES_SERVER-->
 		<Property Id='DBYTES_SERVER'>
 			<RegistrySearch Id='DeceptiveBytesIp' Root='HKLM'
@@ -136,6 +143,9 @@
 				</RegistryKey>
 
 				<RegistryKey Key="ENDPOINT_DECEPTION">
+					<!--add property of SKIP_DBYTES with value and place it to "SOFTWARE\infopercept" -->
+					<RegistryValue Name='SKIP_INSTALL' Value='[SKIP_DBYTES]' Type='string' />
+
 					<!--add property of DBYTES_SERVER with value and place it to "SOFTWARE\infopercept" -->
 					<RegistryValue Name='SERVER_ADDR' Value='[DBYTES_SERVER]' Type='string' />
 
