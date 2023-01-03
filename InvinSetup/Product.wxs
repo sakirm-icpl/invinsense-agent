@@ -12,7 +12,7 @@
 <!-- The manufacturer, for other tools and folder info -->
 <?define ArtifactsName = "Artifacts" ?>
 <!-- The version number of this setup package-->
-<?define Version = "1.0.3.0" ?>
+<?define Version = "1.0.2.0" ?>
 <!-- UpgradeCode must be unique and not changed once the first version of the program is installed. -->
 <?define UpgradeCode = "{38ECE878-1645-4310-BD9A-B9CA57FE0DF0}" ?>
 <!-- The name of the Cabinet -->
@@ -62,11 +62,11 @@
 							Name='WAZUH_AGENT_GROUP' Type='raw' />
 		</Property>
 
-		<!--Fetch property of SKIP_INSTALL-->
-		<Property Id='SKIP_DBYTES'>
+		<!--Fetch property of SKIP_ENDPOINT_DECEPTION-->
+		<Property Id='SKIP_ENDPOINT_DECEPTION'>
 			<RegistrySearch Id='SkipDbytesId' Root='HKLM'
 							Key='SOFTWARE\infopercxept'
-							Name='SKIP_DBYTES' Type='raw' />
+							Name='SKIP_ENDPOINT_DECEPTION' Type='raw' />
 		</Property>
 		
 		<!--Fetch property of DBYTES_SERVER-->
@@ -144,7 +144,7 @@
 
 				<RegistryKey Key="ENDPOINT_DECEPTION">
 					<!--add property of SKIP_DBYTES with value and place it to "SOFTWARE\infopercept" -->
-					<RegistryValue Name='SKIP_INSTALL' Value='[SKIP_DBYTES]' Type='string' />
+					<RegistryValue Name='SKIP_ENDPOINT_DECEPTION' Value='[SKIP_ENDPOINT_DECEPTION]' Type='string' />
 
 					<!--add property of DBYTES_SERVER with value and place it to "SOFTWARE\infopercept" -->
 					<RegistryValue Name='SERVER_ADDR' Value='[DBYTES_SERVER]' Type='string' />
