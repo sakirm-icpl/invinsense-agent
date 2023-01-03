@@ -31,7 +31,7 @@ namespace ToolManager.AgentWrappers
                     return -1;
                 }
 
-                var skipInstall = ToolRepository.GetPropertyByName(ToolName.EndpointDeception, "SKIP_INSTALL");
+                var skipInstall = ToolRepository.GetPropertyByName(ToolName.EndpointDeception, "SKIP_ENDPOINT_DECEPTION");
 
                 if (skipInstall == "Y" || skipInstall == "y")
                 {
