@@ -82,22 +82,22 @@ namespace IvsTray
 
             switch (toolStatus.Name)
             {
-                case ToolName.Wazuuh:
+                case ToolName.EndpointDecetionAndResponse:
                     pb = pbWazuh;
                     break;
-                case ToolName.Dbytes:
+                case ToolName.EndpointDeception:
                     pb = pbDbytes;
                     break;
-                case ToolName.Sysmon:
+                case ToolName.AdvanceTelemetry:
                     pb = pbSysmon;
                     break;
-                case ToolName.Av:
+                case ToolName.EndpointProtection:
                     pb = pbDefender;
                     break;
-                case ToolName.OsQuery:
+                case ToolName.UserBehaviorAnalytics:
                     pb = pbOsquery;
                     break;
-                case ToolName.Lmp:
+                case ToolName.LateralMovementProtection:
                     pb = pbLmp;
                     break;
             }

@@ -10,6 +10,9 @@ using Common.Persistance;
 using ToolManager.AgentWrappers;
 using System.Threading.Tasks;
 using IvsAgent.Extensions;
+using IvsAgent.AvHelper;
+using System.Linq;
+using System.Net.NetworkInformation;
 
 namespace IvsAgent
 {
@@ -84,7 +87,7 @@ namespace IvsAgent
         {
             if (status == null)
             {
-                toolRepository.CaptureEvent(new ToolStatus(ToolName.Wazuuh, InstallStatus.NotFound, RunningStatus.NotFound));
+                toolRepository.CaptureEvent(new ToolStatus(ToolName.EndpointDecetionAndResponse, InstallStatus.NotFound, RunningStatus.NotFound));
                 return;
             }
 
@@ -92,13 +95,13 @@ namespace IvsAgent
             {
                 case ServiceControllerStatus.StartPending:
                 case ServiceControllerStatus.Running:
-                    toolRepository.CaptureEvent(new ToolStatus(ToolName.Wazuuh, InstallStatus.Installed, RunningStatus.Running));
+                    toolRepository.CaptureEvent(new ToolStatus(ToolName.EndpointDecetionAndResponse, InstallStatus.Installed, RunningStatus.Running));
                     return;
                 case ServiceControllerStatus.Stopped:
-                    toolRepository.CaptureEvent(new ToolStatus(ToolName.Wazuuh, InstallStatus.Installed, RunningStatus.Stopped));
+                    toolRepository.CaptureEvent(new ToolStatus(ToolName.EndpointDecetionAndResponse, InstallStatus.Installed, RunningStatus.Stopped));
                     return;
                 default:
-                    toolRepository.CaptureEvent(new ToolStatus(ToolName.Wazuuh, InstallStatus.Installed, RunningStatus.Warning));
+                    toolRepository.CaptureEvent(new ToolStatus(ToolName.EndpointDecetionAndResponse, InstallStatus.Installed, RunningStatus.Warning));
                     return;
             }
         }
@@ -107,7 +110,7 @@ namespace IvsAgent
         {
             if (status == null)
             {
-                toolRepository.CaptureEvent(new ToolStatus(ToolName.Dbytes, InstallStatus.NotFound, RunningStatus.NotFound));
+                toolRepository.CaptureEvent(new ToolStatus(ToolName.EndpointDeception, InstallStatus.NotFound, RunningStatus.NotFound));
                 return;
             }
 
@@ -115,13 +118,13 @@ namespace IvsAgent
             {
                 case ServiceControllerStatus.StartPending:
                 case ServiceControllerStatus.Running:
-                    toolRepository.CaptureEvent(new ToolStatus(ToolName.Dbytes, InstallStatus.Installed, RunningStatus.Running));
+                    toolRepository.CaptureEvent(new ToolStatus(ToolName.EndpointDeception, InstallStatus.Installed, RunningStatus.Running));
                     return;
                 case ServiceControllerStatus.Stopped:
-                    toolRepository.CaptureEvent(new ToolStatus(ToolName.Dbytes, InstallStatus.Installed, RunningStatus.Stopped));
+                    toolRepository.CaptureEvent(new ToolStatus(ToolName.EndpointDeception, InstallStatus.Installed, RunningStatus.Stopped));
                     return;
                 default:
-                    toolRepository.CaptureEvent(new ToolStatus(ToolName.Dbytes, InstallStatus.Installed, RunningStatus.Warning));
+                    toolRepository.CaptureEvent(new ToolStatus(ToolName.EndpointDeception, InstallStatus.Installed, RunningStatus.Warning));
                     return;
             }
         }
@@ -130,7 +133,7 @@ namespace IvsAgent
         {
             if (status == null)
             {
-                toolRepository.CaptureEvent(new ToolStatus(ToolName.OsQuery, InstallStatus.NotFound, RunningStatus.NotFound));
+                toolRepository.CaptureEvent(new ToolStatus(ToolName.UserBehaviorAnalytics, InstallStatus.NotFound, RunningStatus.NotFound));
                 return;
             }
 
@@ -138,13 +141,13 @@ namespace IvsAgent
             {
                 case ServiceControllerStatus.StartPending:
                 case ServiceControllerStatus.Running:
-                    toolRepository.CaptureEvent(new ToolStatus(ToolName.OsQuery, InstallStatus.Installed, RunningStatus.Running));
+                    toolRepository.CaptureEvent(new ToolStatus(ToolName.UserBehaviorAnalytics, InstallStatus.Installed, RunningStatus.Running));
                     return;
                 case ServiceControllerStatus.Stopped:
-                    toolRepository.CaptureEvent(new ToolStatus(ToolName.OsQuery, InstallStatus.Installed, RunningStatus.Stopped));
+                    toolRepository.CaptureEvent(new ToolStatus(ToolName.UserBehaviorAnalytics, InstallStatus.Installed, RunningStatus.Stopped));
                     return;
                 default:
-                    toolRepository.CaptureEvent(new ToolStatus(ToolName.OsQuery, InstallStatus.Installed, RunningStatus.Warning));
+                    toolRepository.CaptureEvent(new ToolStatus(ToolName.UserBehaviorAnalytics, InstallStatus.Installed, RunningStatus.Warning));
                     return;
             }
         }
@@ -153,7 +156,7 @@ namespace IvsAgent
         {
             if (status == null)
             {
-                toolRepository.CaptureEvent(new ToolStatus(ToolName.Sysmon, InstallStatus.NotFound, RunningStatus.NotFound));
+                toolRepository.CaptureEvent(new ToolStatus(ToolName.AdvanceTelemetry, InstallStatus.NotFound, RunningStatus.NotFound));
                 return;
             }
 
@@ -161,13 +164,13 @@ namespace IvsAgent
             {
                 case ServiceControllerStatus.StartPending:
                 case ServiceControllerStatus.Running:
-                    toolRepository.CaptureEvent(new ToolStatus(ToolName.Sysmon, InstallStatus.Installed, RunningStatus.Running));
+                    toolRepository.CaptureEvent(new ToolStatus(ToolName.AdvanceTelemetry, InstallStatus.Installed, RunningStatus.Running));
                     return;
                 case ServiceControllerStatus.Stopped:
-                    toolRepository.CaptureEvent(new ToolStatus(ToolName.Sysmon, InstallStatus.Installed, RunningStatus.Stopped));
+                    toolRepository.CaptureEvent(new ToolStatus(ToolName.AdvanceTelemetry, InstallStatus.Installed, RunningStatus.Stopped));
                     return;
                 default:
-                    toolRepository.CaptureEvent(new ToolStatus(ToolName.Sysmon, InstallStatus.Installed, RunningStatus.Warning));
+                    toolRepository.CaptureEvent(new ToolStatus(ToolName.AdvanceTelemetry, InstallStatus.Installed, RunningStatus.Warning));
                     return;
             }
         }
@@ -176,7 +179,7 @@ namespace IvsAgent
         {
             if (status == null)
             {
-                toolRepository.CaptureEvent(new ToolStatus(ToolName.Lmp, InstallStatus.NotFound, RunningStatus.NotFound));
+                toolRepository.CaptureEvent(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.NotFound, RunningStatus.NotFound));
                 return;
             }
 
@@ -184,13 +187,13 @@ namespace IvsAgent
             {
                 case ServiceControllerStatus.StartPending:
                 case ServiceControllerStatus.Running:
-                    toolRepository.CaptureEvent(new ToolStatus(ToolName.Lmp, InstallStatus.Installed, RunningStatus.Running));
+                    toolRepository.CaptureEvent(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.Installed, RunningStatus.Running));
                     return;
                 case ServiceControllerStatus.Stopped:
-                    toolRepository.CaptureEvent(new ToolStatus(ToolName.Lmp, InstallStatus.Installed, RunningStatus.Stopped));
+                    toolRepository.CaptureEvent(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.Installed, RunningStatus.Stopped));
                     return;
                 default:
-                    toolRepository.CaptureEvent(new ToolStatus(ToolName.Lmp, InstallStatus.Installed, RunningStatus.Warning));
+                    toolRepository.CaptureEvent(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.Installed, RunningStatus.Warning));
                     return;
             }
         }
@@ -219,7 +222,7 @@ namespace IvsAgent
             });
 
             _logger.Information("Task added...");
-            toolRepository.CaptureEvent(new ToolStatus(ToolName.Lmp, InstallStatus.Installed, RunningStatus.Running));
+            toolRepository.CaptureEvent(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.Installed, RunningStatus.Running));
         }
 
         protected override void OnStop()
@@ -228,7 +231,7 @@ namespace IvsAgent
 
             avTimer.Stop();
 
-            toolRepository.CaptureEvent(new ToolStatus(ToolName.Lmp, InstallStatus.Installed, RunningStatus.Stopped));
+            toolRepository.CaptureEvent(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.Installed, RunningStatus.Stopped));
 
             _isRunning = false;
         }
@@ -287,15 +290,28 @@ namespace IvsAgent
 
             _logger.Information("Checking windows defender service");
 
-            var status = ServiceHelper.AVStatus("Windows Defender");
+            var avStatuses = AvMonitor.ListAvStatuses();
 
-            if (avLastStatus != status)
+            var activeAvStatus = avStatuses.FirstOrDefault(x => x.IsAvEnabled);
+
+            InstallStatus currentAvStatus;
+
+            if(activeAvStatus == null)
             {
-                _logger.Information("Windows defender service status : Last: {avLastStatus}, New: {status}", avLastStatus, status);
+                currentAvStatus = InstallStatus.Error;
+            }
+            else
+            {
+                currentAvStatus = activeAvStatus.IsAvUptoDate ? InstallStatus.Installed : InstallStatus.Outdated;
+            }
 
-                avLastStatus = status;
+            if (avLastStatus != currentAvStatus)
+            {
+                _logger.Information("Windows defender service status : Last: {avLastStatus}, New: {status}", avLastStatus, currentAvStatus);
 
-                toolRepository.CaptureEvent(new ToolStatus(ToolName.Av, status, status == InstallStatus.Installed ? RunningStatus.Running : RunningStatus.Warning));
+                avLastStatus = currentAvStatus;
+
+                toolRepository.CaptureEvent(new ToolStatus(ToolName.EndpointProtection, currentAvStatus, currentAvStatus == InstallStatus.Installed ? RunningStatus.Running : RunningStatus.Warning));
             }
 
             inTimer = false;

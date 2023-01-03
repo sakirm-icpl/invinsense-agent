@@ -24,22 +24,22 @@
             switch (toolId)
             {
                 case 1:
-                    Name = ToolName.Wazuuh;
+                    Name = ToolName.EndpointDecetionAndResponse;
                     break;
                 case 2:
-                    Name = ToolName.Dbytes;
+                    Name = ToolName.EndpointDeception;
                     break;
                 case 3:
-                    Name = ToolName.OsQuery;
+                    Name = ToolName.UserBehaviorAnalytics;
                     break;
                 case 4:
-                    Name = ToolName.Sysmon;
+                    Name = ToolName.AdvanceTelemetry;
                     break;
                 case 5:
-                    Name = ToolName.Av;
+                    Name = ToolName.EndpointProtection;
                     break;
                 case 6:
-                    Name = ToolName.Lmp;
+                    Name = ToolName.LateralMovementProtection;
                     break;
                 default:
                     break;
@@ -60,22 +60,22 @@
             var code = 0;
             switch (Name)
             {
-                case ToolName.Wazuuh:
+                case ToolName.EndpointDecetionAndResponse:
                     code += 100;
                     break;
-                case ToolName.Dbytes:
+                case ToolName.EndpointDeception:
                     code += 200;
                     break;
-                case ToolName.OsQuery:
+                case ToolName.UserBehaviorAnalytics:
                     code += 300;
                     break;
-                case ToolName.Sysmon:
+                case ToolName.AdvanceTelemetry:
                     code += 400;
                     break;
-                case ToolName.Av:
+                case ToolName.EndpointProtection:
                     code += 500;
                     break;
-                case ToolName.Lmp:
+                case ToolName.LateralMovementProtection:
                     code += 600;
                     break;
                 default:

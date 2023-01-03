@@ -17,12 +17,12 @@ namespace Common.Persistance
 
         public IEnumerable<ToolStatus> GetAllStatuses()
         {
-            var wazuhStatus = GetStatus(ToolName.Wazuuh);
-            var sysmonStatus = GetStatus(ToolName.Sysmon);
-            var dBytesStatus = GetStatus(ToolName.Dbytes);
-            var osQueryStatus = GetStatus(ToolName.OsQuery);
-            var avStatus = GetStatus(ToolName.Av);
-            var lmpStatus = GetStatus(ToolName.Lmp);
+            var wazuhStatus = GetStatus(ToolName.EndpointDecetionAndResponse);
+            var sysmonStatus = GetStatus(ToolName.AdvanceTelemetry);
+            var dBytesStatus = GetStatus(ToolName.EndpointDeception);
+            var osQueryStatus = GetStatus(ToolName.UserBehaviorAnalytics);
+            var avStatus = GetStatus(ToolName.EndpointProtection);
+            var lmpStatus = GetStatus(ToolName.LateralMovementProtection);
             return new[] { wazuhStatus, sysmonStatus, dBytesStatus, osQueryStatus, avStatus, lmpStatus };
         }
 
