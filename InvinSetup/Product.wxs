@@ -12,7 +12,7 @@
 <!-- The manufacturer, for other tools and folder info -->
 <?define ArtifactsName = "Artifacts" ?>
 <!-- The version number of this setup package-->
-<?define Version = "1.2.9.0" ?>
+<?define Version = "1.0.2.0" ?>
 <!-- UpgradeCode must be unique and not changed once the first version of the program is installed. -->
 <?define UpgradeCode = "{38ECE878-1645-4310-BD9A-B9CA57FE0DF0}" ?>
 <!-- The name of the Cabinet -->
@@ -189,7 +189,6 @@
 				<File Id="a13" Source="$(var.Agent_Service_TargetDir)\Serilog.Sinks.File.pdb" />
 				<File Id="a14" Source="$(var.Agent_Service_TargetDir)\System.CodeDom.dll" />
 				<File Id="a15" Source="$(var.Agent_Service_TargetDir)\System.Security.Principal.Windows.dll"/>
-				<File Id="a16" Name="readme.txt" Source="D:\invinsense-agent\InvinSetup\"/>
 				<!--Removing all the old files on building new msi file-->
 				<RemoveFile Id="AgentComponentsCopiedFiles" Name="*.*" On="install"/>
 			</Component>
@@ -208,7 +207,6 @@
 				<File Id="b08" Source="$(var.Tray_Application_TargetDir)\Serilog.dll" />
 				<File Id="b09" Source="$(var.Tray_Application_TargetDir)\Serilog.Sinks.File.dll" />
 				<File Id="b10" Source="$(var.Tray_Application_TargetDir)\Serilog.Sinks.File.pdb" />
-				<File Id="b11" Name="readme.txt" Source="D:\invinsense-agent\InvinSetup\"/>
 				<!--Removing all the old files on building new msi file-->
 				<RemoveFile Id="TrayComponentsCopiedFiles" Name="*.*" On="install"/>
 			</Component>
