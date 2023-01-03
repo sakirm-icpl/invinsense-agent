@@ -21,17 +21,17 @@ namespace ToolManager.AgentWrappers
 
                 if (ctl != null)
                 {
-                    _logger.Information($"END_POINT_DETECTION found with status: {ctl.Status}");
+                    _logger.Information($"END_POINT_DECEPTION found with status: {ctl.Status}");
                     return 0;
                 }
 
                 if (ctl == null && !isInstall)
                 {
-                    _logger.Information("END_POINT_DETECTION not found and set for skip.");
+                    _logger.Information("END_POINT_DECEPTION not found and set for skip.");
                     return -1;
                 }
 
-                _logger.Information("END_POINT_DETECTION not found. Preparing installation");
+                _logger.Information("END_POINT_DECEPTION not found. Preparing installation");
 
                 if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
                 {
@@ -39,7 +39,7 @@ namespace ToolManager.AgentWrappers
                     return 1618;
                 }
 
-                _logger.Information("END_POINT_DETECTION installation is ready");
+                _logger.Information("END_POINT_DECEPTION installation is ready");
 
                 var msiPath = CommonUtils.GetAbsoletePath("..\\artifacts\\DeceptiveBytes.EPS.x64.msi");
 
@@ -49,6 +49,8 @@ namespace ToolManager.AgentWrappers
 
                 var serverIp = ToolRepository.GetPropertyByName(ToolName.Dbytes, "SERVER_ADDR");
                 var apiKey = ToolRepository.GetPropertyByName(ToolName.Dbytes, "APIKEY");
+
+                _logger.Information($"ServerIP: {serverIp}, ApiKey: {apiKey}");
 
                 Process installerProcess = new Process
                 {
@@ -68,17 +70,17 @@ namespace ToolManager.AgentWrappers
 
                 installerProcess.Start();
 
-                _logger.Information("END_POINT_DETECTION Installation started...");
+                _logger.Information("END_POINT_DECEPTION Installation started...");
 
                 installerProcess.WaitForExit();
 
                 if (installerProcess.ExitCode == 0)
                 {
-                    _logger.Information("END_POINT_DETECTION installation completed");
+                    _logger.Information("END_POINT_DECEPTION installation completed");
                 }
                 else
                 {
-                    _logger.Information($"END_POINT_DETECTION installation fault: {installerProcess.ExitCode}");
+                    _logger.Information($"END_POINT_DECEPTION installation fault: {installerProcess.ExitCode}");
                 }
 
                 return installerProcess.ExitCode;
@@ -92,17 +94,17 @@ namespace ToolManager.AgentWrappers
 
         private static void InstallerProcess_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            _logger.Information($"END_POINT_DETECTION installation error data: {e.Data}");
+            _logger.Information($"END_POINT_DECEPTION installation error data: {e.Data}");
         }
 
         private static void InstallerProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            _logger.Error($"END_POINT_DETECTION error data: {e.Data}");
+            _logger.Error($"END_POINT_DECEPTION error data: {e.Data}");
         }
 
         private static void InstallerProcess_Exited(object sender, EventArgs e)
         {
-            _logger.Information("END_POINT_DETECTION process exited.");
+            _logger.Information("END_POINT_DECEPTION process exited.");
         }
 
         public static int Remove()

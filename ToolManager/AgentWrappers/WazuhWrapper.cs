@@ -52,7 +52,9 @@ namespace ToolManager.AgentWrappers
                 var managerIp = ToolRepository.GetPropertyByName(ToolName.Wazuuh, "MANAGER_ADDR");
                 var registrationIp = ToolRepository.GetPropertyByName(ToolName.Wazuuh, "REGISTRATION_SERVER_ADDR");
                 var agentGroup = ToolRepository.GetPropertyByName(ToolName.Wazuuh, "AGENT_GROUP");
-                
+
+                _logger.Information($"ManagerIP: {managerIp}, RegistrationIP: {registrationIp}, AgentGroup: {agentGroup}");
+
                 Process installerProcess = new Process
                 {
                     StartInfo = new ProcessStartInfo
