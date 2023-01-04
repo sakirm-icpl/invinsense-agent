@@ -37,9 +37,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinUserLogOffTest", "WinUse
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsiCertVerificationTest", "MsiCertVerificationTest\MsiCertVerificationTest.csproj", "{C9EDC506-9370-4C67-B4F9-80F725DC1F0E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomAction1", "CustomAction1\CustomAction1.csproj", "{AD181DCF-919B-403F-BB87-7B755AF6E00A}"
-EndProject
-Project("{B7DD6F7E-DEF8-4E67-B5B7-07EF123DB6F0}") = "SampleSetupTest", "SampleSetupTest\SampleSetupTest.wixproj", "{30FA738C-93C9-4471-B0B8-6134F78E29D8}"
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "SampleSetupTest", "SampleSetupTest\SampleSetupTest.wixproj", "{30FA738C-93C9-4471-B0B8-6134F78E29D8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -325,22 +323,6 @@ Global
 		{C9EDC506-9370-4C67-B4F9-80F725DC1F0E}.Release|x64.Build.0 = Release|Any CPU
 		{C9EDC506-9370-4C67-B4F9-80F725DC1F0E}.Release|x86.ActiveCfg = Release|Any CPU
 		{C9EDC506-9370-4C67-B4F9-80F725DC1F0E}.Release|x86.Build.0 = Release|Any CPU
-		{AD181DCF-919B-403F-BB87-7B755AF6E00A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AD181DCF-919B-403F-BB87-7B755AF6E00A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AD181DCF-919B-403F-BB87-7B755AF6E00A}.Debug|ARM64.ActiveCfg = Debug|Any CPU
-		{AD181DCF-919B-403F-BB87-7B755AF6E00A}.Debug|ARM64.Build.0 = Debug|Any CPU
-		{AD181DCF-919B-403F-BB87-7B755AF6E00A}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{AD181DCF-919B-403F-BB87-7B755AF6E00A}.Debug|x64.Build.0 = Debug|Any CPU
-		{AD181DCF-919B-403F-BB87-7B755AF6E00A}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{AD181DCF-919B-403F-BB87-7B755AF6E00A}.Debug|x86.Build.0 = Debug|Any CPU
-		{AD181DCF-919B-403F-BB87-7B755AF6E00A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AD181DCF-919B-403F-BB87-7B755AF6E00A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AD181DCF-919B-403F-BB87-7B755AF6E00A}.Release|ARM64.ActiveCfg = Release|Any CPU
-		{AD181DCF-919B-403F-BB87-7B755AF6E00A}.Release|ARM64.Build.0 = Release|Any CPU
-		{AD181DCF-919B-403F-BB87-7B755AF6E00A}.Release|x64.ActiveCfg = Release|Any CPU
-		{AD181DCF-919B-403F-BB87-7B755AF6E00A}.Release|x64.Build.0 = Release|Any CPU
-		{AD181DCF-919B-403F-BB87-7B755AF6E00A}.Release|x86.ActiveCfg = Release|Any CPU
-		{AD181DCF-919B-403F-BB87-7B755AF6E00A}.Release|x86.Build.0 = Release|Any CPU
 		{30FA738C-93C9-4471-B0B8-6134F78E29D8}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{30FA738C-93C9-4471-B0B8-6134F78E29D8}.Debug|Any CPU.Build.0 = Debug|x86
 		{30FA738C-93C9-4471-B0B8-6134F78E29D8}.Debug|ARM64.ActiveCfg = Debug|x86
