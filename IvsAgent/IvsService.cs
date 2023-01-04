@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 using IvsAgent.Extensions;
 using IvsAgent.AvHelper;
 using System.Linq;
-using System.Net.NetworkInformation;
 
 namespace IvsAgent
 {
@@ -20,8 +19,8 @@ namespace IvsAgent
     {
         private readonly Timer avTimer = new Timer(15000);
 
-        private readonly ExtendedServiceController wazuh;
-        private readonly ExtendedServiceController Dbytes;
+        private readonly ExtendedServiceController EdrServiceChecker;
+        private readonly ExtendedServiceController DeceptionServiceChecker;
         private readonly ExtendedServiceController OsQuery;
         private readonly ExtendedServiceController Sysmon;
         private readonly ExtendedServiceController LmpService;
@@ -51,11 +50,11 @@ namespace IvsAgent
 
             toolRepository = new ToolRepository();
 
-            wazuh = new ExtendedServiceController("WazuhSvc");
-            wazuh.StatusChanged += (object sender, ServiceStatusEventArgs e) => WazuhUpdateStatus(e.Status);
+            EdrServiceChecker = new ExtendedServiceController("WazuhSvc");
+            EdrServiceChecker.StatusChanged += (object sender, ServiceStatusEventArgs e) => EdrUpdateStatus(e.Status);
 
-            Dbytes = new ExtendedServiceController("DBytesService");
-            Dbytes.StatusChanged += (object sender, ServiceStatusEventArgs e) => DbytesUpdateStatus(e.Status);
+            DeceptionServiceChecker = new ExtendedServiceController("DBytesService");
+            DeceptionServiceChecker.StatusChanged += (object sender, ServiceStatusEventArgs e) => DeceptionUpdateStatus(e.Status);
 
             OsQuery = new ExtendedServiceController("osqueryd");
             OsQuery.StatusChanged += (object sender, ServiceStatusEventArgs e) => OsQueryUpdateStatus(e.Status);
@@ -83,7 +82,7 @@ namespace IvsAgent
             }
         }
 
-        private void WazuhUpdateStatus(ServiceControllerStatus? status)
+        private void EdrUpdateStatus(ServiceControllerStatus? status)
         {
             if (status == null)
             {
@@ -106,7 +105,7 @@ namespace IvsAgent
             }
         }
 
-        private void DbytesUpdateStatus(ServiceControllerStatus? status)
+        private void DeceptionUpdateStatus(ServiceControllerStatus? status)
         {
             if (status == null)
             {
@@ -345,10 +344,10 @@ namespace IvsAgent
 
             if (WazuhWrapper.Verify(true) == 0)
             {
-                _logger.Information($"Wazuh verified with status: {wazuh.Status}");
-                wazuh.StartListening();
-                WazuhUpdateStatus(wazuh.Status);
-                _logger.Information($"Wazuh service listening: {wazuh.Status}");
+                _logger.Information($"Wazuh verified with status: {EdrServiceChecker.Status}");
+                EdrServiceChecker.StartListening();
+                EdrUpdateStatus(EdrServiceChecker.Status);
+                _logger.Information($"Wazuh service listening: {EdrServiceChecker.Status}");
             }
             else
             {
@@ -357,10 +356,10 @@ namespace IvsAgent
 
             if (DBytesWrapper.Verify(true) == 0)
             {
-                _logger.Information($"dBytes verified with status: {Dbytes.Status}");
-                Dbytes.StartListening();
-                DbytesUpdateStatus(Dbytes.Status);
-                _logger.Information($"dBytes service listening: {Dbytes.Status}");
+                _logger.Information($"dBytes verified with status: {DeceptionServiceChecker.Status}");
+                DeceptionServiceChecker.StartListening();
+                DeceptionUpdateStatus(DeceptionServiceChecker.Status);
+                _logger.Information($"dBytes service listening: {DeceptionServiceChecker.Status}");
             }
             else
             {

@@ -12,18 +12,42 @@ namespace Common.Persistance
 
         public ToolRepository()
         {
-
         }
 
         public IEnumerable<ToolStatus> GetAllStatuses()
         {
-            var wazuhStatus = GetStatus(ToolName.EndpointDecetionAndResponse);
+            var edrStatus = GetStatus(ToolName.EndpointDecetionAndResponse);
             var sysmonStatus = GetStatus(ToolName.AdvanceTelemetry);
-            var dBytesStatus = GetStatus(ToolName.EndpointDeception);
             var osQueryStatus = GetStatus(ToolName.UserBehaviorAnalytics);
             var avStatus = GetStatus(ToolName.EndpointProtection);
             var lmpStatus = GetStatus(ToolName.LateralMovementProtection);
-            return new[] { wazuhStatus, sysmonStatus, dBytesStatus, osQueryStatus, avStatus, lmpStatus };
+            var statuses = new List<ToolStatus> { edrStatus, sysmonStatus, osQueryStatus, avStatus, lmpStatus };
+            
+            if(!CanSkipMonitoring(ToolName.EndpointDeception))
+            {
+                var deceptionStatus = GetStatus(ToolName.EndpointDeception);
+                statuses.Add(deceptionStatus);
+            }
+            return statuses;
+        }
+
+        public static bool CanSkipMonitoring(string name)
+        {
+            try
+            {
+                using (var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
+                using (var key = hklm.OpenSubKey($"SOFTWARE\\Infopercept\\{name}", false)) // False is important!
+                {
+                    var skipMonitoring = key?.GetValue("SKIP_MONITORING") as string ?? "N";
+                    return skipMonitoring == "Y" || skipMonitoring == "y";
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Error in reading tool status. {ex}");
+            }
+
+            return false;
         }
 
         public ToolStatus GetStatus(string name)

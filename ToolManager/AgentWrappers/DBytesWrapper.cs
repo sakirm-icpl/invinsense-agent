@@ -31,9 +31,9 @@ namespace ToolManager.AgentWrappers
                     return -1;
                 }
 
-                var skipInstall = ToolRepository.GetPropertyByName(ToolName.EndpointDeception, "SKIP_ENDPOINT_DECEPTION");
+                var skipInstall = ToolRepository.CanSkipMonitoring(ToolName.EndpointDeception);
 
-                if (skipInstall == "Y" || skipInstall == "y")
+                if (skipInstall)
                 {
                     _logger.Information("END_POINT_DECEPTION not found and set for skip by configuration.");
                     return -1;

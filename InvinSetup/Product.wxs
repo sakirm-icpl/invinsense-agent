@@ -144,7 +144,7 @@
 
 				<RegistryKey Key="ENDPOINT_DECEPTION">
 					<!--add property of SKIP_DBYTES with value and place it to "SOFTWARE\infopercept" -->
-					<RegistryValue Name='SKIP_ENDPOINT_DECEPTION' Value='[SKIP_ENDPOINT_DECEPTION]' Type='string' />
+					<RegistryValue Name='SKIP_MONITORING' Value='[SKIP_ENDPOINT_DECEPTION]' Type='string' />
 
 					<!--add property of DBYTES_SERVER with value and place it to "SOFTWARE\infopercept" -->
 					<RegistryValue Name='SERVER_ADDR' Value='[DBYTES_SERVER]' Type='string' />

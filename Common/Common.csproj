@@ -51,6 +51,7 @@
     <Compile Include="Net\RetryPolicyHandler.cs" />
     <Compile Include="Persistance\InstallStatus.cs" />
     <Compile Include="Persistance\RunningStatus.cs" />
+    <Compile Include="Persistance\ToolDetail.cs" />
     <Compile Include="Persistance\ToolName.cs" />
     <Compile Include="Persistance\ToolRepository.cs" />
     <Compile Include="Persistance\ToolStatus.cs" />
