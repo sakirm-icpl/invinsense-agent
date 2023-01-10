@@ -113,5 +113,13 @@
       <Version>5.0.0</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Advance_Telemetry.png" />
+    <Content Include="Assets\Endpoint_detection_and_response.png" />
+    <Content Include="Assets\Endpoint_Deception.png" />
+    <Content Include="Assets\Endpoint_Protection.png" />
+    <Content Include="Assets\Lateral_movement.png" />
+    <Content Include="Assets\User_Behaviour.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
