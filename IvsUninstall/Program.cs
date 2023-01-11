@@ -28,7 +28,7 @@ namespace IvsUninstall
                 Log.Logger.Information($"Program: {item}");
             }
 
-            Thread.Sleep(1000);
+            Thread.Sleep(2000);
 
 
             if (ServiceController.GetServices().Any(serviceController => serviceController.ServiceName.Equals("IvsAgent")))
@@ -36,12 +36,19 @@ namespace IvsUninstall
                 Log.Logger.Information("Stopping Invinsense service");
                 var service = new ServiceController("IvsAgent");
                 service.ExecuteCommand(130);
-                Thread.Sleep(2000);
+                Thread.Sleep(4000);
             }
             else
             {
                 Log.Logger.Information("Invinsense service does not exists...");
             }
+            Log.Logger.Information("Uninstalling OsQuery...");
+
+            var osQueryExitCode = ToolManager.AgentWrappers.OsQueryWrapper.Remove();
+
+            Log.Logger.Information($"OSQUERY remove exit code={osQueryExitCode}");
+
+            Thread.Sleep(3000);
 
             Log.Logger.Information("Uninstalling Deceptive Bytes...");
 
@@ -49,23 +56,23 @@ namespace IvsUninstall
 
             Log.Logger.Information($"Deceptive Bytes remove exit code={dBytesExitCode}");
 
-            Thread.Sleep(1000);
+            Thread.Sleep(3000);
+
+            Log.Logger.Information("Uninstalling Wazuh...");
 
             var wazuhExitCode = ToolManager.AgentWrappers.WazuhWrapper.Remove();
 
             Log.Logger.Information($"Wazuh remove exit code={wazuhExitCode}");
 
-            Thread.Sleep(1000);
+            Thread.Sleep(3000);
 
-            var osQueryExitCode = ToolManager.AgentWrappers.OsQueryWrapper.Remove();
-
-            Log.Logger.Information($"OSQUERY remove exit code={osQueryExitCode}");
-
-            Thread.Sleep(1000);
+            Log.Logger.Information("Uninstalling Sysmon...");
 
             var sysmonExitCode = ToolManager.AgentWrappers.SysmonWrapper.Remove();
 
             Log.Logger.Information($"SYSMON remove exit code={sysmonExitCode}");
+
+            Thread.Sleep(3000);
 
             //Removing Agent with uninstall key
             try
