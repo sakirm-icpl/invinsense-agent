@@ -30,7 +30,6 @@ namespace IvsTray
             InitializeComponent();
 
             Region = Region.FromHrgn(MainFormHelpers.CreateRoundRectRgn(0, 0, Width, Height, 20, 20));
-
             MouseDownFilter mouseFilter = new MouseDownFilter(this);
             mouseFilter.FormClicked += FormClicked;
             Application.AddMessageFilter(mouseFilter);
@@ -58,6 +57,8 @@ namespace IvsTray
 
         private void MainFormOnLoad(object sender, EventArgs e)
         {
+            //By default form will be in visible by making opacity to 0.
+            Opacity = 0;
             _logger.Information("Loading all tools from db");
             var allTools = toolRepository.GetAllStatuses();
             _logger.Information($"Tools loaded: {allTools.Count()}");
@@ -68,6 +69,7 @@ namespace IvsTray
                 toolStatuses.Add(toolDetail.Name, toolDetail.RunningStatus);
                 UpdateToolStatus(new ToolStatus(toolDetail.Name, toolDetail.InstallStatus, toolDetail.RunningStatus));
             }
+            
         }
 
         private void UpdateToolStatus(ToolStatus toolStatus, bool showNotification = false)
@@ -153,7 +155,6 @@ namespace IvsTray
         {
             Hide();
         }
-
         private void ShowClick(object sender, EventArgs e)
         {
             BringToTop();
@@ -161,6 +162,8 @@ namespace IvsTray
 
         private void BringToTop()
         {
+            //When we click on notification icone the form gets visible by making Opacity to true.
+            Opacity = 1;
             //Checks if the method is called from UI thread or not
             if (InvokeRequired)
             {
@@ -181,6 +184,7 @@ namespace IvsTray
                 //Set form's topmost status back to whatever it was
                 TopMost = top;
             }
+            
         }
     }
 }
