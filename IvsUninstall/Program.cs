@@ -42,6 +42,20 @@ namespace IvsUninstall
             {
                 Log.Logger.Information("Invinsense service does not exists...");
             }
+
+            #region Deceptive Bytes - Endpoint Deception
+            Log.Logger.Information("Uninstalling Deceptive Bytes...");
+
+            var dBytesExitCode = ToolManager.AgentWrappers.DBytesWrapper.Remove();
+
+            Log.Logger.Information($"Deceptive Bytes remove exit code={dBytesExitCode}");
+
+            Thread.Sleep(3000);
+
+            #endregion
+
+            #region OSQUERY
+
             Log.Logger.Information("Uninstalling OsQuery...");
 
             var osQueryExitCode = ToolManager.AgentWrappers.OsQueryWrapper.Remove();
@@ -50,13 +64,9 @@ namespace IvsUninstall
 
             Thread.Sleep(3000);
 
-            Log.Logger.Information("Uninstalling Deceptive Bytes...");
+            #endregion
 
-            var dBytesExitCode = ToolManager.AgentWrappers.DBytesWrapper.Remove();
-
-            Log.Logger.Information($"Deceptive Bytes remove exit code={dBytesExitCode}");
-
-            Thread.Sleep(3000);
+            #region WAZUH
 
             Log.Logger.Information("Uninstalling Wazuh...");
 
@@ -66,6 +76,10 @@ namespace IvsUninstall
 
             Thread.Sleep(3000);
 
+            #endregion
+
+            #region SYSMON
+
             Log.Logger.Information("Uninstalling Sysmon...");
 
             var sysmonExitCode = ToolManager.AgentWrappers.SysmonWrapper.Remove();
@@ -73,6 +87,8 @@ namespace IvsUninstall
             Log.Logger.Information($"SYSMON remove exit code={sysmonExitCode}");
 
             Thread.Sleep(3000);
+
+            #endregion
 
             //Removing Agent with uninstall key
             try
