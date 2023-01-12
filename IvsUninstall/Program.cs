@@ -1,6 +1,7 @@
 ﻿using Common.Utils;
 using Serilog;
 using System;
+using System.IO;
 using System.Linq;
 using System.ServiceProcess;
 using System.Threading;
@@ -64,6 +65,12 @@ namespace IvsUninstall
 
             Thread.Sleep(3000);
 
+            //TODO:Removing folder : C:\Program Files\osquery
+            var osqueryPath = "C:\\Program Files\\osquery";
+            if (Directory.Exists(osqueryPath)) Directory.Delete(osqueryPath, true);
+
+            Thread.Sleep(1000);
+
             #endregion
 
             #region WAZUH
@@ -75,6 +82,12 @@ namespace IvsUninstall
             Log.Logger.Information($"Wazuh remove exit code={wazuhExitCode}");
 
             Thread.Sleep(3000);
+
+            //TODO:Removing folder : C:\\Program Files (x86)\\ossec
+            var wazuhPath = "C:\\Program Files (x86)\\ossec";
+            if (Directory.Exists(wazuhPath)) Directory.Delete(wazuhPath, true);
+
+            Thread.Sleep(1000);
 
             #endregion
 
