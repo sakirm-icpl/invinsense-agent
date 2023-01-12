@@ -80,18 +80,18 @@
     <EmbeddedResource Include="Assets\gray.png" />
     <EmbeddedResource Include="Assets\green.png" />
     <EmbeddedResource Include="Assets\invinsence_logo.png" />
-    <EmbeddedResource Include="Assets\letral_threat_protection.png" />
+    <EmbeddedResource Include="Assets\lmt.png" />
     <EmbeddedResource Include="Assets\red.png" />
     <EmbeddedResource Include="Assets\yellow.png" />
-    <EmbeddedResource Include="Assets\deceptive.png" />
-    <EmbeddedResource Include="Assets\defender.png" />
+    <EmbeddedResource Include="Assets\deception.png" />
+    <EmbeddedResource Include="Assets\protection.png" />
     <EmbeddedResource Include="Assets\green_logo.ico" />
     <EmbeddedResource Include="Assets\green_logo_22_22.ico" />
     <EmbeddedResource Include="Assets\microsoft.png" />
-    <EmbeddedResource Include="Assets\osquery.png" />
+    <EmbeddedResource Include="Assets\uba.png" />
     <EmbeddedResource Include="Assets\red_logo.ico" />
     <EmbeddedResource Include="Assets\red_logo_22_22.ico" />
-    <EmbeddedResource Include="Assets\wazuh.png" />
+    <EmbeddedResource Include="Assets\edr.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
@@ -112,14 +112,6 @@
     <PackageReference Include="Serilog.Sinks.File">
       <Version>5.0.0</Version>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Assets\Advance_Telemetry.png" />
-    <Content Include="Assets\Endpoint_detection_and_response.png" />
-    <Content Include="Assets\Endpoint_Deception.png" />
-    <Content Include="Assets\Endpoint_Protection.png" />
-    <Content Include="Assets\Lateral_movement.png" />
-    <Content Include="Assets\User_Behaviour.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

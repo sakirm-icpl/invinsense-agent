@@ -63,16 +63,6 @@ namespace IvsTray.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap Advance_Telemetry {
-            get {
-                object obj = ResourceManager.GetObject("Advance_Telemetry", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         public static System.Drawing.Bitmap close {
             get {
                 object obj = ResourceManager.GetObject("close", resourceCulture);
@@ -83,9 +73,9 @@ namespace IvsTray.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap deceptive {
+        public static System.Drawing.Bitmap deception {
             get {
-                object obj = ResourceManager.GetObject("deceptive", resourceCulture);
+                object obj = ResourceManager.GetObject("deception", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -93,39 +83,9 @@ namespace IvsTray.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap defender {
+        public static System.Drawing.Bitmap edr {
             get {
-                object obj = ResourceManager.GetObject("defender", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap Endpoint_Deception {
-            get {
-                object obj = ResourceManager.GetObject("Endpoint_Deception", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap Endpoint_detection_and_response {
-            get {
-                object obj = ResourceManager.GetObject("Endpoint_detection_and_response", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap Endpoint_Protection {
-            get {
-                object obj = ResourceManager.GetObject("Endpoint_Protection", resourceCulture);
+                object obj = ResourceManager.GetObject("edr", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -193,19 +153,9 @@ namespace IvsTray.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap Lateral_movement {
+        public static System.Drawing.Bitmap lmt {
             get {
-                object obj = ResourceManager.GetObject("Lateral_movement", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap letral_threat_protection {
-            get {
-                object obj = ResourceManager.GetObject("letral_threat_protection", resourceCulture);
+                object obj = ResourceManager.GetObject("lmt", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -223,9 +173,9 @@ namespace IvsTray.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap osquery {
+        public static System.Drawing.Bitmap protection {
             get {
-                object obj = ResourceManager.GetObject("osquery", resourceCulture);
+                object obj = ResourceManager.GetObject("protection", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -263,19 +213,9 @@ namespace IvsTray.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap User_Behaviour {
+        public static System.Drawing.Bitmap uba {
             get {
-                object obj = ResourceManager.GetObject("User_Behaviour", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap wazuh {
-            get {
-                object obj = ResourceManager.GetObject("wazuh", resourceCulture);
+                object obj = ResourceManager.GetObject("uba", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

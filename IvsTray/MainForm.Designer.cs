@@ -229,7 +229,7 @@ namespace IvsTray
             // pbDeceptiveLogo
             // 
             this.pbDeceptiveLogo.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbDeceptiveLogo.Image = global::IvsTray.Properties.Resources.Endpoint_Deception;
+            this.pbDeceptiveLogo.Image = global::IvsTray.Properties.Resources.deception;
             this.pbDeceptiveLogo.InitialImage = null;
             this.pbDeceptiveLogo.Location = new System.Drawing.Point(12, 9);
             this.pbDeceptiveLogo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -242,7 +242,7 @@ namespace IvsTray
             // pbWindowsLogo
             // 
             this.pbWindowsLogo.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbWindowsLogo.Image = global::IvsTray.Properties.Resources.Endpoint_Protection;
+            this.pbWindowsLogo.Image = global::IvsTray.Properties.Resources.protection;
             this.pbWindowsLogo.Location = new System.Drawing.Point(15, 93);
             this.pbWindowsLogo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.pbWindowsLogo.Name = "pbWindowsLogo";
@@ -254,7 +254,7 @@ namespace IvsTray
             // pbWazuhLogo
             // 
             this.pbWazuhLogo.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbWazuhLogo.Image = global::IvsTray.Properties.Resources.Endpoint_detection_and_response;
+            this.pbWazuhLogo.Image = global::IvsTray.Properties.Resources.edr;
             this.pbWazuhLogo.Location = new System.Drawing.Point(15, 253);
             this.pbWazuhLogo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.pbWazuhLogo.Name = "pbWazuhLogo";
@@ -266,7 +266,7 @@ namespace IvsTray
             // pbSysmonLogo
             // 
             this.pbSysmonLogo.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbSysmonLogo.Image = global::IvsTray.Properties.Resources.Advance_Telemetry;
+            this.pbSysmonLogo.Image = global::IvsTray.Properties.Resources.microsoft;
             this.pbSysmonLogo.Location = new System.Drawing.Point(15, 333);
             this.pbSysmonLogo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.pbSysmonLogo.Name = "pbSysmonLogo";
@@ -278,7 +278,7 @@ namespace IvsTray
             // pbLmpogo
             // 
             this.pbLmpogo.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbLmpogo.Image = global::IvsTray.Properties.Resources.Lateral_movement;
+            this.pbLmpogo.Image = global::IvsTray.Properties.Resources.lmt;
             this.pbLmpogo.Location = new System.Drawing.Point(15, 422);
             this.pbLmpogo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.pbLmpogo.Name = "pbLmpogo";
@@ -340,7 +340,7 @@ namespace IvsTray
             // pbOsqueryLogo
             // 
             this.pbOsqueryLogo.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbOsqueryLogo.Image = global::IvsTray.Properties.Resources.User_Behaviour;
+            this.pbOsqueryLogo.Image = global::IvsTray.Properties.Resources.uba;
             this.pbOsqueryLogo.Location = new System.Drawing.Point(18, 175);
             this.pbOsqueryLogo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.pbOsqueryLogo.Name = "pbOsqueryLogo";
