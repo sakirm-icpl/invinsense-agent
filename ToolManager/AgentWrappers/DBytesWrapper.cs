@@ -123,11 +123,11 @@ namespace ToolManager.AgentWrappers
 
                 if (ctl == null)
                 {
-                    _logger.Information("END_POINT_DETECTION not found and set for skip.");
+                    _logger.Information("END_POINT_DECEPTION not found and set for skip.");
                     return -1;
                 }
 
-                _logger.Information("END_POINT_DETECTION found. Preparing uninstallation");
+                _logger.Information("END_POINT_DECEPTIONfound. Preparing uninstallation");
 
                 if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
                 {
@@ -135,7 +135,7 @@ namespace ToolManager.AgentWrappers
                     return 1618;
                 }
 
-                _logger.Information("END_POINT_DETECTION Uninstallation is ready");
+                _logger.Information("END_POINT_DECEPTION Uninstallation is ready");
 
                 var logPath = CommonUtils.DataFolder + "\\dytesInstall.log";
 
