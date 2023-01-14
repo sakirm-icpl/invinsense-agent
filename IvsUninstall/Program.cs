@@ -16,7 +16,7 @@ namespace IvsUninstall
         {
             Log.Logger = new LoggerConfiguration()
                .MinimumLevel.Verbose()
-               .WriteTo.File(CommonUtils.DataFolder + "\\ivsuninstall.log", rollingInterval: RollingInterval.Day, retainedFileCountLimit: 3)
+               .WriteTo.File(CommonUtils.DataFolder + "\\ivsuninstall.log", rollOnFileSizeLimit: true, fileSizeLimitBytes: 100000)
                .WriteTo.Console()
                .CreateLogger();
 

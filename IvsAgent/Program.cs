@@ -16,7 +16,7 @@ namespace IvsAgent
         {
             Log.Logger = new LoggerConfiguration()
                .MinimumLevel.Verbose()
-               .WriteTo.File(CommonUtils.DataFolder + "\\ivsagent.log", rollingInterval: RollingInterval.Day, retainedFileCountLimit: 3)
+               .WriteTo.File(CommonUtils.DataFolder + "\\ivsagent.log", rollOnFileSizeLimit: true, fileSizeLimitBytes: 100000)
                .CreateLogger();
 
             Log.Logger.Information("Initializing service");
