@@ -39,35 +39,25 @@ namespace IvsTray
             this.pbDefender = new System.Windows.Forms.PictureBox();
             this.pbOsquery = new System.Windows.Forms.PictureBox();
             this.pbLmp = new System.Windows.Forms.PictureBox();
-            this.lblDeceptiveBytes = new System.Windows.Forms.Label();
             this.lblWindowsDefender = new System.Windows.Forms.Label();
             this.lblWazuh = new System.Windows.Forms.Label();
             this.lblMicrosoftSysmon = new System.Windows.Forms.Label();
             this.lblLmp = new System.Windows.Forms.Label();
             this.lblOsquery = new System.Windows.Forms.Label();
-            this.pbDeceptiveLogo = new System.Windows.Forms.PictureBox();
-            this.pbWindowsLogo = new System.Windows.Forms.PictureBox();
-            this.pbWazuhLogo = new System.Windows.Forms.PictureBox();
-            this.pbSysmonLogo = new System.Windows.Forms.PictureBox();
-            this.pbLmpogo = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tlpMain = new System.Windows.Forms.TableLayoutPanel();
-            this.pbOsqueryLogo = new System.Windows.Forms.PictureBox();
+            this.lblDeceptiveBytes = new System.Windows.Forms.Label();
             this.pbWazuh = new System.Windows.Forms.PictureBox();
+            this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pbDbytes)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbSysmon)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbDefender)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbOsquery)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbLmp)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbDeceptiveLogo)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbWindowsLogo)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbWazuhLogo)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbSysmonLogo)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbLmpogo)).BeginInit();
             this.tlpMain.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbOsqueryLogo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbWazuh)).BeginInit();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // notifyIcon
@@ -82,10 +72,9 @@ namespace IvsTray
             this.pbDbytes.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pbDbytes.Image = global::IvsTray.Properties.Resources.gray;
             this.pbDbytes.InitialImage = null;
-            this.pbDbytes.Location = new System.Drawing.Point(431, 24);
-            this.pbDbytes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.pbDbytes.Location = new System.Drawing.Point(324, 10);
             this.pbDbytes.Name = "pbDbytes";
-            this.pbDbytes.Size = new System.Drawing.Size(30, 31);
+            this.pbDbytes.Size = new System.Drawing.Size(20, 20);
             this.pbDbytes.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbDbytes.TabIndex = 0;
             this.pbDbytes.TabStop = false;
@@ -93,10 +82,9 @@ namespace IvsTray
             // pictureBox1
             // 
             this.pictureBox1.Image = global::IvsTray.Properties.Resources.invinsence_logo;
-            this.pictureBox1.Location = new System.Drawing.Point(34, 15);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.pictureBox1.Location = new System.Drawing.Point(23, 24);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(346, 75);
+            this.pictureBox1.Size = new System.Drawing.Size(231, 49);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 2;
             this.pictureBox1.TabStop = false;
@@ -106,10 +94,9 @@ namespace IvsTray
             this.pbSysmon.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pbSysmon.Image = global::IvsTray.Properties.Resources.gray;
             this.pbSysmon.InitialImage = null;
-            this.pbSysmon.Location = new System.Drawing.Point(431, 344);
-            this.pbSysmon.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.pbSysmon.Location = new System.Drawing.Point(324, 170);
             this.pbSysmon.Name = "pbSysmon";
-            this.pbSysmon.Size = new System.Drawing.Size(30, 31);
+            this.pbSysmon.Size = new System.Drawing.Size(20, 20);
             this.pbSysmon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbSysmon.TabIndex = 4;
             this.pbSysmon.TabStop = false;
@@ -119,10 +106,9 @@ namespace IvsTray
             this.pbDefender.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pbDefender.Image = global::IvsTray.Properties.Resources.gray;
             this.pbDefender.InitialImage = null;
-            this.pbDefender.Location = new System.Drawing.Point(431, 104);
-            this.pbDefender.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.pbDefender.Location = new System.Drawing.Point(324, 50);
             this.pbDefender.Name = "pbDefender";
-            this.pbDefender.Size = new System.Drawing.Size(30, 31);
+            this.pbDefender.Size = new System.Drawing.Size(20, 20);
             this.pbDefender.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbDefender.TabIndex = 1;
             this.pbDefender.TabStop = false;
@@ -132,10 +118,9 @@ namespace IvsTray
             this.pbOsquery.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pbOsquery.Image = global::IvsTray.Properties.Resources.gray;
             this.pbOsquery.InitialImage = null;
-            this.pbOsquery.Location = new System.Drawing.Point(431, 184);
-            this.pbOsquery.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.pbOsquery.Location = new System.Drawing.Point(324, 90);
             this.pbOsquery.Name = "pbOsquery";
-            this.pbOsquery.Size = new System.Drawing.Size(30, 31);
+            this.pbOsquery.Size = new System.Drawing.Size(20, 20);
             this.pbOsquery.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbOsquery.TabIndex = 2;
             this.pbOsquery.TabStop = false;
@@ -145,36 +130,22 @@ namespace IvsTray
             this.pbLmp.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pbLmp.Image = global::IvsTray.Properties.Resources.gray;
             this.pbLmp.InitialImage = null;
-            this.pbLmp.Location = new System.Drawing.Point(431, 433);
-            this.pbLmp.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.pbLmp.Location = new System.Drawing.Point(324, 210);
             this.pbLmp.Name = "pbLmp";
-            this.pbLmp.Size = new System.Drawing.Size(30, 31);
+            this.pbLmp.Size = new System.Drawing.Size(20, 20);
             this.pbLmp.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbLmp.TabIndex = 5;
             this.pbLmp.TabStop = false;
-            // 
-            // lblDeceptiveBytes
-            // 
-            this.lblDeceptiveBytes.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.lblDeceptiveBytes.AutoSize = true;
-            this.lblDeceptiveBytes.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.lblDeceptiveBytes.Location = new System.Drawing.Point(86, 24);
-            this.lblDeceptiveBytes.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblDeceptiveBytes.Name = "lblDeceptiveBytes";
-            this.lblDeceptiveBytes.Size = new System.Drawing.Size(248, 32);
-            this.lblDeceptiveBytes.TabIndex = 7;
-            this.lblDeceptiveBytes.Text = "End Point Deception";
             // 
             // lblWindowsDefender
             // 
             this.lblWindowsDefender.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblWindowsDefender.AutoSize = true;
-            this.lblWindowsDefender.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.lblWindowsDefender.Location = new System.Drawing.Point(86, 104);
-            this.lblWindowsDefender.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblWindowsDefender.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblWindowsDefender.Location = new System.Drawing.Point(3, 50);
             this.lblWindowsDefender.Name = "lblWindowsDefender";
             this.lblWindowsDefender.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.lblWindowsDefender.Size = new System.Drawing.Size(251, 32);
+            this.lblWindowsDefender.Size = new System.Drawing.Size(140, 19);
             this.lblWindowsDefender.TabIndex = 8;
             this.lblWindowsDefender.Text = "End Point Protection";
             // 
@@ -182,11 +153,10 @@ namespace IvsTray
             // 
             this.lblWazuh.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblWazuh.AutoSize = true;
-            this.lblWazuh.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.lblWazuh.Location = new System.Drawing.Point(86, 248);
-            this.lblWazuh.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblWazuh.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblWazuh.Location = new System.Drawing.Point(3, 130);
             this.lblWazuh.Name = "lblWazuh";
-            this.lblWazuh.Size = new System.Drawing.Size(299, 64);
+            this.lblWazuh.Size = new System.Drawing.Size(232, 19);
             this.lblWazuh.TabIndex = 9;
             this.lblWazuh.Text = "End Point Detection and Response";
             // 
@@ -194,11 +164,10 @@ namespace IvsTray
             // 
             this.lblMicrosoftSysmon.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblMicrosoftSysmon.AutoSize = true;
-            this.lblMicrosoftSysmon.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.lblMicrosoftSysmon.Location = new System.Drawing.Point(86, 344);
-            this.lblMicrosoftSysmon.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblMicrosoftSysmon.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblMicrosoftSysmon.Location = new System.Drawing.Point(3, 170);
             this.lblMicrosoftSysmon.Name = "lblMicrosoftSysmon";
-            this.lblMicrosoftSysmon.Size = new System.Drawing.Size(232, 32);
+            this.lblMicrosoftSysmon.Size = new System.Drawing.Size(132, 19);
             this.lblMicrosoftSysmon.TabIndex = 10;
             this.lblMicrosoftSysmon.Text = "Advance Telemetry";
             // 
@@ -206,11 +175,10 @@ namespace IvsTray
             // 
             this.lblLmp.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblLmp.AutoSize = true;
-            this.lblLmp.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.lblLmp.Location = new System.Drawing.Point(86, 417);
-            this.lblLmp.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblLmp.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblLmp.Location = new System.Drawing.Point(3, 210);
             this.lblLmp.Name = "lblLmp";
-            this.lblLmp.Size = new System.Drawing.Size(228, 64);
+            this.lblLmp.Size = new System.Drawing.Size(197, 19);
             this.lblLmp.TabIndex = 11;
             this.lblLmp.Text = "Lateral Movement Protection";
             // 
@@ -218,160 +186,95 @@ namespace IvsTray
             // 
             this.lblOsquery.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblOsquery.AutoSize = true;
-            this.lblOsquery.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.lblOsquery.Location = new System.Drawing.Point(86, 184);
-            this.lblOsquery.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblOsquery.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblOsquery.Location = new System.Drawing.Point(3, 90);
             this.lblOsquery.Name = "lblOsquery";
-            this.lblOsquery.Size = new System.Drawing.Size(298, 32);
+            this.lblOsquery.Size = new System.Drawing.Size(171, 19);
             this.lblOsquery.TabIndex = 9;
             this.lblOsquery.Text = "User Behaviour Analytics";
-            // 
-            // pbDeceptiveLogo
-            // 
-            this.pbDeceptiveLogo.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbDeceptiveLogo.Image = global::IvsTray.Properties.Resources.deception;
-            this.pbDeceptiveLogo.InitialImage = null;
-            this.pbDeceptiveLogo.Location = new System.Drawing.Point(12, 9);
-            this.pbDeceptiveLogo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.pbDeceptiveLogo.Name = "pbDeceptiveLogo";
-            this.pbDeceptiveLogo.Size = new System.Drawing.Size(57, 62);
-            this.pbDeceptiveLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbDeceptiveLogo.TabIndex = 12;
-            this.pbDeceptiveLogo.TabStop = false;
-            // 
-            // pbWindowsLogo
-            // 
-            this.pbWindowsLogo.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbWindowsLogo.Image = global::IvsTray.Properties.Resources.protection;
-            this.pbWindowsLogo.Location = new System.Drawing.Point(15, 93);
-            this.pbWindowsLogo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.pbWindowsLogo.Name = "pbWindowsLogo";
-            this.pbWindowsLogo.Size = new System.Drawing.Size(51, 54);
-            this.pbWindowsLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbWindowsLogo.TabIndex = 13;
-            this.pbWindowsLogo.TabStop = false;
-            // 
-            // pbWazuhLogo
-            // 
-            this.pbWazuhLogo.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbWazuhLogo.Image = global::IvsTray.Properties.Resources.edr;
-            this.pbWazuhLogo.Location = new System.Drawing.Point(15, 253);
-            this.pbWazuhLogo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.pbWazuhLogo.Name = "pbWazuhLogo";
-            this.pbWazuhLogo.Size = new System.Drawing.Size(51, 54);
-            this.pbWazuhLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbWazuhLogo.TabIndex = 15;
-            this.pbWazuhLogo.TabStop = false;
-            // 
-            // pbSysmonLogo
-            // 
-            this.pbSysmonLogo.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbSysmonLogo.Image = global::IvsTray.Properties.Resources.microsoft;
-            this.pbSysmonLogo.Location = new System.Drawing.Point(15, 333);
-            this.pbSysmonLogo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.pbSysmonLogo.Name = "pbSysmonLogo";
-            this.pbSysmonLogo.Size = new System.Drawing.Size(51, 54);
-            this.pbSysmonLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbSysmonLogo.TabIndex = 16;
-            this.pbSysmonLogo.TabStop = false;
-            // 
-            // pbLmpogo
-            // 
-            this.pbLmpogo.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbLmpogo.Image = global::IvsTray.Properties.Resources.lmt;
-            this.pbLmpogo.Location = new System.Drawing.Point(15, 422);
-            this.pbLmpogo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.pbLmpogo.Name = "pbLmpogo";
-            this.pbLmpogo.Size = new System.Drawing.Size(51, 54);
-            this.pbLmpogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbLmpogo.TabIndex = 17;
-            this.pbLmpogo.TabStop = false;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 35F, System.Drawing.FontStyle.Bold);
             this.label1.ForeColor = System.Drawing.Color.Green;
-            this.label1.Location = new System.Drawing.Point(384, 8);
+            this.label1.Location = new System.Drawing.Point(267, 11);
             this.label1.Margin = new System.Windows.Forms.Padding(0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(139, 93);
+            this.label1.Size = new System.Drawing.Size(125, 62);
             this.label1.TabIndex = 17;
-            this.label1.Text = "3.0";
+            this.label1.Text = "V3.0";
             // 
             // tlpMain
             // 
-            this.tlpMain.ColumnCount = 3;
-            this.tlpMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 82F));
-            this.tlpMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 330F));
+            this.tlpMain.ColumnCount = 2;
+            this.tlpMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 300F));
             this.tlpMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 69F));
-            this.tlpMain.Controls.Add(this.pbLmpogo, 0, 5);
-            this.tlpMain.Controls.Add(this.pbSysmonLogo, 0, 4);
-            this.tlpMain.Controls.Add(this.lblLmp, 1, 5);
-            this.tlpMain.Controls.Add(this.pbOsqueryLogo, 0, 2);
-            this.tlpMain.Controls.Add(this.pbDeceptiveLogo, 0, 0);
-            this.tlpMain.Controls.Add(this.lblMicrosoftSysmon, 1, 4);
-            this.tlpMain.Controls.Add(this.pbWindowsLogo, 0, 1);
-            this.tlpMain.Controls.Add(this.lblWazuh, 1, 3);
-            this.tlpMain.Controls.Add(this.pbWazuhLogo, 0, 3);
-            this.tlpMain.Controls.Add(this.lblWindowsDefender, 1, 1);
-            this.tlpMain.Controls.Add(this.pbDbytes, 2, 0);
-            this.tlpMain.Controls.Add(this.lblDeceptiveBytes, 1, 0);
-            this.tlpMain.Controls.Add(this.pbDefender, 2, 1);
-            this.tlpMain.Controls.Add(this.pbLmp, 2, 5);
-            this.tlpMain.Controls.Add(this.pbWazuh, 2, 3);
-            this.tlpMain.Controls.Add(this.pbSysmon, 2, 4);
-            this.tlpMain.Controls.Add(this.pbOsquery, 2, 2);
-            this.tlpMain.Controls.Add(this.lblOsquery, 1, 2);
-            this.tlpMain.Location = new System.Drawing.Point(34, 108);
-            this.tlpMain.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.tlpMain.Controls.Add(this.lblDeceptiveBytes, 0, 0);
+            this.tlpMain.Controls.Add(this.lblWindowsDefender, 0, 1);
+            this.tlpMain.Controls.Add(this.lblOsquery, 0, 2);
+            this.tlpMain.Controls.Add(this.lblWazuh, 0, 3);
+            this.tlpMain.Controls.Add(this.lblMicrosoftSysmon, 0, 4);
+            this.tlpMain.Controls.Add(this.lblLmp, 0, 5);
+            this.tlpMain.Controls.Add(this.pbDbytes, 1, 0);
+            this.tlpMain.Controls.Add(this.pbDefender, 1, 1);
+            this.tlpMain.Controls.Add(this.pbOsquery, 1, 2);
+            this.tlpMain.Controls.Add(this.pbWazuh, 1, 3);
+            this.tlpMain.Controls.Add(this.pbSysmon, 1, 4);
+            this.tlpMain.Controls.Add(this.pbLmp, 1, 5);
+            this.tlpMain.Location = new System.Drawing.Point(23, 15);
             this.tlpMain.Name = "tlpMain";
             this.tlpMain.RowCount = 6;
-            this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 80F));
-            this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 80F));
-            this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 80F));
-            this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 80F));
-            this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 80F));
-            this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 31F));
-            this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 31F));
-            this.tlpMain.Size = new System.Drawing.Size(480, 498);
+            this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+            this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+            this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+            this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+            this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+            this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+            this.tlpMain.Size = new System.Drawing.Size(369, 240);
             this.tlpMain.TabIndex = 18;
             // 
-            // pbOsqueryLogo
+            // lblDeceptiveBytes
             // 
-            this.pbOsqueryLogo.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbOsqueryLogo.Image = global::IvsTray.Properties.Resources.uba;
-            this.pbOsqueryLogo.Location = new System.Drawing.Point(18, 175);
-            this.pbOsqueryLogo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.pbOsqueryLogo.Name = "pbOsqueryLogo";
-            this.pbOsqueryLogo.Size = new System.Drawing.Size(46, 49);
-            this.pbOsqueryLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbOsqueryLogo.TabIndex = 14;
-            this.pbOsqueryLogo.TabStop = false;
+            this.lblDeceptiveBytes.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblDeceptiveBytes.AutoSize = true;
+            this.lblDeceptiveBytes.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDeceptiveBytes.Location = new System.Drawing.Point(3, 10);
+            this.lblDeceptiveBytes.Name = "lblDeceptiveBytes";
+            this.lblDeceptiveBytes.Size = new System.Drawing.Size(140, 19);
+            this.lblDeceptiveBytes.TabIndex = 7;
+            this.lblDeceptiveBytes.Text = "End Point Deception";
             // 
             // pbWazuh
             // 
             this.pbWazuh.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pbWazuh.Image = global::IvsTray.Properties.Resources.gray;
             this.pbWazuh.InitialImage = null;
-            this.pbWazuh.Location = new System.Drawing.Point(431, 264);
-            this.pbWazuh.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.pbWazuh.Location = new System.Drawing.Point(324, 130);
             this.pbWazuh.Name = "pbWazuh";
-            this.pbWazuh.Size = new System.Drawing.Size(30, 31);
+            this.pbWazuh.Size = new System.Drawing.Size(20, 20);
             this.pbWazuh.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbWazuh.TabIndex = 3;
             this.pbWazuh.TabStop = false;
             // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.LightGray;
+            this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.pictureBox1);
+            this.panel1.Location = new System.Drawing.Point(0, 262);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(416, 100);
+            this.panel1.TabIndex = 19;
+            // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(546, 620);
+            this.ClientSize = new System.Drawing.Size(417, 362);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.tlpMain);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.pictureBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "MainForm";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -384,17 +287,12 @@ namespace IvsTray
             ((System.ComponentModel.ISupportInitialize)(this.pbDefender)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbOsquery)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbLmp)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbDeceptiveLogo)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbWindowsLogo)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbWazuhLogo)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbSysmonLogo)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbLmpogo)).EndInit();
             this.tlpMain.ResumeLayout(false);
             this.tlpMain.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbOsqueryLogo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbWazuh)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -413,21 +311,15 @@ namespace IvsTray
         {
             this.pbInvinsense = pbInvinsense;
         }
-
-        private Label lblDeceptiveBytes;
         private Label lblWindowsDefender;
         private Label lblWazuh;
         private Label lblMicrosoftSysmon;
         private Label lblLmp;
         private Label lblOsquery;
-        private PictureBox pbDeceptiveLogo;
-        private PictureBox pbWindowsLogo;
-        private PictureBox pbWazuhLogo;
-        private PictureBox pbSysmonLogo;
-        private PictureBox pbLmpogo;
         private Label label1;
         private TableLayoutPanel tlpMain;
         private PictureBox pbWazuh;
-        private PictureBox pbOsqueryLogo;
+        private Label lblDeceptiveBytes;
+        private Panel panel1;
     }
 }

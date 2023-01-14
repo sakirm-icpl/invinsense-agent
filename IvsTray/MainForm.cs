@@ -19,6 +19,8 @@ namespace IvsTray
 
         private readonly ILogger _logger = Log.ForContext<MainForm>();
 
+        private const int Margine = 10;
+
         private readonly ToolRepository toolRepository;
 
         private readonly IDictionary<string, RunningStatus> toolStatuses = new Dictionary<string, RunningStatus>();
@@ -29,10 +31,7 @@ namespace IvsTray
 
             InitializeComponent();
 
-            Region = Region.FromHrgn(MainFormHelpers.CreateRoundRectRgn(0, 0, Width, Height, 20, 20));
-            MouseDownFilter mouseFilter = new MouseDownFilter(this);
-            mouseFilter.FormClicked += FormClicked;
-            Application.AddMessageFilter(mouseFilter);
+            SetWindow();
 
             toolRepository = new ToolRepository();
 
@@ -42,6 +41,17 @@ namespace IvsTray
             };
 
             log.EntryWritten += Log_EntryWritten;
+        }
+
+        private void SetWindow()
+        {
+            Region = Region.FromHrgn(MainFormHelpers.CreateRoundRectRgn(0, 0, Width, Height, 20, 20));
+            MouseDownFilter mouseFilter = new MouseDownFilter(this);
+            mouseFilter.FormClicked += FormClicked;
+            Application.AddMessageFilter(mouseFilter);
+
+            Rectangle workingArea = Screen.GetWorkingArea(this);
+            Location = new Point(workingArea.Right - Size.Width - Margine, workingArea.Bottom - Size.Height - Margine);
         }
 
         /// <summary>
