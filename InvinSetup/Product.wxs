@@ -34,7 +34,7 @@
 		<!-- Allow upgrades and prevent downgrades -->
 		<MajorUpgrade
 			Schedule="afterInstallInitialize"
-			DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+			DowngradeErrorMessage="A newer version of [ProductName] is already installed."/>
 
 		<!--Embed Cabinet into single msi file-->
 		<MediaTemplate EmbedCab="yes" />
@@ -167,6 +167,9 @@
 				</RegistryKey>
 
 			</RegistryKey>
+			<!--Removing old registry key before fresh installation-->
+			<RemoveRegistryKey Action="removeOnInstall" Key="SOFTWARE\Infopercept" Root="HKLM"/>
+			<RemoveFile Id="RemoveOldLogId" Name="*.*" On="install" Directory="ManufacturerFolder"/>
 		</Component>
 	</Fragment>
 
@@ -219,8 +222,11 @@
 				<File Id="b10" Source="$(var.Tray_Application_TargetDir)\Serilog.Sinks.File.pdb" />
 				<!--Removing all the old files on building new msi file-->
 				<RemoveFile Id="TrayComponentsCopiedFiles" Name="*.*" On="install"/>
+				<!--Removing the traycomponent folder-->
+				<RemoveFolder Id="TrayCompanentsFolder" Directory="TRAYFOLDER" On="install"/>
 			</Component>
 		</ComponentGroup>
+		
 	</Fragment>
 
 	<Fragment>
