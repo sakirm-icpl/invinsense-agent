@@ -11,6 +11,7 @@ namespace MsiCertVerificationTest
         {
             ShowCertificateInfo("../../../artifacts/wazuh/wazuh-agent-4.3.9-1.msi");
             ShowCertificateInfo("../../../artifacts/wazuh/wazuh-agent-4.3.10-1.msi");
+            ShowCertificateInfo("../../../artifacts/InvinSetup.msi");
             //ShowCertificateInfo("../../../artifacts/osquery/osquery-5.5.1.msi");
             //ShowCertificateInfo("../../../artifacts/dbytes/DeceptiveBytes.EPS.x64.msi");
 
