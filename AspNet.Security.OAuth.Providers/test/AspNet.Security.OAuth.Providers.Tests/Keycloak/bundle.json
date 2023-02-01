@@ -1,0 +1,15 @@
+{
+  "$schema": "https://raw.githubusercontent.com/justeat/httpclient-interception/master/src/HttpClientInterception/Bundles/http-request-bundle-schema.json",
+  "items": [
+    {
+      "uri": "http://localhost:8080/realms/invinsense/protocol/openid-connect/token",
+      "method": "POST",
+      "contentFormat": "json",
+      "contentJson": {
+        "expires_in": 300,
+        "token_type": "Bearer",
+        "scope": "openid"
+      }
+    }
+  ]
+}
