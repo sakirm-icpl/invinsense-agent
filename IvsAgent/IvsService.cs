@@ -306,7 +306,7 @@ namespace IvsAgent
 
             if (avLastStatus != currentAvStatus)
             {
-                _logger.Information("Windows defender service status : Last: {avLastStatus}, New: {status}", avLastStatus, currentAvStatus);
+                _logger.Information("{avName} service status : Last: {avLastStatus}, New: {status}", activeAvStatus.AvName, avLastStatus, currentAvStatus);
 
                 avLastStatus = currentAvStatus;
 
