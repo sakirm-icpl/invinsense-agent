@@ -17,7 +17,7 @@ namespace IvsAgent
         {
             Log.Logger = new LoggerConfiguration()
                .MinimumLevel.Verbose()
-               .WriteTo.File(new JsonFormatter(),CommonUtils.DataFolder + "\\ivsagent.jason", rollOnFileSizeLimit: true, fileSizeLimitBytes: 100000)
+               .WriteTo.File(new JsonFormatter(),CommonUtils.DataFolder + "\\ivsagent.jason", rollOnFileSizeLimit: false, fileSizeLimitBytes: 100000)
                .CreateLogger();
 
             Log.Logger.Information("Initializing service");

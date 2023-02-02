@@ -287,7 +287,7 @@ namespace IvsAgent
                 ProcessExtensions.StartProcessAsCurrentUser(null, ivsTrayFile);
             }
 
-            _logger.Information("Checking windows defender service");
+            
 
             var avStatuses = AvMonitor.ListAvStatuses();
 
@@ -295,7 +295,9 @@ namespace IvsAgent
 
             InstallStatus currentAvStatus;
 
-            if(activeAvStatus == null)
+            _logger.Information("Checking {avName} service",activeAvStatus.AvName);
+
+            if (activeAvStatus == null)
             {
                 currentAvStatus = InstallStatus.Error;
             }
