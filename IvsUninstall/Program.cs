@@ -16,7 +16,7 @@ namespace IvsUninstall
         {
             Log.Logger = new LoggerConfiguration()
                .MinimumLevel.Verbose()
-               .WriteTo.File(CommonUtils.DataFolder + "\\ivsuninstall.log", rollOnFileSizeLimit: true, fileSizeLimitBytes: 100000)
+               .WriteTo.File(CommonUtils.DataFolder + "\\ivsuninstall.log", rollOnFileSizeLimit: false, fileSizeLimitBytes: 100000)
                .WriteTo.Console()
                .CreateLogger();
 
@@ -117,6 +117,20 @@ namespace IvsUninstall
                 var logPath = CommonUtils.DataFolder + "\\agentUninstall.log";
 
                 var status = MsiPackageWrapper.Uninstall("Invinsense", logPath, "UNINSTALL_KEY=\"ICPL_2023\"");
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.Error(ex.Message);
+            }
+
+            //Unistalling all files from Infopercept folder from ProgramData Folder
+            try
+            {
+                if (Directory.Exists(CommonUtils.DataFolder))
+                {
+                    Log.Logger.Information("Removing files from ProgramData/Infopercept");
+                    Directory.Delete(CommonUtils.DataFolder, true);
+                }
             }
             catch (Exception ex)
             {
