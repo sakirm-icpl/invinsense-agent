@@ -295,7 +295,7 @@ namespace IvsAgent
 
             InstallStatus currentAvStatus;
 
-            _logger.Information("Checking {avName} service",activeAvStatus.AvName);
+            _logger.Information($"Checking {activeAvStatus.AvName} service");
 
             if (activeAvStatus == null)
             {
