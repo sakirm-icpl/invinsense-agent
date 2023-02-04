@@ -1,25 +1,36 @@
 
 # AspNet.Security.OAuth.Providers
 
-**AspNet.Security.OAuth.Providers** is a **collection of security middleware** that you can use in your **ASP.NET Core** application to support social authentication providers like **[GitHub](https://github.com/)**, **[Foursquare](https://foursquare.com/)** or **[Dropbox](https://www.dropbox.com/)**. It is directly inspired by **[Jerrie Pelser](https://github.com/jerriep)**'s initiative, **[Owin.Security.Providers](https://github.com/RockstarLabs/OwinOAuthProviders)**.
+**AspNet.Security.OAuth.Providers** is a **collection of security middleware** that you can use in your **ASP.NET Core** application to support social authentication providers like **[GitHub](https://github.com/)**, **[Foursquare](https://foursquare.com/)** or **[Dropbox](https://www.dropbox.com/)**. 
 
-**The latest official release can be found on [NuGet](https://www.nuget.org/profiles/aspnet-contrib) and the nightly builds on [MyGet](https://www.myget.org/gallery/aspnet-contrib)**.
-
-[![Build status](https://github.com/aspnet-contrib/AspNet.Security.OAuth.Providers/workflows/build/badge.svg?branch=dev&event=push)](https://github.com/aspnet-contrib/AspNet.Security.OAuth.Providers/actions?query=workflow%3Abuild+branch%3Adev+event%3Apush)
 
 ## Getting started
 
-**Adding social authentication to your application is a breeze** and just requires a few lines in your `Startup` class:
+**Prerequisites**
+
+*Install the latest community version of Visual Studio.*
+
+*Install .Net Core 6 SDK*
+
+*Run the instance of keycloak on dev machine using the following command:
+
+docker run -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:19.0.1 start-dev
+
+
+
+**Adding keycloak authentication to your application is a breeze** and just requires a few lines in your `Startup` class of Mvc.Client nampespace as per your own rleam settings:
 
 ```csharp
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddAuthentication(options => { /* Authentication options */ })
-            .AddGitHub(options =>
-            {
-                options.ClientId = "49e302895d8b09ea5656";
-                options.ClientSecret = "98f1bf028608901e9df91d64ee61536fe562064b";
-            });
+        .AddKeycloak(options =>
+        {
+            options.ClientId = "test-client";
+            options.ClientSecret = "6LHT0sjBsgrDzQGhii4Vnbxa5XSZzOn7";
+            options.AuthorizationEndpoint = "http://<host:port>/realms/<realm-name>/protocol/openid-connect/auth";
+            options.UserInformationEndpoint = "http://<host:port>/realms/<realm-name>/protocol/openid-connect/userinfo";
+        });
 }
 
 public void Configure(IApplicationBuilder app)
@@ -28,97 +39,9 @@ public void Configure(IApplicationBuilder app)
     app.UseAuthorization();
 }
 ```
-
-See the [/samples](https://github.com/aspnet-contrib/AspNet.Security.OAuth.Providers/tree/dev/samples) directory for a complete sample **using ASP.NET Core MVC and supporting multiple social providers**.
-
-## Contributing
-
-**AspNet.Security.OAuth.Providers** is actively maintained by:
-
-  * **[Kévin Chalet](https://github.com/kevinchalet)** ([@kevin_chalet](https://twitter.com/kevin_chalet)).
-  * **[Martin Costello](https://github.com/martincostello)** ([@martin_costello](https://twitter.com/martin_costello)).
-
-We would love it if you could help contributing to this repository.
-
-**Special thanks to our contributors:**
-
-* [Abhinav Nigam](https://github.com/abhinavnigam)
-* [Adam Reisinger](https://github.com/Res42)
-* [Albert Zakiev](https://github.com/serber)
-* [Albireo](https://github.com/kappa7194)
-* [Anders Blankholm](https://github.com/ablankholm)
-* [Andrew Lock](https://github.com/andrewlock)
-* [Andrew Mattie](https://github.com/amattie)
-* [Andrii Chebukin](https://github.com/xperiandri)
-* [Anthony Yates](https://github.com/AnthonyYates)
-* [Chino Chang](https://github.com/kinosang)
-* [Chris Sung](https://github.com/christallire)
-* [CoCo Lin](https://github.com/linmasaki)
-* [Dave Timmins](https://github.com/davetimmins)
-* [Dmitry Popov](https://github.com/justdmitry)
-* [Elan Hasson](https://github.com/ElanHasson)
-* [Eric Green](https://github.com/ericgreenmix)
-* [Ethan Celletti](https://github.com/Gekctek)
-* [Floris Westerman](https://github.com/FWest98)
-* [Galo](https://github.com/asiffermann)
-* [Igor Simovic](https://github.com/igorsimovic)
-* [James Holcomb](https://github.com/jamesholcomb)
-* [Jason Loeffler](https://github.com/jmloeffler)
-* [Jerrie Pelser](https://github.com/jerriep)
-* [Jesse Mandel](https://github.com/supergibbs)
-* [Jordan Knight](https://github.com/jakkaj)
-* [Kévin Chalet](https://github.com/kevinchalet)
-* [Konstantin Mamaev](https://github.com/MrMeison)
-* [LeaFrock](https://github.com/LeaFrock)
-* [Levi Muriuki](https://github.com/levimatheri)
-* [Luke Fulliton](https://github.com/lukefulliton)
-* [Mariusz Zieliński](https://github.com/mariozski)
-* [Martin Costello](https://github.com/martincostello)
-* [Matthew Moore](https://github.com/Dusty-Meg)
-* [Maxime Roussin-Bélanger](https://github.com/Lorac)
-* [Michael Knowles](https://github.com/mjknowles)
-* [Michael Tanczos](https://github.com/tanczosm)
-* [Patrick Westerhoff](https://github.com/poke)
-* [Robert Shade](https://github.com/robert-shade)
-* [saber-wang](https://github.com/saber-wang)
-* [Sinan](https://github.com/SH2015)
-* [Stefan](https://github.com/Schlurcher)
-* [Steffen Wenz](https://github.com/swenz)
-* [Tathagata Chakraborty](https://github.com/tatx)
-* [TheUltimateC0der](https://github.com/TheUltimateC0der)
-* [Tolbxela](https://github.com/tolbxela)
-* [Tommy Parnell](https://github.com/tparnell8)
-* [twsl](https://github.com/twsI)
-* [wplong11](https://github.com/wplong11)
-* [Yannic Smeets](https://github.com/yannicsmeets)
-* [zAfLu](https://github.com/zAfLu)
-* [zhengchun](https://github.com/zhengchun)
-* [Vicente Yu](https://github.com/vicenteyu)
-* [Volodymyr Baydalka](https://github.com/zVolodymyr)
-* [Logan Dam](https://github.com/biltongza)
-
-## Security policy
-
-Please see [SECURITY.md](./.github/SECURITY.md) for information about reporting security issues and bugs.
-
-## Support
-
-**Need help or wanna share your thoughts?** Don't hesitate to join us on Gitter or ask your question on StackOverflow:
-
-- **Gitter: [https://gitter.im/aspnet-contrib/AspNet.Security.OAuth.Providers](https://gitter.im/aspnet-contrib/AspNet.Security.OAuth.Providers)**
-- **StackOverflow: [https://stackoverflow.com/questions/tagged/aspnet-contrib](https://stackoverflow.com/questions/tagged/aspnet-contrib)**
-
-## License
-
 This project is licensed under the **Apache License**. This means that you can use, modify and distribute it freely. See [https://www.apache.org/licenses/LICENSE-2.0.html](https://www.apache.org/licenses/LICENSE-2.0.html) for more details.
 
 ## Providers
-
-Links to the latest stable and nightly NuGet packages for each provider, as well as a link to their integration documentation are listed in the table below.
-
-Documentation for the providers' settings can be found [here](docs/README.md "Provider documentation").
-
-If a provider you're looking for does not exist, consider making a PR to add one.
 
 | Provider | Stable | Nightly | Documentation |
 |:-:|:-:|:-:|:-:|
