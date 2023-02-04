@@ -12,11 +12,15 @@
 
 *Install .Net Core 6 SDK*
 
+*Install Docker Destop
+
 *Run the instance of keycloak on dev machine using the following command:
 
 docker run -p 8080:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:19.0.1 start-dev
 
+Start the container of keycloak in deocker desktop
 
+Run localhost:8080 in your browser
 
 **Adding keycloak authentication to your application is a breeze** and just requires a few lines in your `Startup` class of Mvc.Client nampespace as per your own rleam settings:
 
