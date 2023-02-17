@@ -72,9 +72,10 @@ namespace IvsTray
             this.pbDbytes.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pbDbytes.Image = global::IvsTray.Properties.Resources.gray;
             this.pbDbytes.InitialImage = null;
-            this.pbDbytes.Location = new System.Drawing.Point(328, 14);
+            this.pbDbytes.Location = new System.Drawing.Point(496, 26);
+            this.pbDbytes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pbDbytes.Name = "pbDbytes";
-            this.pbDbytes.Size = new System.Drawing.Size(12, 12);
+            this.pbDbytes.Size = new System.Drawing.Size(18, 18);
             this.pbDbytes.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbDbytes.TabIndex = 0;
             this.pbDbytes.TabStop = false;
@@ -82,9 +83,10 @@ namespace IvsTray
             // pictureBox1
             // 
             this.pictureBox1.Image = global::IvsTray.Properties.Resources.invinsence_logo;
-            this.pictureBox1.Location = new System.Drawing.Point(23, 24);
+            this.pictureBox1.Location = new System.Drawing.Point(28, 17);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(231, 49);
+            this.pictureBox1.Size = new System.Drawing.Size(346, 75);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 2;
             this.pictureBox1.TabStop = false;
@@ -94,9 +96,10 @@ namespace IvsTray
             this.pbSysmon.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pbSysmon.Image = global::IvsTray.Properties.Resources.gray;
             this.pbSysmon.InitialImage = null;
-            this.pbSysmon.Location = new System.Drawing.Point(328, 174);
+            this.pbSysmon.Location = new System.Drawing.Point(496, 306);
+            this.pbSysmon.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pbSysmon.Name = "pbSysmon";
-            this.pbSysmon.Size = new System.Drawing.Size(12, 12);
+            this.pbSysmon.Size = new System.Drawing.Size(18, 18);
             this.pbSysmon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbSysmon.TabIndex = 4;
             this.pbSysmon.TabStop = false;
@@ -106,9 +109,10 @@ namespace IvsTray
             this.pbDefender.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pbDefender.Image = global::IvsTray.Properties.Resources.gray;
             this.pbDefender.InitialImage = null;
-            this.pbDefender.Location = new System.Drawing.Point(328, 54);
+            this.pbDefender.Location = new System.Drawing.Point(496, 95);
+            this.pbDefender.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pbDefender.Name = "pbDefender";
-            this.pbDefender.Size = new System.Drawing.Size(12, 12);
+            this.pbDefender.Size = new System.Drawing.Size(18, 18);
             this.pbDefender.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbDefender.TabIndex = 1;
             this.pbDefender.TabStop = false;
@@ -118,9 +122,10 @@ namespace IvsTray
             this.pbOsquery.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pbOsquery.Image = global::IvsTray.Properties.Resources.gray;
             this.pbOsquery.InitialImage = null;
-            this.pbOsquery.Location = new System.Drawing.Point(328, 94);
+            this.pbOsquery.Location = new System.Drawing.Point(496, 161);
+            this.pbOsquery.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pbOsquery.Name = "pbOsquery";
-            this.pbOsquery.Size = new System.Drawing.Size(12, 12);
+            this.pbOsquery.Size = new System.Drawing.Size(18, 18);
             this.pbOsquery.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbOsquery.TabIndex = 2;
             this.pbOsquery.TabStop = false;
@@ -130,9 +135,10 @@ namespace IvsTray
             this.pbLmp.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pbLmp.Image = global::IvsTray.Properties.Resources.gray;
             this.pbLmp.InitialImage = null;
-            this.pbLmp.Location = new System.Drawing.Point(328, 214);
+            this.pbLmp.Location = new System.Drawing.Point(496, 378);
+            this.pbLmp.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pbLmp.Name = "pbLmp";
-            this.pbLmp.Size = new System.Drawing.Size(12, 12);
+            this.pbLmp.Size = new System.Drawing.Size(18, 18);
             this.pbLmp.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbLmp.TabIndex = 5;
             this.pbLmp.TabStop = false;
@@ -142,10 +148,11 @@ namespace IvsTray
             this.lblWindowsDefender.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblWindowsDefender.AutoSize = true;
             this.lblWindowsDefender.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblWindowsDefender.Location = new System.Drawing.Point(3, 50);
+            this.lblWindowsDefender.Location = new System.Drawing.Point(4, 89);
+            this.lblWindowsDefender.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblWindowsDefender.Name = "lblWindowsDefender";
             this.lblWindowsDefender.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.lblWindowsDefender.Size = new System.Drawing.Size(140, 19);
+            this.lblWindowsDefender.Size = new System.Drawing.Size(215, 29);
             this.lblWindowsDefender.TabIndex = 8;
             this.lblWindowsDefender.Text = "End Point Protection";
             // 
@@ -154,9 +161,10 @@ namespace IvsTray
             this.lblWazuh.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblWazuh.AutoSize = true;
             this.lblWazuh.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblWazuh.Location = new System.Drawing.Point(3, 130);
+            this.lblWazuh.Location = new System.Drawing.Point(4, 227);
+            this.lblWazuh.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblWazuh.Name = "lblWazuh";
-            this.lblWazuh.Size = new System.Drawing.Size(232, 19);
+            this.lblWazuh.Size = new System.Drawing.Size(351, 29);
             this.lblWazuh.TabIndex = 9;
             this.lblWazuh.Text = "End Point Detection and Response";
             // 
@@ -165,9 +173,10 @@ namespace IvsTray
             this.lblMicrosoftSysmon.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblMicrosoftSysmon.AutoSize = true;
             this.lblMicrosoftSysmon.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblMicrosoftSysmon.Location = new System.Drawing.Point(3, 170);
+            this.lblMicrosoftSysmon.Location = new System.Drawing.Point(4, 300);
+            this.lblMicrosoftSysmon.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblMicrosoftSysmon.Name = "lblMicrosoftSysmon";
-            this.lblMicrosoftSysmon.Size = new System.Drawing.Size(132, 19);
+            this.lblMicrosoftSysmon.Size = new System.Drawing.Size(201, 29);
             this.lblMicrosoftSysmon.TabIndex = 10;
             this.lblMicrosoftSysmon.Text = "Advance Telemetry";
             // 
@@ -176,9 +185,10 @@ namespace IvsTray
             this.lblLmp.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblLmp.AutoSize = true;
             this.lblLmp.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblLmp.Location = new System.Drawing.Point(3, 210);
+            this.lblLmp.Location = new System.Drawing.Point(4, 373);
+            this.lblLmp.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblLmp.Name = "lblLmp";
-            this.lblLmp.Size = new System.Drawing.Size(197, 19);
+            this.lblLmp.Size = new System.Drawing.Size(302, 29);
             this.lblLmp.TabIndex = 11;
             this.lblLmp.Text = "Lateral Movement Protection";
             // 
@@ -187,9 +197,10 @@ namespace IvsTray
             this.lblOsquery.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblOsquery.AutoSize = true;
             this.lblOsquery.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblOsquery.Location = new System.Drawing.Point(3, 90);
+            this.lblOsquery.Location = new System.Drawing.Point(4, 156);
+            this.lblOsquery.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblOsquery.Name = "lblOsquery";
-            this.lblOsquery.Size = new System.Drawing.Size(171, 19);
+            this.lblOsquery.Size = new System.Drawing.Size(256, 29);
             this.lblOsquery.TabIndex = 9;
             this.lblOsquery.Text = "User Behaviour Analytics";
             // 
@@ -198,40 +209,41 @@ namespace IvsTray
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 35F, System.Drawing.FontStyle.Bold);
             this.label1.ForeColor = System.Drawing.Color.Green;
-            this.label1.Location = new System.Drawing.Point(267, 11);
+            this.label1.Location = new System.Drawing.Point(383, 7);
             this.label1.Margin = new System.Windows.Forms.Padding(0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(125, 62);
+            this.label1.Size = new System.Drawing.Size(177, 93);
             this.label1.TabIndex = 17;
-            this.label1.Text = "V3.0";
+            this.label1.Text = "v3.0";
             // 
             // tlpMain
             // 
             this.tlpMain.ColumnCount = 2;
-            this.tlpMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 300F));
-            this.tlpMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 69F));
+            this.tlpMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 450F));
+            this.tlpMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 104F));
             this.tlpMain.Controls.Add(this.lblDeceptiveBytes, 0, 0);
             this.tlpMain.Controls.Add(this.lblWindowsDefender, 0, 1);
             this.tlpMain.Controls.Add(this.lblOsquery, 0, 2);
             this.tlpMain.Controls.Add(this.lblWazuh, 0, 3);
             this.tlpMain.Controls.Add(this.lblMicrosoftSysmon, 0, 4);
             this.tlpMain.Controls.Add(this.lblLmp, 0, 5);
-            this.tlpMain.Controls.Add(this.pbDbytes, 1, 0);
             this.tlpMain.Controls.Add(this.pbDefender, 1, 1);
             this.tlpMain.Controls.Add(this.pbOsquery, 1, 2);
             this.tlpMain.Controls.Add(this.pbWazuh, 1, 3);
             this.tlpMain.Controls.Add(this.pbSysmon, 1, 4);
             this.tlpMain.Controls.Add(this.pbLmp, 1, 5);
-            this.tlpMain.Location = new System.Drawing.Point(23, 15);
+            this.tlpMain.Controls.Add(this.pbDbytes, 1, 0);
+            this.tlpMain.Location = new System.Drawing.Point(34, 1);
+            this.tlpMain.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tlpMain.Name = "tlpMain";
             this.tlpMain.RowCount = 6;
-            this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-            this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-            this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-            this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-            this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-            this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-            this.tlpMain.Size = new System.Drawing.Size(369, 240);
+            this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 71F));
+            this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 66F));
+            this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 67F));
+            this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 75F));
+            this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 72F));
+            this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
+            this.tlpMain.Size = new System.Drawing.Size(560, 424);
             this.tlpMain.TabIndex = 18;
             // 
             // lblDeceptiveBytes
@@ -239,9 +251,10 @@ namespace IvsTray
             this.lblDeceptiveBytes.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblDeceptiveBytes.AutoSize = true;
             this.lblDeceptiveBytes.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDeceptiveBytes.Location = new System.Drawing.Point(3, 10);
+            this.lblDeceptiveBytes.Location = new System.Drawing.Point(4, 21);
+            this.lblDeceptiveBytes.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblDeceptiveBytes.Name = "lblDeceptiveBytes";
-            this.lblDeceptiveBytes.Size = new System.Drawing.Size(140, 19);
+            this.lblDeceptiveBytes.Size = new System.Drawing.Size(214, 29);
             this.lblDeceptiveBytes.TabIndex = 7;
             this.lblDeceptiveBytes.Text = "End Point Deception";
             // 
@@ -250,9 +263,10 @@ namespace IvsTray
             this.pbWazuh.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pbWazuh.Image = global::IvsTray.Properties.Resources.gray;
             this.pbWazuh.InitialImage = null;
-            this.pbWazuh.Location = new System.Drawing.Point(328, 134);
+            this.pbWazuh.Location = new System.Drawing.Point(496, 232);
+            this.pbWazuh.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.pbWazuh.Name = "pbWazuh";
-            this.pbWazuh.Size = new System.Drawing.Size(12, 12);
+            this.pbWazuh.Size = new System.Drawing.Size(18, 18);
             this.pbWazuh.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbWazuh.TabIndex = 3;
             this.pbWazuh.TabStop = false;
@@ -262,19 +276,21 @@ namespace IvsTray
             this.panel1.BackColor = System.Drawing.Color.LightGray;
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.pictureBox1);
-            this.panel1.Location = new System.Drawing.Point(0, 262);
+            this.panel1.Location = new System.Drawing.Point(13, 435);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(416, 100);
+            this.panel1.Size = new System.Drawing.Size(590, 172);
             this.panel1.TabIndex = 19;
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(417, 362);
+            this.ClientSize = new System.Drawing.Size(607, 621);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.tlpMain);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "MainForm";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

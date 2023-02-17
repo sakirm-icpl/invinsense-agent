@@ -34,6 +34,7 @@
     <Compile Include="AgentWrappers\DBytesWrapper.cs" />
     <Compile Include="AgentWrappers\OsQueryWrapper.cs" />
     <Compile Include="AgentWrappers\SysmonWrapper.cs" />
+    <Compile Include="AgentWrappers\ToolsDataJason.cs" />
     <Compile Include="AgentWrappers\WazuhWrapper.cs" />
     <Compile Include="MoWrapper.cs" />
     <Compile Include="MsiWrapper\EnumExtensions.cs" />

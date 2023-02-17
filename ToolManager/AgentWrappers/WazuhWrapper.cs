@@ -7,13 +7,14 @@ using System.ServiceProcess;
 using System.Xml;
 using Common.Persistance;
 using ToolManager.MsiWrapper;
+using System.IO;
 
 namespace ToolManager.AgentWrappers
 {
     public static class WazuhWrapper
     {
         private static readonly ILogger _logger = Log.ForContext(typeof(WazuhWrapper));
-
+        
         public static int Verify(bool isInstall = false)
         {
             try
@@ -32,28 +33,26 @@ namespace ToolManager.AgentWrappers
                     _logger.Information("END_POINT_DETECTION_AND_RESPONSE not found and set for skip.");
                     return -1;
                 }
-
-                _logger.Information("END_POINT_DETECTION_AND_RESPONSE not found. Preparing installation");
+                _logger.Information("END_POINT_DETECTION_AND_RESPONSE not found and set for skip.");
 
                 if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
                 {
                     _logger.Information("MSI Installer is not free.");
                     return 1618;
                 }
-
                 _logger.Information("END_POINT_DETECTION_AND_RESPONSE installation is ready");
 
                 var msiPath = CommonUtils.GetAbsoletePath("..\\artifacts\\wazuh-agent-4.3.10-1.msi");
 
                 var logPath = CommonUtils.DataFolder + "\\wazuhInstall.log";
 
-                _logger.Information($"PATH: {msiPath}, Log: {logPath}");
+                _logger.Information($"PATH:{msiPath},Log:{logPath}");
 
                 var managerIp = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "MANAGER_ADDR");
                 var registrationIp = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "REGISTRATION_SERVER_ADDR");
                 var agentGroup = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "AGENT_GROUP");
 
-                _logger.Information($"ManagerIP: {managerIp}, RegistrationIP: {registrationIp}, AgentGroup: {agentGroup}");
+                _logger.Information($"ManagerIP:{managerIp},RegistrationIP:{registrationIp},AgentGroup:{agentGroup}");
 
                 Process installerProcess = new Process
                 {
@@ -82,9 +81,11 @@ namespace ToolManager.AgentWrappers
                     _logger.Information("END_POINT_DETECTION_AND_RESPONSE installation completed");
 
                     _logger.Information("Copying local_internal_options.conf file to wazuh installed directory");
+
                     System.IO.File.Copy(CommonUtils.GetAbsoletePath("..\\artifacts\\local_internal_options.conf"), "C:\\Program Files (x86)\\ossec-agent\\local_internal_options.conf", true);
 
-                    _logger.Information("enable osquery for END_POINT_DETECTION_AND_RESPONSE");
+                    _logger.Information("Enable osquery for END_POINT_DETECTION_AND_RESPONSE");
+
                     var confFile = "C:\\Program Files (x86)\\ossec-agent\\ossec.conf";
                     XmlDocument document = new XmlDocument();
                     document.Load(confFile);
@@ -107,7 +108,7 @@ namespace ToolManager.AgentWrappers
 
                     if (ctl == null)
                     {
-                        _logger.Information($"END_POINT_DETECTION_AND_RESPONSE installed but service not registered. Please check installation logs.");
+                        _logger.Information("END_POINT_DETECTION_AND_RESPONSE installed but service not registered. Please check installation logs.");
                     }
                     else
                     {
@@ -124,19 +125,19 @@ namespace ToolManager.AgentWrappers
             }
             catch (Exception ex)
             {
-                _logger.Error(ex.Message);
+                _logger.Error($"{ex.Message}");
                 return 1;
             }
         }
 
         private static void InstallerProcess_OutputDataReceived(object sender, DataReceivedEventArgs e)
-        {
+        { 
             _logger.Information($"END_POINT_DETECTION_AND_RESPONSE installation error data: {e.Data}");
         }
 
         private static void InstallerProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            _logger.Error($"END_POINT_DETECTION_AND_RESPONSE error data: {e.Data}");
+            _logger.Information($"END_POINT_DETECTION_AND_RESPONSE error data: {e.Data}");
         }
 
         private static void InstallerProcess_Exited(object sender, EventArgs e)
@@ -153,10 +154,9 @@ namespace ToolManager.AgentWrappers
 
                 if (ctl == null)
                 {
-                    _logger.Information($"END_POINT_DETECTION_AND_RESPONSE not found. Skipping...");
+                    _logger.Information("END_POINT_DETECTION_AND_RESPONSE not found. Skipping...");
                     return -1;
                 }
-
                 _logger.Information("END_POINT_DETECTION_AND_RESPONSE found. Preparing uninstallation");
 
                 if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
@@ -164,7 +164,6 @@ namespace ToolManager.AgentWrappers
                     _logger.Information("MSI Installer is not free.");
                     return 1618;
                 }
-
                 _logger.Information("END_POINT_DETECTION_AND_RESPONSE Uninstallation is ready");
 
                 var logPath = CommonUtils.DataFolder + "\\wazuhInstall.log";
@@ -177,7 +176,7 @@ namespace ToolManager.AgentWrappers
             }
             catch (Exception ex)
             {
-                _logger.Error(ex.Message);
+                _logger.Error(ex.Message,new { WazuhError = $"{ex.Message}" });
                 return 1;
             }
         }

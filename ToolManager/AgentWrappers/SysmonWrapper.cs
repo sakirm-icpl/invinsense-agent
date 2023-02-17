@@ -2,6 +2,7 @@
 using Serilog;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.ServiceProcess;
 
@@ -14,7 +15,6 @@ namespace ToolManager.AgentWrappers
     public static class SysmonWrapper
     {
         private static readonly ILogger _logger = Log.ForContext(typeof(SysmonWrapper));
-
         public static int Verify(bool isInstall = false)
         {
             try
@@ -23,7 +23,7 @@ namespace ToolManager.AgentWrappers
 
                 if (ctl != null)
                 {
-                    _logger.Information($"SYSMON found with status: {ctl.Status}");
+                    _logger.Information($"SYSMON found with status:{ctl.Status}");
                     return 0;
                 }
 
@@ -32,14 +32,13 @@ namespace ToolManager.AgentWrappers
                     _logger.Information("SYSMON not found and set for skip.");
                     return -1;
                 }
-
                 _logger.Information("SYSMON not found. Preparing installation");
 
                 var exePath = CommonUtils.GetAbsoletePath("..\\artifacts\\Sysmon64.exe");
 
                 var logPath = CommonUtils.DataFolder + "\\sysmonInstall.log";
 
-                _logger.Information($"PATH: {exePath}, Log: {logPath}");
+                _logger.Information($"PATH:{exePath},Log={logPath}");
 
                 Process installerProcess = new Process
                 {
@@ -58,7 +57,6 @@ namespace ToolManager.AgentWrappers
                 installerProcess.Exited += InstallerProcess_Exited;
 
                 installerProcess.Start();
-
 
                 _logger.Information("SYSMON Installation started...");
 
@@ -79,13 +77,13 @@ namespace ToolManager.AgentWrappers
             }
             catch (Exception ex)
             {
-                _logger.Error(ex.Message);
+                _logger.Error($"{ex.Message}");
                 return 1;
             }
         }
 
         private static void InstallerProcess_OutputDataReceived(object sender, DataReceivedEventArgs e)
-        {
+        { 
             _logger.Information($"SYSMON installation error data: {e.Data}");
         }
 
@@ -107,15 +105,14 @@ namespace ToolManager.AgentWrappers
 
                 if (ctl == null)
                 {
-                    _logger.Information($"SYSMON not found. Skipping");
+                    _logger.Information("SYSMON not found. Skipping");
                     return 0;
                 }
-
                 _logger.Information("SYSMON found. Preparing Uninstallation");
 
                 var exePath = CommonUtils.GetAbsoletePath("C:\\Windows\\Sysmon64.exe");
 
-                _logger.Information($"PATH: {exePath}");
+                _logger.Information($"PATH:{exePath}");
 
                 Process installerProcess = new Process
                 {
@@ -134,7 +131,6 @@ namespace ToolManager.AgentWrappers
                 installerProcess.Exited += InstallerProcess_Exited;
 
                 installerProcess.Start();
-
 
                 _logger.Information("SYSMON Uninstallation started...");
 
@@ -155,7 +151,7 @@ namespace ToolManager.AgentWrappers
             }
             catch (Exception ex)
             {
-                _logger.Error(ex.Message);
+                _logger.Error($"{ex.Message}");
                 return 1;
             }
         }

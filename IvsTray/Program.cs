@@ -4,6 +4,9 @@ using System;
 using System.Threading;
 using System.Windows.Forms;
 using Serilog.Formatting.Json;
+using Microsoft.Win32;
+using System.ServiceProcess;
+using FluentAssertions.Common;
 
 namespace IvsTray
 {
@@ -20,7 +23,7 @@ namespace IvsTray
 
             Log.Logger = new LoggerConfiguration()
                .MinimumLevel.Debug()
-               .WriteTo.File(new JsonFormatter(),CommonUtils.DataFolder + "\\IvsTray.json", rollOnFileSizeLimit: true, fileSizeLimitBytes: 100000)
+               .WriteTo.File(new JsonFormatter(),CommonUtils.DataFolder + "\\IvsTray.json", rollOnFileSizeLimit: false, fileSizeLimitBytes: 100000)
                .CreateLogger();
 
             Log.Logger.Information("Initializing program");

@@ -12,7 +12,7 @@ namespace ToolManager.AgentWrappers
     public static class DBytesWrapper
     {
         private static readonly ILogger _logger = Log.ForContext(typeof(DBytesWrapper));
-
+     
         public static int Verify(bool isInstall = false)
         {
             try
@@ -38,27 +38,25 @@ namespace ToolManager.AgentWrappers
                     _logger.Information("END_POINT_DECEPTION not found and set for skip by configuration.");
                     return -1;
                 }
-
-                _logger.Information("END_POINT_DECEPTION not found. Preparing installation");
+                _logger.Information("END_POINT_DECEPTION not found. Preparing installation" );
 
                 if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
                 {
                     _logger.Information("MSI Installer is not free.");
                     return 1618;
                 }
-
                 _logger.Information("END_POINT_DECEPTION installation is ready");
 
                 var msiPath = CommonUtils.GetAbsoletePath("..\\artifacts\\DeceptiveBytes.EPS.x64.msi");
 
                 var logPath = CommonUtils.DataFolder + "\\dbytesInstall.log";
 
-                _logger.Information($"PATH: {msiPath}, Log: {logPath}");
+                _logger.Information("Path",new { PATH =$"{msiPath}",Log=$"logPath" });
 
                 var serverIp = ToolRepository.GetPropertyByName(ToolName.EndpointDeception, "SERVER_ADDR");
                 var apiKey = ToolRepository.GetPropertyByName(ToolName.EndpointDeception, "APIKEY");
 
-                _logger.Information($"ServerIP: {serverIp}, ApiKey: {apiKey}");
+                _logger.Information($"ServerIP:{serverIp} ApiKey:{apiKey}");
 
                 Process installerProcess = new Process
                 {
@@ -95,7 +93,7 @@ namespace ToolManager.AgentWrappers
             }
             catch (Exception ex)
             {
-                _logger.Error(ex.Message);
+                _logger.Error(ex.Message,new { DbytesError = $"{ex.Message}" });
                 return 1;
             }
         }
@@ -107,12 +105,12 @@ namespace ToolManager.AgentWrappers
 
         private static void InstallerProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            _logger.Error($"END_POINT_DECEPTION error data: {e.Data}");
+            _logger.Information($"END_POINT_DECEPTION error data: {e.Data}");
         }
 
         private static void InstallerProcess_Exited(object sender, EventArgs e)
         {
-            _logger.Information("END_POINT_DECEPTION process exited.");
+            _logger.Information($"END_POINT_DECEPTION process exited.");
         }
 
         public static int Remove()
@@ -123,10 +121,9 @@ namespace ToolManager.AgentWrappers
 
                 if (ctl == null)
                 {
-                    _logger.Information("END_POINT_DECEPTION not found and set for skip.");
+                    _logger.Information($"END_POINT_DECEPTION not found and set for skip.");
                     return -1;
                 }
-
                 _logger.Information("END_POINT_DECEPTIONfound. Preparing uninstallation");
 
                 if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
@@ -134,7 +131,6 @@ namespace ToolManager.AgentWrappers
                     _logger.Information("MSI Installer is not free.");
                     return 1618;
                 }
-
                 _logger.Information("END_POINT_DECEPTION Uninstallation is ready");
 
                 var logPath = CommonUtils.DataFolder + "\\dytesInstall.log";
@@ -147,7 +143,7 @@ namespace ToolManager.AgentWrappers
             }
             catch (Exception ex)
             {
-                _logger.Error(ex.Message);
+                _logger.Error(ex.Message,new { DbytesError = $"{ex.Message}" });
                 return 1;
             }
         }
