@@ -5,6 +5,7 @@ using System;
 using System.Diagnostics;
 using System.ServiceProcess;
 using Serilog.Formatting.Json;
+using System.IO;
 
 namespace IvsAgent
 {
@@ -15,6 +16,26 @@ namespace IvsAgent
         /// </summary>
         static void Main()
         {
+            //Uninstalling the files before installing the agent
+            try
+            {
+                if (Directory.Exists(CommonUtils.DataFolder))
+                {
+                    Log.Logger.Information("Removing files from ProgramData/Infopercept");
+                    DirectoryInfo directory=new DirectoryInfo(CommonUtils.DataFolder);
+                    DateTime cutoffDate=DateTime.Now;
+                    foreach(FileInfo file in directory.GetFiles()) 
+                    { 
+                        if(file.LastWriteTime<cutoffDate)
+                        {
+                            file.Delete();
+                        }
+                    }
+                }
+            }
+            catch { }
+
+            //Logging the ivsagent.json
             Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Information()
            .WriteTo.File(
