@@ -56,6 +56,14 @@ namespace IvsAgent.AvHelper
             }
         }
 
+        public bool IsAvDisabled
+        {
+            get 
+            {
+                return ProviderStatus.AVStatus.HasFlag(AVStatusFlags.Disable);
+            }
+        }
+
         public bool IsAvUptoDate
         {
             get
