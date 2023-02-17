@@ -11,7 +11,7 @@ namespace Jitbit.Utils
 		private static bool _isDefenderAvailable;
 		private static string _defenderPath;
 		private static SemaphoreSlim _lock = new SemaphoreSlim(5); //limit to 5 concurrent checks at a time
-
+		
 		//static ctor
 		static WinDefender()
 		{
