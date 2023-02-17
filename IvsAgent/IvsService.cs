@@ -26,6 +26,8 @@ namespace IvsAgent
         private readonly ExtendedServiceController LmpService;
 
         private readonly ILogger _logger = Log.ForContext<IvsService>();
+      
+        AgentServiceJasonData agentServiceJasonData=new AgentServiceJasonData();
 
         private readonly ToolRepository toolRepository;
 
@@ -69,15 +71,15 @@ namespace IvsAgent
         protected override void OnSessionChange(SessionChangeDescription changeDescription)
         {
             EventLog.WriteEntry($"IvsService.OnSessionChange {DateTime.Now.ToLongTimeString()} - Session change notice received: {changeDescription.Reason}  Session ID: {changeDescription.SessionId}");
-
+            
             switch (changeDescription.Reason)
             {
                 case SessionChangeReason.SessionLogon:
-                    EventLog.WriteEntry("IvsService.OnSessionChange: Logon");
+                    EventLog.WriteEntry("IvsService.OnSessionChange: Logon");                    
                     break;
 
                 case SessionChangeReason.SessionLogoff:
-                    EventLog.WriteEntry("IvsService.OnSessionChange Logoff");
+                    EventLog.WriteEntry("IvsService.OnSessionChange Logoff");                    
                     break;
             }
         }
@@ -200,14 +202,14 @@ namespace IvsAgent
         protected override void OnStart(string[] args)
         {
             if (_isRunning)
-            {
+            { 
                 _logger.Information("Invinsense service is already running.");
                 return;
             }
 
             _isRunning = true;
 
-            _logger.Information("Starting Invinsense service...");
+            _logger.Information("Starting Invinsense service..." );
 
             avTimer.Elapsed += new ElapsedEventHandler(OnElapsedTime);
             avTimer.Start();
@@ -219,7 +221,7 @@ namespace IvsAgent
                 await Task.Delay(5000);
                 VerifyDependencyAndInstall();
             });
-
+            
             _logger.Information("Task added...");
             toolRepository.CaptureEvent(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.Installed, RunningStatus.Running));
         }
@@ -227,12 +229,12 @@ namespace IvsAgent
         protected override void OnStop()
         {
             _logger.Information("Stopping service");
-
             avTimer.Stop();
 
             toolRepository.CaptureEvent(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.Installed, RunningStatus.Stopped));
 
             _isRunning = false;
+
         }
 
         protected override void OnPause()
@@ -249,18 +251,49 @@ namespace IvsAgent
 
         protected override void OnCustomCommand(int command)
         {
-            _logger.Information($"Agent cuustom command: {command}");
+            _logger.Information($"CustomCommand {command }");
             base.OnCustomCommand(command);
 
             if(command == 130)
             {
                 Stop();
             }
+            else if(command==140)
+            {
+                var avStatuses = AvMonitor.ListAvStatuses();
+
+                var activeAvStatus = avStatuses.FirstOrDefault(x => x.IsAvEnabled);
+                if (activeAvStatus.AvName == "Windows Defender")
+                {
+                    WinDefender wd = new WinDefender($"-Scan -ScanType 2");
+                    _logger.Information("Windows Defender Starts Scanning..");
+
+                    var isVirus = WinDefender.IsVirus();
+                    _logger.Information($"{isVirus}");
+                }
+            }
+            else if(command==141)
+            {
+                var avStatuses = AvMonitor.ListAvStatuses();
+
+                var activeAvStatus = avStatuses.FirstOrDefault(x => x.IsAvEnabled);
+                if (activeAvStatus.AvName == "Windows Defender")
+                {
+                    WinDefender wd = new WinDefender($"-Scan -ScanType 1");
+                    _logger.Information("Windows Defender Starts Scanning..");
+
+                    var isVirus = WinDefender.IsVirus();
+                    _logger.Information($"{isVirus}");
+                }
+            }
         }
 
         protected override void OnShutdown()
         {
             _logger.Information("System is shutting down");
+            ServiceController service = new ServiceController("Invinsense 3.0");
+            service.Stop();
+            System.Environment.Exit(0);
             base.OnShutdown();
         }
 
@@ -276,27 +309,28 @@ namespace IvsAgent
 
             inTimer = true;
 
-            if (ProcessExtensions.CheckProcessAsCurrentUser("IvsTray"))
+            //Check the user seesion is active or not
+            bool isSessionActive = Process.GetProcesses().Any(p => p.SessionId> 0 && p.ProcessName !="Idel");
+            if (isSessionActive) 
             {
-                _logger.Information("IvsTray is running.");
+                if (ProcessExtensions.CheckProcessAsCurrentUser("IvsTray"))
+                {
+                    _logger.Information("IvsTray is running.");
+                }
+                else
+                {
+                    var ivsTrayFile = CommonUtils.GetAbsoletePath("..\\IvsTray\\IvsTray.exe");
+                    _logger.Information($"IvsTray is not running. Starting... {ivsTrayFile}");
+                    ProcessExtensions.StartProcessAsCurrentUser(null, ivsTrayFile);
+                }
             }
-            else
-            {
-                var ivsTrayFile = CommonUtils.GetAbsoletePath("..\\IvsTray\\IvsTray.exe");
-                _logger.Information($"IvsTray is not running. Starting... {ivsTrayFile}");
-                ProcessExtensions.StartProcessAsCurrentUser(null, ivsTrayFile);
-            }
-
-            
-
             var avStatuses = AvMonitor.ListAvStatuses();
 
             var activeAvStatus = avStatuses.FirstOrDefault(x => x.IsAvEnabled);
 
             InstallStatus currentAvStatus;
-
-            _logger.Information($"Checking {activeAvStatus.AvName} service");
-
+            
+            _logger.Information($"AvName:{activeAvStatus.AvName}");
             if (activeAvStatus == null)
             {
                 currentAvStatus = InstallStatus.Error;
@@ -308,8 +342,7 @@ namespace IvsAgent
 
             if (avLastStatus != currentAvStatus)
             {
-                _logger.Information("{avName} service status : Last: {avLastStatus}, New: {status}", activeAvStatus.AvName, avLastStatus, currentAvStatus);
-
+                _logger.Information($"AvDescription{activeAvStatus.AvName} service status : Last: {avLastStatus}, New: {currentAvStatus}");
                 avLastStatus = currentAvStatus;
 
                 toolRepository.CaptureEvent(new ToolStatus(ToolName.EndpointProtection, currentAvStatus, currentAvStatus == InstallStatus.Installed ? RunningStatus.Running : RunningStatus.Warning));
@@ -317,15 +350,15 @@ namespace IvsAgent
 
             inTimer = false;
         }
-
+        
         private void VerifyDependencyAndInstall()
         {
             if (SysmonWrapper.Verify(true) == 0)
             {
-                _logger.Information($"Sysmon verified with status: {Sysmon.Status}");
+                _logger.Information($"SysmonServiceVerified with status {Sysmon.Status}");
                 Sysmon.StartListening();
                 SysmonUpdateStatus(Sysmon.Status);
-                _logger.Information($"Sysmon service listening: {Sysmon.Status}");
+                _logger.Information($"SysmonServiceListening with status {Sysmon.Status}");
             }
             else
             {
@@ -334,10 +367,10 @@ namespace IvsAgent
 
             if (OsQueryWrapper.Verify(true) == 0)
             {
-                _logger.Information($"OSQuery verified with status: {OsQuery.Status}");
+                _logger.Information("OsQueryVerified with status {OsQuery.Status}");
                 OsQuery.StartListening();
                 OsQueryUpdateStatus(OsQuery.Status);
-                _logger.Information($"OSQuery service listening: {OsQuery.Status}");
+                _logger.Information($"OsQueryListening with status {OsQuery.Status}");
             }
             else
             {
@@ -346,10 +379,10 @@ namespace IvsAgent
 
             if (WazuhWrapper.Verify(true) == 0)
             {
-                _logger.Information($"Wazuh verified with status: {EdrServiceChecker.Status}");
+                _logger.Information($"WazuhServiceVerified with status {EdrServiceChecker.Status}");
                 EdrServiceChecker.StartListening();
                 EdrUpdateStatus(EdrServiceChecker.Status);
-                _logger.Information($"Wazuh service listening: {EdrServiceChecker.Status}");
+                _logger.Information($"WazuhServiceListening with status {EdrServiceChecker.Status}");
             }
             else
             {
@@ -358,16 +391,15 @@ namespace IvsAgent
 
             if (DBytesWrapper.Verify(true) == 0)
             {
-                _logger.Information($"dBytes verified with status: {DeceptionServiceChecker.Status}");
+                _logger.Information($"DbytesServiceVerified with status {DeceptionServiceChecker.Status}");
                 DeceptionServiceChecker.StartListening();
                 DeceptionUpdateStatus(DeceptionServiceChecker.Status);
-                _logger.Information($"dBytes service listening: {DeceptionServiceChecker.Status}");
+                _logger.Information($"DbytesServiceListening with status {DeceptionServiceChecker.Status}");
             }
             else
             {
-                _logger.Error("Error in dBytes installer");
-            }
-
+                _logger.Information("Error in dBytes installer" );
+            }            
             _logger.Information("Adding fake user");
             UserExtensions.EnsureFakeUser("maintenance", "P@$$w0rd");
         }
