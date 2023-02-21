@@ -12,7 +12,7 @@
 <!-- The manufacturer, for other tools and folder info -->
 <?define ArtifactsName = "Artifacts" ?>
 <!-- The version number of this setup package-->
-<?define Version = "1.1.25.0" ?>
+<?define Version = "1.1.32.0" ?>
 <!-- UpgradeCode must be unique and not changed once the first version of the program is installed. -->
 <?define UpgradeCode = "{38ECE878-1645-4310-BD9A-B9CA57FE0DF0}" ?>
 <!-- The name of the Cabinet -->
@@ -61,14 +61,14 @@
 							Key='SOFTWARE\infopercxept'
 							Name='WAZUH_AGENT_GROUP' Type='raw' />
 		</Property>
-		
-		<!--Fetch property of WAZUH_AGENT_GROUP-->
-		<Property Id='WAZUH_PASSWORD'>
-			<RegistrySearch Id='WazuhAgentGroup' Root='HKLM'
-							Key='SOFTWARE\infopercxept'
-							Name='WAZUH_PASSWORD' Type='raw' />
-		</Property>
 
+		<!--Fetch property of WAZUH_AGENT_GROUP-->
+		<Property Id='WAZUH_AGENT_PASSWORD'>
+			<RegistrySearch Id='WazuhAgentPassword' Root='HKLM'
+							Key='SOFTWARE\infopercxept'
+							Name='WAZUH_AGENT_PASSWORD' Type='raw' />
+		</Property>
+		
 		<!--Fetch property of SKIP_ENDPOINT_DECEPTION-->
 		<Property Id='SKIP_ENDPOINT_DECEPTION'>
 			<RegistrySearch Id='SkipDbytesId' Root='HKLM'
@@ -134,9 +134,9 @@
 
 					<!--add property of WAZUH_AGENT_GROUP with value and place it to "SOFTWARE\infopercept" -->
 					<RegistryValue Name="AGENT_GROUP" Value='[WAZUH_AGENT_GROUP]' Type='string' ></RegistryValue>
-					
-					<!--add property of WAZUH_AGENT_GROUP with value and place it to "SOFTWARE\infopercept" -->
-					<RegistryValue Name="AGENT_PASSWORD" Value='[WAZUH_PASSWORD]' Type='string' ></RegistryValue>
+
+					<!--add property of WAZUH_AGENT_PASSWORD with value and place it to "SOFTWARE\infopercept" -->
+					<RegistryValue Name="AGENT_PASSWORD" Value='[WAZUH_AGENT_PASSWORD]' Type='string' ></RegistryValue>
 					
 					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string" ></RegistryValue>
 					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string" ></RegistryValue>

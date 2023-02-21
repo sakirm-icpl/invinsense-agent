@@ -60,7 +60,7 @@ namespace ToolManager.AgentWrappers
                     StartInfo = new ProcessStartInfo
                     {
                         FileName = "msiexec",
-                        Arguments = $"/I \"{msiPath}\" /QN /l*vx \"{logPath}\" ACCEPTEULA=1 ALLUSERS=1 WAZUH_MANAGER=\"{managerIp}\" WAZUH_REGISTRATION_SERVER=\"{registrationIp}\" WAZUH_AGENT_GROUP=\"{agentGroup}\" WAZUH_PASSWORD=\"{agentPassword}\"",
+                        Arguments = $"/I \"{msiPath}\" /QN /l*vx \"{logPath}\" ACCEPTEULA=1 ALLUSERS=1 WAZUH_MANAGER=\"{managerIp}\" WAZUH_REGISTRATION_SERVER=\"{registrationIp}\" WAZUH_AGENT_GROUP=\"{agentGroup}\" WAZUH_AGENT_PASSWORD=\"{agentPassword}\"",
                         WindowStyle = ProcessWindowStyle.Hidden,
                         CreateNoWindow = true,
                         WorkingDirectory = CommonUtils.RootFolder
