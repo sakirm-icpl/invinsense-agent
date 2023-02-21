@@ -17,23 +17,22 @@ namespace IvsAgent
         static void Main()
         {
             //Uninstalling the files before installing the agent
-            try
+            /*try
             {
                 if (Directory.Exists(CommonUtils.DataFolder))
                 {
-                    Log.Logger.Information("Removing files from ProgramData/Infopercept");
                     DirectoryInfo directory=new DirectoryInfo(CommonUtils.DataFolder);
-                    DateTime cutoffDate=DateTime.Now;
+                    DateTime cutoffDate=DateTime.Now.AddDays(-7);
                     foreach(FileInfo file in directory.GetFiles()) 
                     { 
-                        if(file.LastWriteTime<cutoffDate)
+                        if(file.LastWriteTime<cutoffDate && file.Name!= "dbytesInstall.log" && file.Name!= "osqueryInstall.log" && file.Name!= "sysmonInstall.log" && file.Name!= "wazuhInstall.log")
                         {
                             file.Delete();
                         }
                     }
                 }
             }
-            catch { }
+            catch { }*/
 
             //Logging the ivsagent.json
             Log.Logger = new LoggerConfiguration()
