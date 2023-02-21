@@ -55,6 +55,21 @@
 - Display service Invinsense3.0 on serices and also diplay process under name of single agent
 - Create Window user name with single agent.
 
+## ✅ How to perform quick virus scan with Microsoft Defender using Powershell
+To complete a quick scan using PowerShell, use these steps:
+<ul>
+  <li>Open Start.</li>
+<li>Search for PowerShell, right-click the top result, and select the Run as administrator option.</li>
+<li>Type the following command to start a quick virus scan and press Enter:Start-MpScan -ScanType QuickScan</li>
+</ul>
+
+## ✅ How to perform quick virus scan with Microsoft Defender using Powershell
+To complete a full scan using commands on Windows 10, use these steps:
+<ul>
+  <li>Open Start.</li>
+<li>Search for PowerShell, right-click the top result, and select the Run as administrator option.</li>
+<li>Type the following command to start a full virus scan and press Enter:Start-MpScan -ScanType FullScan</li>
+</ul>
 
 ## ✅ How to install Single Installer..(install wazuh,deceptiveBytes,Sysmon,SingleAgent)
 
