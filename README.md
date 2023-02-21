@@ -12,7 +12,7 @@
 - Agent shows status by monitoring tools' services.
 
 <p align="center">
-    <img src="https://user-images.githubusercontent.com/103485015/184890996-a61a045c-9141-4416-93e5-1a95c312345d.png" alt="CodeQL" style="max-width: 100%;">
+    <img src="https://user-images.githubusercontent.com/121154130/220250038-0bcb276a-8f5c-436b-931b-36668dc6df2f.png" alt="CodeQL" style="max-width: 100%;">
   </a>
   </p>
    
