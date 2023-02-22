@@ -63,7 +63,7 @@ To complete a quick scan using PowerShell, use these steps:
 <li>Type the following command to start a quick virus scan and press Enter:Start-MpScan -ScanType QuickScan</li>
 </ul>
 
-## ✅ How to perform quick virus scan with Microsoft Defender using Powershell
+## ✅ How to perform full scan with Microsoft Defender using Powershell
 To complete a full scan using commands on Windows 10, use these steps:
 <ul>
   <li>Open Start.</li>
