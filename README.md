@@ -40,10 +40,17 @@
 
 ## 🖥️ Run agent using Commandline/Userinterface
 
-- Download `.msi` file https://github.com/Infopercept/invinsense-agent/blob/main/InvinsenseSingleAgentSetup%20(2).msi
+- Download `.msi` file 
+- [text]https://github.com/Infopercept/invinsense-agent/blob/main/InvinSetup_23_02_21.msi
 - copy file path and open on cmd(Administration)
 - run following command
-- **msiexec /i "C:\Users\Downloads\InvinsenseSingleAgentSetup.msi" ALLUSERS=1 /qn /l* "C:\Users\Downloads\app.log"**
+- <b>With Deceptivebytes:</b>
+msiexec.exe /i InvinSetup_23_02_21.msi /l*v C:\ProgramData\install.log WAZUH_MANAGER="34.100.141.147" WAZUH_REGISTRATION_SERVER="34.100.141.147" 
+WAZUH_AGENT_GROUP="default" WAZUH_REGISTRATION_PASSWORD="password" DBYTES_SERVER="172.17.14.76" 
+DBYTES_APIKEY="9c208321ad917ef07680f485f6597e37b29ae53d23a62bc7e9ca4af97e0ad85b"<br/>
+<b>Skiping Deceptivebytes:</b>
+msiexec.exe /i InvinSetup_23_02_21.msi /l*v C:\ProgramData\install.log WAZUH_MANAGER="34.100.141.147" 
+WAZUH_REGISTRATION_SERVER="34.100.141.147" WAZUH_AGENT_GROUP="default" WAZUH_REGISTRATION_PASSWORD="password" SKIP_ENDPOINT_DECEPTION="y"
 
 ## 🚧 Features
 
@@ -63,7 +70,7 @@ To complete a quick scan using PowerShell, use these steps:
 <li>Type the following command to start a quick virus scan and press Enter:Start-MpScan -ScanType QuickScan</li>
 </ul>
 
-## ✅ How to perform quick virus scan with Microsoft Defender using Powershell
+## ✅ How to perform full scan with Microsoft Defender using Powershell
 To complete a full scan using commands on Windows 10, use these steps:
 <ul>
   <li>Open Start.</li>
