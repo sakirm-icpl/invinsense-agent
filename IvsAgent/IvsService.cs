@@ -234,7 +234,8 @@ namespace IvsAgent
             toolRepository.CaptureEvent(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.Installed, RunningStatus.Stopped));
 
             _isRunning = false;
-
+            base.RequestAdditionalTime(1000*60*2);
+            base.Stop();
         }
 
         protected override void OnPause()
@@ -292,7 +293,12 @@ namespace IvsAgent
         {
             _logger.Information("System is shutting down");
             ServiceController service = new ServiceController("Invinsense 3.0");
-            service.Stop();
+            if (service.Status == ServiceControllerStatus.Running)
+            {
+                _logger.Information("Stopping service...");
+                service.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(30)); // Wait up to 30 seconds for the service to stop
+            }
+            _logger.Information("Exiting service...");
             System.Environment.Exit(0);
             base.OnShutdown();
         }

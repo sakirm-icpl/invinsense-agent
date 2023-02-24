@@ -16,24 +16,6 @@ namespace IvsAgent
         /// </summary>
         static void Main()
         {
-            //Uninstalling the files before installing the agent
-            /*try
-            {
-                if (Directory.Exists(CommonUtils.DataFolder))
-                {
-                    DirectoryInfo directory=new DirectoryInfo(CommonUtils.DataFolder);
-                    DateTime cutoffDate=DateTime.Now.AddDays(-7);
-                    foreach(FileInfo file in directory.GetFiles()) 
-                    { 
-                        if(file.LastWriteTime<cutoffDate && file.Name!= "dbytesInstall.log" && file.Name!= "osqueryInstall.log" && file.Name!= "sysmonInstall.log" && file.Name!= "wazuhInstall.log")
-                        {
-                            file.Delete();
-                        }
-                    }
-                }
-            }
-            catch { }*/
-
             //Logging the ivsagent.json
             Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Information()

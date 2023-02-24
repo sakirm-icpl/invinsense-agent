@@ -51,7 +51,6 @@ namespace ToolManager.AgentWrappers
                 var managerIp = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "MANAGER_ADDR");
                 var registrationIp = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "REGISTRATION_SERVER_ADDR");
                 var agentGroup = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "AGENT_GROUP");
-                var agentPassword = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "AGENT_PASSWORD");
 
                 _logger.Information($"ManagerIP:{managerIp},RegistrationIP:{registrationIp},AgentGroup:{agentGroup}");
 
@@ -60,7 +59,7 @@ namespace ToolManager.AgentWrappers
                     StartInfo = new ProcessStartInfo
                     {
                         FileName = "msiexec",
-                        Arguments = $"/I \"{msiPath}\" /QN /l*vx \"{logPath}\" ACCEPTEULA=1 ALLUSERS=1 WAZUH_MANAGER=\"{managerIp}\" WAZUH_REGISTRATION_SERVER=\"{registrationIp}\" WAZUH_AGENT_GROUP=\"{agentGroup}\" WAZUH_REGISTRATION_PASSWORD=\"{agentPassword}\"",
+                        Arguments = $"/I \"{msiPath}\" /QN /l*vx \"{logPath}\" ACCEPTEULA=1 ALLUSERS=1 WAZUH_MANAGER=\"{managerIp}\" WAZUH_REGISTRATION_SERVER=\"{registrationIp}\" WAZUH_AGENT_GROUP=\"{agentGroup}\"",
                         WindowStyle = ProcessWindowStyle.Hidden,
                         CreateNoWindow = true,
                         WorkingDirectory = CommonUtils.RootFolder

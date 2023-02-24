@@ -1,6 +1,9 @@
 ﻿using Microsoft.Deployment.WindowsInstaller;
+using System.IO;
+using System;
 using System.Linq;
 using System.ServiceProcess;
+using Common.Utils;
 
 namespace ToolManager
 {
@@ -9,6 +12,30 @@ namespace ToolManager
     /// </summary>
     public class CustomActions
     {
+        [CustomAction]
+        public static ActionResult RemoveOldDataFiles(Session session)
+        {
+            //Uninstalling the files before installing the agent
+            try
+            {
+                if (Directory.Exists(CommonUtils.DataFolder))
+                {
+                    DirectoryInfo directory = new DirectoryInfo(CommonUtils.DataFolder);
+                    DateTime cutoffDate = DateTime.Now;
+                    foreach (FileInfo file in directory.GetFiles())
+                    {
+                        if (file.LastWriteTime < cutoffDate)
+                        {
+                            file.Delete();
+                        }
+                    }
+                }
+            }
+            catch { }
+
+            return ActionResult.Success;
+        }
+
         [CustomAction]
         public static ActionResult CheckSessionParameters(Session session)
         {
@@ -29,12 +56,6 @@ namespace ToolManager
             if (string.IsNullOrEmpty(session["WAZUH_AGENT_GROUP"]))
             {
                 session.Log($"Required parameter 'WAZUH_AGENT_GROUP' is missing. Installer will exit.");
-                return ActionResult.Failure;
-            }
-
-            if (string.IsNullOrEmpty(session["WAZUH_REGISTRATION_PASSWORD"]))
-            {
-                session.Log($"Required parameter 'WAZUH_REGISTRATION_PASSWORD' is missing. Installer will exit.");
                 return ActionResult.Failure;
             }
 
