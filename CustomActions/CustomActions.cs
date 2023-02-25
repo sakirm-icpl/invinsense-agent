@@ -94,6 +94,7 @@ namespace ToolManager
                     service.ExecuteCommand(130);
                     session.Log("Stopping Invinsense service. Wait for Status Stopped");
                     service.WaitForStatus(ServiceControllerStatus.Stopped);
+                    service.Stop();
                 }
 
                 session.Log($"Invinsense service stauts: {service.Status}");

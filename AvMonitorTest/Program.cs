@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Management;
+using System.Net.NetworkInformation;
 
 namespace AvMonitorTest
 {
@@ -6,14 +8,14 @@ namespace AvMonitorTest
     {
         static void Main()
         {
-            var avStatuses = AvMonitor.ListAvStatuses();
+            ManagementObjectSearcher wmiData = new ManagementObjectSearcher(@"root\SecurityCenter2", "SELECT * FROM AntiVirusProduct");
+            ManagementObjectCollection data = wmiData.Get();
 
-            foreach (var avStatus in avStatuses)
+            foreach (ManagementObject virusChecker in data)
             {
-                Console.WriteLine($"Antivirus status: {avStatus}");
+                Console.WriteLine("Antivirus software found: " + virusChecker["displayName"]);
+                Console.WriteLine("Antivirus software version: " + virusChecker["displayVersion"]);
             }
-
-            Console.ReadLine();
         }
     }
 }

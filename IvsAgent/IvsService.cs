@@ -331,27 +331,25 @@ namespace IvsAgent
                 }
             }
             var avStatuses = AvMonitor.ListAvStatuses();
+            var enabledAvStatus = avStatuses.FirstOrDefault(x => x.IsAvEnabled && x.IsAvUptoDate);
+            var disabledAvStatus = avStatuses.FirstOrDefault(x => x.IsAvDisabled);
+            var currentAvStatus = InstallStatus.Error;
 
-            var activeAvStatus = avStatuses.FirstOrDefault(x => x.IsAvEnabled);
-
-            InstallStatus currentAvStatus;
-            
-            _logger.Information($"AvName:{activeAvStatus.AvName}");
-            if (activeAvStatus == null)
+            if (enabledAvStatus != null)
             {
-                currentAvStatus = InstallStatus.Error;
+                currentAvStatus = InstallStatus.Installed;
+                _logger.Information($"Antivirus Description: {enabledAvStatus.AvName}, Current Status: {currentAvStatus}");
+                toolRepository.CaptureEvent(new ToolStatus(ToolName.EndpointProtection, currentAvStatus, RunningStatus.Running));
+            }
+            else if (disabledAvStatus != null)
+            {
+                _logger.Information($"Antivirus Description: {disabledAvStatus.AvName}, Current Status: {currentAvStatus}");
+                toolRepository.CaptureEvent(new ToolStatus(ToolName.EndpointProtection, currentAvStatus, RunningStatus.Warning));
             }
             else
             {
-                currentAvStatus = activeAvStatus.IsAvUptoDate ? InstallStatus.Installed : InstallStatus.Outdated;
-            }
-
-            if (avLastStatus != currentAvStatus)
-            {
-                _logger.Information($"AvDescription{activeAvStatus.AvName} service status : Last: {avLastStatus}, New: {currentAvStatus}");
-                avLastStatus = currentAvStatus;
-
-                toolRepository.CaptureEvent(new ToolStatus(ToolName.EndpointProtection, currentAvStatus, currentAvStatus == InstallStatus.Installed ? RunningStatus.Running : RunningStatus.Warning));
+                _logger.Information($"No Antivirus Installed");
+                toolRepository.CaptureEvent(new ToolStatus(ToolName.EndpointProtection, currentAvStatus, RunningStatus.NotFound));
             }
 
             inTimer = false;

@@ -34,6 +34,7 @@ namespace AvMonitorTest
         {
             //We can have separate AV Object for better reporting
             AvName = mo["displayName"].ToString();
+            AvVersion = mo["displayVersion"].ToString();
             InstanceGuid = mo["instanceGuid"].ToString();
             PathToSignedProductExe = mo["pathToSignedProductExe"].ToString();
             ProviderStatus = ConvertToProviderStatus((uint)mo.Properties["ProductState"].Value);
@@ -42,6 +43,8 @@ namespace AvMonitorTest
 
 
         public string AvName { get; set; }
+
+        public string AvVersion { get;set; }
 
         public string InstanceGuid { get; set; }
 
@@ -56,6 +59,7 @@ namespace AvMonitorTest
         public override string ToString()
         {
             return $"{nameof(AvName)}: {AvName} {Environment.NewLine}" +
+                $"{nameof(AvVersion)}: {AvVersion} {Environment.NewLine}" +
                 $"{nameof(InstanceGuid)}: {InstanceGuid} {Environment.NewLine}" +
                 $"{nameof(PathToSignedProductExe)}: {PathToSignedProductExe} {Environment.NewLine}" +
                 $"{ProviderStatus}: {Environment.NewLine}" +

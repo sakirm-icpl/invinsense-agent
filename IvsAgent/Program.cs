@@ -19,6 +19,10 @@ namespace IvsAgent
             //Logging the ivsagent.json
             Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Information()
+            .MinimumLevel.Debug()
+            .MinimumLevel.Fatal()
+            .MinimumLevel.Error()
+            .MinimumLevel.Warning()
            .WriteTo.File(
                 new JsonFormatter(),
                 CommonUtils.DataFolder + "\\ivsagent.json",
