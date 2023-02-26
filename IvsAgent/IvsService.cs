@@ -333,24 +333,39 @@ namespace IvsAgent
             var avStatuses = AvMonitor.ListAvStatuses();
             var enabledAvStatus = avStatuses.FirstOrDefault(x => x.IsAvEnabled && x.IsAvUptoDate);
             var disabledAvStatus = avStatuses.FirstOrDefault(x => x.IsAvDisabled);
-            var currentAvStatus = InstallStatus.Error;
 
-            if (enabledAvStatus != null)
+            InstallStatus currentAvStatus;
+            RunningStatus currentRunningStatus;
+
+            if (enabledAvStatus == null && disabledAvStatus == null)
             {
-                currentAvStatus = InstallStatus.Installed;
-                _logger.Information($"Antivirus Description: {enabledAvStatus.AvName}, Current Status: {currentAvStatus}");
-                toolRepository.CaptureEvent(new ToolStatus(ToolName.EndpointProtection, currentAvStatus, RunningStatus.Running));
+                // No antivirus is detected
+                currentAvStatus = InstallStatus.Error;
+                currentRunningStatus = RunningStatus.Stopped;
+                _logger.Information($"AvName:{enabledAvStatus.AvName},CurrentStatus: {currentAvStatus},RunningStatus:{currentRunningStatus}");
             }
-            else if (disabledAvStatus != null)
+            else if (enabledAvStatus != null)
             {
-                _logger.Information($"Antivirus Description: {disabledAvStatus.AvName}, Current Status: {currentAvStatus}");
-                toolRepository.CaptureEvent(new ToolStatus(ToolName.EndpointProtection, currentAvStatus, RunningStatus.Warning));
+                // An enabled and up-to-date antivirus is detected
+                currentAvStatus = InstallStatus.Installed;
+                currentRunningStatus = RunningStatus.Running;
+                _logger.Information($"AvName:{enabledAvStatus.AvName},CurrentStatus: {currentAvStatus},RunningStatus:{currentRunningStatus}");
             }
             else
             {
-                _logger.Information($"No Antivirus Installed");
-                toolRepository.CaptureEvent(new ToolStatus(ToolName.EndpointProtection, currentAvStatus, RunningStatus.NotFound));
+                // A disabled antivirus is detected
+                currentAvStatus = InstallStatus.Installed;
+                currentRunningStatus = RunningStatus.Warning;
+                _logger.Information($"AvName:{disabledAvStatus.AvName},CurrentStatus: {currentAvStatus},RunningStatus:{currentRunningStatus}");
             }
+
+            if (avLastStatus != currentAvStatus)
+            {
+                _logger.Information($"Antivirus status changed: Last: {avLastStatus}, New: {currentAvStatus}");
+                avLastStatus = currentAvStatus;
+            }
+
+            toolRepository.CaptureEvent(new ToolStatus(ToolName.EndpointProtection, currentAvStatus, currentRunningStatus));
 
             inTimer = false;
         }
