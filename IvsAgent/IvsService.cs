@@ -292,7 +292,7 @@ namespace IvsAgent
         protected override void OnShutdown()
         {
             _logger.Information("System is shutting down");
-            ServiceController service = new ServiceController("Invinsense 3.0");
+            ServiceController service = new ServiceController("IvsAgent");
             if (service.Status == ServiceControllerStatus.Running)
             {
                 _logger.Information("Stopping service...");
