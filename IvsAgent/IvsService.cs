@@ -292,14 +292,7 @@ namespace IvsAgent
         protected override void OnShutdown()
         {
             _logger.Information("System is shutting down");
-            ServiceController service = new ServiceController("IvsAgent");
-            if (service.Status == ServiceControllerStatus.Running)
-            {
-                _logger.Information("Stopping service...");
-                service.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(30)); // Wait up to 30 seconds for the service to stop
-            }
-            _logger.Information("Exiting service...");
-            System.Environment.Exit(0);
+            Stop();
             base.OnShutdown();
         }
 
