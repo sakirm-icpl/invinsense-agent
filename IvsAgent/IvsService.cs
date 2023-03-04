@@ -88,6 +88,7 @@ namespace IvsAgent
         {
             if (status == null)
             {
+                Log.Logger.Information("EndpointDecetionAndResponse NotFound");
                 toolRepository.CaptureEvent(new ToolStatus(ToolName.EndpointDecetionAndResponse, InstallStatus.NotFound, RunningStatus.NotFound));
                 return;
             }
@@ -96,12 +97,15 @@ namespace IvsAgent
             {
                 case ServiceControllerStatus.StartPending:
                 case ServiceControllerStatus.Running:
+                    Log.Logger.Information("EndpointDecetionAndResponse is Running");
                     toolRepository.CaptureEvent(new ToolStatus(ToolName.EndpointDecetionAndResponse, InstallStatus.Installed, RunningStatus.Running));
                     return;
                 case ServiceControllerStatus.Stopped:
+                    Log.Logger.Information("EndpointDecetionAndResponse is Stopped");
                     toolRepository.CaptureEvent(new ToolStatus(ToolName.EndpointDecetionAndResponse, InstallStatus.Installed, RunningStatus.Stopped));
                     return;
                 default:
+                    Log.Logger.Information("There is Warning in EndpointDecetionAndResponse");
                     toolRepository.CaptureEvent(new ToolStatus(ToolName.EndpointDecetionAndResponse, InstallStatus.Installed, RunningStatus.Warning));
                     return;
             }
@@ -111,6 +115,7 @@ namespace IvsAgent
         {
             if (status == null)
             {
+                Log.Logger.Information("EndpointDeception NotFound");
                 toolRepository.CaptureEvent(new ToolStatus(ToolName.EndpointDeception, InstallStatus.NotFound, RunningStatus.NotFound));
                 return;
             }
@@ -119,12 +124,15 @@ namespace IvsAgent
             {
                 case ServiceControllerStatus.StartPending:
                 case ServiceControllerStatus.Running:
+                    Log.Logger.Information("EndpointDeception is Running");
                     toolRepository.CaptureEvent(new ToolStatus(ToolName.EndpointDeception, InstallStatus.Installed, RunningStatus.Running));
                     return;
                 case ServiceControllerStatus.Stopped:
+                    Log.Logger.Information("EndpointDeception is Stopped");
                     toolRepository.CaptureEvent(new ToolStatus(ToolName.EndpointDeception, InstallStatus.Installed, RunningStatus.Stopped));
                     return;
                 default:
+                    Log.Logger.Information("There is Warning in EndpointDeception");
                     toolRepository.CaptureEvent(new ToolStatus(ToolName.EndpointDeception, InstallStatus.Installed, RunningStatus.Warning));
                     return;
             }
@@ -134,6 +142,7 @@ namespace IvsAgent
         {
             if (status == null)
             {
+                Log.Logger.Information("UserBehaviorAnalytics NotFound");
                 toolRepository.CaptureEvent(new ToolStatus(ToolName.UserBehaviorAnalytics, InstallStatus.NotFound, RunningStatus.NotFound));
                 return;
             }
@@ -142,12 +151,15 @@ namespace IvsAgent
             {
                 case ServiceControllerStatus.StartPending:
                 case ServiceControllerStatus.Running:
+                    Log.Logger.Information("UserBehaviorAnalytics is Running");
                     toolRepository.CaptureEvent(new ToolStatus(ToolName.UserBehaviorAnalytics, InstallStatus.Installed, RunningStatus.Running));
                     return;
                 case ServiceControllerStatus.Stopped:
+                    Log.Logger.Information("UserBehaviorAnalytics is Stopped");
                     toolRepository.CaptureEvent(new ToolStatus(ToolName.UserBehaviorAnalytics, InstallStatus.Installed, RunningStatus.Stopped));
                     return;
                 default:
+                    Log.Logger.Information("There is Warning in UserBehaviorAnalytics");
                     toolRepository.CaptureEvent(new ToolStatus(ToolName.UserBehaviorAnalytics, InstallStatus.Installed, RunningStatus.Warning));
                     return;
             }
@@ -157,6 +169,7 @@ namespace IvsAgent
         {
             if (status == null)
             {
+                Log.Logger.Information("AdvanceTelemetry NotFound");
                 toolRepository.CaptureEvent(new ToolStatus(ToolName.AdvanceTelemetry, InstallStatus.NotFound, RunningStatus.NotFound));
                 return;
             }
@@ -165,12 +178,15 @@ namespace IvsAgent
             {
                 case ServiceControllerStatus.StartPending:
                 case ServiceControllerStatus.Running:
+                    Log.Logger.Information("AdvanceTelemetry is Running");
                     toolRepository.CaptureEvent(new ToolStatus(ToolName.AdvanceTelemetry, InstallStatus.Installed, RunningStatus.Running));
                     return;
                 case ServiceControllerStatus.Stopped:
+                    Log.Logger.Information("AdvanceTelemetry is Stopped");
                     toolRepository.CaptureEvent(new ToolStatus(ToolName.AdvanceTelemetry, InstallStatus.Installed, RunningStatus.Stopped));
                     return;
                 default:
+                    Log.Logger.Information("There is Warning in AdvanceTelemetry");
                     toolRepository.CaptureEvent(new ToolStatus(ToolName.AdvanceTelemetry, InstallStatus.Installed, RunningStatus.Warning));
                     return;
             }
@@ -180,6 +196,7 @@ namespace IvsAgent
         {
             if (status == null)
             {
+                Log.Logger.Information("LateralMovementProtection NotFound");
                 toolRepository.CaptureEvent(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.NotFound, RunningStatus.NotFound));
                 return;
             }
@@ -188,12 +205,15 @@ namespace IvsAgent
             {
                 case ServiceControllerStatus.StartPending:
                 case ServiceControllerStatus.Running:
+                    Log.Logger.Information("LateralMovementProtection is Running");
                     toolRepository.CaptureEvent(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.Installed, RunningStatus.Running));
                     return;
                 case ServiceControllerStatus.Stopped:
+                    Log.Logger.Information("LateralMovementProtection is Stopped");
                     toolRepository.CaptureEvent(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.Installed, RunningStatus.Stopped));
                     return;
                 default:
+                    Log.Logger.Information("There is Warning in LateralMovementProtection");
                     toolRepository.CaptureEvent(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.Installed, RunningStatus.Warning));
                     return;
             }
@@ -221,7 +241,7 @@ namespace IvsAgent
                 await Task.Delay(5000);
                 VerifyDependencyAndInstall();
             });
-            
+
             _logger.Information("Task added...");
             toolRepository.CaptureEvent(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.Installed, RunningStatus.Running));
         }
@@ -292,7 +312,14 @@ namespace IvsAgent
         protected override void OnShutdown()
         {
             _logger.Information("System is shutting down");
-            Stop();
+            string serviceName = "IvsAgent";
+
+            ServiceController[] services = ServiceController.GetServices();
+            ServiceController sc = services.FirstOrDefault(s => s.ServiceName == serviceName);
+            if (sc != null) 
+            { 
+                sc.Stop();
+            }
             base.OnShutdown();
         }
 
@@ -335,29 +362,29 @@ namespace IvsAgent
                 // No antivirus is detected
                 currentAvStatus = InstallStatus.Error;
                 currentRunningStatus = RunningStatus.Stopped;
-                _logger.Information($"AvName:{enabledAvStatus.AvName},CurrentStatus: {currentAvStatus},RunningStatus:{currentRunningStatus}");
+                _logger.Information($"{enabledAvStatus.AvName} is {currentRunningStatus}");
             }
             else if (enabledAvStatus != null)
             {
                 // An enabled and up-to-date antivirus is detected
                 currentAvStatus = InstallStatus.Installed;
                 currentRunningStatus = RunningStatus.Running;
-                _logger.Information($"AvName:{enabledAvStatus.AvName},CurrentStatus: {currentAvStatus},RunningStatus:{currentRunningStatus}");
+                _logger.Information($"{enabledAvStatus.AvName} is {currentRunningStatus}");
             }
             else
             {
                 // A disabled antivirus is detected
                 currentAvStatus = InstallStatus.Installed;
-                currentRunningStatus = RunningStatus.Warning;
-                _logger.Information($"AvName:{disabledAvStatus.AvName},CurrentStatus: {currentAvStatus},RunningStatus:{currentRunningStatus}");
+                currentRunningStatus = RunningStatus.Error;
+                _logger.Information($"{disabledAvStatus.AvName} is having {currentRunningStatus}");
             }
 
             if (avLastStatus != currentAvStatus)
             {
-                _logger.Information($"Antivirus status changed: Last: {avLastStatus}, New: {currentAvStatus}");
+                _logger.Information($"Antivirus status changed from {avLastStatus} to {currentAvStatus}");
                 avLastStatus = currentAvStatus;
             }
-
+          
             toolRepository.CaptureEvent(new ToolStatus(ToolName.EndpointProtection, currentAvStatus, currentRunningStatus));
 
             inTimer = false;

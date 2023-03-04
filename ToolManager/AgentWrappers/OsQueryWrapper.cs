@@ -45,7 +45,8 @@ namespace ToolManager.AgentWrappers
 
                 var logPath = CommonUtils.DataFolder + "\\osqueryInstall.log";
 
-                _logger.Information("PATH,Log", new { PATH=$"{msiPath}", Log=$"{logPath}" });
+                _logger.Information($"OsQuery msiPath {msiPath}");
+                _logger.Information($"OsQuery logPath {logPath}");
 
                 Process installerProcess = new Process
                 {
@@ -115,7 +116,7 @@ namespace ToolManager.AgentWrappers
         {
             try
             {
-
+                bool status = false;
                 ServiceController ctl = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName == "osqueryd");
 
                 if (ctl == null)
@@ -131,13 +132,16 @@ namespace ToolManager.AgentWrappers
                     return 1618;
                 }
                 _logger.Information("OSQUERY Uninstallation is ready");
+                     
+                //Checking if file is exists or not
+                if(Verify(true)==0)
+                {
+                        status = MsiPackageWrapper.Uninstall("osquery");
 
-                var logPath = CommonUtils.DataFolder + "\\osqueryInstall.log";
+                        _logger.Information("OSQUERY uninstall started...");
 
-                var status = MsiPackageWrapper.Uninstall("osquery", logPath);
-
-                _logger.Information("OSQUERY uninstall started...");
-
+                }
+                
                 return status ? 0 : 1;
 
             }

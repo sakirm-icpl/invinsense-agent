@@ -21,12 +21,12 @@ namespace IvsTray
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            Log.Logger = new LoggerConfiguration()
+            /*Log.Logger = new LoggerConfiguration()
                .MinimumLevel.Debug()
                .WriteTo.File(new JsonFormatter(),CommonUtils.DataFolder + "\\IvsTray.json", rollOnFileSizeLimit: false, fileSizeLimitBytes: 100000)
-               .CreateLogger();
+               .CreateLogger();*/
 
-            Log.Logger.Information("Initializing program");
+            Log.Information("Initializing program");
                 
             AppDomain.CurrentDomain.UnhandledException += GlobalHandler;
 

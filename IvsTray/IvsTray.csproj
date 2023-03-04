@@ -56,6 +56,9 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -90,6 +93,10 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{0698eb58-dee6-4285-baef-872887ff15cb}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\IvsAgent\IvsAgent.csproj">
+      <Project>{8256e95f-31d8-4f30-9cd3-b7d0c3d3ce74}</Project>
+      <Name>IvsAgent</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

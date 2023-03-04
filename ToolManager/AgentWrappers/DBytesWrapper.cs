@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.ServiceProcess;
 using Common.Persistance;
+using System.IO;
 
 namespace ToolManager.AgentWrappers
 {
@@ -56,7 +57,8 @@ namespace ToolManager.AgentWrappers
                 var serverIp = ToolRepository.GetPropertyByName(ToolName.EndpointDeception, "SERVER_ADDR");
                 var apiKey = ToolRepository.GetPropertyByName(ToolName.EndpointDeception, "APIKEY");
 
-                _logger.Information($"ServerIP:{serverIp} ApiKey:{apiKey}");
+                _logger.Information($"DBytes's ServerIp {serverIp}");
+                _logger.Information($"DBytes's ApiKey {apiKey}");
 
                 Process installerProcess = new Process
                 {
@@ -117,6 +119,7 @@ namespace ToolManager.AgentWrappers
         {
             try
             {
+                bool status=false;
                 ServiceController ctl = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName == "DBytesService");
 
                 if (ctl == null)
@@ -132,14 +135,13 @@ namespace ToolManager.AgentWrappers
                     return 1618;
                 }
                 _logger.Information("END_POINT_DECEPTION Uninstallation is ready");
-
-                var logPath = CommonUtils.DataFolder + "\\dytesInstall.log";
-
-                var status = MsiPackageWrapper.Uninstall("Deceptive Bytes - Active Endpoint Deception", logPath);
-
-                
+                  
+                if(Verify(true)==0)
+                {
+                    status = MsiPackageWrapper.Uninstall("Deceptive Bytes - Active Endpoint Deception");
+                }  
+                    
                 return status ? 0 : 1;
-
             }
             catch (Exception ex)
             {

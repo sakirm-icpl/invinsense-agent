@@ -88,9 +88,9 @@
             return code;
         }
 
-        public override string ToString()
+        /*public override string ToString()
         {
             return $"{Name} Install: {InstallStatus} Running: {RunningStatus}";
-        }
+        }*/
     }
 }

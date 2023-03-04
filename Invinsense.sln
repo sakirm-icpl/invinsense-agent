@@ -10,6 +10,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{0698EB58-DEE6-4285-BAEF-872887FF15CB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6089DA97-C5D7-49BB-BA04-BF1F9413896F}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "InvinSetup", "InvinSetup\InvinSetup.wixproj", "{EA0BF198-F9BD-4244-99DC-5135B0F45D74}"
 EndProject

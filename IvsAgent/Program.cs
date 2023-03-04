@@ -23,8 +23,9 @@ namespace IvsAgent
                 new JsonFormatter(),
                 CommonUtils.DataFolder + "\\ivsagent.json",
                 rollOnFileSizeLimit: false,
-                fileSizeLimitBytes: 10000)
+                fileSizeLimitBytes: 30000)
            .CreateLogger();
+            //var logger = JsonFormatLogger.JsonLogger.ConfigureLogger();
 
             Log.Information("Initializing service");
 

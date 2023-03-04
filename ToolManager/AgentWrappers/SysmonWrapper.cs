@@ -38,42 +38,47 @@ namespace ToolManager.AgentWrappers
 
                 var logPath = CommonUtils.DataFolder + "\\sysmonInstall.log";
 
-                _logger.Information($"PATH:{exePath},Log={logPath}");
+                _logger.Information($"Sysmon exePath {exePath}");
+                _logger.Information($"Sysmon logPath {logPath}");
 
-                Process installerProcess = new Process
-                {
-                    StartInfo = new ProcessStartInfo
+               if(File.Exists(exePath))
+               {
+                    Process installerProcess = new Process
                     {
-                        FileName = exePath,
-                        Arguments = $"-accepteula -i",
-                        WindowStyle = ProcessWindowStyle.Hidden,
-                        CreateNoWindow = true,
-                        WorkingDirectory = CommonUtils.RootFolder
+                        StartInfo = new ProcessStartInfo
+                        {
+                            FileName = exePath,
+                            Arguments = $"-accepteula -i",
+                            WindowStyle = ProcessWindowStyle.Hidden,
+                            CreateNoWindow = true,
+                            WorkingDirectory = CommonUtils.RootFolder
+                        }
+                    };
+
+                    installerProcess.OutputDataReceived += InstallerProcess_OutputDataReceived;
+                    installerProcess.ErrorDataReceived += InstallerProcess_ErrorDataReceived;
+                    installerProcess.Exited += InstallerProcess_Exited;
+
+                    installerProcess.Start();
+
+                    _logger.Information("SYSMON Installation started...");
+
+                    installerProcess.WaitForExit();
+
+                    var exitCode = installerProcess.ExitCode;
+
+                    if (exitCode == 0)
+                    {
+                        _logger.Information("SYSMON installation completed");
+                        return 0;
                     }
-                };
-
-                installerProcess.OutputDataReceived += InstallerProcess_OutputDataReceived;
-                installerProcess.ErrorDataReceived += InstallerProcess_ErrorDataReceived;
-                installerProcess.Exited += InstallerProcess_Exited;
-
-                installerProcess.Start();
-
-                _logger.Information("SYSMON Installation started...");
-
-                installerProcess.WaitForExit();
-
-                var exitCode = installerProcess.ExitCode;
-
-                if (exitCode == 0)
-                {
-                    _logger.Information("SYSMON installation completed");
-                    return 0;
+                    else
+                    {
+                        _logger.Information($"SYSMON installation fault: {exitCode}");
+                        return exitCode;
+                    }
                 }
-                else
-                {
-                    _logger.Information($"SYSMON installation fault: {exitCode}");
-                    return exitCode;
-                }
+                return 0;
             }
             catch (Exception ex)
             {
@@ -101,6 +106,7 @@ namespace ToolManager.AgentWrappers
         {
             try
             {
+                var exitCode=-1;
                 ServiceController ctl = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName == "Sysmon64");
 
                 if (ctl == null)
@@ -112,41 +118,46 @@ namespace ToolManager.AgentWrappers
 
                 var exePath = CommonUtils.GetAbsoletePath("C:\\Windows\\Sysmon64.exe");
 
-                _logger.Information($"PATH:{exePath}");
+                _logger.Information($"Sysmon exepath {exePath}");
 
-                Process installerProcess = new Process
+                if(Verify(true)==0)
                 {
-                    StartInfo = new ProcessStartInfo
+                    if(File.Exists(exePath))
                     {
-                        FileName = exePath,
-                        Arguments = $"-accepteula -u",
-                        WindowStyle = ProcessWindowStyle.Hidden,
-                        CreateNoWindow = true,
-                        WorkingDirectory = CommonUtils.RootFolder
+                        Process installerProcess = new Process
+                        {
+                            StartInfo = new ProcessStartInfo
+                            {
+                                FileName = exePath,
+                                Arguments = $"-accepteula -u",
+                                WindowStyle = ProcessWindowStyle.Hidden,
+                                CreateNoWindow = true,
+                                WorkingDirectory = CommonUtils.RootFolder
+                            }
+                        };
+
+                        installerProcess.OutputDataReceived += InstallerProcess_OutputDataReceived;
+                        installerProcess.ErrorDataReceived += InstallerProcess_ErrorDataReceived;
+                        installerProcess.Exited += InstallerProcess_Exited;
+
+                        installerProcess.Start();
+
+                        _logger.Information("SYSMON Uninstallation started...");
+
+                        installerProcess.WaitForExit();
+
+                        exitCode = installerProcess.ExitCode;
+
+                        if (exitCode == 0)
+                        {
+                            _logger.Information("SYSMON Uninstallation completed");
+                        }
+                        else
+                        {
+                            _logger.Information($"SYSMON Uninstallation fault: {exitCode}");
+                        }
                     }
-                };
-
-                installerProcess.OutputDataReceived += InstallerProcess_OutputDataReceived;
-                installerProcess.ErrorDataReceived += InstallerProcess_ErrorDataReceived;
-                installerProcess.Exited += InstallerProcess_Exited;
-
-                installerProcess.Start();
-
-                _logger.Information("SYSMON Uninstallation started...");
-
-                installerProcess.WaitForExit();
-
-                var exitCode = installerProcess.ExitCode;
-
-                if (exitCode == 0)
-                {
-                    _logger.Information("SYSMON Uninstallation completed");
                 }
-                else
-                {
-                    _logger.Information($"SYSMON Uninstallation fault: {exitCode}");
-                }
-
                 return exitCode;
             }
             catch (Exception ex)

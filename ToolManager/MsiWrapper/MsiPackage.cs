@@ -1,6 +1,7 @@
 ﻿using Serilog;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
 
 namespace ToolManager.MsiWrapper
@@ -69,47 +70,46 @@ namespace ToolManager.MsiWrapper
         /// Uninstalls the program.
         /// </summary>
         /// <returns>True if the uninstallation succeeded, otherwise false</returns>
-        public static bool Uninstall(string packageName, string logFile, params string[] args)
+        public static bool Uninstall(string packageName, params string[] args)
         {
             var uninstallResult = false;
 
             try
             {
                 Log.Information("Beginning MSI package uninstallation");
+                    string identifier = MoWrapper.GetPackageIdentifier(packageName);
 
-                string identifier = MoWrapper.GetPackageIdentifier(packageName);
+                    if (string.IsNullOrEmpty(identifier))
+                    {
+                        return false;
+                    }
 
-                if(string.IsNullOrEmpty(identifier))
-                {
-                    return false;
-                }
+                    string arguments = $"/x \"{identifier}\" /quiet";
 
-                string arguments = $"/x \"{identifier}\" /quiet";
+                    // /l = Logging enabled
+                    //  * = Log everything
+                    //  v = Verbose output
+                    //  x = Extra debugging information
+                    //arguments += $" /l*vx \"{logFile}\"";
 
-                // /l = Logging enabled
-                //  * = Log everything
-                //  v = Verbose output
-                //  x = Extra debugging information
-                arguments += $" /l*vx \"{logFile}\"";
+                    foreach (var arg in args)
+                    {
+                        arguments += $" {arg}";
+                    }
 
-                foreach (var arg in args)
-                {
-                    arguments += $" {arg}";
-                }
+                    using (Process p = ProcessHelper.CreateHiddenProcess(WindowsInstallerProgramName, arguments))
+                    {
+                        Log.Information("Starting process '{0}'", p.StartInfo.FileName);
+                        p.Start();
+                        p.WaitForExit();
 
-                using (Process p = ProcessHelper.CreateHiddenProcess(WindowsInstallerProgramName, arguments))
-                {
-                    Log.Information("Starting process '{0}'", p.StartInfo.FileName);
-                    p.Start();
-                    p.WaitForExit();
+                        string uninstallResultDescription = ((MsiExitCode)p.ExitCode).GetEnumDescription();
+                        Log.Information("MSI package uninstall result: ({0}) {1}", p.ExitCode, uninstallResultDescription);
 
-                    string uninstallResultDescription = ((MsiExitCode)p.ExitCode).GetEnumDescription();
-                    Log.Information("MSI package uninstall result: ({0}) {1}", p.ExitCode, uninstallResultDescription);
+                        if (p.ExitCode != 0) throw new Exception(uninstallResultDescription);
+                    }
 
-                    if (p.ExitCode != 0) throw new Exception(uninstallResultDescription);
-                }
-
-                Log.Information("Uninstallation completed");
+                    Log.Information("Uninstallation completed");
             }
             catch (Exception ex)
             {

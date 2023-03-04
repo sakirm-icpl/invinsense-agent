@@ -46,13 +46,16 @@ namespace ToolManager.AgentWrappers
 
                 var logPath = CommonUtils.DataFolder + "\\wazuhInstall.log";
 
-                _logger.Information($"PATH:{msiPath},Log:{logPath}");
+                _logger.Information($"Wazuh's msiPath {msiPath}");
+                _logger.Information($"Wazuh's logPath {logPath}");
 
                 var managerIp = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "MANAGER_ADDR");
                 var registrationIp = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "REGISTRATION_SERVER_ADDR");
                 var agentGroup = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "AGENT_GROUP");
 
-                _logger.Information($"ManagerIP:{managerIp},RegistrationIP:{registrationIp},AgentGroup:{agentGroup}");
+                _logger.Information($"Wazuh's ManagerIp {managerIp}");
+                _logger.Information($"Wazuh's RegistrationIP {registrationIp}");
+                _logger.Information($"Wazuh's AgentGroup {agentGroup}");
 
                 Process installerProcess = new Process
                 {
@@ -149,7 +152,7 @@ namespace ToolManager.AgentWrappers
         {
             try
             {
-
+                bool status = false;
                 ServiceController ctl = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName == "WazuhSvc");
 
                 if (ctl == null)
@@ -166,10 +169,11 @@ namespace ToolManager.AgentWrappers
                 }
                 _logger.Information("END_POINT_DETECTION_AND_RESPONSE Uninstallation is ready");
 
-                var logPath = CommonUtils.DataFolder + "\\wazuhInstall.log";
-
-                var status = MsiPackageWrapper.Uninstall("Wazuh Agent", logPath);
-
+                //Checking if file is exists or not
+                if(Verify(true) == 0)
+                {
+                        status = MsiPackageWrapper.Uninstall("Wazuh Agent");
+                }
                 
                 return status ? 0 : 1;
 
