@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Diagnostics.PerformanceData;
-using System.Text.RegularExpressions;
 using System.Threading;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace ProcessMonitorTest
 {
-    internal class PerfMonSample
+    /// <summary>
+    /// https://michaelscodingspot.com/performance-counters/
+    /// https://michaelscodingspot.com/find-fix-and-avoid-memory-leaks-in-c-net-8-best-practices/
+    /// </summary>
+    public class PerfMonSample
     {
         /// <summary>
         /// 
