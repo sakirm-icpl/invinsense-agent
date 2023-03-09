@@ -38,7 +38,7 @@ namespace ProcessMonitorTest
 
             while (!Console.KeyAvailable)
             {
-                System.Threading.Thread.Sleep(1000);
+                Thread.Sleep(1000);
 
                 long usedMemory = currentProcess.PrivateMemorySize64;
                 
