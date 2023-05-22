@@ -57,6 +57,10 @@
   <ItemGroup>
     <Folder Include="Assets" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\green_logo_22_22.ico" />
+    <Content Include="readme.txt" />
+  </ItemGroup>
   <Import Project="$(WixTargetsPath)" Condition=" '$(WixTargetsPath)' != '' " />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets" Condition=" '$(WixTargetsPath)' == '' AND Exists('$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets') " />
   <Target Name="EnsureWixToolsetInstalled" Condition=" '$(WixTargetsImported)' != 'true' ">
