@@ -1,9 +1,9 @@
-﻿using Microsoft.Deployment.WindowsInstaller;
-using System.IO;
+﻿using System.IO;
 using System;
 using System.Linq;
 using System.ServiceProcess;
 using Common.Utils;
+using WixToolset.Dtf.WindowsInstaller;
 
 namespace ToolManager
 {
@@ -98,7 +98,7 @@ namespace ToolManager
                     service.WaitForStatus(ServiceControllerStatus.Stopped);
                 }
 
-                session.Log($"Invinsense service stauts: {service.Status}");
+                session.Log($"Invinsense service status: {service.Status}");
             }
             else
             {

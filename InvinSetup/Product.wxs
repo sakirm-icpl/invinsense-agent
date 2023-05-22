@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- The name of the product -->
+﻿<!-- The name of the product -->
 <?define Name = "Invinsense" ?>
 <!-- The Description of the product -->
 <?define Description = "Invinsense 4.0 Agent" ?>
@@ -18,7 +17,7 @@
 <!-- The name of the Cabinet -->
 <?define CabName = "Invinsense.cab" ?>
 
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util">
 
 	<!--Variable for Agent Service Directory-->
 	<?define Agent_Service_TargetDir=$(var.IvsAgent.TargetDir)?>
@@ -26,15 +25,13 @@
 	<!--Variable for Sample Application Directory-->
 	<?define Tray_Application_TargetDir=$(var.IvsTray.TargetDir)?>
 
-	<Product Id="*" Name="$(var.Name)" Manufacturer="$(var.Manufacturer)" UpgradeCode="$(var.UpgradeCode)" Version="$(var.Version)" Language="1033">
+	<Package Name="$(var.Name)" Manufacturer="$(var.Manufacturer)" UpgradeCode="$(var.UpgradeCode)" Version="$(var.Version)" Language="1033" InstallerVersion="200">
 
 		<!--Setup or Installer with properties-->
-		<Package Id="*" InstallerVersion="200" Compressed="yes" InstallScope="perMachine" Manufacturer="$(var.Manufacturer)" Platform="x64"/>
+		<SummaryInformation Manufacturer="$(var.Manufacturer)" />
 
 		<!-- Allow upgrades and prevent downgrades -->
-		<MajorUpgrade
-			Schedule="afterInstallInitialize"
-			DowngradeErrorMessage="A newer version of [ProductName] is already installed."/>
+		<MajorUpgrade Schedule="afterInstallInitialize" DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
 
 		<!--Embed Cabinet into single msi file-->
 		<MediaTemplate EmbedCab="yes" />
@@ -42,58 +39,46 @@
 		<!--User provided Property values in registry keys and use a RegistrySearch to read them back out for repair, upgrade and uninstall-->
 
 		<!--Fetch property of WAZUH_MANAGER-->
-		<Property Id='WAZUH_MANAGER'>
-			<RegistrySearch Id='WazuhManagerIp' Root='HKLM'
-							Key='SOFTWARE\infopercxept'
-							Name='WAZUH_MANAGER' Type='raw' />
+		<Property Id="WAZUH_MANAGER">
+			<RegistrySearch Id="WazuhManagerIp" Root="HKLM" Key="SOFTWARE\infopercxept" Name="WAZUH_MANAGER" Type="raw" />
 		</Property>
 
 		<!--Fetch property of WAZUH_REGISTRATION_SERVER-->
-		<Property Id='WAZUH_REGISTRATION_SERVER'>
-			<RegistrySearch Id='WazuhRegistrationIp' Root='HKLM'
-							Key='SOFTWARE\infopercxept'
-							Name='WAZUH_REGISTRATION_SERVER' Type='raw' />
+		<Property Id="WAZUH_REGISTRATION_SERVER">
+			<RegistrySearch Id="WazuhRegistrationIp" Root="HKLM" Key="SOFTWARE\infopercxept" Name="WAZUH_REGISTRATION_SERVER" Type="raw" />
 		</Property>
 
 		<!--Fetch property of WAZUH_AGENT_GROUP-->
-		<Property Id='WAZUH_AGENT_GROUP'>
-			<RegistrySearch Id='WazuhAgentGroup' Root='HKLM'
-							Key='SOFTWARE\infopercxept'
-							Name='WAZUH_AGENT_GROUP' Type='raw' />
+		<Property Id="WAZUH_AGENT_GROUP">
+			<RegistrySearch Id="WazuhAgentGroup" Root="HKLM" Key="SOFTWARE\infopercxept" Name="WAZUH_AGENT_GROUP" Type="raw" />
 		</Property>
 		
 		<!--Fetch property of SKIP_ENDPOINT_DECEPTION-->
-		<Property Id='SKIP_ENDPOINT_DECEPTION'>
-			<RegistrySearch Id='SkipDbytesId' Root='HKLM'
-							Key='SOFTWARE\infopercxept'
-							Name='SKIP_ENDPOINT_DECEPTION' Type='raw' />
+		<Property Id="SKIP_ENDPOINT_DECEPTION">
+			<RegistrySearch Id="SkipDbytesId" Root="HKLM" Key="SOFTWARE\infopercxept" Name="SKIP_ENDPOINT_DECEPTION" Type="raw" />
 		</Property>
 		
 		<!--Fetch property of DBYTES_SERVER-->
-		<Property Id='DBYTES_SERVER'>
-			<RegistrySearch Id='DeceptiveBytesIp' Root='HKLM'
-							Key='SOFTWARE\infopercxept'
-							Name='DBYTES_SERVER' Type='raw' />
+		<Property Id="DBYTES_SERVER">
+			<RegistrySearch Id="DeceptiveBytesIp" Root="HKLM" Key="SOFTWARE\infopercxept" Name="DBYTES_SERVER" Type="raw" />
 		</Property>
 
 		<!--Fetch property of DBYTES_APIKEY-->
-		<Property Id='DBYTES_APIKEY'>
-			<RegistrySearch Id='DeceptiveBytesApiKey' Root='HKLM'
-							Key='SOFTWARE\infopercxept'
-							Name='DBYTES_APIKEY' Type='raw'/>
+		<Property Id="DBYTES_APIKEY">
+			<RegistrySearch Id="DeceptiveBytesApiKey" Root="HKLM" Key="SOFTWARE\infopercxept" Name="DBYTES_APIKEY" Type="raw" />
 		</Property>
 
 		<!--Adding the icon for msi -->
-		<Icon Id="green_logo_22_22.ico" SourceFile="Assets\green_logo_22_22.ico"/>
+		<Icon Id="green_logo_22_22.ico" SourceFile="Assets\green_logo_22_22.ico" />
 		<Property Id="ARPPRODUCTICON" Value="green_logo_22_22.ico" />
 		
 		<!--Main Feature for this Setup which can be found in Fragment Tag with ComponentGroupRef Id-->
 		<Feature Id="ProductFeature" Title="$(var.Name)" Level="1">
-			<ComponentRef Id="ConfigurationValues"/>
+			<ComponentRef Id="ConfigurationValues" />
 			<ComponentGroupRef Id="AgentComponents" />
 			<ComponentGroupRef Id="TrayComponents" />
 			<ComponentGroupRef Id="ToolComponents" />
-			<ComponentGroupRef Id="PostInstallation"/>
+			<ComponentGroupRef Id="PostInstallation" />
 		</Feature>
 
 		<!--Tell MSI that restart should not be required-->
@@ -103,96 +88,94 @@
 		<util:CloseApplication Id="CloseTray" Target="IvsTray.exe" CloseMessage="yes" RebootPrompt="no"></util:CloseApplication>
 
 		<Binary Id="CustomActionBinary" SourceFile="$(var.CustomActions.TargetDir)$(var.CustomActions.TargetName).CA.dll" />
-		<CustomAction Id="CheckSessionVariables" BinaryKey="CustomActionBinary" DllEntry="CheckSessionParameters" Execute="immediate" Return="check" />
-		<CustomAction Id="StopAgentService" BinaryKey="CustomActionBinary" DllEntry="StopAgentService" Execute="immediate" Return="check" />
-		<CustomAction Id="VerifyRemoveKey" BinaryKey="CustomActionBinary" DllEntry="VerifyRemoveKey" Execute="immediate" Return="check" />
+		<CustomAction Id="CheckSessionVariables" DllEntry="CheckSessionParameters" Execute="immediate" Return="check" BinaryRef="CustomActionBinary" />
+		<CustomAction Id="StopAgentService" DllEntry="StopAgentService" Execute="immediate" Return="check" BinaryRef="CustomActionBinary" />
+		<CustomAction Id="VerifyRemoveKey" DllEntry="VerifyRemoveKey" Execute="immediate" Return="check" BinaryRef="CustomActionBinary" />
 
 		<InstallExecuteSequence>
-			<Custom Action="CheckSessionVariables" Before="LaunchConditions">NOT Installed</Custom>
-			<Custom Action="StopAgentService" Before="LaunchConditions">Installed</Custom>
-			<Custom Action="VerifyRemoveKey" Before="LaunchConditions">Installed AND ( REMOVE = "ALL" OR AI_INSTALL_MODE = "Remove" ) AND NOT UPGRADINGPRODUCTCODE</Custom>
+			<Custom Action="CheckSessionVariables" Before="LaunchConditions" Condition="NOT Installed" />
+			<Custom Action="StopAgentService" Before="LaunchConditions" Condition="Installed" />
+			<Custom Action="VerifyRemoveKey" Before="LaunchConditions" Condition="Installed AND ( REMOVE = &quot;ALL&quot; OR AI_INSTALL_MODE = &quot;Remove&quot; ) AND NOT UPGRADINGPRODUCTCODE" />
 		</InstallExecuteSequence>
 
-	</Product>
+	</Package>
 
 	<!--Fragment to save properties-->
 	<Fragment>
-		<Component Id="ConfigurationValues" Directory="ManufacturerFolder" Win64="yes">
+		<Component Id="ConfigurationValues" Directory="ManufacturerFolder" Bitness="always64">
 
 			<RegistryKey Root="HKLM" Key="SOFTWARE\Infopercept">
 
 				<RegistryKey Key="ENDPOINT_DETECTION_AND_RESPONSE">
 
 					<!--add property of WAZUH_MANAGER with value and place it to "SOFTWARE\infopercept" -->
-					<RegistryValue Name="MANAGER_ADDR" Value='[WAZUH_MANAGER]' Type='string' ></RegistryValue>
+					<RegistryValue Name="MANAGER_ADDR" Value="[WAZUH_MANAGER]" Type="string"></RegistryValue>
 
 					<!--add property of WAZUH_REGISTRATION_SERVER with value and place it to "SOFTWARE\infopercept" -->
-					<RegistryValue Name="REGISTRATION_SERVER_ADDR" Value='[WAZUH_REGISTRATION_SERVER]' Type='string' ></RegistryValue>
+					<RegistryValue Name="REGISTRATION_SERVER_ADDR" Value="[WAZUH_REGISTRATION_SERVER]" Type="string"></RegistryValue>
 
 					<!--add property of WAZUH_AGENT_GROUP with value and place it to "SOFTWARE\infopercept" -->
-					<RegistryValue Name="AGENT_GROUP" Value='[WAZUH_AGENT_GROUP]' Type='string' ></RegistryValue>
+					<RegistryValue Name="AGENT_GROUP" Value="[WAZUH_AGENT_GROUP]" Type="string"></RegistryValue>
 					
-					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string" ></RegistryValue>
-					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string" ></RegistryValue>
+					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string"></RegistryValue>
+					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string"></RegistryValue>
 				</RegistryKey>
 
 				<RegistryKey Key="ADVANCE_TELEMETRY">
-					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string" ></RegistryValue>
-					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string" ></RegistryValue>
+					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string"></RegistryValue>
+					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string"></RegistryValue>
 				</RegistryKey>
 
 				<RegistryKey Key="USER_BEHAVIOUR_ANALYTICS">
-					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string" ></RegistryValue>
-					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string" ></RegistryValue>
+					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string"></RegistryValue>
+					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string"></RegistryValue>
 				</RegistryKey>
 
 				<RegistryKey Key="ENDPOINT_DECEPTION">
 					<!--add property of SKIP_DBYTES with value and place it to "SOFTWARE\infopercept" -->
-					<RegistryValue Name='SKIP_MONITORING' Value='[SKIP_ENDPOINT_DECEPTION]' Type='string' />
+					<RegistryValue Name="SKIP_MONITORING" Value="[SKIP_ENDPOINT_DECEPTION]" Type="string" />
 
 					<!--add property of DBYTES_SERVER with value and place it to "SOFTWARE\infopercept" -->
-					<RegistryValue Name='SERVER_ADDR' Value='[DBYTES_SERVER]' Type='string' />
+					<RegistryValue Name="SERVER_ADDR" Value="[DBYTES_SERVER]" Type="string" />
 
 					<!--add property of DBYTES_APIKEY with value and place it to "SOFTWARE\infopercept" -->
-					<RegistryValue Name='APIKEY' Value='[DBYTES_APIKEY]' Type='string' />
+					<RegistryValue Name="APIKEY" Value="[DBYTES_APIKEY]" Type="string" />
 					
-					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string" ></RegistryValue>
-					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string" ></RegistryValue>
+					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string"></RegistryValue>
+					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string"></RegistryValue>
 				</RegistryKey>
 
 				<RegistryKey Key="ENDPOINT_PROTECTION">
-					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string" ></RegistryValue>
-					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string" ></RegistryValue>
+					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string"></RegistryValue>
+					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string"></RegistryValue>
 				</RegistryKey>
 
 				<RegistryKey Key="LMP">
-					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string" ></RegistryValue>
-					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string" ></RegistryValue>
+					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string"></RegistryValue>
+					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string"></RegistryValue>
 				</RegistryKey>
 
 			</RegistryKey>
 			<!--Removing old registry key before fresh installation-->
-			<RemoveRegistryKey Action="removeOnInstall" Key="SOFTWARE\Infopercept" Root="HKLM"/>
-			<RemoveFile Id="RemoveOldLogId" Name="*.*" On="install" Directory="ManufacturerFolder"/>
+			<RemoveRegistryKey Action="removeOnInstall" Key="SOFTWARE\Infopercept" Root="HKLM" />
+			<RemoveFile Id="RemoveOldLogId" Name="*.*" On="install" Directory="ManufacturerFolder" />
 		</Component>
 	</Fragment>
 
 	<!--Fragment with details of installation directory-->
 	<Fragment>
-		<Directory Id="TARGETDIR" Name="SourceDir">
-			<Directory Id="ProgramFiles64Folder">
+			<StandardDirectory Id="ProgramFiles64Folder">
 				<Directory Id="ManufacturerFolder" Name="!(bind.property.Manufacturer)">
 					<Directory Id="AGENTFOLDER" Name="$(var.AgentName)" />
 					<Directory Id="TRAYFOLDER" Name="$(var.TrayName)" />
 					<Directory Id="ARTIFACTSFOLDER" Name="$(var.ArtifactsName)" />
 				</Directory>
-			</Directory>
-		</Directory>
-	</Fragment>
+			</StandardDirectory>
+		</Fragment>
 
 	<Fragment>
 		<ComponentGroup Id="AgentComponents" Directory="AGENTFOLDER">
-			<Component Id="a00" Guid="380bbddd-daa7-0744-517b-37da768f5570" Win64="yes">
+			<Component Id="a00" Guid="380bbddd-daa7-0744-517b-37da768f5570" Bitness="always64">
 				<File Id="a01" Source="$(var.Agent_Service_TargetDir)\Common.dll" />
 				<File Id="a02" Source="$(var.Agent_Service_TargetDir)\Common.pdb" />
 				<File Id="a03" Source="$(var.IvsAgent.TargetPath)" />
@@ -205,16 +188,16 @@
 				<File Id="a12" Source="$(var.Agent_Service_TargetDir)\Serilog.Sinks.File.dll" />
 				<File Id="a13" Source="$(var.Agent_Service_TargetDir)\Serilog.Sinks.File.pdb" />
 				<File Id="a14" Source="$(var.Agent_Service_TargetDir)\System.CodeDom.dll" />
-				<File Id="a15" Source="$(var.Agent_Service_TargetDir)\System.Security.Principal.Windows.dll"/>
+				<File Id="a15" Source="$(var.Agent_Service_TargetDir)\System.Security.Principal.Windows.dll" />
 				<!--Removing all the old files on building new msi file-->
-				<RemoveFile Id="AgentComponentsCopiedFiles" Name="*.*" On="install"/>
+				<RemoveFile Id="AgentComponentsCopiedFiles" Name="*.*" On="install" />
 			</Component>
 		</ComponentGroup>
 	</Fragment>
 
 	<Fragment>
 		<ComponentGroup Id="TrayComponents" Directory="TRAYFOLDER">
-			<Component Id="b00" Guid="7E588662-AE80-401C-B2DE-29BB4CF1ECF3" Win64="yes">
+			<Component Id="b00" Guid="7E588662-AE80-401C-B2DE-29BB4CF1ECF3" Bitness="always64">
 				<File Id="b01" Source="$(var.Tray_Application_TargetDir)\Common.dll" />
 				<File Id="b02" Source="$(var.Tray_Application_TargetDir)\Common.pdb" />
 				<File Id="b03" Source="$(var.IvsTray.TargetPath)" />
@@ -225,9 +208,9 @@
 				<File Id="b09" Source="$(var.Tray_Application_TargetDir)\Serilog.Sinks.File.dll" />
 				<File Id="b10" Source="$(var.Tray_Application_TargetDir)\Serilog.Sinks.File.pdb" />
 				<!--Removing all the old files on building new msi file-->
-				<RemoveFile Id="TrayComponentsCopiedFiles" Name="*.*" On="install"/>
+				<RemoveFile Id="TrayComponentsCopiedFiles" Name="*.*" On="install" />
 				<!--Removing the traycomponent folder-->
-				<RemoveFolder Id="TrayCompanentsFolder" Directory="TRAYFOLDER" On="install"/>
+				<RemoveFolder Id="TrayCompanentsFolder" Directory="TRAYFOLDER" On="install" />
 			</Component>
 		</ComponentGroup>
 		
@@ -235,7 +218,7 @@
 
 	<Fragment>
 		<ComponentGroup Id="ToolComponents" Directory="ARTIFACTSFOLDER">
-			<Component Id="c00" Guid="DEF1F99A-A721-4F70-87BC-92E13E47B0B1" Win64="yes">
+			<Component Id="c00" Guid="DEF1F99A-A721-4F70-87BC-92E13E47B0B1" Bitness="always64">
 				<File Id="c02" Source="..\artifacts\Sysmon\Sysmon64.exe" />
 				<File Id="c03" Source="..\artifacts\osquery\osquery-5.5.1.msi" />
 				<File Id="c04" Source="..\artifacts\osquery\osquery.conf" />
@@ -244,15 +227,15 @@
 				<File Id="c07" Source="..\artifacts\wazuh\local_internal_options.conf" />
 				<File Id="c08" Source="..\artifacts\dbytes\DeceptiveBytes.EPS.x64.msi" />
 				<!--Removing all the old files on building new msi file-->
-				<RemoveFile Id="ToolComponentsCopiedFiles" Name="*.*" On="install"/>
+				<RemoveFile Id="ToolComponentsCopiedFiles" Name="*.*" On="install" />
 			</Component>
 		</ComponentGroup>
 	</Fragment>
 
 	<Fragment>
 		<ComponentGroup Id="PostInstallation" Directory="AGENTFOLDER">
-			<Component Id="s0" Guid="868F4F33-6851-4169-B814-F25842A2D414" Win64="yes">
-				<File Id='AgentEXE' Name='IvsAgent' DiskId='1' Source='$(var.IvsAgent.TargetPath)' KeyPath='yes'/>
+			<Component Id="s0" Guid="868F4F33-6851-4169-B814-F25842A2D414" Bitness="always64">
+				<File Id="AgentEXE" Name="IvsAgent" DiskId="1" Source="$(var.IvsAgent.TargetPath)" KeyPath="yes" />
 				<ServiceInstall Id="s1" Name="IvsAgent" DisplayName="Invinsense 3.0" Description="Invinsense Service" ErrorControl="normal" Start="auto" Type="ownProcess" />
 				<ServiceControl Id="s2" Name="IvsAgent" Start="install" Stop="both" Remove="both" Wait="yes" />
 			</Component>

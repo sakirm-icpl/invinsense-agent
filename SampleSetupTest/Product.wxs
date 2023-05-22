@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
 	<!--For Small Updates Change the Package's ID attribute and the value of ID attribute is GUID -->
 	<!--For Minor Updates Change the Package's ID attribute and the value of ID attribute is GUID and Product's Version attribute-->
 
@@ -9,38 +8,32 @@
 	Change the Product's ID attribute and the value of ID attribute is GUID and Version attribute-->
 
 	<!--Generate the product that is msi file-->
-	<Product Id="*" Name="SampleSetupTest" Language="1033" Version="1.0.0.0" Manufacturer="MsiTest" UpgradeCode="bc34bc2c-ca3d-4423-9013-1eb0e62038bf">
-		<Package Id="*" InstallPrivileges="elevated" InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+	<Package Name="SampleSetupTest" Language="1033" Version="1.0.0.0" Manufacturer="MsiTest" UpgradeCode="bc34bc2c-ca3d-4423-9013-1eb0e62038bf" InstallerVersion="200">
+		
 
 		<!--For major upgrades removing the old files and replacing the files with the newer version use the Schedule attribute-->
-		<MajorUpgrade
-			Schedule="afterInstallInitialize"
-			DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
-		<MediaTemplate EmbedCab="yes"/>
+		<MajorUpgrade Schedule="afterInstallInitialize" DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate EmbedCab="yes" />
 
 		<!--Adding the files to the insattler-->
 		<Feature Id="ProductFeature" Title="SampleSetupTest" Level="1">
-			<ComponentGroupRef Id="ProductComponents"/>
+			<ComponentGroupRef Id="ProductComponents" />
 		</Feature>
-	</Product>
+	</Package>
 
 	<!--Creating the taget directory of our installer-->
 	<Fragment>
-		<Directory Id="TARGETDIR" Name="SourceDir">
-			<Directory Id="ProgramFilesFolder">
-				<Directory Id="INSTALLFOLDER" Name="MsiTest"/>
-			</Directory>
-		</Directory>
-	</Fragment>
+			<StandardDirectory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="MsiTest" />
+			</StandardDirectory>
+		</Fragment>
 	<!--Creating the which will bundle all the files at place it in the desired target folder-->
 	<Fragment>
 		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
 			<Component Id="AvMonitior" Guid="{F91E5AEB-C815-4929-8DD4-9D162027B171}">
 				<File Id="ReadmeId" Name="Readmetxt" Source="readme.txt"></File>
-				<File Id="ReadmeId" Name="Readmetxt" Source="readme123.txt"></File>
-				<File Id="ReadmeId" Name="Readmetxt" Source="readme124.txt"></File>
 				<!--Removing all the files on building new msi file-->
-				<RemoveFile Id="CopiedFiles" Name="*.*" On="install"/>
+				<RemoveFile Id="CopiedFiles" Name="*.*" On="install" />
 			</Component>
 		</ComponentGroup>
 	</Fragment>
