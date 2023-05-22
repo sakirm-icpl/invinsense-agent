@@ -7,7 +7,6 @@ using System.ServiceProcess;
 using System.Xml;
 using Common.Persistance;
 using ToolManager.MsiWrapper;
-using System.IO;
 
 namespace ToolManager.AgentWrappers
 {

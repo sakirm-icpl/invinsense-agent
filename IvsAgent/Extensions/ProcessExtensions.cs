@@ -157,7 +157,7 @@ namespace IvsAgent.Extensions
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        private struct WTS_SESSION_INFO
+        private readonly struct WTS_SESSION_INFO
         {
             public readonly uint SessionID;
 

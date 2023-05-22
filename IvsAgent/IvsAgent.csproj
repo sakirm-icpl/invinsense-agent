@@ -38,7 +38,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AgentServiceJasonData.cs" />
     <Compile Include="AvHelper\AvMonitor.cs" />
     <Compile Include="AvHelper\AVStatusFlags.cs" />
     <Compile Include="AvHelper\ProviderFlags.cs" />

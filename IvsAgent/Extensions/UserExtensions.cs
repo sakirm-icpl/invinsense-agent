@@ -38,21 +38,15 @@ namespace IvsAgent.Extensions
             {
                 DirectoryEntry AD = new DirectoryEntry("WinNT://" + Environment.MachineName + ",computer");
 
-                DirectoryEntry newUser = Search(username, "Name");
-
-                if (newUser == null)
-                {
-                    newUser = AD.Children.Add(username, "user");
-                }
-
-                newUser.Invoke("SetPassword", new object[] { GetRandomAlphanumericString(12) });
-                newUser.Invoke("Put", new object[] { "Description", "Maintenance User" });
-                newUser.CommitChanges();
+                DirectoryEntry directoryUser = Search(username, "Name") ?? AD.Children.Add(username, "user");
+                directoryUser.Invoke("SetPassword", new object[] { GetRandomAlphanumericString(12) });
+                directoryUser.Invoke("Put", new object[] { "Description", "Maintenance User" });
+                directoryUser.CommitChanges();
 
                 try
                 {
                     DirectoryEntry grp = AD.Children.Find("Users", "group");
-                    grp?.Invoke("Add", new object[] { newUser.Path.ToString() });
+                    grp?.Invoke("Add", new object[] { directoryUser.Path.ToString() });
                 } catch{ }
 
                 _logger.Information("Account Created Successfully");

@@ -15,6 +15,8 @@ namespace ToolManager
         [CustomAction]
         public static ActionResult RemoveOldDataFiles(Session session)
         {
+            session.Log("RemoveOldDataFiles");
+
             //Uninstalling the files before installing the agent
             try
             {

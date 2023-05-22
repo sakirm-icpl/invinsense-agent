@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.ServiceProcess;
 using Common.Persistance;
-using System.IO;
 
 namespace ToolManager.AgentWrappers
 {

@@ -1,12 +1,7 @@
-﻿using Common.Utils;
-using Serilog;
+﻿using Serilog;
 using System;
 using System.Threading;
 using System.Windows.Forms;
-using Serilog.Formatting.Json;
-using Microsoft.Win32;
-using System.ServiceProcess;
-using FluentAssertions.Common;
 
 namespace IvsTray
 {

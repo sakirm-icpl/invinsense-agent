@@ -26,8 +26,6 @@ namespace IvsAgent
         private readonly ExtendedServiceController LmpService;
 
         private readonly ILogger _logger = Log.ForContext<IvsService>();
-      
-        AgentServiceJasonData agentServiceJasonData=new AgentServiceJasonData();
 
         private readonly ToolRepository toolRepository;
 
@@ -38,7 +36,7 @@ namespace IvsAgent
             InitializeComponent();
 
             AutoLog = false;
-            
+
             //Allow service to handle shutdown
             CanShutdown = true;
 
@@ -47,7 +45,7 @@ namespace IvsAgent
 
             //Stop service to pause and continue
             CanPauseAndContinue = false;
-            
+
             CanHandleSessionChangeEvent = true;
 
             toolRepository = new ToolRepository();
@@ -71,15 +69,15 @@ namespace IvsAgent
         protected override void OnSessionChange(SessionChangeDescription changeDescription)
         {
             EventLog.WriteEntry($"IvsService.OnSessionChange {DateTime.Now.ToLongTimeString()} - Session change notice received: {changeDescription.Reason}  Session ID: {changeDescription.SessionId}");
-            
+
             switch (changeDescription.Reason)
             {
                 case SessionChangeReason.SessionLogon:
-                    EventLog.WriteEntry("IvsService.OnSessionChange: Logon");                    
+                    EventLog.WriteEntry("IvsService.OnSessionChange: Logon");
                     break;
 
                 case SessionChangeReason.SessionLogoff:
-                    EventLog.WriteEntry("IvsService.OnSessionChange Logoff");                    
+                    EventLog.WriteEntry("IvsService.OnSessionChange Logoff");
                     break;
             }
         }
@@ -222,14 +220,14 @@ namespace IvsAgent
         protected override void OnStart(string[] args)
         {
             if (_isRunning)
-            { 
+            {
                 _logger.Information("Invinsense service is already running.");
                 return;
             }
 
             _isRunning = true;
 
-            _logger.Information("Starting Invinsense service..." );
+            _logger.Information("Starting Invinsense service...");
 
             avTimer.Elapsed += new ElapsedEventHandler(OnElapsedTime);
             avTimer.Start();
@@ -254,7 +252,7 @@ namespace IvsAgent
             toolRepository.CaptureEvent(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.Installed, RunningStatus.Stopped));
 
             _isRunning = false;
-            base.RequestAdditionalTime(1000*60*2);
+            base.RequestAdditionalTime(1000 * 60 * 2);
             base.Stop();
         }
 
@@ -272,14 +270,14 @@ namespace IvsAgent
 
         protected override void OnCustomCommand(int command)
         {
-            _logger.Information($"CustomCommand {command }");
+            _logger.Information($"CustomCommand {command}");
             base.OnCustomCommand(command);
 
-            if(command == 130)
+            if (command == 130)
             {
                 Stop();
             }
-            else if(command==140)
+            else if (command == 140)
             {
                 var avStatuses = AvMonitor.ListAvStatuses();
 
@@ -293,7 +291,7 @@ namespace IvsAgent
                     _logger.Information($"{isVirus}");
                 }
             }
-            else if(command==141)
+            else if (command == 141)
             {
                 var avStatuses = AvMonitor.ListAvStatuses();
 
@@ -316,9 +314,14 @@ namespace IvsAgent
 
             ServiceController[] services = ServiceController.GetServices();
             ServiceController sc = services.FirstOrDefault(s => s.ServiceName == serviceName);
-            if (sc != null) 
-            { 
+            
+            if (sc != null)
+            {
                 sc.Stop();
+            }
+            else
+            {
+                _logger.Information($"Service {serviceName} not found");
             }
             base.OnShutdown();
         }
@@ -336,8 +339,8 @@ namespace IvsAgent
             inTimer = true;
 
             //Check the user seesion is active or not
-            bool isSessionActive = Process.GetProcesses().Any(p => p.SessionId> 0 && p.ProcessName !="Idel");
-            if (isSessionActive) 
+            bool isSessionActive = Process.GetProcesses().Any(p => p.SessionId > 0 && p.ProcessName != "Idel");
+            if (isSessionActive)
             {
                 if (ProcessExtensions.CheckProcessAsCurrentUser("IvsTray"))
                 {
@@ -384,12 +387,12 @@ namespace IvsAgent
                 _logger.Information($"Antivirus status changed from {avLastStatus} to {currentAvStatus}");
                 avLastStatus = currentAvStatus;
             }
-          
+
             toolRepository.CaptureEvent(new ToolStatus(ToolName.EndpointProtection, currentAvStatus, currentRunningStatus));
 
             inTimer = false;
         }
-        
+
         private void VerifyDependencyAndInstall()
         {
             if (SysmonWrapper.Verify(true) == 0)
@@ -437,8 +440,8 @@ namespace IvsAgent
             }
             else
             {
-                _logger.Information("Error in dBytes installer" );
-            }            
+                _logger.Information("Error in dBytes installer");
+            }
             _logger.Information("Adding fake user");
             UserExtensions.EnsureFakeUser("maintenance", "P@$$w0rd");
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Management;
 
 namespace ToolManager
@@ -13,7 +14,8 @@ namespace ToolManager
             try
             {
                 ManagementObjectSearcher mos = new ManagementObjectSearcher("SELECT * FROM Win32_Product");
-                foreach (ManagementObject mo in mos.Get())
+                IEnumerable<ManagementObject> collection = mos.Get().Cast<ManagementObject>();
+                foreach (ManagementObject mo in collection)
                 {
                     try
                     {
@@ -43,7 +45,7 @@ namespace ToolManager
 
             ManagementObjectSearcher mos = new ManagementObjectSearcher(searchString);
 
-            foreach (ManagementObject mo in mos.Get())
+            foreach (ManagementObject mo in mos.Get().Cast<ManagementObject>())
             {
                 // Will return Name, IdentifyingNumber and Version
                 try
@@ -69,7 +71,7 @@ namespace ToolManager
             {
                 ManagementObjectSearcher mos = new ManagementObjectSearcher("SELECT * FROM Win32_Product WHERE Name = '" + programName + "'");
 
-                foreach (ManagementObject mo in mos.Get())
+                foreach (ManagementObject mo in mos.Get().Cast<ManagementObject>())
                 {
                     try
                     {

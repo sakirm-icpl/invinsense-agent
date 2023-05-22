@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.ServiceProcess;
 using System.Threading;
-using System.Management;
 using ToolManager;
 using ToolManager.MsiWrapper;
 using System.DirectoryServices.AccountManagement;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
@@ -12,6 +13,8 @@ namespace Common.Net
     public class RetryPolicyHandler : DelegatingHandler
     {
         private readonly string _key;
+
+        private readonly ILogger _logger = Log.ForContext<RetryPolicyHandler>();
 
         public RetryPolicyHandler(string key)
         {
@@ -34,7 +37,7 @@ namespace Common.Net
 
                     if (response.StatusCode != HttpStatusCode.OK)
                     {
-                        //Add log here
+                        _logger.Verbose($"Response code of {nameof(RetryPolicyHandler)} : {response.StatusCode}");
                     }
 
                     if (response.StatusCode == HttpStatusCode.ServiceUnavailable)
@@ -57,6 +60,7 @@ namespace Common.Net
                 }
                 catch (Exception ex) when (IsNetworkError(ex))
                 {
+                    _logger.Error($"Network error for {nameof(RetryPolicyHandler)}");
                     // Network error
                     // Wait a bit and try again later
                     await Task.Delay(2000, cancellationToken);
