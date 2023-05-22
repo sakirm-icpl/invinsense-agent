@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Name>InvinSetup</Name>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <DefineConstants>Debug</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
