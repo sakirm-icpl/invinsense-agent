@@ -27,13 +27,13 @@ namespace ToolManager.AgentWrappers
                     return 0;
                 }
 
+                _logger.Information("END_POINT_DETECTION_AND_RESPONSE not found."); 
+                
                 if (ctl == null && !isInstall)
                 {
-                    _logger.Information("END_POINT_DETECTION_AND_RESPONSE not found and set for skip.");
+                    _logger.Information("END_POINT_DETECTION_AND_RESPONSE set for skip.");
                     return -1;
                 }
-
-                _logger.Information("END_POINT_DETECTION_AND_RESPONSE not found and set for skip.");
 
                 if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
                 {
@@ -43,7 +43,7 @@ namespace ToolManager.AgentWrappers
 
                 _logger.Information("END_POINT_DETECTION_AND_RESPONSE installation is ready");
 
-                var msiPath = CommonUtils.GetAbsoletePath("..\\artifacts\\wazuh\\wazuh-agent-4.3.10-1.msi");
+                var msiPath = CommonUtils.GetAbsoletePath("..\\artifacts\\wazuh-agent-4.3.10-1.msi");
 
                 var logPath = CommonUtils.DataFolder + "\\wazuhInstall.log";
 
