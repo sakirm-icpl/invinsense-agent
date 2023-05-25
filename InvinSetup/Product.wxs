@@ -231,7 +231,7 @@
 				<File Id="c03" Source="..\artifacts\osquery\osquery-5.5.1.msi" />
 				<File Id="c04" Source="..\artifacts\osquery\osquery.conf" />
 				<File Id="c05" Source="..\artifacts\osquery\osquery-packs.zip" />
-				<File Id="c06" Source="..\artifacts\wazuh\wazuh-agent-4.3.10-1.msi" />
+				<File Id="c06" Source="..\artifacts\wazuh\wazuh-agent-4.4.2-1.msi" />
 				<File Id="c07" Source="..\artifacts\wazuh\local_internal_options.conf" />
 				<File Id="c08" Source="..\artifacts\dbytes\DeceptiveBytes.EPS.x64.msi" />
 				<!--Removing all the old files on building new msi file-->
