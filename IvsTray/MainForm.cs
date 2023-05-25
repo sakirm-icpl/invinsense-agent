@@ -142,12 +142,12 @@ namespace IvsTray
             if (toolStatuses.Any(x=>x.Value != RunningStatus.Running))
             {
                 notifyIcon.Icon = Properties.Resources.red_logo_22_22;
-                notifyIcon.Text = "Invinsense 3.0 - Not all services are healthy";
+                notifyIcon.Text = $"{Constants.IvsDescription} - Not all services are healthy";
             }
             else
             {
                 notifyIcon.Icon = Properties.Resources.green_logo_22_22;
-                notifyIcon.Text = "Invinsense 3.0 - Healthy";
+                notifyIcon.Text = $"{Constants.IvsDescription} - Healthy";
             }
 
             if(showNotification)

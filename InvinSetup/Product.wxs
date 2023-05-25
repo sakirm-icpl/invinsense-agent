@@ -11,7 +11,7 @@
 <!-- The manufacturer, for other tools and folder info -->
 <?define ArtifactsName = "Artifacts" ?>
 <!-- The version number of this setup package-->
-<?define Version = "1.3.0.0" ?>
+<?define Version = "4.0.0.0" ?>
 <!-- UpgradeCode must be unique and not changed once the first version of the program is installed. -->
 <?define UpgradeCode = "{38ECE878-1645-4310-BD9A-B9CA57FE0DF0}" ?>
 <!-- The name of the Cabinet -->
@@ -236,7 +236,7 @@
 		<ComponentGroup Id="PostInstallation" Directory="AGENTFOLDER">
 			<Component Id="s0" Guid="868F4F33-6851-4169-B814-F25842A2D414" Bitness="always64">
 				<File Id="AgentEXE" Name="IvsAgent" DiskId="1" Source="$(var.IvsAgent.TargetPath)" KeyPath="yes" />
-				<ServiceInstall Id="s1" Name="IvsAgent" DisplayName="Invinsense 3.0" Description="Invinsense Service" ErrorControl="normal" Start="auto" Type="ownProcess" />
+				<ServiceInstall Id="s1" Name="IvsAgent" DisplayName="Invinsense 4.0" Description="Invinsense Service" ErrorControl="normal" Start="auto" Type="ownProcess" />
 				<ServiceControl Id="s2" Name="IvsAgent" Start="install" Stop="both" Remove="both" Wait="yes" />
 			</Component>
 		</ComponentGroup>

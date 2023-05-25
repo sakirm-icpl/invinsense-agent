@@ -7,6 +7,6 @@
         public const string IvsTrayName = "IvsTray";
 
         public const string IvsName = "Invinsense";
-        public const string IvsDescription = "Invinsense 3.0";
+        public const string IvsDescription = "Invinsense 4.0";
     }
 }
