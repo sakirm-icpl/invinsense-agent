@@ -61,9 +61,9 @@ namespace ToolManager
                 return ActionResult.Failure;
             }
 
-            if (string.IsNullOrEmpty(session["WAZUH_PASSWORD"]))
+            if (string.IsNullOrEmpty(session["WAZUH_REGISTRATION_PASSWORD"]))
             {
-                session.Log($"Required parameter 'WAZUH_PASSWORD' is missing. Installer will exit.");
+                session.Log($"Required parameter 'WAZUH_REGISTRATION_PASSWORD' is missing. Installer will exit.");
                 return ActionResult.Failure;
             }
 
