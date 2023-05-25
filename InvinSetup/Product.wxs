@@ -52,6 +52,11 @@
 		<Property Id="WAZUH_AGENT_GROUP">
 			<RegistrySearch Id="WazuhAgentGroup" Root="HKLM" Key="SOFTWARE\infopercxept" Name="WAZUH_AGENT_GROUP" Type="raw" />
 		</Property>
+
+		<!--Fetch property of WAZUH_PASSWORD-->
+		<Property Id="WAZUH_PASSWORD">
+			<RegistrySearch Id="WazuhPassword" Root="HKLM" Key="SOFTWARE\infopercxept" Name="WAZUH_PASSWORD" Type="raw" />
+		</Property>
 		
 		<!--Fetch property of SKIP_ENDPOINT_DECEPTION-->
 		<Property Id="SKIP_ENDPOINT_DECEPTION">

@@ -1,0 +1,13 @@
+<Project Sdk="WixToolset.Sdk/4.0.0">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <DefineConstants>Release</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="readme.txt" />
+    <Content Include="readme123.txt" />
+    <Content Include="readme124.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SampleCustomActions\SampleCustomActions.csproj" />
+  </ItemGroup>
+</Project>

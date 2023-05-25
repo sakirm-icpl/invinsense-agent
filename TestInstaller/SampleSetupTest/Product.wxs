@@ -9,7 +9,7 @@
 
 	<!--Generate the product that is msi file-->
 	<Package Name="SampleSetupTest" Language="1033" Version="1.0.0.0" Manufacturer="MsiTest" UpgradeCode="bc34bc2c-ca3d-4423-9013-1eb0e62038bf" InstallerVersion="200">
-		
+
 
 		<!--For major upgrades removing the old files and replacing the files with the newer version use the Schedule attribute-->
 		<MajorUpgrade Schedule="afterInstallInitialize" DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
@@ -19,18 +19,26 @@
 		<Feature Id="ProductFeature" Title="SampleSetupTest" Level="1">
 			<ComponentGroupRef Id="ProductComponents" />
 		</Feature>
+
+		<Binary Id="CustomActionBinary" SourceFile="$(var.SampleCustomActions.TargetDir)$(var.SampleCustomActions.TargetName).CA.dll" />
+		<CustomAction Id="CheckSessionVariables" DllEntry="CheckSessionParameters" Execute="immediate" Return="check" BinaryRef="CustomActionBinary" />
+
+		<InstallExecuteSequence>
+			<Custom Action="CheckSessionVariables" Before="LaunchConditions" Condition="NOT Installed" />
+		</InstallExecuteSequence>
+
 	</Package>
 
 	<!--Creating the taget directory of our installer-->
 	<Fragment>
-			<StandardDirectory Id="ProgramFilesFolder">
-				<Directory Id="INSTALLFOLDER" Name="MsiTest" />
-			</StandardDirectory>
-		</Fragment>
+		<StandardDirectory Id="ProgramFiles64Folder">
+			<Directory Id="INSTALLFOLDER" Name="SampleTest" />
+		</StandardDirectory>
+	</Fragment>
 	<!--Creating the which will bundle all the files at place it in the desired target folder-->
 	<Fragment>
 		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
-			<Component Id="AvMonitior" Guid="{F91E5AEB-C815-4929-8DD4-9D162027B171}">
+			<Component Id="AvMonitior" Guid="{F91E5AEB-C815-4929-8DD4-9D162027B171}" Bitness="always64">
 				<File Id="ReadmeId" Name="Readmetxt" Source="readme.txt"></File>
 				<!--Removing all the files on building new msi file-->
 				<RemoveFile Id="CopiedFiles" Name="*.*" On="install" />

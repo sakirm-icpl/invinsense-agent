@@ -1,0 +1,1 @@
+msiexec.exe /i SampleSetupTest.msi /l*v install.log
