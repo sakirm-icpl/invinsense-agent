@@ -32,6 +32,7 @@ namespace ToolManager.AgentWrappers
                     _logger.Information("END_POINT_DETECTION_AND_RESPONSE not found and set for skip.");
                     return -1;
                 }
+
                 _logger.Information("END_POINT_DETECTION_AND_RESPONSE not found and set for skip.");
 
                 if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
@@ -39,6 +40,7 @@ namespace ToolManager.AgentWrappers
                     _logger.Information("MSI Installer is not free.");
                     return 1618;
                 }
+
                 _logger.Information("END_POINT_DETECTION_AND_RESPONSE installation is ready");
 
                 var msiPath = CommonUtils.GetAbsoletePath("..\\artifacts\\wazuh\\wazuh-agent-4.3.10-1.msi");
@@ -51,17 +53,19 @@ namespace ToolManager.AgentWrappers
                 var managerIp = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "MANAGER_ADDR");
                 var registrationIp = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "REGISTRATION_SERVER_ADDR");
                 var agentGroup = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "AGENT_GROUP");
+                var registrationPassword = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "REGISTRATION_PASSWORD");
 
                 _logger.Information($"Wazuh's ManagerIp {managerIp}");
                 _logger.Information($"Wazuh's RegistrationIP {registrationIp}");
                 _logger.Information($"Wazuh's AgentGroup {agentGroup}");
+                _logger.Information($"Wazuh's Password {registrationPassword}");
 
                 Process installerProcess = new Process
                 {
                     StartInfo = new ProcessStartInfo
                     {
                         FileName = "msiexec",
-                        Arguments = $"/I \"{msiPath}\" /QN /l*vx \"{logPath}\" ACCEPTEULA=1 ALLUSERS=1 WAZUH_MANAGER=\"{managerIp}\" WAZUH_REGISTRATION_SERVER=\"{registrationIp}\" WAZUH_AGENT_GROUP=\"{agentGroup}\"",
+                        Arguments = $"/I \"{msiPath}\" /QN /l*vx \"{logPath}\" ACCEPTEULA=1 ALLUSERS=1 WAZUH_MANAGER=\"{managerIp}\" WAZUH_REGISTRATION_SERVER=\"{registrationIp}\" WAZUH_AGENT_GROUP=\"{agentGroup}\" WAZUH_REGISTRATION_PASSWORD=\"{registrationPassword}\"",
                         WindowStyle = ProcessWindowStyle.Hidden,
                         CreateNoWindow = true,
                         WorkingDirectory = CommonUtils.RootFolder

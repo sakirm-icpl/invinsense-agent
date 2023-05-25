@@ -1,44 +1,43 @@
-<Project Sdk="WixToolset.Sdk/4.0.0">
-  <PropertyGroup>
-    <Name>InvinSetup</Name>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
-    <DefineConstants>Debug</DefineConstants>
-  </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CustomActions\CustomActions.csproj">
-      <Name>CustomActions</Name>
-      <Project>{52f2af5c-722c-4bce-a438-dd4896e1ef5f}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
-    <ProjectReference Include="..\IvsAgent\IvsAgent.csproj">
-      <Name>IvsAgent</Name>
-      <Project>{8256e95f-31d8-4f30-9cd3-b7d0c3d3ce74}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
-    <ProjectReference Include="..\IvsTray\IvsTray.csproj">
-      <Name>IvsTray</Name>
-      <Project>{9f8824a3-d490-48af-bde9-06aa58e979ff}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="WixToolset.Util.wixext" Version="4.0.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Assets" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Assets\green_logo_22_22.ico" />
-    <Content Include="readme.txt" />
-  </ItemGroup>
+﻿<Project Sdk="WixToolset.Sdk/4.0.0">
+	<PropertyGroup>
+		<Name>InvinSetup</Name>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+		<DefineConstants>Debug</DefineConstants>
+	</PropertyGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\CustomActions\CustomActions.csproj">
+			<Name>CustomActions</Name>
+			<Project>{52f2af5c-722c-4bce-a438-dd4896e1ef5f}</Project>
+			<Private>True</Private>
+			<DoNotHarvest>True</DoNotHarvest>
+			<RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+			<RefTargetDir>INSTALLFOLDER</RefTargetDir>
+		</ProjectReference>
+		<ProjectReference Include="..\IvsAgent\IvsAgent.csproj">
+			<Name>IvsAgent</Name>
+			<Project>{8256e95f-31d8-4f30-9cd3-b7d0c3d3ce74}</Project>
+			<Private>True</Private>
+			<DoNotHarvest>True</DoNotHarvest>
+			<RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+			<RefTargetDir>INSTALLFOLDER</RefTargetDir>
+		</ProjectReference>
+		<ProjectReference Include="..\IvsTray\IvsTray.csproj">
+			<Name>IvsTray</Name>
+			<Project>{9f8824a3-d490-48af-bde9-06aa58e979ff}</Project>
+			<Private>True</Private>
+			<DoNotHarvest>True</DoNotHarvest>
+			<RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+			<RefTargetDir>INSTALLFOLDER</RefTargetDir>
+		</ProjectReference>
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="WixToolset.Util.wixext" Version="4.0.0" />
+	</ItemGroup>
+	<ItemGroup>
+		<Folder Include="Assets" />
+	</ItemGroup>
+	<ItemGroup>
+		<Content Include="Assets\green_logo_22_22.ico" />
+	</ItemGroup>
 </Project>

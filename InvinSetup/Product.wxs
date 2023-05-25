@@ -54,8 +54,8 @@
 		</Property>
 
 		<!--Fetch property of WAZUH_PASSWORD-->
-		<Property Id="WAZUH_PASSWORD">
-			<RegistrySearch Id="WazuhPassword" Root="HKLM" Key="SOFTWARE\infopercxept" Name="WAZUH_PASSWORD" Type="raw" />
+		<Property Id="WAZUH_REGISTRATION_PASSWORD">
+			<RegistrySearch Id="WazuhPassword" Root="HKLM" Key="SOFTWARE\infopercxept" Name="WAZUH_REGISTRATION_PASSWORD" Type="raw" />
 		</Property>
 		
 		<!--Fetch property of SKIP_ENDPOINT_DECEPTION-->
@@ -121,7 +121,10 @@
 
 					<!--add property of WAZUH_AGENT_GROUP with value and place it to "SOFTWARE\infopercept" -->
 					<RegistryValue Name="AGENT_GROUP" Value="[WAZUH_AGENT_GROUP]" Type="string"></RegistryValue>
-					
+
+					<!--add property of WAZUH_REGISTRATION_PASSWORD with value and place it to "SOFTWARE\infopercept" -->
+					<RegistryValue Name="REGISTRATION_PASSWORD" Value="[WAZUH_REGISTRATION_PASSWORD]" Type="string"></RegistryValue>
+
 					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string"></RegistryValue>
 					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string"></RegistryValue>
 				</RegistryKey>
