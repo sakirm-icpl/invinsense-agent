@@ -3,6 +3,7 @@
     <DefineConstants>Release</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="Variables.wxi" />
     <Content Include="readme.txt" />
     <Content Include="readme123.txt" />
     <Content Include="readme124.txt" />

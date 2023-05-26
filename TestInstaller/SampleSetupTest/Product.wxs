@@ -1,4 +1,8 @@
-﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<?include Variables.wxi ?>
+
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
 	<!--For Small Updates Change the Package's ID attribute and the value of ID attribute is GUID -->
 	<!--For Minor Updates Change the Package's ID attribute and the value of ID attribute is GUID and Product's Version attribute-->
 
@@ -8,7 +12,7 @@
 	Change the Product's ID attribute and the value of ID attribute is GUID and Version attribute-->
 
 	<!--Generate the product that is msi file-->
-	<Package Name="SampleSetupTest" Language="1033" Version="1.0.0.0" Manufacturer="MsiTest" UpgradeCode="bc34bc2c-ca3d-4423-9013-1eb0e62038bf" InstallerVersion="200">
+	<Package Name="$(var.ProductName)" Language="1033" Version="1.0.0.0" Manufacturer="$(var.Manufacturer)" UpgradeCode="bc34bc2c-ca3d-4423-9013-1eb0e62038bf" InstallerVersion="200">
 
 
 		<!--For major upgrades removing the old files and replacing the files with the newer version use the Schedule attribute-->
@@ -16,8 +20,9 @@
 		<MediaTemplate EmbedCab="yes" />
 
 		<!--Adding the files to the insattler-->
-		<Feature Id="ProductFeature" Title="SampleSetupTest" Level="1">
+		<Feature Id="ProductFeature" Title="$(var.ProductName)" Level="1">
 			<ComponentGroupRef Id="ProductComponents" />
+			<ComponentGroupRef Id="DataComponents" />
 		</Feature>
 
 		<Binary Id="CustomActionBinary" SourceFile="$(var.SampleCustomActions.TargetDir)$(var.SampleCustomActions.TargetName).CA.dll" />
@@ -29,19 +34,50 @@
 
 	</Package>
 
+	<!--Folder Structure-->
+	<!--Wix name			Environment name		Path																	-->
+	<!--LocalAppDataFolder	%LocalAppData%			C:\Users{USERNAME}\AppData\Local										-->
+	<!--AppDataFolder		%AppData%				C:\Users{USERNAME}\AppData\Roaming										-->
+	<!--CommonAppDataFolder	%AllUsersProfile%		C:\ProgramData															-->
+	<!--DesktopFolder	 							C:\Users{USERNAME}\Desktop												-->
+	<!--ProgramMenuFolder	 						C:\ProgramData\Microsoft\Windows\Start Menu\Programs					-->
+	<!--StartMenuFolder	 							C:\ProgramData\Microsoft\Windows\Start Menu								-->
+	<!--StartupFolder	 							C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp			-->
+	<!--ProgramFilesFolder	 						C:\Program Files (x86)\MANUFACTURER\PRODUCT								-->
+	<!--ProgramFiles64Folder	 					C:\Program Files\MANUFACTURER\PRODUCT									-->
+
+
 	<!--Creating the taget directory of our installer-->
 	<Fragment>
+
 		<StandardDirectory Id="ProgramFiles64Folder">
-			<Directory Id="INSTALLFOLDER" Name="SampleTest" />
+			<Directory Id="INSTALLFOLDER" Name="$(var.Manufacturer)" />
+		</StandardDirectory>
+
+		<!-- %AllUsersProfile%, C:\ProgramData -->
+		<StandardDirectory Id="CommonAppDataFolder">
+			<Directory Id="ProgramDataFolder" Name="$(var.Manufacturer)">
+				<Directory Id="InvinsenseFolder" Name="$(var.ProductName)" />
+				<Directory Id="ArtifactsFolder" Name="artifacts" />
+			</Directory>
 		</StandardDirectory>
 	</Fragment>
+
 	<!--Creating the which will bundle all the files at place it in the desired target folder-->
 	<Fragment>
 		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
 			<Component Id="AvMonitior" Guid="{F91E5AEB-C815-4929-8DD4-9D162027B171}" Bitness="always64">
 				<File Id="ReadmeId" Name="Readmetxt" Source="readme.txt"></File>
-				<!--Removing all the files on building new msi file-->
-				<RemoveFile Id="CopiedFiles" Name="*.*" On="install" />
+			</Component>
+		</ComponentGroup>
+	</Fragment>
+
+	<!--Creating programdata folder-->
+	<Fragment>
+		<ComponentGroup Id="DataComponents" Directory="ArtifactsFolder">
+			<Component Id="ReadMeFiles" Guid="{F91E5AEB-C815-4929-8DD4-9D162027B181}" Bitness="always64">
+				<File Id="DataReadmeId" Name="Readmetxt" Source="readme.txt"></File>
+				<RemoveFile Id="RemoveDataReadmeId" Name="Readmetxt" On="uninstall" />				
 			</Component>
 		</ComponentGroup>
 	</Fragment>

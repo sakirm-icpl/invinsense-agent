@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>Invinsense Single Agent3.0</h1>
+  <h1>Invinsense Single Agent4.0</h1>
   <br>
   <img alt="Invinsense Single Agent3.0" src="https://user-images.githubusercontent.com/103485015/184890149-3bfa14b3-2443-4a0b-960f-582ddc39f07a.png" width="300px">
 </div>
@@ -14,11 +14,12 @@
 <p align="center">
     <img src="https://user-images.githubusercontent.com/121154130/220250038-0bcb276a-8f5c-436b-931b-36668dc6df2f.png" alt="CodeQL" style="max-width: 100%;">
   </a>
-  </p>
+</p>
    
-   - **What is wazuh? 🤔**
+  - **What is wazuh? 🤔**
   [Check out Website](https://wazuh.com/)
-     
+  [Wazuh Installation Parameters](https://documentation.wazuh.com/current/user-manual/deployment-variables/deployment-variables-windows.html)
+
    - **What is DeceptiveBytes? 🤔**
   [Check out Website](https://deceptivebytes.com/)
   
@@ -30,7 +31,7 @@
   
 
   ## 📖 Prerequisites
-  #### System Requirements (Invinsense 3.0)
+  ### System Requirements (Invinsense 4.0)
 | Component | README |
 | ------ | ------ |
 | .NET Framework 4.8 | Must be pre-installed in computer in order to run the Single agent |

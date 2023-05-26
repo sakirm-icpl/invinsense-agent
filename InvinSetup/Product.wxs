@@ -57,12 +57,12 @@
 		<Property Id="WAZUH_REGISTRATION_PASSWORD">
 			<RegistrySearch Id="WazuhPassword" Root="HKLM" Key="SOFTWARE\infopercxept" Name="WAZUH_REGISTRATION_PASSWORD" Type="raw" />
 		</Property>
-		
+
 		<!--Fetch property of SKIP_ENDPOINT_DECEPTION-->
 		<Property Id="SKIP_ENDPOINT_DECEPTION">
 			<RegistrySearch Id="SkipDbytesId" Root="HKLM" Key="SOFTWARE\infopercxept" Name="SKIP_ENDPOINT_DECEPTION" Type="raw" />
 		</Property>
-		
+
 		<!--Fetch property of DBYTES_SERVER-->
 		<Property Id="DBYTES_SERVER">
 			<RegistrySearch Id="DeceptiveBytesIp" Root="HKLM" Key="SOFTWARE\infopercxept" Name="DBYTES_SERVER" Type="raw" />
@@ -76,7 +76,7 @@
 		<!--Adding the icon for msi -->
 		<Icon Id="green_logo_22_22.ico" SourceFile="Assets\green_logo_22_22.ico" />
 		<Property Id="ARPPRODUCTICON" Value="green_logo_22_22.ico" />
-		
+
 		<!--Main Feature for this Setup which can be found in Fragment Tag with ComponentGroupRef Id-->
 		<Feature Id="ProductFeature" Title="$(var.Name)" Level="1">
 			<ComponentRef Id="ConfigurationValues" />
@@ -148,7 +148,7 @@
 
 					<!--add property of DBYTES_APIKEY with value and place it to "SOFTWARE\infopercept" -->
 					<RegistryValue Name="APIKEY" Value="[DBYTES_APIKEY]" Type="string" />
-					
+
 					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string"></RegistryValue>
 					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string"></RegistryValue>
 				</RegistryKey>
@@ -172,14 +172,26 @@
 
 	<!--Fragment with details of installation directory-->
 	<Fragment>
-			<StandardDirectory Id="ProgramFiles64Folder">
-				<Directory Id="ManufacturerFolder" Name="!(bind.property.Manufacturer)">
-					<Directory Id="AGENTFOLDER" Name="$(var.AgentName)" />
-					<Directory Id="TRAYFOLDER" Name="$(var.TrayName)" />
-					<Directory Id="ARTIFACTSFOLDER" Name="$(var.ArtifactsName)" />
-				</Directory>
-			</StandardDirectory>
-		</Fragment>
+		<StandardDirectory Id="ProgramFiles64Folder">
+			<Directory Id="ManufacturerFolder" Name="!(bind.property.Manufacturer)">
+				<Directory Id="AGENTFOLDER" Name="$(var.AgentName)" />
+				<Directory Id="TRAYFOLDER" Name="$(var.TrayName)" />
+				<Directory Id="ARTIFACTSFOLDER" Name="$(var.ArtifactsName)" />
+			</Directory>
+		</StandardDirectory>
+
+	</Fragment>
+	
+	<!--Fragment with details of artifacts directory-->
+	<Fragment>
+		<StandardDirectory Id="ProgramFiles64Folder">
+			<Directory Id="ManufacturerFolder" Name="!(bind.property.Manufacturer)">
+				<Directory Id="AGENTFOLDER" Name="$(var.AgentName)" />
+				<Directory Id="TRAYFOLDER" Name="$(var.TrayName)" />
+				<Directory Id="ARTIFACTSFOLDER" Name="$(var.ArtifactsName)" />
+			</Directory>
+		</StandardDirectory>
+	</Fragment>
 
 	<Fragment>
 		<ComponentGroup Id="AgentComponents" Directory="AGENTFOLDER">
@@ -221,7 +233,7 @@
 				<RemoveFolder Id="TrayCompanentsFolder" Directory="TRAYFOLDER" On="install" />
 			</Component>
 		</ComponentGroup>
-		
+
 	</Fragment>
 
 	<Fragment>

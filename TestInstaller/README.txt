@@ -1,1 +1,1 @@
-msiexec.exe /i SampleSetupTest.msi /l*v install.log
+msiexec.exe /i SampleSetupTest.msi /l*v install.log REQUIRED=1
