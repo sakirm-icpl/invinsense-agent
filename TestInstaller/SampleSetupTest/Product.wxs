@@ -23,6 +23,8 @@
 		<Feature Id="ProductFeature" Title="$(var.ProductName)" Level="1">
 			<ComponentGroupRef Id="ProductComponents" />
 			<ComponentGroupRef Id="DataComponents" />
+			<!--<ComponentGroupRef Id="UserProductDataComponents" />
+			<ComponentGroupRef Id="UserRootDataComponents" />-->
 		</Feature>
 
 		<Binary Id="CustomActionBinary" SourceFile="$(var.SampleCustomActions.TargetDir)$(var.SampleCustomActions.TargetName).CA.dll" />
@@ -34,6 +36,8 @@
 
 	</Package>
 
+	<!--TODO: https://notes.kargware.com/2020/04/25/Folders-and-Directories-in-WixToolset/-->
+	
 	<!--Folder Structure-->
 	<!--Wix name			Environment name		Path																	-->
 	<!--LocalAppDataFolder	%LocalAppData%			C:\Users{USERNAME}\AppData\Local										-->
@@ -61,6 +65,14 @@
 				<Directory Id="ArtifactsFolder" Name="artifacts" />
 			</Directory>
 		</StandardDirectory>
+		
+		<!-- %LocalAppData%, C:\Users\{USERNAME}\AppData\Local -->
+		<!--<StandardDirectory Id="LocalAppDataFolder">
+			<Directory Id="LocalAppDataManufacturerFolder" Name="$(var.Manufacturer)">
+				<Directory Id="LocalAppDataProductDatabaseFolder" Name="$(var.ProductName)" />
+			</Directory>
+		</StandardDirectory>-->
+		
 	</Fragment>
 
 	<!--Creating the which will bundle all the files at place it in the desired target folder-->
@@ -81,4 +93,22 @@
 			</Component>
 		</ComponentGroup>
 	</Fragment>
+
+	<!--Creating user data folder-->
+	<!--<Fragment>
+		<ComponentGroup Id="UserProductDataComponents" Directory="LocalAppDataProductDatabaseFolder">
+			<Component Id="UserReadMeFiles" Guid="{F91E5AEB-C815-4929-8DD4-9D162027B191}" Bitness="always64">
+				<File Id="UserDataReadmeId" Name="Readmetxt" Source="readme.txt"></File>
+				<RemoveFile Id="UserRemoveDataReadmeId" Name="Readmetxt" On="uninstall" />
+				<RemoveFolder Id='UserDataRemoveId' On='uninstall' />
+			</Component>
+		</ComponentGroup>
+
+		<ComponentGroup Id="UserRootDataComponents" Directory="LocalAppDataManufacturerFolder">
+			<Component Id="LocalAppDataRootId" Guid="{F91E5AEB-C815-4929-8DD4-9D162027B1A1}" Bitness="always64">
+				<RemoveFolder Id='RemoveLocalAppDataRootId' On='uninstall' />
+			</Component>
+		</ComponentGroup>
+	</Fragment>-->
+	
 </Wix>
