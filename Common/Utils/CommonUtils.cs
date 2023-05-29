@@ -21,16 +21,26 @@ namespace Common.Utils
 
         public static string DataFolder => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Infopercept");
 
-        public static void EnsureFolders()
+        static CommonUtils()
         {
             if (!Directory.Exists(DataFolder))
             {
                 Directory.CreateDirectory(DataFolder);
             }
 
-            if (Directory.Exists(ConfigFolder)) 
-            { 
-                Directory.CreateDirectory(ConfigFolder); 
+            if (!Directory.Exists(ConfigFolder))
+            {
+                Directory.CreateDirectory(ConfigFolder);
+            }
+
+            if (!Directory.Exists(ArtifactsFolder))
+            {
+                Directory.CreateDirectory(ArtifactsFolder);
+            }
+
+            if (!Directory.Exists(LogsFolder))
+            {
+                Directory.CreateDirectory(LogsFolder);
             }
         }
     }
