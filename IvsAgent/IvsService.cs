@@ -348,7 +348,7 @@ namespace IvsAgent
                 }
                 else
                 {
-                    var ivsTrayFile = CommonUtils.GetAbsoletePath("..\\IvsTray\\IvsTray.exe");
+                    var ivsTrayFile = CommonUtils.ConstructFromRoot("..\\IvsTray\\IvsTray.exe");
                     _logger.Information($"IvsTray is not running. Starting... {ivsTrayFile}");
                     ProcessExtensions.StartProcessAsCurrentUser(null, ivsTrayFile);
                 }

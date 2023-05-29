@@ -158,26 +158,23 @@
 	<!--Fragment with details of installation directory-->
 	<Fragment>
 		<StandardDirectory Id="ProgramFiles64Folder">
-			<Directory Id="ManufacturerFolder" Name="!(bind.property.Manufacturer)">
+			<Directory Id="ManufacturerFolder" Name="$(var.Manufacturer)">
 				<Directory Id="AGENTFOLDER" Name="$(var.AgentName)" />
 				<Directory Id="TRAYFOLDER" Name="$(var.TrayName)" />
+			</Directory>
+		</StandardDirectory>
+
+		<!-- %AllUsersProfile%, C:\ProgramData -->
+		<StandardDirectory Id="CommonAppDataFolder">
+			<Directory Id="ProgramDataFolder" Name="$(var.Manufacturer)">
 				<Directory Id="ARTIFACTSFOLDER" Name="$(var.ArtifactsName)" />
+				<Directory Id="LOGFOLDER" Name="$(var.LogsFolder)" />
 			</Directory>
 		</StandardDirectory>
 
 	</Fragment>
-	
-	<!--Fragment with details of artifacts directory-->
-	<Fragment>
-		<StandardDirectory Id="ProgramFiles64Folder">
-			<Directory Id="ManufacturerFolder" Name="!(bind.property.Manufacturer)">
-				<Directory Id="AGENTFOLDER" Name="$(var.AgentName)" />
-				<Directory Id="TRAYFOLDER" Name="$(var.TrayName)" />
-				<Directory Id="ARTIFACTSFOLDER" Name="$(var.ArtifactsName)" />
-			</Directory>
-		</StandardDirectory>
-	</Fragment>
 
+	<!--Fragment with Agent Service installation-->
 	<Fragment>
 		<ComponentGroup Id="AgentComponents" Directory="AGENTFOLDER">
 			<Component Id="a00" Guid="380bbddd-daa7-0744-517b-37da768f5570" Bitness="always64">
@@ -200,6 +197,7 @@
 		</ComponentGroup>
 	</Fragment>
 
+	<!--Fragment with Agent Tray installation-->
 	<Fragment>
 		<ComponentGroup Id="TrayComponents" Directory="TRAYFOLDER">
 			<Component Id="b00" Guid="7E588662-AE80-401C-B2DE-29BB4CF1ECF3" Bitness="always64">
@@ -221,6 +219,7 @@
 
 	</Fragment>
 
+	<!--Fragment with Artifacts installation-->
 	<Fragment>
 		<ComponentGroup Id="ToolComponents" Directory="ARTIFACTSFOLDER">
 			<Component Id="c00" Guid="DEF1F99A-A721-4F70-87BC-92E13E47B0B1" Bitness="always64">
@@ -237,6 +236,7 @@
 		</ComponentGroup>
 	</Fragment>
 
+	<!--Fragment with post installation steps-->
 	<Fragment>
 		<ComponentGroup Id="PostInstallation" Directory="AGENTFOLDER">
 			<Component Id="s0" Guid="868F4F33-6851-4169-B814-F25842A2D414" Bitness="always64">

@@ -7,6 +7,7 @@ using System.ServiceProcess;
 using System.Xml;
 using Common.Persistance;
 using ToolManager.MsiWrapper;
+using System.IO;
 
 namespace ToolManager.AgentWrappers
 {
@@ -43,9 +44,9 @@ namespace ToolManager.AgentWrappers
 
                 _logger.Information("END_POINT_DETECTION_AND_RESPONSE installation is ready");
 
-                var msiPath = CommonUtils.GetAbsoletePath("..\\artifacts\\wazuh-agent-4.4.2-1.msi");
+                var msiPath = Path.Combine(CommonUtils.ArtifactsFolder, "wazuh-agent-4.4.2-1.msi");
 
-                var logPath = CommonUtils.DataFolder + "\\wazuhInstall.log";
+                var logPath = Path.Combine(CommonUtils.LogsFolder, "wazuhInstall.log");
 
                 _logger.Information($"Wazuh's msiPath {msiPath}");
                 _logger.Information($"Wazuh's logPath {logPath}");
@@ -88,7 +89,7 @@ namespace ToolManager.AgentWrappers
 
                     _logger.Information("Copying local_internal_options.conf file to wazuh installed directory");
 
-                    System.IO.File.Copy(CommonUtils.GetAbsoletePath("..\\artifacts\\local_internal_options.conf"), "C:\\Program Files (x86)\\ossec-agent\\local_internal_options.conf", true);
+                    System.IO.File.Copy(CommonUtils.ConstructFromRoot("..\\artifacts\\local_internal_options.conf"), "C:\\Program Files (x86)\\ossec-agent\\local_internal_options.conf", true);
 
                     _logger.Information("Enable osquery for END_POINT_DETECTION_AND_RESPONSE");
 

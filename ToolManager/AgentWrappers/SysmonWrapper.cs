@@ -32,11 +32,13 @@ namespace ToolManager.AgentWrappers
                     _logger.Information("SYSMON not found and set for skip.");
                     return -1;
                 }
+
                 _logger.Information("SYSMON not found. Preparing installation");
 
-                var exePath = CommonUtils.GetAbsoletePath("..\\artifacts\\Sysmon64.exe");
+                var exePath = Path.Combine(CommonUtils.ArtifactsFolder, "Sysmon64.exe");
 
-                var logPath = CommonUtils.DataFolder + "\\sysmonInstall.log";
+                var logPath = Path.Combine(CommonUtils.LogsFolder, "sysmonInstall.log");
+
 
                 _logger.Information($"Sysmon exePath {exePath}");
                 _logger.Information($"Sysmon logPath {logPath}");
@@ -116,7 +118,7 @@ namespace ToolManager.AgentWrappers
                 }
                 _logger.Information("SYSMON found. Preparing Uninstallation");
 
-                var exePath = CommonUtils.GetAbsoletePath("C:\\Windows\\Sysmon64.exe");
+                var exePath = CommonUtils.ConstructFromRoot("C:\\Windows\\Sysmon64.exe");
 
                 _logger.Information($"Sysmon exepath {exePath}");
 

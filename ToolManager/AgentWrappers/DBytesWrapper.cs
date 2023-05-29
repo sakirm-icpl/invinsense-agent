@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.ServiceProcess;
 using Common.Persistance;
+using System.IO;
 
 namespace ToolManager.AgentWrappers
 {
@@ -47,9 +48,9 @@ namespace ToolManager.AgentWrappers
                 }
                 _logger.Information("END_POINT_DECEPTION installation is ready");
 
-                var msiPath = CommonUtils.GetAbsoletePath("..\\artifacts\\DeceptiveBytes.EPS.x64.msi");
+                var msiPath = Path.Combine(CommonUtils.ArtifactsFolder, "DeceptiveBytes.EPS.x64.msi");
 
-                var logPath = CommonUtils.DataFolder + "\\dbytesInstall.log";
+                var logPath = Path.Combine(CommonUtils.LogsFolder, "dbytesInstall.log");
 
                 _logger.Information("Path",new { PATH =$"{msiPath}",Log=$"logPath" });
 
