@@ -109,6 +109,10 @@ namespace ToolManager.AgentWrappers
                     }
                     document.Save(confFile);
 
+                    _logger.Information("Copying active response scripts to wazuh installed directory");
+                    File.Copy(Path.Combine(CommonUtils.ArtifactsFolder, "full-scan.exe"), "C:\\Program Files (x86)\\ossec-agent\\active-response", true);
+                    File.Copy(Path.Combine(CommonUtils.ArtifactsFolder, "qick-scan.exe"), "C:\\Program Files (x86)\\ossec-agent\\active-response", true);
+
                     _logger.Information("END_POINT_DETECTION_AND_RESPONSE is ready to start...");
 
                     ctl = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName == "WazuhSvc");
