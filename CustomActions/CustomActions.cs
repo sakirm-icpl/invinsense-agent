@@ -43,7 +43,7 @@ namespace ToolManager
         {
             session.Log("Preparing Install. Checking required parameters.");
 
-            if(string.IsNullOrEmpty(session["WAZUH_MANAGER"]))
+            if (string.IsNullOrEmpty(session["WAZUH_MANAGER"]))
             {
                 session.Log($"Required parameter 'WAZUH_MANAGER' is missing. Installer will exit.");
                 return ActionResult.Failure;
@@ -61,14 +61,34 @@ namespace ToolManager
                 return ActionResult.Failure;
             }
 
-            if (string.IsNullOrEmpty(session["WAZUH_REGISTRATION_PASSWORD"]))
+            if (string.IsNullOrEmpty(session["WAZUH_REGISTRATION_TYPE"]))
+            {
+                session.Log($"Required parameter 'WAZUH_REGISTRATION_TYPE' is missing. Installer will exit.");
+                return ActionResult.Failure;
+            }
+
+            var authType = session["WAZUH_REGISTRATION_TYPE"];
+
+            if(!(authType == "NONE" || authType == "PASSWORD" || authType == "CERTIFICATE"))
+            {
+                session.Log($"'WAZUH_REGISTRATION_TYPE' value is invalid. Expected: NONE | PASSWORD | CERTIFICATE");
+                return ActionResult.Failure;
+            }
+
+            if (authType == "PASSWORD" && string.IsNullOrEmpty(session["WAZUH_REGISTRATION_PASSWORD"]))
             {
                 session.Log($"Required parameter 'WAZUH_REGISTRATION_PASSWORD' is missing. Installer will exit.");
                 return ActionResult.Failure;
             }
 
+            if (authType == "CERTIFICATE" && (string.IsNullOrEmpty(session["WAZUH_REGISTRATION_CERTIFICATE"]) || string.IsNullOrEmpty(session["WAZUH_REGISTRATION_KEY"])))
+            {
+                session.Log($"Required parameter 'WAZUH_REGISTRATION_CERTIFICATE' or 'WAZUH_REGISTRATION_KEY' is missing. Installer will exit.");
+                return ActionResult.Failure;
+            }
+
             var skipEndpointDeception = session["SKIP_ENDPOINT_DECEPTION"];
-            if(skipEndpointDeception == "Y" || skipEndpointDeception == "y")
+            if (skipEndpointDeception == "Y" || skipEndpointDeception == "y")
             {
                 return ActionResult.Success;
             }
@@ -97,7 +117,7 @@ namespace ToolManager
             {
                 session.Log("Stopping Invinsense service");
                 var service = new ServiceController("IvsAgent");
-                if(service.Status == ServiceControllerStatus.Running)
+                if (service.Status == ServiceControllerStatus.Running)
                 {
                     service.ExecuteCommand(130);
                     session.Log("Stopping Invinsense service. Wait for Status Stopped");

@@ -8,13 +8,14 @@ using System.Xml;
 using Common.Persistance;
 using ToolManager.MsiWrapper;
 using System.IO;
+using System.Text;
 
 namespace ToolManager.AgentWrappers
 {
     public static class WazuhWrapper
     {
         private static readonly ILogger _logger = Log.ForContext(typeof(WazuhWrapper));
-        
+
         public static int Verify(bool isInstall = false)
         {
             try
@@ -28,8 +29,8 @@ namespace ToolManager.AgentWrappers
                     return 0;
                 }
 
-                _logger.Information("END_POINT_DETECTION_AND_RESPONSE not found."); 
-                
+                _logger.Information("END_POINT_DETECTION_AND_RESPONSE not found.");
+
                 if (ctl == null && !isInstall)
                 {
                     _logger.Information("END_POINT_DETECTION_AND_RESPONSE set for skip.");
@@ -51,22 +52,52 @@ namespace ToolManager.AgentWrappers
                 _logger.Information($"Wazuh's msiPath {msiPath}");
                 _logger.Information($"Wazuh's logPath {logPath}");
 
-                var managerIp = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "MANAGER_ADDR");
-                var registrationIp = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "REGISTRATION_SERVER_ADDR");
-                var agentGroup = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "AGENT_GROUP");
-                var registrationPassword = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "REGISTRATION_PASSWORD");
+                var inputParameterBuilder = new StringBuilder();
 
+                var managerIp = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "MANAGER_ADDR");
                 _logger.Information($"Wazuh's ManagerIp {managerIp}");
+                inputParameterBuilder.Append($"WAZUH_MANAGER=\"{managerIp}\"");
+                inputParameterBuilder.Append(" ");
+
+                var registrationIp = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "REGISTRATION_SERVER_ADDR");
                 _logger.Information($"Wazuh's RegistrationIP {registrationIp}");
+                inputParameterBuilder.Append($"WAZUH_REGISTRATION_SERVER=\"{registrationIp}\"");
+                inputParameterBuilder.Append(" ");
+
+                var agentGroup = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "AGENT_GROUP");
                 _logger.Information($"Wazuh's AgentGroup {agentGroup}");
-                _logger.Information($"Wazuh's Password {registrationPassword}");
+                inputParameterBuilder.Append($"WAZUH_AGENT_GROUP=\"{agentGroup}\"");
+                inputParameterBuilder.Append(" ");
+
+                var authType = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "REGISTRATION_TYPE");
+
+                if (authType == "PASSWORD")
+                {
+                    var registrationPassword = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "REGISTRATION_PASSWORD");
+                    _logger.Information($"Wazuh's RegistrationPassword {registrationPassword}");
+                    inputParameterBuilder.Append($"WAZUH_REGISTRATION_PASSWORD=\"{registrationPassword}\"");
+                    inputParameterBuilder.Append(" ");
+                }
+
+                if(authType == "CERTIFICATE")
+                {
+                    var certificatePath = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "REGISTRATION_CERTIFICATE");
+                    _logger.Information($"Wazuh's Certificate File Path {certificatePath}");
+                    inputParameterBuilder.Append($"WAZUH_REGISTRATION_CERTIFICATE=\"{certificatePath}\"");
+                    inputParameterBuilder.Append(" ");
+
+                    var keyPath = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "REGISTRATION_KEY");
+                    _logger.Information($"Wazuh's Certificate Key File Path {keyPath}");
+                    inputParameterBuilder.Append($"WAZUH_REGISTRATION_KEY=\"{keyPath}\"");
+                    inputParameterBuilder.Append(" ");
+                }
 
                 Process installerProcess = new Process
                 {
                     StartInfo = new ProcessStartInfo
                     {
                         FileName = "msiexec",
-                        Arguments = $"/I \"{msiPath}\" /QN /l*vx \"{logPath}\" ACCEPTEULA=1 ALLUSERS=1 WAZUH_MANAGER=\"{managerIp}\" WAZUH_REGISTRATION_SERVER=\"{registrationIp}\" WAZUH_AGENT_GROUP=\"{agentGroup}\" WAZUH_REGISTRATION_PASSWORD=\"{registrationPassword}\"",
+                        Arguments = $"/I \"{msiPath}\" /QN /l*vx \"{logPath}\" ACCEPTEULA=1 ALLUSERS=1 {inputParameterBuilder}",
                         WindowStyle = ProcessWindowStyle.Hidden,
                         CreateNoWindow = true,
                         WorkingDirectory = CommonUtils.RootFolder
@@ -142,7 +173,7 @@ namespace ToolManager.AgentWrappers
         }
 
         private static void InstallerProcess_OutputDataReceived(object sender, DataReceivedEventArgs e)
-        { 
+        {
             _logger.Information($"END_POINT_DETECTION_AND_RESPONSE installation error data: {e.Data}");
         }
 
@@ -178,17 +209,17 @@ namespace ToolManager.AgentWrappers
                 _logger.Information("END_POINT_DETECTION_AND_RESPONSE Uninstallation is ready");
 
                 //Checking if file is exists or not
-                if(Verify(true) == 0)
+                if (Verify(true) == 0)
                 {
-                        status = MsiPackageWrapper.Uninstall("Wazuh Agent");
+                    status = MsiPackageWrapper.Uninstall("Wazuh Agent");
                 }
-                
+
                 return status ? 0 : 1;
 
             }
             catch (Exception ex)
             {
-                _logger.Error(ex.Message,new { WazuhError = $"{ex.Message}" });
+                _logger.Error(ex.Message, new { WazuhError = $"{ex.Message}" });
                 return 1;
             }
         }

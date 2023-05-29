@@ -38,9 +38,24 @@
 			<RegistrySearch Id="WazuhAgentGroup" Root="HKLM" Key="SOFTWARE\infopercxept" Name="WAZUH_AGENT_GROUP" Type="raw" />
 		</Property>
 
-		<!--Fetch property of WAZUH_PASSWORD-->
+		<!--Fetch property of WAZUH_REGISTRATION_TYPE-->
+		<Property Id="WAZUH_REGISTRATION_TYPE">
+			<RegistrySearch Id="WazuhAuthType" Root="HKLM" Key="SOFTWARE\infopercxept" Name="WAZUH_REGISTRATION_TYPE" Type="raw" />
+		</Property>
+
+		<!--Fetch property of WAZUH_REGISTRATION_PASSWORD-->
 		<Property Id="WAZUH_REGISTRATION_PASSWORD">
 			<RegistrySearch Id="WazuhPassword" Root="HKLM" Key="SOFTWARE\infopercxept" Name="WAZUH_REGISTRATION_PASSWORD" Type="raw" />
+		</Property>
+
+		<!--Fetch property of WAZUH_REGISTRATION_KEY-->
+		<Property Id="WAZUH_REGISTRATION_KEY">
+			<RegistrySearch Id="WazuhCertKey" Root="HKLM" Key="SOFTWARE\infopercxept" Name="WAZUH_REGISTRATION_KEY" Type="raw" />
+		</Property>
+
+		<!--Fetch property of WAZUH_REGISTRATION_CERTIFICATE-->
+		<Property Id="WAZUH_REGISTRATION_CERTIFICATE">
+			<RegistrySearch Id="WazuhCertPath" Root="HKLM" Key="SOFTWARE\infopercxept" Name="WAZUH_REGISTRATION_CERTIFICATE" Type="raw" />
 		</Property>
 
 		<!--Fetch property of SKIP_ENDPOINT_DECEPTION-->
@@ -96,6 +111,7 @@
 
 			<RegistryKey Root="HKLM" Key="SOFTWARE\Infopercept">
 
+				<!--add property of WAZUH_MANAGER with value and place it to "SOFTWARE\infopercept" -->
 				<RegistryKey Key="ENDPOINT_DETECTION_AND_RESPONSE">
 
 					<!--add property of WAZUH_MANAGER with value and place it to "SOFTWARE\infopercept" -->
@@ -107,9 +123,19 @@
 					<!--add property of WAZUH_AGENT_GROUP with value and place it to "SOFTWARE\infopercept" -->
 					<RegistryValue Name="AGENT_GROUP" Value="[WAZUH_AGENT_GROUP]" Type="string"></RegistryValue>
 
+					<!--add property of WAZUH_REGISTRATION_TYPE with value and place it to "SOFTWARE\infopercept" -->
+					<RegistryValue Name="REGISTRATION_TYPE" Value="[WAZUH_REGISTRATION_TYPE]" Type="string"></RegistryValue>
+					
 					<!--add property of WAZUH_REGISTRATION_PASSWORD with value and place it to "SOFTWARE\infopercept" -->
 					<RegistryValue Name="REGISTRATION_PASSWORD" Value="[WAZUH_REGISTRATION_PASSWORD]" Type="string"></RegistryValue>
+					
+					<!--add property of WAZUH_REGISTRATION_CERTIFICATE with value and place it to "SOFTWARE\infopercept" -->
+					<RegistryValue Name="REGISTRATION_CERTIFICATE" Value="[WAZUH_REGISTRATION_CERTIFICATE]" Type="string"></RegistryValue>
 
+					<!--add property of REGISTRATION_KEY with value and place it to "SOFTWARE\infopercept" -->
+					<RegistryValue Name="REGISTRATION_KEY" Value="[WAZUH_REGISTRATION_KEY]" Type="string"></RegistryValue>
+					
+					
 					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string"></RegistryValue>
 					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string"></RegistryValue>
 				</RegistryKey>
