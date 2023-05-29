@@ -252,8 +252,8 @@ namespace IvsAgent
             toolRepository.CaptureEvent(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.Installed, RunningStatus.Stopped));
 
             _isRunning = false;
-            base.RequestAdditionalTime(1000 * 60 * 2);
-            base.Stop();
+            RequestAdditionalTime(1000 * 60 * 2);
+            Stop();
         }
 
         protected override void OnPause()

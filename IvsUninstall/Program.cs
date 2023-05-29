@@ -58,7 +58,7 @@ namespace IvsUninstall
 
                if (DBytesWrapper.Verify(true)==0)
                {
-                        var dBytesExitCode = ToolManager.AgentWrappers.DBytesWrapper.Remove();
+                        var dBytesExitCode = DBytesWrapper.Remove();
 
                         Log.Logger.Information($"Deceptive Bytes remove exit code={dBytesExitCode}");
 
@@ -78,7 +78,7 @@ namespace IvsUninstall
                 //Checking if file is exists or not
                 if (OsQueryWrapper.Verify(true)==0)
                 {
-                        var osQueryExitCode = ToolManager.AgentWrappers.OsQueryWrapper.Remove();
+                        var osQueryExitCode = OsQueryWrapper.Remove();
 
                         Log.Logger.Information($"OSQUERY remove exit code={osQueryExitCode}");
 
@@ -104,7 +104,7 @@ namespace IvsUninstall
                 {
                     Log.Logger.Information("Uninstalling Wazuh...");
 
-                    var wazuhExitCode = ToolManager.AgentWrappers.WazuhWrapper.Remove();
+                    var wazuhExitCode = WazuhWrapper.Remove();
 
                         Log.Logger.Information($"Wazuh remove exit code={wazuhExitCode}");
 
@@ -129,7 +129,7 @@ namespace IvsUninstall
                 {
                     Log.Logger.Information("Uninstalling Sysmon...");
 
-                    var sysmonExitCode = ToolManager.AgentWrappers.SysmonWrapper.Remove();
+                    var sysmonExitCode = SysmonWrapper.Remove();
 
                     Log.Logger.Information($"SYSMON remove exit code={sysmonExitCode}");
 

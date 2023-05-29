@@ -76,11 +76,11 @@ namespace ToolManager.AgentWrappers
 
                     _logger.Information("Copying osquery.conf file to osquery installed directory");
 
-                    File.Copy(CommonUtils.ConstructFromRoot("..\\artifacts\\osquery.conf"), "C:\\Program Files\\osquery\\osquery.conf", true);
+                    File.Copy(Path.Combine(CommonUtils.ArtifactsFolder, "osquery.conf"), "C:\\Program Files\\osquery\\osquery.conf", true);
 
                     _logger.Information("OsQueryStatus",new { OsQueryStatus = "Extract packs to osquery" });
 
-                    ZipFile.ExtractToDirectory(CommonUtils.ConstructFromRoot("..\\artifacts\\osquery-packs.zip"), "C:\\Program Files\\osquery\\packs");
+                    ZipFile.ExtractToDirectory(Path.Combine(CommonUtils.ArtifactsFolder, "osquery -packs.zip"), "C:\\Program Files\\osquery\\packs");
                     return 0;
                 }
                 else

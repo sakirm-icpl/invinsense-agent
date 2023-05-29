@@ -89,7 +89,7 @@ namespace ToolManager.AgentWrappers
 
                     _logger.Information("Copying local_internal_options.conf file to wazuh installed directory");
 
-                    System.IO.File.Copy(CommonUtils.ConstructFromRoot("..\\artifacts\\local_internal_options.conf"), "C:\\Program Files (x86)\\ossec-agent\\local_internal_options.conf", true);
+                    File.Copy(Path.Combine(CommonUtils.ArtifactsFolder, "local_internal_options.conf"), "C:\\Program Files (x86)\\ossec-agent\\local_internal_options.conf", true);
 
                     _logger.Information("Enable osquery for END_POINT_DETECTION_AND_RESPONSE");
 

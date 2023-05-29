@@ -28,7 +28,7 @@ namespace IvsAgent
                 //Check event log exists
                 if (!EventLog.SourceExists(Constants.IvsAgentName))
                 {
-                    EventLog.CreateEventSource(Constants.IvsAgentName, Common.Constants.LogGroupName);
+                    EventLog.CreateEventSource(Constants.IvsAgentName, Constants.LogGroupName);
                 }
 
                 ServiceBase[] ServicesToRun;
