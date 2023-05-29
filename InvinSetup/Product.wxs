@@ -1,21 +1,6 @@
-﻿<!-- The name of the product -->
-<?define Name = "Invinsense" ?>
-<!-- The Description of the product -->
-<?define Description = "Invinsense 4.0 Agent" ?>
-<!-- The manufacturer, for setup package publisher and folder info -->
-<?define Manufacturer = "Infopercept" ?>
-<!-- The manufacturer, for AgentPackege and folder info -->
-<?define AgentName = "IvsAgent" ?>
-<!-- The manufacturer, for TrayPackage and folder info -->
-<?define TrayName = "IvsTray" ?>
-<!-- The manufacturer, for other tools and folder info -->
-<?define ArtifactsName = "Artifacts" ?>
-<!-- The version number of this setup package-->
-<?define Version = "4.0.0.0" ?>
-<!-- UpgradeCode must be unique and not changed once the first version of the program is installed. -->
-<?define UpgradeCode = "{38ECE878-1645-4310-BD9A-B9CA57FE0DF0}" ?>
-<!-- The name of the Cabinet -->
-<?define CabName = "Invinsense.cab" ?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<?include Variables.wxi ?>
 
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs" xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util">
 
