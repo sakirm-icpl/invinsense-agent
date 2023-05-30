@@ -1,35 +1,13 @@
 ﻿using Microsoft.Win32;
 using Serilog;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Common.Persistance
 {
-    public sealed class ToolRepository
+    public static class ToolRepository
     {
-        private static readonly ILogger _logger = Log.ForContext<ToolRepository>();
-
-        public ToolRepository()
-        {
-        }
-
-        public IEnumerable<ToolStatus> GetAllStatuses()
-        {
-            var edrStatus = GetStatus(ToolName.EndpointDecetionAndResponse);
-            var sysmonStatus = GetStatus(ToolName.AdvanceTelemetry);
-            var osQueryStatus = GetStatus(ToolName.UserBehaviorAnalytics);
-            var avStatus = GetStatus(ToolName.EndpointProtection);
-            var lmpStatus = GetStatus(ToolName.LateralMovementProtection);
-            var statuses = new List<ToolStatus> { edrStatus, sysmonStatus, osQueryStatus, avStatus, lmpStatus };
-            
-            if(!CanSkipMonitoring(ToolName.EndpointDeception))
-            {
-                var deceptionStatus = GetStatus(ToolName.EndpointDeception);
-                statuses.Add(deceptionStatus);
-            }
-            return statuses;
-        }
+        private static readonly ILogger _logger = Log.ForContext(typeof(ToolRepository));
 
         public static bool CanSkipMonitoring(string name)
         {
@@ -48,27 +26,6 @@ namespace Common.Persistance
             }
 
             return false;
-        }
-
-        public ToolStatus GetStatus(string name)
-        {
-            try
-            {
-                using (var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
-                using (var key = hklm.OpenSubKey($"SOFTWARE\\Infopercept\\{name}", false)) // False is important!
-                {
-                    var installStatus = (InstallStatus) Enum.Parse(typeof(InstallStatus), (key?.GetValue("INSTALL_STATUS") as string) ?? "NotFound");
-                    var runningStatus = (RunningStatus) Enum.Parse(typeof(RunningStatus), (key?.GetValue("RUNNING_STATUS") as string) ?? "NotFound");
-
-                    return new ToolStatus(name, installStatus, runningStatus);
-                }
-            }
-            catch(Exception ex)
-            {
-                _logger.Error($"Error in reading tool status. {ex}");
-            }
-
-            return new ToolStatus(name, InstallStatus.NotFound, RunningStatus.NotFound);
         }
 
         public static string GetPropertyByName(string path, string name)
@@ -104,29 +61,9 @@ namespace Common.Persistance
             }
         }
 
-        public void CaptureEvent(ToolStatus toolStatus)
+        public static void CaptureEvent(ToolStatus toolStatus)
         {
             _logger.Information($"{toolStatus}");
-
-            var oldStatus = GetStatus(toolStatus.Name);
-
-            if(oldStatus.InstallStatus != toolStatus.InstallStatus)
-            {
-                SetPropertyByName(toolStatus.Name, "INSTALL_STATUS", toolStatus.InstallStatus.ToString());
-            }
-
-            if (oldStatus.RunningStatus != toolStatus.RunningStatus)
-            {
-                SetPropertyByName(toolStatus.Name, "RUNNING_STATUS", toolStatus.RunningStatus.ToString());
-            }
-
-            if (oldStatus.InstallStatus == toolStatus.InstallStatus && oldStatus.RunningStatus == toolStatus.RunningStatus)
-            {
-                _logger.Information($"{toolStatus} not changed. Skipping...");
-                return;
-            }
-
-            _logger.Information($"Status changed. Old: {oldStatus}, New: {toolStatus}");
 
             var log = new EventLog(Constants.LogGroupName) { Source = Constants.IvsAgentName };
 

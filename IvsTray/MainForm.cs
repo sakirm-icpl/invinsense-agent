@@ -5,7 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
+using System.IO.Pipes;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace IvsTray
@@ -21,9 +24,9 @@ namespace IvsTray
 
         private const int Margine = 10;
 
-        private readonly ToolRepository toolRepository;
+        private readonly IDictionary<string, RunningStatus> _toolRunningStatuses = new Dictionary<string, RunningStatus>();
 
-        private readonly IDictionary<string, RunningStatus> toolStatuses = new Dictionary<string, RunningStatus>();
+        private NamedPipeClientStream _client;
 
         public MainForm()
         {
@@ -32,8 +35,6 @@ namespace IvsTray
             InitializeComponent();
 
             SetWindow();
-
-            toolRepository = new ToolRepository();
 
             var log = new EventLog(Constants.LogGroupName)
             {
@@ -62,31 +63,89 @@ namespace IvsTray
         private void Log_EntryWritten(object sender, EntryWrittenEventArgs e)
         {
             var toolStatus = new ToolStatus(e.Entry.InstanceId);
-            UpdateToolStatus(toolStatus, true);            
+            UpdateToolStatus(toolStatus, true);
         }
 
         private void MainFormOnLoad(object sender, EventArgs e)
         {
             //By default form will be in visible by making opacity to 0.
             Opacity = 0;
-            _logger.Information("Loading all tools from db");
-            var allTools = toolRepository.GetAllStatuses();
-            _logger.Information($"Tools loaded: {allTools.Count()}");
-
-            toolStatuses.Clear();
-            foreach (var toolDetail in allTools)
-            {
-                toolStatuses.Add(toolDetail.Name, toolDetail.RunningStatus);
-                UpdateToolStatus(new ToolStatus(toolDetail.Name, toolDetail.InstallStatus, toolDetail.RunningStatus));
-            }
             
+            _logger.Information("Loading all tools from NamedPipes");
+
+            _client = new NamedPipeClientStream(".", "MyPipe", PipeDirection.In);
+            Task.Run(() => ConnectAndListen());
+        }
+
+        private async Task ConnectAndListen()
+        {
+            while (true)
+            {
+                try
+                {
+                    if (!_client.IsConnected)
+                    {
+                        _client.Connect();
+                    }
+
+                    var reader = new StreamReader(_client);
+                    var message = await reader.ReadLineAsync();
+
+                    if (message == null)
+                    {
+                        _client.Close();
+                        _client = new NamedPipeClientStream(".", "MyPipe", PipeDirection.In);
+                    }
+                    else
+                    {
+                        UpdateStatus(message);
+                    }
+                }
+                catch
+                {
+                    // Wait before trying to connect again to avoid spamming the server
+                    await Task.Delay(5000);
+                }
+            }
+        }
+
+        private void UpdateStatus(string status)
+        {
+            // Updates a label on the form with the new status. 
+            // Must be done on the UI thread if this method isn't called from the UI thread.
+            if (InvokeRequired)
+            {
+                Invoke((Action<string>)UpdateStatus, status);
+            }
+            else
+            {
+                var toolStatuses = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ToolStatus>>(status);
+
+                var requireToFillInitialValues = _toolRunningStatuses.Count == 0;
+
+                foreach (var toolStatus in toolStatuses)
+                {
+                    if (requireToFillInitialValues)
+                    {
+                        _toolRunningStatuses.Add(toolStatus.Name, toolStatus.RunningStatus);
+                    }
+
+                    UpdateToolStatus(toolStatus);
+                }
+
+                //Resize window based on number of tools
+                if(requireToFillInitialValues)
+                {
+                    
+                }
+            }
         }
 
         private void UpdateToolStatus(ToolStatus toolStatus, bool showNotification = false)
         {
-            if(toolStatuses.ContainsKey(toolStatus.Name))
+            if(_toolRunningStatuses.ContainsKey(toolStatus.Name))
             {
-                toolStatuses[toolStatus.Name] = toolStatus.RunningStatus;
+                _toolRunningStatuses[toolStatus.Name] = toolStatus.RunningStatus;
             }
 
             var pb = pbInvinsense;
@@ -139,7 +198,7 @@ namespace IvsTray
                 _logger.Fatal($"{toolStatus.Name} error state");
             }
 
-            if (toolStatuses.Any(x=>x.Value != RunningStatus.Running))
+            if (_toolRunningStatuses.Any(x=>x.Value != RunningStatus.Running))
             {
                 notifyIcon.Icon = Properties.Resources.red_logo_22_22;
                 notifyIcon.Text = $"{Constants.IvsDescription} - Not all services are healthy";
