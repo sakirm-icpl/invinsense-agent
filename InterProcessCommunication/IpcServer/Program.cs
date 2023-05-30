@@ -1,11 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.IO.Pipes;
-using System.Text;
 using System.Threading;
 
 namespace IpcServer
 {
+    /// <summary>
+    /// https://learn.microsoft.com/en-us/dotnet/standard/io/how-to-use-named-pipes-for-network-interprocess-communication
+    /// </summary>
     internal class Program
     {
         private static readonly int numThreads = 4;
@@ -39,7 +41,10 @@ namespace IpcServer
                     }
                 }
             }
+
             Console.WriteLine("\nServer threads exhausted, exiting.");
+            Console.WriteLine("\nPress any key to exit...");
+            Console.ReadLine();
         }
 
         private static void ServerThread(object data)
@@ -69,8 +74,8 @@ namespace IpcServer
                 ReadFileToStream fileReader = new ReadFileToStream(ss, filename);
 
                 // Display the name of the user we are impersonating.
-                Console.WriteLine("Reading file: {0} on thread[{1}] as user: {2}.",
-                    filename, threadId, pipeServer.GetImpersonationUserName());
+                Console.WriteLine("Reading file: {0} on thread[{1}] as user: {2}.", filename, threadId, pipeServer.GetImpersonationUserName());
+
                 pipeServer.RunAsClient(fileReader.Start);
             }
             // Catch the IOException that is raised if the pipe is broken
@@ -79,65 +84,8 @@ namespace IpcServer
             {
                 Console.WriteLine("ERROR: {0}", e.Message);
             }
+
             pipeServer.Close();
-        }
-    }
-
-    // Defines the data protocol for reading and writing strings on our stream
-    public class StreamString
-    {
-        private readonly Stream ioStream;
-        private readonly UnicodeEncoding streamEncoding;
-
-        public StreamString(Stream ioStream)
-        {
-            this.ioStream = ioStream;
-            streamEncoding = new UnicodeEncoding();
-        }
-
-        public string ReadString()
-        {
-            int len = ioStream.ReadByte() * 256;
-            len += ioStream.ReadByte();
-            byte[] inBuffer = new byte[len];
-            ioStream.Read(inBuffer, 0, len);
-
-            return streamEncoding.GetString(inBuffer);
-        }
-
-        public int WriteString(string outString)
-        {
-            byte[] outBuffer = streamEncoding.GetBytes(outString);
-            int len = outBuffer.Length;
-            if (len > UInt16.MaxValue)
-            {
-                len = (int)UInt16.MaxValue;
-            }
-            ioStream.WriteByte((byte)(len / 256));
-            ioStream.WriteByte((byte)(len & 255));
-            ioStream.Write(outBuffer, 0, len);
-            ioStream.Flush();
-
-            return outBuffer.Length + 2;
-        }
-    }
-
-    // Contains the method executed in the context of the impersonated user
-    public class ReadFileToStream
-    {
-        private readonly string fn;
-        private readonly StreamString ss;
-
-        public ReadFileToStream(StreamString str, string filename)
-        {
-            fn = filename;
-            ss = str;
-        }
-
-        public void Start()
-        {
-            string contents = File.ReadAllText(fn);
-            ss.WriteString(contents);
         }
     }
 }

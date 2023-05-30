@@ -3,11 +3,13 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
 using System.Security.Principal;
-using System.Text;
 using System.Threading;
 
 namespace IpcClient
 {
+    /// <summary>
+    /// https://learn.microsoft.com/en-us/dotnet/standard/io/how-to-use-named-pipes-for-network-interprocess-communication
+    /// </summary>
     internal class Program
     {
         private static readonly int numClients = 4;
@@ -18,12 +20,10 @@ namespace IpcClient
             {
                 if (args[0] == "spawnclient")
                 {
-                    var pipeClient =
-                        new NamedPipeClientStream(".", "testpipe",
-                            PipeDirection.InOut, PipeOptions.None,
-                            TokenImpersonationLevel.Impersonation);
+                    var pipeClient = new NamedPipeClientStream(".", "testpipe", PipeDirection.InOut, PipeOptions.None, TokenImpersonationLevel.Impersonation);
 
                     Console.WriteLine("Connecting to server...\n");
+
                     pipeClient.Connect();
 
                     var ss = new StreamString(pipeClient);
@@ -33,7 +33,7 @@ namespace IpcClient
                         // The client security token is sent with the first write.
                         // Send the name of the file whose contents are returned
                         // by the server.
-                        ss.WriteString("c:\\textfile.txt");
+                        ss.WriteString("FileContent.txt");
 
                         // Print the file to the screen.
                         Console.Write(ss.ReadString());
@@ -53,6 +53,9 @@ namespace IpcClient
                 Console.WriteLine("\n*** Named pipe client stream with impersonation example ***\n");
                 StartClients();
             }
+
+            Console.WriteLine("\n\nPress any key to exit...");
+            Console.ReadLine();
         }
 
         // Helper function to create pipe client processes
@@ -70,12 +73,12 @@ namespace IpcClient
 
             if (currentProcessName.Contains(Environment.CurrentDirectory))
             {
-                currentProcessName = currentProcessName.Replace(Environment.CurrentDirectory, String.Empty);
+                currentProcessName = currentProcessName.Replace(Environment.CurrentDirectory, string.Empty);
             }
 
             // Remove extra characters when launched from Visual Studio
-            currentProcessName = currentProcessName.Replace("\\", String.Empty);
-            currentProcessName = currentProcessName.Replace("\"", String.Empty);
+            currentProcessName = currentProcessName.Replace("\\", string.Empty);
+            currentProcessName = currentProcessName.Replace("\"", string.Empty);
 
             int i;
             for (i = 0; i < numClients; i++)
@@ -103,47 +106,6 @@ namespace IpcClient
                 }
             }
             Console.WriteLine("\nClient processes finished, exiting.");
-        }
-    }
-
-    // Defines the data protocol for reading and writing strings on our stream.
-    public class StreamString
-    {
-        private readonly Stream ioStream;
-        private readonly UnicodeEncoding streamEncoding;
-
-        public StreamString(Stream ioStream)
-        {
-            this.ioStream = ioStream;
-            streamEncoding = new UnicodeEncoding();
-        }
-
-        public string ReadString()
-        {
-            int len;
-            len = ioStream.ReadByte() * 256;
-            len += ioStream.ReadByte();
-            var inBuffer = new byte[len];
-            ioStream.Read(inBuffer, 0, len);
-
-            return streamEncoding.GetString(inBuffer);
-        }
-
-        public int WriteString(string outString)
-        {
-            byte[] outBuffer = streamEncoding.GetBytes(outString);
-            int len = outBuffer.Length;
-            if (len > UInt16.MaxValue)
-            {
-                len = (int)UInt16.MaxValue;
-            }
-
-            ioStream.WriteByte((byte)(len / 256));
-            ioStream.WriteByte((byte)(len & 255));
-            ioStream.Write(outBuffer, 0, len);
-            ioStream.Flush();
-
-            return outBuffer.Length + 2;
         }
     }
 }
