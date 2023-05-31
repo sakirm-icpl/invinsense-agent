@@ -3,7 +3,6 @@ using Common.Persistance;
 using Serilog;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.IO.Pipes;
@@ -35,13 +34,6 @@ namespace IvsTray
             InitializeComponent();
 
             SetWindow();
-
-            var log = new EventLog(Constants.LogGroupName)
-            {
-                EnableRaisingEvents = true
-            };
-
-            log.EntryWritten += Log_EntryWritten;
         }
 
         private void SetWindow()
@@ -55,22 +47,11 @@ namespace IvsTray
             Location = new Point(workingArea.Right - Size.Width - Margine, workingArea.Bottom - Size.Height - Margine);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Log_EntryWritten(object sender, EntryWrittenEventArgs e)
-        {
-            var toolStatus = new ToolStatus(e.Entry.InstanceId);
-            UpdateToolStatus(toolStatus, true);
-        }
-
         private void MainFormOnLoad(object sender, EventArgs e)
         {
             //By default form will be in visible by making opacity to 0.
             Opacity = 0;
-            
+
             _logger.Information("Loading all tools from NamedPipes");
             _client = new NamedPipeClientStream(".", Constants.IvsName, PipeDirection.In);
             Task.Run(() => ConnectAndListen());
@@ -78,13 +59,16 @@ namespace IvsTray
 
         private async Task ConnectAndListen()
         {
+            _logger.Debug("Inside ConnectAndListen");
+
             while (true)
             {
                 try
                 {
                     if (!_client.IsConnected)
                     {
-                        _client.Connect();
+                        _logger.Information("Connecting to NamedPipe");
+                        await _client.ConnectAsync();
                     }
 
                     var reader = new StreamReader(_client);
@@ -135,7 +119,7 @@ namespace IvsTray
                 }
 
                 //Resize window based on number of tools
-                if(requireToFillInitialValues)
+                if (requireToFillInitialValues)
                 {
                     var toolsCount = _toolRunningStatuses.Count;
                     _logger.Information($"Number of tools: {toolsCount}");
@@ -145,7 +129,7 @@ namespace IvsTray
 
         private void UpdateToolStatus(ToolStatus toolStatus, bool showNotification = false)
         {
-            if(_toolRunningStatuses.ContainsKey(toolStatus.Name))
+            if (_toolRunningStatuses.ContainsKey(toolStatus.Name))
             {
                 _toolRunningStatuses[toolStatus.Name] = toolStatus.RunningStatus;
             }
@@ -200,7 +184,7 @@ namespace IvsTray
                 _logger.Fatal($"{toolStatus.Name} error state");
             }
 
-            if (_toolRunningStatuses.Any(x=>x.Value != RunningStatus.Running))
+            if (_toolRunningStatuses.Any(x => x.Value != RunningStatus.Running))
             {
                 notifyIcon.Icon = Properties.Resources.red_logo_22_22;
                 notifyIcon.Text = $"{Constants.IvsDescription} - Not all services are healthy";
@@ -211,7 +195,7 @@ namespace IvsTray
                 notifyIcon.Text = $"{Constants.IvsDescription} - Healthy";
             }
 
-            if(showNotification)
+            if (showNotification)
             {
                 notifyIcon.ShowBalloonTip(5000, toolStatus.Name, $"Status: {toolStatus.RunningStatus}", icon);
             }
@@ -238,7 +222,7 @@ namespace IvsTray
         {
             //When we click on notification icone the form gets visible by making Opacity to true.
             Opacity = 1;
-            
+
             //Checks if the method is called from UI thread or not
             if (InvokeRequired)
             {
@@ -259,7 +243,7 @@ namespace IvsTray
                 //Set form's topmost status back to whatever it was
                 TopMost = top;
             }
-            
+
         }
     }
 }

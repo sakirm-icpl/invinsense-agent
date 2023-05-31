@@ -16,6 +16,7 @@ using System.IO.Pipes;
 using System.IO;
 using System.Collections.Generic;
 using Common;
+using System.Diagnostics.Eventing.Reader;
 
 namespace IvsAgent
 {
@@ -26,6 +27,8 @@ namespace IvsAgent
         private readonly ExtendedServiceController UserBehaviorServiceChecker;
         private readonly ExtendedServiceController AdvanceTelemetryServiceChecker;
         private readonly ExtendedServiceController LmpServiceChecker;
+
+        private readonly EventLogWatcher avWatcher;
 
         private readonly ILogger _logger = Log.ForContext<IvsService>();
 
@@ -66,6 +69,38 @@ namespace IvsAgent
 
             LmpServiceChecker = new ExtendedServiceController("IvsAgent");
             LmpServiceChecker.StatusChanged += (object sender, ServiceStatusEventArgs e) => LmpStatusUpdate(e.Status);
+
+            //Adding AV Watcher
+            //TODO: Need to check if this is the best way to do it
+            avWatcher = new EventLogWatcher("Microsoft-Windows-Windows Defender/Operational");
+            avWatcher.EventRecordWritten += new EventHandler<EventRecordWrittenEventArgs>(DefenderEventWritten);
+            avWatcher.Enabled = true;
+        }
+
+        /// <summary>
+        /// This method is called when there is any change in windows defender
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="arg"></param>
+        public void DefenderEventWritten(object obj, EventRecordWrittenEventArgs arg)
+        {
+            if (arg.EventRecord != null)
+            {
+                _logger.Debug("Defender EventId: {0}, Publisher: {1}", arg.EventRecord.Id, arg.EventRecord.ProviderName);
+
+                if (arg.EventRecord.Id == 5001)
+                {
+                    SendStatusUpdate(new ToolStatus(ToolName.EndpointProtection, InstallStatus.Installed, RunningStatus.Stopped));
+                }
+                else if (arg.EventRecord.Id == 5000)
+                {
+                    SendStatusUpdate(new ToolStatus(ToolName.EndpointProtection, InstallStatus.Installed, RunningStatus.Running));
+                }
+            }
+            else
+            {
+                Console.WriteLine("Event reading error: {0}", arg.EventException.Message);
+            }
         }
 
         protected override void OnSessionChange(SessionChangeDescription changeDescription)
@@ -373,7 +408,7 @@ namespace IvsAgent
             {
                 if (ProcessExtensions.CheckProcessAsCurrentUser("IvsTray"))
                 {
-                    _logger.Information("IvsTray is running.");
+                    _logger.Debug("IvsTray is running.");
                 }
                 else
                 {
