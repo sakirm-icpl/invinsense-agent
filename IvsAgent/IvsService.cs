@@ -428,6 +428,9 @@ namespace IvsAgent
         /// </summary>
         private void VerifyDependencyAndInstall()
         {
+            _logger.Information("Starting dependency check and installation");
+
+            _logger.Information("Checking Sysmon");
             if (SysmonWrapper.Verify(true) == 0)
             {
                 _logger.Information($"SysmonServiceVerified with status {AdvanceTelemetryServiceChecker.Status}");
@@ -440,6 +443,7 @@ namespace IvsAgent
                 _logger.Error("Error in Sysmon installer");
             }
 
+            _logger.Information("Checking OsQuery");
             if (OsQueryWrapper.Verify(true) == 0)
             {
                 _logger.Information("OsQueryVerified with status {OsQuery.Status}");
@@ -452,6 +456,7 @@ namespace IvsAgent
                 _logger.Error("Error in OSQuery installer");
             }
 
+            _logger.Information("Checking Wazuh");
             if (WazuhWrapper.Verify(true) == 0)
             {
                 _logger.Information($"WazuhServiceVerified with status {EdrServiceChecker.Status}");
@@ -464,6 +469,7 @@ namespace IvsAgent
                 _logger.Error("Error in Wazuh installer");
             }
 
+            _logger.Information("Checking DBytes");
             if (DBytesWrapper.Verify(true) == 0)
             {
                 _logger.Information($"DbytesServiceVerified with status {DeceptionServiceChecker.Status}");
@@ -491,7 +497,20 @@ namespace IvsAgent
                 case ToolName.EndpointDecetionAndResponse:
                     return new ToolStatus(ToolName.EndpointDecetionAndResponse, DeceptionServiceChecker.InstallStatus, DeceptionServiceChecker.RunningStatus);
                 case ToolName.EndpointProtection:
-                    return new ToolStatus(ToolName.EndpointProtection, InstallStatus.Installed, RunningStatus.Running);
+                    var installedAntiviruses = AvMonitor.ListAvStatuses();
+                    ToolStatus avStatus;
+                    if (installedAntiviruses.Any(x => x.IsAvEnabled && x.AvName == "Windows Defender"))
+                    {
+                        var defenderStatus = installedAntiviruses.FirstOrDefault(x => x.IsAvEnabled && x.AvName == "Windows Defender");
+                        var runningStatus = (defenderStatus.IsAvEnabled && defenderStatus.IsAvUptoDate) ? RunningStatus.Running : RunningStatus.Warning;
+                        avStatus = new ToolStatus(ToolName.EndpointProtection, InstallStatus.Installed, runningStatus);
+                    }
+                    else
+                    {
+                        avStatus = new ToolStatus(ToolName.EndpointProtection, InstallStatus.Installed, RunningStatus.NotFound);
+                    }
+
+                    return avStatus;
                 case ToolName.LateralMovementProtection:
                     return new ToolStatus(ToolName.LateralMovementProtection, LmpServiceChecker.InstallStatus, LmpServiceChecker.RunningStatus);
                 case ToolName.UserBehaviorAnalytics:
