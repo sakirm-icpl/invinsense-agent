@@ -99,7 +99,7 @@ namespace IvsAgent
             }
             else
             {
-                Console.WriteLine("Event reading error: {0}", arg.EventException.Message);
+                _logger.Debug("Windows Defender Event reading error: {0}", arg.EventException.Message);
             }
         }
 

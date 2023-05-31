@@ -283,6 +283,7 @@ namespace IvsTray
             this.Text = "Invinsense 4.0";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainFormClosing);
             this.Load += new System.EventHandler(this.MainFormOnLoad);
+            this.DpiChanged += new System.Windows.Forms.DpiChangedEventHandler(this.OnDpiChanged);
             ((System.ComponentModel.ISupportInitialize)(this.pbDbytes)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbSysmon)).EndInit();

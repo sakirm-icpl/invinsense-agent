@@ -36,27 +36,45 @@ namespace IvsTray
             SetWindow();
         }
 
+        private void OnDpiChanged(object sender, DpiChangedEventArgs e)
+        {
+            SetWindow();
+        }
+
+        /// <summary>
+        /// Setting location of window.
+        /// </summary>
         private void SetWindow()
         {
-            Region = Region.FromHrgn(MainFormHelpers.CreateRoundRectRgn(0, 0, Width, Height, 20, 20));
-            MouseDownFilter mouseFilter = new MouseDownFilter(this);
-            mouseFilter.FormClicked += FormClicked;
-            Application.AddMessageFilter(mouseFilter);
-
             Rectangle workingArea = Screen.GetWorkingArea(this);
             Location = new Point(workingArea.Right - Size.Width - Margine, workingArea.Bottom - Size.Height - Margine);
         }
 
+        /// <summary>
+        /// Starting configuration for the form.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MainFormOnLoad(object sender, EventArgs e)
         {
             //By default form will be in visible by making opacity to 0.
             Opacity = 0;
 
+            Region = Region.FromHrgn(MainFormHelpers.CreateRoundRectRgn(0, 0, Width, Height, 20, 20));
+            MouseDownFilter mouseFilter = new MouseDownFilter(this);
+            mouseFilter.FormClicked += FormClicked;
+            Application.AddMessageFilter(mouseFilter);
+
+
             _logger.Information("Loading all tools from NamedPipes");
-            _client = new NamedPipeClientStream(".", Constants.IvsName, PipeDirection.In);
+            _client = new NamedPipeClientStream(".", Constants.IvsName, PipeDirection.In, PipeOptions.Asynchronous);
             Task.Run(() => ConnectAndListen());
         }
 
+        /// <summary>
+        /// This function connects to server named pipes and listens for messages
+        /// </summary>
+        /// <returns></returns>
         private async Task ConnectAndListen()
         {
             _logger.Debug("Inside ConnectAndListen");
@@ -79,7 +97,7 @@ namespace IvsTray
                     if (message == null)
                     {
                         _client.Close();
-                        _client = new NamedPipeClientStream(".", Constants.IvsName, PipeDirection.In);
+                        _client = new NamedPipeClientStream(".", Constants.IvsName, PipeDirection.In, PipeOptions.Asynchronous);
                     }
                     else
                     {
