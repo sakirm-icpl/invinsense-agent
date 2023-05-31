@@ -20,7 +20,7 @@ namespace IvsTray
 
             Log.Logger = new LoggerConfiguration()
                .MinimumLevel.Debug()
-               .WriteTo.File(new JsonFormatter(), CommonUtils.DataFolder + "\\IvsTray.json", rollOnFileSizeLimit: false, fileSizeLimitBytes: 100000)
+               .WriteTo.File(new JsonFormatter(), CommonUtils.DataFolder + "\\IvsTray.json", rollOnFileSizeLimit: true, fileSizeLimitBytes: 30000)
                .CreateLogger();
 
             Log.Information("Initializing program");

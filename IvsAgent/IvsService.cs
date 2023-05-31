@@ -75,6 +75,8 @@ namespace IvsAgent
             avWatcher = new EventLogWatcher("Microsoft-Windows-Windows Defender/Operational");
             avWatcher.EventRecordWritten += new EventHandler<EventRecordWrittenEventArgs>(DefenderEventWritten);
             avWatcher.Enabled = true;
+
+            _sysTrayTimer.Elapsed += new ElapsedEventHandler(CheckUserSystemTray);
         }
 
         /// <summary>
@@ -121,6 +123,8 @@ namespace IvsAgent
                     break;
             }
         }
+
+        #region ToolStatusCheck
 
         private void EdrUpdateStatus(ServiceControllerStatus? status)
         {
@@ -257,6 +261,8 @@ namespace IvsAgent
             }
         }
 
+        #endregion
+
         protected override void OnStart(string[] args)
         {
             if (_isRunning)
@@ -269,7 +275,6 @@ namespace IvsAgent
 
             _logger.Information("Starting Invinsense service...");
 
-            _sysTrayTimer.Elapsed += new ElapsedEventHandler(CheckUserSystemTray);
             _sysTrayTimer.Start();
 
             _logger.Information("Scheduling dependency after 5 sec...");
