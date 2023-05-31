@@ -72,8 +72,7 @@ namespace IvsTray
             Opacity = 0;
             
             _logger.Information("Loading all tools from NamedPipes");
-
-            _client = new NamedPipeClientStream(".", "MyPipe", PipeDirection.In);
+            _client = new NamedPipeClientStream(".", Constants.IvsName, PipeDirection.In);
             Task.Run(() => ConnectAndListen());
         }
 
@@ -89,12 +88,14 @@ namespace IvsTray
                     }
 
                     var reader = new StreamReader(_client);
-                    var message = await reader.ReadLineAsync();
+                    var message = await reader.ReadToEndAsync();
+
+                    _logger.Information($"Received message: {message}");
 
                     if (message == null)
                     {
                         _client.Close();
-                        _client = new NamedPipeClientStream(".", "MyPipe", PipeDirection.In);
+                        _client = new NamedPipeClientStream(".", Constants.IvsName, PipeDirection.In);
                     }
                     else
                     {

@@ -21,8 +21,6 @@ namespace IvsAgent
 {
     public partial class IvsService : ServiceBase
     {
-        private readonly Timer avTimer = new Timer(15000);
-
         private readonly ExtendedServiceController EdrServiceChecker;
         private readonly ExtendedServiceController DeceptionServiceChecker;
         private readonly ExtendedServiceController UserBehaviorServiceChecker;
@@ -72,7 +70,10 @@ namespace IvsAgent
 
         protected override void OnSessionChange(SessionChangeDescription changeDescription)
         {
-            EventLog.WriteEntry($"IvsService.OnSessionChange {DateTime.Now.ToLongTimeString()} - Session change notice received: {changeDescription.Reason}  Session ID: {changeDescription.SessionId}");
+            var message = $"IvsService.OnSessionChange {DateTime.Now.ToLongTimeString()} - Session change notice received: {changeDescription.Reason}  Session ID: {changeDescription.SessionId}";
+            
+            _logger.Information(message);
+            EventLog.WriteEntry(message);
 
             switch (changeDescription.Reason)
             {
@@ -233,8 +234,8 @@ namespace IvsAgent
 
             _logger.Information("Starting Invinsense service...");
 
-            avTimer.Elapsed += new ElapsedEventHandler(OnElapsedTime);
-            avTimer.Start();
+            _sysTrayTimer.Elapsed += new ElapsedEventHandler(CheckUserSystemTray);
+            _sysTrayTimer.Start();
 
             _logger.Information("Scheduling dependency after 5 sec...");
 
@@ -254,14 +255,21 @@ namespace IvsAgent
 
         protected override void OnStop()
         {
-            _logger.Information("Stopping service");
-            avTimer.Stop();
+            _isRunning = false;
 
+            _logger.Information("Stopping service");
+
+            //Stop the timer.
+            _sysTrayTimer.Stop();
+
+            //Update tray for LMP.
             SendStatusUpdate(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.Installed, RunningStatus.Stopped));
 
+            //Clean up pipe variables.
+            _logger.Information("Cleaning up pipe server");
+            _pipeServer?.Disconnect();
             _pipeServer?.Dispose();
-
-            _isRunning = false;
+            _writer = null;
 
             //TODO: Study RequestAdditionalTime functionality for this context.
             //https://docs.microsoft.com/en-us/dotnet/api/system.serviceprocess.servicebase.requestadditionaltime?view=netframework-4.8
@@ -326,6 +334,7 @@ namespace IvsAgent
         protected override void OnShutdown()
         {
             _logger.Information("System is shutting down");
+
             string serviceName = "IvsAgent";
 
             ServiceController[] services = ServiceController.GetServices();
@@ -339,13 +348,17 @@ namespace IvsAgent
             {
                 _logger.Information($"Service {serviceName} not found");
             }
+
             base.OnShutdown();
         }
 
-        private bool inTimer = false;
-        private InstallStatus avLastStatus = InstallStatus.NotFound;
+        #region Checking System Tray Periodically
 
-        private void OnElapsedTime(object source, ElapsedEventArgs e)
+        private readonly Timer _sysTrayTimer = new Timer();
+
+        private bool inTimer = false;
+
+        private void CheckUserSystemTray(object source, ElapsedEventArgs e)
         {
             if (inTimer)
             {
@@ -369,46 +382,15 @@ namespace IvsAgent
                     ProcessExtensions.StartProcessAsCurrentUser(null, ivsTrayFile);
                 }
             }
-            var avStatuses = AvMonitor.ListAvStatuses();
-            var enabledAvStatus = avStatuses.FirstOrDefault(x => x.IsAvEnabled && x.IsAvUptoDate);
-            var disabledAvStatus = avStatuses.FirstOrDefault(x => x.IsAvDisabled);
-
-            InstallStatus currentAvStatus;
-            RunningStatus currentRunningStatus;
-
-            if (enabledAvStatus == null && disabledAvStatus == null)
-            {
-                // No antivirus is detected
-                currentAvStatus = InstallStatus.Error;
-                currentRunningStatus = RunningStatus.Stopped;
-                _logger.Information($"{enabledAvStatus.AvName} is {currentRunningStatus}");
-            }
-            else if (enabledAvStatus != null)
-            {
-                // An enabled and up-to-date antivirus is detected
-                currentAvStatus = InstallStatus.Installed;
-                currentRunningStatus = RunningStatus.Running;
-                _logger.Information($"{enabledAvStatus.AvName} is {currentRunningStatus}");
-            }
-            else
-            {
-                // A disabled antivirus is detected
-                currentAvStatus = InstallStatus.Installed;
-                currentRunningStatus = RunningStatus.Error;
-                _logger.Information($"{disabledAvStatus.AvName} is having {currentRunningStatus}");
-            }
-
-            if (avLastStatus != currentAvStatus)
-            {
-                _logger.Information($"Antivirus status changed from {avLastStatus} to {currentAvStatus}");
-                avLastStatus = currentAvStatus;
-            }
-
-            SendStatusUpdate(new ToolStatus(ToolName.EndpointProtection, currentAvStatus, currentRunningStatus));
 
             inTimer = false;
         }
 
+        #endregion
+
+        /// <summary>
+        /// TODO: Need to move tool installation logic to separate class.
+        /// </summary>
         private void VerifyDependencyAndInstall()
         {
             if (SysmonWrapper.Verify(true) == 0)
@@ -463,34 +445,6 @@ namespace IvsAgent
             UserExtensions.EnsureFakeUser("maintenance", "P@$$w0rd");
         }
 
-        private async Task HandleClientConnections()
-        {
-            while (true)
-            {
-                await _pipeServer.WaitForConnectionAsync();
-                _writer = new StreamWriter(_pipeServer)
-                {
-                    AutoFlush = true
-                };
-
-                var statuses = new List<ToolStatus>
-                {
-                    GetToolStatus(ToolName.EndpointDeception),
-                    GetToolStatus(ToolName.EndpointProtection),
-                    GetToolStatus(ToolName.UserBehaviorAnalytics),
-                    GetToolStatus(ToolName.EndpointDecetionAndResponse),
-                    GetToolStatus(ToolName.AdvanceTelemetry),
-                    GetToolStatus(ToolName.LateralMovementProtection)
-                };
-
-                await _writer.WriteLineAsync(Newtonsoft.Json.JsonConvert.SerializeObject(statuses));
-
-                _pipeServer.WaitForPipeDrain();
-                _pipeServer.Disconnect();
-                _writer = null;
-            }
-        }
-
         private ToolStatus GetToolStatus(string toolName)
         {
             switch (toolName)
@@ -512,6 +466,41 @@ namespace IvsAgent
             }
         }
 
+        #region IPC Block
+
+        private async Task HandleClientConnections()
+        {
+            while (true)
+            {
+                await _pipeServer.WaitForConnectionAsync();
+
+                _logger.Information("Tray IPC Connected");
+
+                _writer = new StreamWriter(_pipeServer)
+                {
+                    AutoFlush = true
+                };
+
+                var statuses = new List<ToolStatus>
+                {
+                    GetToolStatus(ToolName.EndpointDeception),
+                    GetToolStatus(ToolName.EndpointProtection),
+                    GetToolStatus(ToolName.UserBehaviorAnalytics),
+                    GetToolStatus(ToolName.EndpointDecetionAndResponse),
+                    GetToolStatus(ToolName.AdvanceTelemetry),
+                    GetToolStatus(ToolName.LateralMovementProtection)
+                };
+
+                var message = Newtonsoft.Json.JsonConvert.SerializeObject(statuses);
+
+                _logger.Information($"Sending status to tray {string.Join(", ", statuses.Select(x=> x))}");
+
+                await _writer.WriteLineAsync(message);
+
+                _pipeServer.WaitForPipeDrain();
+            }
+        }
+
         private void SendStatusUpdate(ToolStatus status)
         {
             //Capture the event in the event logger
@@ -521,5 +510,7 @@ namespace IvsAgent
             var statuses = new List<ToolStatus> { status };
             _writer?.WriteLineAsync(Newtonsoft.Json.JsonConvert.SerializeObject(statuses));
         }
+
+        #endregion
     }
 }

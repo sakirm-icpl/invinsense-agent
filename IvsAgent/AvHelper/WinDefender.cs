@@ -10,13 +10,16 @@ namespace IvsAgent.AvHelper
         private static bool _isDefenderAvailable;
         private static string _defenderPath;
         private static string _scanCommand;
+
         //private static SemaphoreSlim _lock = new SemaphoreSlim(5); //limit to 5 concurrent checks at a time
+        
         public WinDefender(string scanCommand) 
         {
             _defenderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Windows Defender", "MpCmdRun.exe");
             _isDefenderAvailable = File.Exists(_defenderPath);
             _scanCommand = scanCommand;
         }
+
         public static async Task<bool> IsVirus()
         {
             if (!_isDefenderAvailable) return false;

@@ -39,6 +39,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AvHelper\AvMonitor.cs" />
+    <Compile Include="AvHelper\AvStatus.cs" />
     <Compile Include="AvHelper\AVStatusFlags.cs" />
     <Compile Include="AvHelper\ProviderFlags.cs" />
     <Compile Include="AvHelper\ProviderStatus.cs" />
