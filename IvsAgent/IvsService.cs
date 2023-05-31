@@ -281,11 +281,12 @@ namespace IvsAgent
                 VerifyDependencyAndInstall();
             });
 
-            _logger.Information("Task added...");
-            SendStatusUpdate(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.Installed, RunningStatus.Running));
-
+            _logger.Information("Starting IPC server");
             _pipeServer = new NamedPipeServerStream(Constants.IvsName, PipeDirection.Out, 1, PipeTransmissionMode.Message, PipeOptions.Asynchronous);
             Task.Run(HandleClientConnections);
+
+            _logger.Information("Invinsense service started.");
+            SendStatusUpdate(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.Installed, RunningStatus.Running));
         }
 
         protected override void OnStop()
@@ -408,7 +409,7 @@ namespace IvsAgent
             {
                 if (ProcessExtensions.CheckProcessAsCurrentUser("IvsTray"))
                 {
-                    _logger.Debug("IvsTray is running.");
+                    _logger.Verbose("IvsTray is running.");
                 }
                 else
                 {
@@ -528,7 +529,7 @@ namespace IvsAgent
             {
                 await _pipeServer.WaitForConnectionAsync();
 
-                _logger.Information("Tray IPC Connected");
+                _logger.Information("Incoming Tray connection...");
 
                 _writer = new StreamWriter(_pipeServer)
                 {
