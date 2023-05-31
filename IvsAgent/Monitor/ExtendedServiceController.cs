@@ -1,4 +1,5 @@
-﻿using IvsTray.Monitor;
+﻿using Common.Persistance;
+using IvsTray.Monitor;
 using System;
 using System.Collections.Generic;
 using System.ServiceProcess;
@@ -23,6 +24,41 @@ namespace IvsAgent.Monitor
                 catch (Exception)
                 {
                     return null;
+                }
+            }
+        }
+
+        public InstallStatus InstallStatus
+        {
+            get
+            {
+                return Status == null ? InstallStatus.NotFound : InstallStatus.Installed;
+            }
+        }
+
+        public RunningStatus RunningStatus
+        {
+            get
+            {
+                if(Status == null)
+                {
+                    return RunningStatus.NotFound;
+                }
+
+                switch (Status)
+                {
+                    case ServiceControllerStatus.Running:
+                        return RunningStatus.Running;
+                    case ServiceControllerStatus.Stopped:
+                        return RunningStatus.Stopped;
+                    case ServiceControllerStatus.Paused:
+                    case ServiceControllerStatus.StopPending:
+                    case ServiceControllerStatus.StartPending:
+                    case ServiceControllerStatus.ContinuePending:
+                    case ServiceControllerStatus.PausePending:
+                        return RunningStatus.Warning;
+                    default:
+                        return RunningStatus.NotFound;
                 }
             }
         }

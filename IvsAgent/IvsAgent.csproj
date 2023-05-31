@@ -44,11 +44,9 @@
     <Compile Include="AvHelper\ProviderStatus.cs" />
     <Compile Include="AvHelper\SignatureStatusFlags.cs" />
     <Compile Include="AvHelper\WinDefender.cs" />
-    <Compile Include="CustomJsonFormatter.cs" />
     <Compile Include="Extensions\FileFaker.cs" />
     <Compile Include="Extensions\ProcessExtensions.cs" />
     <Compile Include="Extensions\UserExtensions.cs" />
-    <Compile Include="LoggingConfig.cs" />
     <Compile Include="Monitor\ExtendedServiceController.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -136,7 +136,8 @@ namespace IvsTray
                 //Resize window based on number of tools
                 if(requireToFillInitialValues)
                 {
-                    
+                    var toolsCount = _toolRunningStatuses.Count;
+                    _logger.Information($"Number of tools: {toolsCount}");
                 }
             }
         }
@@ -229,10 +230,14 @@ namespace IvsTray
             BringToTop();
         }
 
+        /// <summary>
+        /// This method brings the form to top without stealing focus
+        /// </summary>
         private void BringToTop()
         {
             //When we click on notification icone the form gets visible by making Opacity to true.
             Opacity = 1;
+            
             //Checks if the method is called from UI thread or not
             if (InvokeRequired)
             {

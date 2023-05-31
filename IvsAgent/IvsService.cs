@@ -25,9 +25,9 @@ namespace IvsAgent
 
         private readonly ExtendedServiceController EdrServiceChecker;
         private readonly ExtendedServiceController DeceptionServiceChecker;
-        private readonly ExtendedServiceController OsQuery;
-        private readonly ExtendedServiceController Sysmon;
-        private readonly ExtendedServiceController LmpService;
+        private readonly ExtendedServiceController UserBehaviorServiceChecker;
+        private readonly ExtendedServiceController AdvanceTelemetryServiceChecker;
+        private readonly ExtendedServiceController LmpServiceChecker;
 
         private readonly ILogger _logger = Log.ForContext<IvsService>();
 
@@ -60,14 +60,14 @@ namespace IvsAgent
             DeceptionServiceChecker = new ExtendedServiceController("DBytesService");
             DeceptionServiceChecker.StatusChanged += (object sender, ServiceStatusEventArgs e) => DeceptionUpdateStatus(e.Status);
 
-            OsQuery = new ExtendedServiceController("osqueryd");
-            OsQuery.StatusChanged += (object sender, ServiceStatusEventArgs e) => OsQueryUpdateStatus(e.Status);
+            UserBehaviorServiceChecker = new ExtendedServiceController("osqueryd");
+            UserBehaviorServiceChecker.StatusChanged += (object sender, ServiceStatusEventArgs e) => OsQueryUpdateStatus(e.Status);
 
-            Sysmon = new ExtendedServiceController("Sysmon64");
-            Sysmon.StatusChanged += (object sender, ServiceStatusEventArgs e) => SysmonUpdateStatus(e.Status);
+            AdvanceTelemetryServiceChecker = new ExtendedServiceController("Sysmon64");
+            AdvanceTelemetryServiceChecker.StatusChanged += (object sender, ServiceStatusEventArgs e) => SysmonUpdateStatus(e.Status);
 
-            LmpService = new ExtendedServiceController("IvsAgent");
-            LmpService.StatusChanged += (object sender, ServiceStatusEventArgs e) => LmpStatusUpdate(e.Status);
+            LmpServiceChecker = new ExtendedServiceController("IvsAgent");
+            LmpServiceChecker.StatusChanged += (object sender, ServiceStatusEventArgs e) => LmpStatusUpdate(e.Status);
         }
 
         protected override void OnSessionChange(SessionChangeDescription changeDescription)
@@ -262,13 +262,13 @@ namespace IvsAgent
             _pipeServer?.Dispose();
 
             _isRunning = false;
-          
+
             //TODO: Study RequestAdditionalTime functionality for this context.
             //https://docs.microsoft.com/en-us/dotnet/api/system.serviceprocess.servicebase.requestadditionaltime?view=netframework-4.8
             //https://stackoverflow.com/questions/125964/how-to-stop-a-windows-service-that-is-stuck-on-stopping
             //Check if installation is in progress and wait for it to complete.
             //RequestAdditionalTime(1000 * 60 * 2);
-            
+
             Stop();
         }
 
@@ -330,7 +330,7 @@ namespace IvsAgent
 
             ServiceController[] services = ServiceController.GetServices();
             ServiceController sc = services.FirstOrDefault(s => s.ServiceName == serviceName);
-            
+
             if (sc != null)
             {
                 sc.Stop();
@@ -413,10 +413,10 @@ namespace IvsAgent
         {
             if (SysmonWrapper.Verify(true) == 0)
             {
-                _logger.Information($"SysmonServiceVerified with status {Sysmon.Status}");
-                Sysmon.StartListening();
-                SysmonUpdateStatus(Sysmon.Status);
-                _logger.Information($"SysmonServiceListening with status {Sysmon.Status}");
+                _logger.Information($"SysmonServiceVerified with status {AdvanceTelemetryServiceChecker.Status}");
+                AdvanceTelemetryServiceChecker.StartListening();
+                SysmonUpdateStatus(AdvanceTelemetryServiceChecker.Status);
+                _logger.Information($"SysmonServiceListening with status {AdvanceTelemetryServiceChecker.Status}");
             }
             else
             {
@@ -426,9 +426,9 @@ namespace IvsAgent
             if (OsQueryWrapper.Verify(true) == 0)
             {
                 _logger.Information("OsQueryVerified with status {OsQuery.Status}");
-                OsQuery.StartListening();
-                OsQueryUpdateStatus(OsQuery.Status);
-                _logger.Information($"OsQueryListening with status {OsQuery.Status}");
+                UserBehaviorServiceChecker.StartListening();
+                OsQueryUpdateStatus(UserBehaviorServiceChecker.Status);
+                _logger.Information($"OsQueryListening with status {UserBehaviorServiceChecker.Status}");
             }
             else
             {
@@ -475,12 +475,12 @@ namespace IvsAgent
 
                 var statuses = new List<ToolStatus>
                 {
-                    new ToolStatus(ToolName.EndpointDeception, InstallStatus.Installed, RunningStatus.Running),
-                    new ToolStatus(ToolName.EndpointProtection, InstallStatus.Installed, RunningStatus.Running),
-                    new ToolStatus(ToolName.UserBehaviorAnalytics, InstallStatus.Installed, RunningStatus.Running),
-                    new ToolStatus(ToolName.EndpointDecetionAndResponse, InstallStatus.Installed, RunningStatus.Running),
-                    new ToolStatus(ToolName.AdvanceTelemetry, InstallStatus.Installed, RunningStatus.Running),
-                    new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.Installed, RunningStatus.Running)
+                    GetToolStatus(ToolName.EndpointDeception),
+                    GetToolStatus(ToolName.EndpointProtection),
+                    GetToolStatus(ToolName.UserBehaviorAnalytics),
+                    GetToolStatus(ToolName.EndpointDecetionAndResponse),
+                    GetToolStatus(ToolName.AdvanceTelemetry),
+                    GetToolStatus(ToolName.LateralMovementProtection)
                 };
 
                 await _writer.WriteLineAsync(Newtonsoft.Json.JsonConvert.SerializeObject(statuses));
@@ -491,13 +491,34 @@ namespace IvsAgent
             }
         }
 
+        private ToolStatus GetToolStatus(string toolName)
+        {
+            switch (toolName)
+            {
+                case ToolName.AdvanceTelemetry:
+                    return new ToolStatus(ToolName.AdvanceTelemetry, AdvanceTelemetryServiceChecker.InstallStatus, AdvanceTelemetryServiceChecker.RunningStatus);
+                case ToolName.EndpointDeception:
+                    return new ToolStatus(ToolName.EndpointDeception, EdrServiceChecker.InstallStatus, EdrServiceChecker.RunningStatus);
+                case ToolName.EndpointDecetionAndResponse:
+                    return new ToolStatus(ToolName.EndpointDecetionAndResponse, DeceptionServiceChecker.InstallStatus, DeceptionServiceChecker.RunningStatus);
+                case ToolName.EndpointProtection:
+                    return new ToolStatus(ToolName.EndpointProtection, InstallStatus.Installed, RunningStatus.Running);
+                case ToolName.LateralMovementProtection:
+                    return new ToolStatus(ToolName.LateralMovementProtection, LmpServiceChecker.InstallStatus, LmpServiceChecker.RunningStatus);
+                case ToolName.UserBehaviorAnalytics:
+                    return new ToolStatus(ToolName.UserBehaviorAnalytics, UserBehaviorServiceChecker.InstallStatus, UserBehaviorServiceChecker.RunningStatus);
+                default:
+                    throw new Exception($"Unknown tool name {toolName}");
+            }
+        }
+
         private void SendStatusUpdate(ToolStatus status)
         {
             //Capture the event in the event logger
             ToolRepository.CaptureEvent(status);
 
             //Send the status to the client
-            var statuses = new List<ToolStatus>{ status };
+            var statuses = new List<ToolStatus> { status };
             _writer?.WriteLineAsync(Newtonsoft.Json.JsonConvert.SerializeObject(statuses));
         }
     }
