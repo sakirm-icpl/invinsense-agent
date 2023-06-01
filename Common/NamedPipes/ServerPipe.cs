@@ -15,12 +15,19 @@ namespace Common.NamedPipes
             this.asyncReaderStart = asyncReaderStart;
             PipeName = pipeName;
 
+            var pipeSecurity = new PipeSecurity();
+            pipeSecurity.AddAccessRule(new PipeAccessRule("Everyone", PipeAccessRights.FullControl, System.Security.AccessControl.AccessControlType.Allow));
+
+
             serverPipeStream = new NamedPipeServerStream(
                 pipeName,
                 PipeDirection.InOut,
                 NamedPipeServerStream.MaxAllowedServerInstances,
                 PipeTransmissionMode.Message,
-                PipeOptions.Asynchronous);
+                PipeOptions.Asynchronous,
+                0,
+                0,
+                pipeSecurity);
 
             pipeStream = serverPipeStream;
             serverPipeStream.BeginWaitForConnection(new AsyncCallback(PipeConnected), null);
