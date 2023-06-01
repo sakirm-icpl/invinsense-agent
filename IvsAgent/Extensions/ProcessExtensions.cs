@@ -215,7 +215,7 @@ namespace IvsAgent.Extensions
             return bResult;
         }
 
-        public static bool StartProcessAsCurrentUser(string appPath, string cmdLine = null, string workDir = null, bool visible = true)
+        public static bool RunInActiveUserSession(string appPath, string cmdLine = null, string workDir = null, bool visible = true)
         {
             var hUserToken = IntPtr.Zero;
             var startInfo = new STARTUPINFO();
@@ -276,31 +276,5 @@ namespace IvsAgent.Extensions
 
             return true;
         }
-
-        public static bool CheckProcessAsCurrentUser(string appName)
-        {
-            var proc = Process.GetProcesses();
-
-            foreach (var procInfo in proc)
-            {
-                Console.WriteLine($"{procInfo.ProcessName}, {procInfo.StartInfo.FileName}");
-            }
-
-            Process myProc = Process.GetProcesses().FirstOrDefault(pp => pp.ProcessName.StartsWith(appName));
-            if (myProc == null)
-            {
-                return false;
-            }
-
-            Process myExplorer = Process.GetProcesses().FirstOrDefault(pp => pp.ProcessName == "explorer" && pp.SessionId == myProc.SessionId);
-
-            if (myExplorer == null)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
     }
 }

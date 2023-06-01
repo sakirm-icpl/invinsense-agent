@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Management;
 using System.Threading;
 
@@ -21,6 +23,35 @@ namespace ProcessMonitorTest
         /// <param name="args"></param>
         static void Main()
         {
+
+            Console.WriteLine("Please type command");
+
+            string input;
+
+            while ((input = Console.ReadLine().ToLower()) != "q")
+            {
+                switch (input)
+                {
+                    case "1":
+                        ProcessMonitor();
+                        break;
+                    case "session check":
+                        var processes = Process.GetProcesses();
+
+                        bool isSessionActive = Process.GetProcesses().Any(p => p.SessionId > 0 && p.ProcessName != "Idel");
+                        Console.WriteLine($"Is session active: {isSessionActive}");
+                        Process myProc = Process.GetProcesses().FirstOrDefault(pp => pp.ProcessName.StartsWith("notepad"));
+                        Process myExplorer = Process.GetProcesses().FirstOrDefault(pp => pp.ProcessName == "explorer" && pp.SessionId == myProc.SessionId);
+                        break;
+                    default:
+                        Console.WriteLine("Please select correct switch");
+                        break;
+                }
+            }
+        }
+
+        public static void ProcessMonitor()
+        {
             DateTime start = DateTime.Now;
 
             var monitor = new ProcessMonitor("msedge");
@@ -41,8 +72,8 @@ namespace ProcessMonitorTest
                 Thread.Sleep(1000);
 
                 long usedMemory = currentProcess.PrivateMemorySize64;
-                
-                Console.WriteLine($"Used Memory: {usedMemory}, Processor Time: {currentProcess.TotalProcessorTime.TotalSeconds} / {(DateTime.Now-start).TotalSeconds}");
+
+                Console.WriteLine($"Used Memory: {usedMemory}, Processor Time: {currentProcess.TotalProcessorTime.TotalSeconds} / {(DateTime.Now - start).TotalSeconds}");
             }
 
             startWatch.Stop();
@@ -124,7 +155,7 @@ namespace ProcessMonitorTest
             float ram = ramCounter.NextValue();
             float cpu = cpuCounter.NextValue();
             Console.WriteLine("RAM: " + (ram) + " MB; CPU: " + (cpu));
-          
+
         }
     }
 }

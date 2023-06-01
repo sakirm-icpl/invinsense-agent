@@ -33,18 +33,18 @@ namespace IvsTray
 
             InitializeComponent();
 
-            SetWindow();
+            SetWindowPosition();
         }
 
         private void OnDpiChanged(object sender, DpiChangedEventArgs e)
         {
-            SetWindow();
+            SetWindowPosition();
         }
 
         /// <summary>
         /// Setting location of window.
         /// </summary>
-        private void SetWindow()
+        private void SetWindowPosition()
         {
             Rectangle workingArea = Screen.GetWorkingArea(this);
             Location = new Point(workingArea.Right - Size.Width - Margine, workingArea.Bottom - Size.Height - Margine);
@@ -60,6 +60,7 @@ namespace IvsTray
             //By default form will be in visible by making opacity to 0.
             Opacity = 0;
 
+            //Making form borderless and rounded in the corners.
             Region = Region.FromHrgn(MainFormHelpers.CreateRoundRectRgn(0, 0, Width, Height, 20, 20));
             MouseDownFilter mouseFilter = new MouseDownFilter(this);
             mouseFilter.FormClicked += FormClicked;
@@ -104,8 +105,10 @@ namespace IvsTray
                         UpdateStatus(message);
                     }
                 }
-                catch
+                catch(Exception ex)
                 {
+                    _logger.Error($"Error while connecting to NamedPipe. {ex.Message}");
+
                     // Wait before trying to connect again to avoid spamming the server
                     await Task.Delay(5000);
                 }
@@ -238,7 +241,7 @@ namespace IvsTray
         /// </summary>
         private void BringToTop()
         {
-            //When we click on notification icone the form gets visible by making Opacity to true.
+            //When we click on notification icon the form gets visible by making Opacity to true.
             Opacity = 1;
 
             //Checks if the method is called from UI thread or not

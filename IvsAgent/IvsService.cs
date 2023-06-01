@@ -108,7 +108,7 @@ namespace IvsAgent
         protected override void OnSessionChange(SessionChangeDescription changeDescription)
         {
             var message = $"IvsService.OnSessionChange {DateTime.Now.ToLongTimeString()} - Session change notice received: {changeDescription.Reason}  Session ID: {changeDescription.SessionId}";
-            
+
             _logger.Information(message);
             EventLog.WriteEntry(message);
 
@@ -294,31 +294,38 @@ namespace IvsAgent
             SendStatusUpdate(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.Installed, RunningStatus.Running));
         }
 
+        /// <summary>
+        /// https://docs.microsoft.com/en-us/dotnet/api/system.serviceprocess.servicebase.requestadditionaltime?view=netframework-4.8
+        /// https://stackoverflow.com/questions/125964/how-to-stop-a-windows-service-that-is-stuck-on-stopping
+        /// Check if installation is in progress and wait for it to complete.
+        /// Try to use : RequestAdditionalTime(1000 * 60 * 2);
+        /// </summary>
         protected override void OnStop()
         {
             _isRunning = false;
 
             _logger.Information("Stopping service");
 
-            //Stop the timer.
-            _sysTrayTimer.Stop();
+            try
+            {
+                //Stop the timer.
+                _sysTrayTimer.Stop();
 
-            //Update tray for LMP.
-            SendStatusUpdate(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.Installed, RunningStatus.Stopped));
+                //Update tray for LMP.
+                SendStatusUpdate(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.Installed, RunningStatus.Stopped));
 
-            //Clean up pipe variables.
-            _logger.Information("Cleaning up pipe server");
-            _pipeServer?.Disconnect();
-            _pipeServer?.Dispose();
-            _writer = null;
+                //Clean up pipe variables.
+                _logger.Information("Cleaning up pipe server");
+                _pipeServer?.Disconnect();
+                _pipeServer?.Dispose();
+                _writer = null;
 
-            //TODO: Study RequestAdditionalTime functionality for this context.
-            //https://docs.microsoft.com/en-us/dotnet/api/system.serviceprocess.servicebase.requestadditionaltime?view=netframework-4.8
-            //https://stackoverflow.com/questions/125964/how-to-stop-a-windows-service-that-is-stuck-on-stopping
-            //Check if installation is in progress and wait for it to complete.
-            //RequestAdditionalTime(1000 * 60 * 2);
-
-            Stop();
+                Stop();
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Error while stopping service");
+            }
         }
 
         protected override void OnPause()
@@ -333,6 +340,10 @@ namespace IvsAgent
             base.OnContinue();
         }
 
+        /// <summary>
+        /// Custom command handler.
+        /// </summary>
+        /// <param name="command"></param>
         protected override void OnCustomCommand(int command)
         {
             _logger.Information($"CustomCommand {command}");
@@ -342,40 +353,16 @@ namespace IvsAgent
             {
                 Stop();
             }
-            else if (command == 140)
-            {
-                var avStatuses = AvMonitor.ListAvStatuses();
-
-                var activeAvStatus = avStatuses.FirstOrDefault(x => x.IsAvEnabled);
-                if (activeAvStatus.AvName == "Windows Defender")
-                {
-                    WinDefender wd = new WinDefender($"-Scan -ScanType 2");
-                    _logger.Information("Windows Defender Starts Scanning..");
-
-                    var isVirus = WinDefender.IsVirus();
-                    _logger.Information($"{isVirus}");
-                }
-            }
-            else if (command == 141)
-            {
-                var avStatuses = AvMonitor.ListAvStatuses();
-
-                var activeAvStatus = avStatuses.FirstOrDefault(x => x.IsAvEnabled);
-                if (activeAvStatus.AvName == "Windows Defender")
-                {
-                    WinDefender wd = new WinDefender($"-Scan -ScanType 1");
-                    _logger.Information("Windows Defender Starts Scanning..");
-
-                    var isVirus = WinDefender.IsVirus();
-                    _logger.Information($"{isVirus}");
-                }
-            }
         }
 
+        /// <summary>
+        /// Logging unhandled exceptions.
+        /// </summary>
         protected override void OnShutdown()
         {
             _logger.Information("System is shutting down");
 
+            /*
             string serviceName = "IvsAgent";
 
             ServiceController[] services = ServiceController.GetServices();
@@ -389,13 +376,14 @@ namespace IvsAgent
             {
                 _logger.Information($"Service {serviceName} not found");
             }
+            */
 
             base.OnShutdown();
         }
 
         #region Checking System Tray Periodically
 
-        private readonly Timer _sysTrayTimer = new Timer();
+        private readonly Timer _sysTrayTimer = new Timer { AutoReset = true, Interval = 1000 * 60 * 1 }; //1 min
 
         private bool inTimer = false;
 
@@ -408,20 +396,36 @@ namespace IvsAgent
 
             inTimer = true;
 
-            //Check the user seesion is active or not
-            bool isSessionActive = Process.GetProcesses().Any(p => p.SessionId > 0 && p.ProcessName != "Idel");
-            if (isSessionActive)
+            try
             {
-                if (ProcessExtensions.CheckProcessAsCurrentUser("IvsTray"))
+                //Check the user seesion is active or not
+                var processes = Process.GetProcesses();
+                bool isSessionActive = processes.Any(p => p.SessionId > 0 && p.ProcessName != "Idel");
+
+                _logger.Verbose($"Is session active: {isSessionActive}");
+
+                if (isSessionActive)
                 {
-                    _logger.Verbose("IvsTray is running.");
+                    Process trayApp = processes.FirstOrDefault(pp => pp.ProcessName.StartsWith("IvsTray"));
+
+                    //TODO: Evaluate below scenario for multiple user sessions.
+                    //Process myExplorer = Process.GetProcesses().FirstOrDefault(pp => pp.ProcessName == "explorer" && pp.SessionId == trayApp.SessionId);
+
+                    if (trayApp != null)
+                    {
+                        _logger.Verbose($"Active Session App: {trayApp.ProcessName} - {trayApp.SessionId}");
+                    }
+                    else
+                    {
+                        var ivsTrayFile = CommonUtils.ConstructFromRoot("..\\IvsTray\\IvsTray.exe");
+                        _logger.Information($"IvsTray is not running. Starting... {ivsTrayFile}"); 
+                        ProcessExtensions.RunInActiveUserSession(null, ivsTrayFile);
+                    }
                 }
-                else
-                {
-                    var ivsTrayFile = CommonUtils.ConstructFromRoot("..\\IvsTray\\IvsTray.exe");
-                    _logger.Information($"IvsTray is not running. Starting... {ivsTrayFile}");
-                    ProcessExtensions.StartProcessAsCurrentUser(null, ivsTrayFile);
-                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Error while checking system tray");
             }
 
             inTimer = false;
@@ -553,7 +557,7 @@ namespace IvsAgent
 
                 var message = Newtonsoft.Json.JsonConvert.SerializeObject(statuses);
 
-                _logger.Information($"Sending status to tray {string.Join(", ", statuses.Select(x=> x))}");
+                _logger.Information($"Sending status to tray {string.Join(", ", statuses.Select(x => x))}");
 
                 await _writer.WriteLineAsync(message);
 

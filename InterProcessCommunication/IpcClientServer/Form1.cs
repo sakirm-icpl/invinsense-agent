@@ -9,12 +9,12 @@ namespace PipesClientTest
 {
     public partial class Form1 : Form
     {
-        private List<ClientPipe> clientPipes;
-        private List<ServerPipe> serverPipes;
-        private List<TextBox> tbServerSenders;
-        private List<TextBox> tbServerReceivers;
-        private List<TextBox> tbClientSenders;
-        private List<TextBox> tbClientReceivers;
+        private readonly List<ClientPipe> clientPipes;
+        private readonly List<ServerPipe> serverPipes;
+        private readonly List<TextBox> tbServerSenders;
+        private readonly List<TextBox> tbServerReceivers;
+        private readonly List<TextBox> tbClientSenders;
+        private readonly List<TextBox> tbClientReceivers;
         private ServerPipe nextServer;
 
         public Form1()
