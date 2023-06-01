@@ -15,13 +15,14 @@ namespace Common.NamedPipes
             this.asyncReaderStart = asyncReaderStart;
             PipeName = pipeName;
 
-            pipeStream = new NamedPipeServerStream(
+            serverPipeStream = new NamedPipeServerStream(
                 pipeName,
                 PipeDirection.InOut,
                 NamedPipeServerStream.MaxAllowedServerInstances,
                 PipeTransmissionMode.Message,
                 PipeOptions.Asynchronous);
 
+            pipeStream = serverPipeStream;
             serverPipeStream.BeginWaitForConnection(new AsyncCallback(PipeConnected), null);
         }
 
