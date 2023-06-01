@@ -44,7 +44,6 @@
     <Compile Include="AvHelper\ProviderFlags.cs" />
     <Compile Include="AvHelper\ProviderStatus.cs" />
     <Compile Include="AvHelper\SignatureStatusFlags.cs" />
-    <Compile Include="AvHelper\WinDefender.cs" />
     <Compile Include="Extensions\FileFaker.cs" />
     <Compile Include="Extensions\ProcessExtensions.cs" />
     <Compile Include="Extensions\UserExtensions.cs" />
