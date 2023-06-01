@@ -55,6 +55,7 @@ namespace Common.NamedPipes
 
         public Task WriteString(string str)
         {
+            if(!pipeStream.IsConnected) return Task.CompletedTask;
             return WriteBytes(Encoding.UTF8.GetBytes(str));
         }
 
