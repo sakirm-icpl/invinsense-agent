@@ -78,8 +78,12 @@ namespace IvsAgent
 
             _serverPipe = new ServerPipe(Constants.IvsName, p => p.StartStringReaderAsync());
 
-            _serverPipe.DataReceived += (sndr, args) => { _logger.Verbose($"Message received: {args.String}"); };
+            // Data received from client
+            _serverPipe.DataReceived += (sndr, args) => { 
+                _logger.Verbose($"Message received: {args.String}"); 
+            };
 
+            // Client connected
             _serverPipe.Connected += (sndr, args) => {
                 _logger.Debug("Client is connected.");
                 SendToolStatuses(); 
@@ -534,6 +538,7 @@ namespace IvsAgent
 
             var message = Newtonsoft.Json.JsonConvert.SerializeObject(statuses);
             _logger.Information($"Sending status to tray {string.Join(", ", statuses.Select(x => x))}");
+
             _serverPipe.WriteString(message);
         }
 
