@@ -319,13 +319,13 @@ namespace IvsAgent
                 _pipeServer?.Disconnect();
                 _pipeServer?.Dispose();
                 _writer = null;
-
-                Stop();
             }
             catch (Exception ex)
             {
                 _logger.Error(ex, "Error while stopping service");
             }
+
+            base.OnStop();
         }
 
         protected override void OnPause()
@@ -361,23 +361,6 @@ namespace IvsAgent
         protected override void OnShutdown()
         {
             _logger.Information("System is shutting down");
-
-            /*
-            string serviceName = "IvsAgent";
-
-            ServiceController[] services = ServiceController.GetServices();
-            ServiceController sc = services.FirstOrDefault(s => s.ServiceName == serviceName);
-
-            if (sc != null)
-            {
-                sc.Stop();
-            }
-            else
-            {
-                _logger.Information($"Service {serviceName} not found");
-            }
-            */
-
             base.OnShutdown();
         }
 
