@@ -44,6 +44,10 @@
     <Compile Include="Models\Error.cs" />
     <Compile Include="Models\IModel.cs" />
     <Compile Include="Models\ProcessResult.cs" />
+    <Compile Include="NamedPipes\BasicPipe.cs" />
+    <Compile Include="NamedPipes\ClientPipe.cs" />
+    <Compile Include="NamedPipes\PipeEventArgs.cs" />
+    <Compile Include="NamedPipes\ServerPipe.cs" />
     <Compile Include="Net\ClientService.cs" />
     <Compile Include="Net\HttpClientConfig.cs" />
     <Compile Include="Net\HttpContentTypes.cs" />

@@ -15,7 +15,6 @@ namespace PipesClientTest
         private readonly List<TextBox> tbServerReceivers;
         private readonly List<TextBox> tbClientSenders;
         private readonly List<TextBox> tbClientReceivers;
-        private ServerPipe nextServer;
 
         public Form1()
         {
@@ -49,7 +48,9 @@ namespace PipesClientTest
                 this.BeginInvoke(() =>
                     {
                         CreateServerUI();
-                        nextServer = CreateServer();
+                        
+                        //Recursively create next server
+                        CreateServer();
                     });
 
             return serverPipe;

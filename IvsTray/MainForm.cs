@@ -1,4 +1,5 @@
 using Common;
+using Common.NamedPipes;
 using Common.Persistance;
 using Serilog;
 using System;
@@ -25,7 +26,7 @@ namespace IvsTray
 
         private readonly IDictionary<string, RunningStatus> _toolRunningStatuses = new Dictionary<string, RunningStatus>();
 
-        private NamedPipeClientStream _client;
+        private readonly ClientPipe _clientPipe;
 
         public MainForm()
         {
@@ -34,6 +35,10 @@ namespace IvsTray
             InitializeComponent();
 
             SetWindowPosition();
+
+            _clientPipe = new ClientPipe(".", Constants.IvsName, p => p.StartStringReaderAsync());
+
+            _clientPipe.DataReceived += (sndr, args) => { UpdateStatus(args.String); };
         }
 
         private void OnDpiChanged(object sender, DpiChangedEventArgs e)
@@ -66,53 +71,8 @@ namespace IvsTray
             mouseFilter.FormClicked += FormClicked;
             Application.AddMessageFilter(mouseFilter);
 
-
-            _logger.Information("Loading all tools from NamedPipes");
-            _client = new NamedPipeClientStream(".", Constants.IvsName, PipeDirection.In, PipeOptions.Asynchronous);
-            Task.Run(() => ConnectAndListen());
-        }
-
-        /// <summary>
-        /// This function connects to server named pipes and listens for messages
-        /// </summary>
-        /// <returns></returns>
-        private async Task ConnectAndListen()
-        {
-            _logger.Debug("Inside ConnectAndListen");
-
-            while (true)
-            {
-                try
-                {
-                    if (!_client.IsConnected)
-                    {
-                        _logger.Information("Connecting to NamedPipe");
-                        await _client.ConnectAsync();
-                    }
-
-                    var reader = new StreamReader(_client);
-                    var message = await reader.ReadToEndAsync();
-
-                    _logger.Information($"Received message: {message}");
-
-                    if (message == null)
-                    {
-                        _client.Close();
-                        _client = new NamedPipeClientStream(".", Constants.IvsName, PipeDirection.In, PipeOptions.Asynchronous);
-                    }
-                    else
-                    {
-                        UpdateStatus(message);
-                    }
-                }
-                catch(Exception ex)
-                {
-                    _logger.Error($"Error while connecting to NamedPipe. {ex.Message}");
-
-                    // Wait before trying to connect again to avoid spamming the server
-                    await Task.Delay(5000);
-                }
-            }
+            _logger.Debug("Connecting to server");
+            _clientPipe.Connect();
         }
 
         private void UpdateStatus(string status)

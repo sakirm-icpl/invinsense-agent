@@ -12,11 +12,10 @@ using System.Threading.Tasks;
 using IvsAgent.Extensions;
 using IvsAgent.AvHelper;
 using System.Linq;
-using System.IO.Pipes;
-using System.IO;
 using System.Collections.Generic;
 using Common;
 using System.Diagnostics.Eventing.Reader;
+using Common.NamedPipes;
 
 namespace IvsAgent
 {
@@ -28,14 +27,13 @@ namespace IvsAgent
         private readonly ExtendedServiceController AdvanceTelemetryServiceChecker;
         private readonly ExtendedServiceController LmpServiceChecker;
 
+        private readonly ServerPipe _serverPipe;
+
         private readonly EventLogWatcher avWatcher;
 
         private readonly ILogger _logger = Log.ForContext<IvsService>();
 
         private bool _isRunning = false;
-
-        private NamedPipeServerStream _pipeServer;
-        private StreamWriter _writer;
 
         public IvsService()
         {
@@ -77,6 +75,15 @@ namespace IvsAgent
             avWatcher.Enabled = true;
 
             _sysTrayTimer.Elapsed += new ElapsedEventHandler(CheckUserSystemTray);
+
+            _serverPipe = new ServerPipe(Constants.IvsName, p => p.StartStringReaderAsync());
+
+            _serverPipe.DataReceived += (sndr, args) => { _logger.Verbose($"Message received: {args.String}"); };
+
+            _serverPipe.Connected += (sndr, args) => {
+                _logger.Debug("Client is connected.");
+                SendToolStatuses(); 
+            };
         }
 
         /// <summary>
@@ -287,8 +294,7 @@ namespace IvsAgent
             });
 
             _logger.Information("Starting IPC server");
-            _pipeServer = new NamedPipeServerStream(Constants.IvsName, PipeDirection.Out, 1, PipeTransmissionMode.Message, PipeOptions.Asynchronous);
-            Task.Run(HandleClientConnections);
+
 
             _logger.Information("Invinsense service started.");
             SendStatusUpdate(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.Installed, RunningStatus.Running));
@@ -316,9 +322,8 @@ namespace IvsAgent
 
                 //Clean up pipe variables.
                 _logger.Information("Cleaning up pipe server");
-                _pipeServer?.Disconnect();
-                _pipeServer?.Dispose();
-                _writer = null;
+
+
             }
             catch (Exception ex)
             {
@@ -401,7 +406,7 @@ namespace IvsAgent
                     else
                     {
                         var ivsTrayFile = CommonUtils.ConstructFromRoot("..\\IvsTray\\IvsTray.exe");
-                        _logger.Information($"IvsTray is not running. Starting... {ivsTrayFile}"); 
+                        _logger.Information($"IvsTray is not running. Starting... {ivsTrayFile}");
                         ProcessExtensions.RunInActiveUserSession(null, ivsTrayFile);
                     }
                 }
@@ -515,20 +520,9 @@ namespace IvsAgent
 
         #region IPC Block
 
-        private async Task HandleClientConnections()
+        private void SendToolStatuses()
         {
-            while (true)
-            {
-                await _pipeServer.WaitForConnectionAsync();
-
-                _logger.Information("Incoming Tray connection...");
-
-                _writer = new StreamWriter(_pipeServer)
-                {
-                    AutoFlush = true
-                };
-
-                var statuses = new List<ToolStatus>
+            var statuses = new List<ToolStatus>
                 {
                     GetToolStatus(ToolName.EndpointDeception),
                     GetToolStatus(ToolName.EndpointProtection),
@@ -538,14 +532,9 @@ namespace IvsAgent
                     GetToolStatus(ToolName.LateralMovementProtection)
                 };
 
-                var message = Newtonsoft.Json.JsonConvert.SerializeObject(statuses);
-
-                _logger.Information($"Sending status to tray {string.Join(", ", statuses.Select(x => x))}");
-
-                await _writer.WriteLineAsync(message);
-
-                _pipeServer.WaitForPipeDrain();
-            }
+            var message = Newtonsoft.Json.JsonConvert.SerializeObject(statuses);
+            _logger.Information($"Sending status to tray {string.Join(", ", statuses.Select(x => x))}");
+            _serverPipe.WriteString(message);
         }
 
         private void SendStatusUpdate(ToolStatus status)
@@ -555,7 +544,10 @@ namespace IvsAgent
 
             //Send the status to the client
             var statuses = new List<ToolStatus> { status };
-            _writer?.WriteLineAsync(Newtonsoft.Json.JsonConvert.SerializeObject(statuses));
+
+            var message = Newtonsoft.Json.JsonConvert.SerializeObject(statuses);
+            _logger.Information($"Sending status to tray {string.Join(", ", statuses.Select(x => x))}");
+            _serverPipe.WriteString(message);
         }
 
         #endregion
