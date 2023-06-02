@@ -36,9 +36,7 @@ namespace ToolManager.AgentWrappers
                 _logger.Information("SYSMON not found. Preparing installation");
 
                 var exePath = Path.Combine(CommonUtils.ArtifactsFolder, "Sysmon64.exe");
-
                 var logPath = Path.Combine(CommonUtils.LogsFolder, "sysmonInstall.log");
-
 
                 _logger.Information($"Sysmon exePath {exePath}");
                 _logger.Information($"Sysmon logPath {logPath}");

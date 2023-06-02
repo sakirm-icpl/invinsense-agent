@@ -88,6 +88,11 @@ namespace IvsAgent
                 _logger.Debug("Client is connected.");
                 SendToolStatuses(); 
             };
+
+            _serverPipe.PipeClosed += (sndr, args) =>
+            {
+                _logger.Debug("Client is disconnected.");
+            };
         }
 
         /// <summary>
@@ -99,7 +104,7 @@ namespace IvsAgent
         {
             if (arg.EventRecord != null)
             {
-                _logger.Debug("Defender EventId: {0}, Publisher: {1}", arg.EventRecord.Id, arg.EventRecord.ProviderName);
+                _logger.Debug("Defender EventId: {Id}, Publisher: {ProviderName}", arg.EventRecord.Id, arg.EventRecord.ProviderName);
 
                 if (arg.EventRecord.Id == 5001)
                 {
@@ -112,7 +117,7 @@ namespace IvsAgent
             }
             else
             {
-                _logger.Debug("Windows Defender Event reading error: {0}", arg.EventException.Message);
+                _logger.Debug("Windows Defender Event reading error: {Message}", arg.EventException.Message);
             }
         }
 
@@ -284,7 +289,6 @@ namespace IvsAgent
 
             _logger.Information("Starting IPC server");
 
-
             _logger.Information("Invinsense service started.");
             SendStatusUpdate(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.Installed, RunningStatus.Running));
         }
@@ -311,7 +315,6 @@ namespace IvsAgent
 
                 //Clean up pipe variables.
                 _logger.Information("Cleaning up pipe server");
-
 
             }
             catch (Exception ex)
@@ -523,7 +526,6 @@ namespace IvsAgent
 
             var message = Newtonsoft.Json.JsonConvert.SerializeObject(statuses);
             _logger.Information($"Sending status to tray {string.Join(", ", statuses.Select(x => x))}");
-
             _serverPipe.WriteString(message);
         }
 

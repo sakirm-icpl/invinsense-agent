@@ -49,10 +49,10 @@ namespace ToolManager.AgentWrappers
                 _logger.Information("END_POINT_DECEPTION installation is ready");
 
                 var msiPath = Path.Combine(CommonUtils.ArtifactsFolder, "DeceptiveBytes.EPS.x64.msi");
-
                 var logPath = Path.Combine(CommonUtils.LogsFolder, "dbytesInstall.log");
 
-                _logger.Information("Path",new { PATH =$"{msiPath}",Log=$"logPath" });
+                _logger.Information($"DBytes msiPath {msiPath}");
+                _logger.Information($"DBytes logPath {logPath}");
 
                 var serverIp = ToolRepository.GetPropertyByName(ToolName.EndpointDeception, "SERVER_ADDR");
                 var apiKey = ToolRepository.GetPropertyByName(ToolName.EndpointDeception, "APIKEY");

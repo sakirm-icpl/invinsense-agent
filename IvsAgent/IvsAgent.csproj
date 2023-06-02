@@ -37,6 +37,9 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>green_logo_22_22.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="AvHelper\AvMonitor.cs" />
     <Compile Include="AvHelper\AvStatus.cs" />
@@ -127,6 +130,9 @@
     <PackageReference Include="System.Xml.XmlDocument">
       <Version>4.3.0</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="green_logo_22_22.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

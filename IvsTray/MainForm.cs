@@ -110,7 +110,6 @@ namespace IvsTray
             Location = new Point(workingArea.Right - Size.Width - margine, workingArea.Bottom - Size.Height - margine);
         }
 
-
         /// <summary>
         /// This method brings the form to top without stealing focus
         /// </summary>

@@ -67,9 +67,9 @@ namespace IvsTray
             this.lblVersion.Location = new System.Drawing.Point(294, 11);
             this.lblVersion.Margin = new System.Windows.Forms.Padding(0);
             this.lblVersion.Name = "lblVersion";
-            this.lblVersion.Size = new System.Drawing.Size(105, 54);
+            this.lblVersion.Size = new System.Drawing.Size(100, 54);
             this.lblVersion.TabIndex = 17;
-            this.lblVersion.Text = "V4.0";
+            this.lblVersion.Text = "v4.0";
             // 
             // brandingPanel
             // 
