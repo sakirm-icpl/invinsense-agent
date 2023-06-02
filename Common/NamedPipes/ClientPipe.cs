@@ -16,6 +16,7 @@ namespace Common.NamedPipes
 
         public void Connect()
         {
+            _logger.Verbose("Connecting to pipe");
             clientPipeStream.Connect();
             asyncReaderStart(this);
         }

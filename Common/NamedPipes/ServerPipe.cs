@@ -9,11 +9,13 @@ namespace Common.NamedPipes
         public event EventHandler<EventArgs> Connected;
 
         protected NamedPipeServerStream serverPipeStream;
+
         protected string PipeName { get; set; }
 
         public ServerPipe(string pipeName, Action<BasicPipe> asyncReaderStart) : base(pipeName)
         {
             this.asyncReaderStart = asyncReaderStart;
+
             PipeName = pipeName;
 
             var pipeSecurity = new PipeSecurity();

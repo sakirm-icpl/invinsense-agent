@@ -27,7 +27,7 @@ namespace IvsAgent
         private readonly ExtendedServiceController AdvanceTelemetryServiceChecker;
         private readonly ExtendedServiceController LmpServiceChecker;
 
-        private readonly ServerPipe _serverPipe;
+        private ServerPipe _serverPipe;
 
         private readonly EventLogWatcher avWatcher;
 
@@ -76,6 +76,11 @@ namespace IvsAgent
 
             _sysTrayTimer.Elapsed += new ElapsedEventHandler(CheckUserSystemTray);
 
+            CreateServerPipe();
+        }
+
+        private void CreateServerPipe()
+        {
             _serverPipe = new ServerPipe(Constants.IvsName, p => p.StartStringReaderAsync());
 
             // Data received from client
@@ -93,7 +98,8 @@ namespace IvsAgent
 
             _serverPipe.PipeClosed += (sndr, args) =>
             {
-                _logger.Debug("Client is disconnected.");
+                _logger.Debug("Client is disconnected. Creating new server pipe...");
+                CreateServerPipe();
             };
         }
 

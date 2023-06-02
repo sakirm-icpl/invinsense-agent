@@ -19,7 +19,7 @@ namespace Common.NamedPipes
 
         public BasicPipe(string Context)
         {
-            _logger = _logger.ForContext("PipeContext", Context);
+            _logger = Log.ForContext("PipeContext", Context);
         }
 
         public void Close()
