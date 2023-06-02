@@ -402,6 +402,11 @@ namespace IvsAgent
                     if (trayApp != null)
                     {
                         _logger.Verbose($"Active Session App: {trayApp.ProcessName} - {trayApp.SessionId}");
+                       
+                        if(_logger.IsEnabled(Serilog.Events.LogEventLevel.Verbose))
+                        {
+                            SendToolStatuses();
+                        }
                     }
                     else
                     {
@@ -539,7 +544,7 @@ namespace IvsAgent
                 });
 
             var message = Newtonsoft.Json.JsonConvert.SerializeObject(statuses);
-            _logger.Information($"Sending status to tray {string.Join(", ", statuses.Select(x => x))}");
+            _logger.Debug($"Sending status to tray {string.Join(", ", statuses.Select(x => x))}");
             _serverPipe.WriteString(message);
         }
 
