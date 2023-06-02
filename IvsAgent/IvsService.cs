@@ -79,14 +79,16 @@ namespace IvsAgent
             _serverPipe = new ServerPipe(Constants.IvsName, p => p.StartStringReaderAsync());
 
             // Data received from client
-            _serverPipe.DataReceived += (sndr, args) => { 
-                _logger.Verbose($"Message received: {args.String}"); 
+            _serverPipe.DataReceived += (sndr, args) =>
+            {
+                _logger.Verbose($"Message received: {args.String}");
             };
 
             // Client connected
-            _serverPipe.Connected += (sndr, args) => {
+            _serverPipe.Connected += (sndr, args) =>
+            {
                 _logger.Debug("Client is connected.");
-                SendToolStatuses(); 
+                SendToolStatuses();
             };
 
             _serverPipe.PipeClosed += (sndr, args) =>
@@ -514,15 +516,21 @@ namespace IvsAgent
 
         private void SendToolStatuses()
         {
-            var statuses = new List<ToolStatus>
+            var skipDeception = ToolRepository.CanSkipMonitoring(ToolName.EndpointDeception);
+            var statuses = new List<ToolStatus>();
+            if (!skipDeception)
+            {
+                statuses.Add(GetToolStatus(ToolName.EndpointDeception));
+            }
+
+            statuses.AddRange(new List<ToolStatus>
                 {
-                    GetToolStatus(ToolName.EndpointDeception),
                     GetToolStatus(ToolName.EndpointProtection),
                     GetToolStatus(ToolName.UserBehaviorAnalytics),
                     GetToolStatus(ToolName.EndpointDetectionAndResponse),
                     GetToolStatus(ToolName.AdvanceTelemetry),
                     GetToolStatus(ToolName.LateralMovementProtection)
-                };
+                });
 
             var message = Newtonsoft.Json.JsonConvert.SerializeObject(statuses);
             _logger.Information($"Sending status to tray {string.Join(", ", statuses.Select(x => x))}");

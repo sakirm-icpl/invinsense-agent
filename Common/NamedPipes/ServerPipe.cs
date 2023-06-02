@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO.Pipes;
+using System.Security.AccessControl;
 
 namespace Common.NamedPipes
 {
@@ -10,13 +11,13 @@ namespace Common.NamedPipes
         protected NamedPipeServerStream serverPipeStream;
         protected string PipeName { get; set; }
 
-        public ServerPipe(string pipeName, Action<BasicPipe> asyncReaderStart)
+        public ServerPipe(string pipeName, Action<BasicPipe> asyncReaderStart) : base(pipeName)
         {
             this.asyncReaderStart = asyncReaderStart;
             PipeName = pipeName;
 
             var pipeSecurity = new PipeSecurity();
-            pipeSecurity.AddAccessRule(new PipeAccessRule("Everyone", PipeAccessRights.FullControl, System.Security.AccessControl.AccessControlType.Allow));
+            pipeSecurity.AddAccessRule(new PipeAccessRule("Everyone", PipeAccessRights.FullControl, AccessControlType.Allow));
 
             serverPipeStream = new NamedPipeServerStream(
                 pipeName,
@@ -34,6 +35,7 @@ namespace Common.NamedPipes
 
         protected void PipeConnected(IAsyncResult ar)
         {
+            _logger.Verbose("Pipe connected");
             serverPipeStream.EndWaitForConnection(ar);
             Connected?.Invoke(this, new EventArgs());
             asyncReaderStart(this);

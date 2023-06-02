@@ -7,7 +7,7 @@ namespace Common.NamedPipes
     {
         protected NamedPipeClientStream clientPipeStream;
 
-        public ClientPipe(string serverName, string pipeName, Action<BasicPipe> asyncReaderStart)
+        public ClientPipe(string serverName, string pipeName, Action<BasicPipe> asyncReaderStart) : base(pipeName)
         {
             this.asyncReaderStart = asyncReaderStart;
             clientPipeStream = new NamedPipeClientStream(serverName, pipeName, PipeDirection.InOut, PipeOptions.Asynchronous);

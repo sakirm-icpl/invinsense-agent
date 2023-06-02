@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.IO.Pipes;
 using System.Linq;
 using System.Text;
@@ -8,18 +9,23 @@ namespace Common.NamedPipes
 {
     public abstract class BasicPipe
     {
+        protected readonly ILogger _logger;
+
         public event EventHandler<PipeEventArgs> DataReceived;
         public event EventHandler<EventArgs> PipeClosed;
 
         protected PipeStream pipeStream;
         protected Action<BasicPipe> asyncReaderStart;
 
-        public BasicPipe()
+        public BasicPipe(string Context)
         {
+            _logger = _logger.ForContext("PipeContext", Context);
         }
 
         public void Close()
         {
+            _logger.Verbose("Closing pipe");
+
             pipeStream.WaitForPipeDrain();
             pipeStream.Close();
             pipeStream.Dispose();
@@ -50,12 +56,19 @@ namespace Common.NamedPipes
 
         public void Flush()
         {
+            _logger.Verbose("Flushing pipe");
             pipeStream.Flush();
         }
 
         public Task WriteString(string str)
         {
-            if(!pipeStream.IsConnected) return Task.CompletedTask;
+            _logger.Verbose("Writing string: {str}", str);
+            if (!pipeStream.IsConnected)
+            {
+                _logger.Verbose("Skipping as pipe is not connected.");
+                return Task.CompletedTask;
+            }
+
             return WriteBytes(Encoding.UTF8.GetBytes(str));
         }
 
