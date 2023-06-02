@@ -19,7 +19,7 @@ namespace IvsTray
             Application.SetCompatibleTextRenderingDefault(false);
 
             Log.Logger = new LoggerConfiguration()
-               .MinimumLevel.Debug()
+               .MinimumLevel.Verbose()
                .WriteTo.File(new JsonFormatter(), CommonUtils.DataFolder + "\\IvsTray.json", rollOnFileSizeLimit: true, fileSizeLimitBytes: 30000)
                .CreateLogger();
 

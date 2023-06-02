@@ -54,26 +54,26 @@ namespace ToolManager.AgentWrappers
 
                 var inputParameterBuilder = new StringBuilder();
 
-                var managerIp = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "MANAGER_ADDR");
+                var managerIp = ToolRepository.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "MANAGER_ADDR");
                 _logger.Information($"Wazuh's ManagerIp {managerIp}");
                 inputParameterBuilder.Append($"WAZUH_MANAGER=\"{managerIp}\"");
                 inputParameterBuilder.Append(" ");
 
-                var registrationIp = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "REGISTRATION_SERVER_ADDR");
+                var registrationIp = ToolRepository.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "REGISTRATION_SERVER_ADDR");
                 _logger.Information($"Wazuh's RegistrationIP {registrationIp}");
                 inputParameterBuilder.Append($"WAZUH_REGISTRATION_SERVER=\"{registrationIp}\"");
                 inputParameterBuilder.Append(" ");
 
-                var agentGroup = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "AGENT_GROUP");
+                var agentGroup = ToolRepository.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "AGENT_GROUP");
                 _logger.Information($"Wazuh's AgentGroup {agentGroup}");
                 inputParameterBuilder.Append($"WAZUH_AGENT_GROUP=\"{agentGroup}\"");
                 inputParameterBuilder.Append(" ");
 
-                var authType = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "REGISTRATION_TYPE");
+                var authType = ToolRepository.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "REGISTRATION_TYPE");
 
                 if (authType == "PASSWORD")
                 {
-                    var registrationPassword = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "REGISTRATION_PASSWORD");
+                    var registrationPassword = ToolRepository.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "REGISTRATION_PASSWORD");
                     _logger.Information($"Wazuh's RegistrationPassword {registrationPassword}");
                     inputParameterBuilder.Append($"WAZUH_REGISTRATION_PASSWORD=\"{registrationPassword}\"");
                     inputParameterBuilder.Append(" ");
@@ -81,12 +81,12 @@ namespace ToolManager.AgentWrappers
 
                 if(authType == "CERTIFICATE")
                 {
-                    var certificatePath = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "REGISTRATION_CERTIFICATE");
+                    var certificatePath = ToolRepository.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "REGISTRATION_CERTIFICATE");
                     _logger.Information($"Wazuh's Certificate File Path {certificatePath}");
                     inputParameterBuilder.Append($"WAZUH_REGISTRATION_CERTIFICATE=\"{certificatePath}\"");
                     inputParameterBuilder.Append(" ");
 
-                    var keyPath = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "REGISTRATION_KEY");
+                    var keyPath = ToolRepository.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "REGISTRATION_KEY");
                     _logger.Information($"Wazuh's Certificate Key File Path {keyPath}");
                     inputParameterBuilder.Append($"WAZUH_REGISTRATION_KEY=\"{keyPath}\"");
                     inputParameterBuilder.Append(" ");

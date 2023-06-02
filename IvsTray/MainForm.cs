@@ -1,13 +1,12 @@
 using Common;
 using Common.NamedPipes;
 using Common.Persistance;
+using IvsTray.Extensions;
+using Newtonsoft.Json;
 using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
-using System.IO.Pipes;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -15,44 +14,17 @@ namespace IvsTray
 {
     public partial class MainForm : Form
     {
-        private readonly Image NotFoundImage = Properties.Resources.gray;
-        private readonly Image ErrorImage = Properties.Resources.red;
-        private readonly Image WarnImage = Properties.Resources.yellow;
-        private readonly Image OkImage = Properties.Resources.green;
-
         private readonly ILogger _logger = Log.ForContext<MainForm>();
-
-        private const int Margine = 10;
-
-        private readonly IDictionary<string, RunningStatus> _toolRunningStatuses = new Dictionary<string, RunningStatus>();
 
         private readonly ClientPipe _clientPipe;
 
         public MainForm()
         {
             _logger.Information("Loading MainForm");
-
             InitializeComponent();
 
-            SetWindowPosition();
-
             _clientPipe = new ClientPipe(".", Constants.IvsName, p => p.StartStringReaderAsync());
-
-            _clientPipe.DataReceived += (sndr, args) => { UpdateStatus(args.String); };
-        }
-
-        private void OnDpiChanged(object sender, DpiChangedEventArgs e)
-        {
-            SetWindowPosition();
-        }
-
-        /// <summary>
-        /// Setting location of window.
-        /// </summary>
-        private void SetWindowPosition()
-        {
-            Rectangle workingArea = Screen.GetWorkingArea(this);
-            Location = new Point(workingArea.Right - Size.Width - Margine, workingArea.Bottom - Size.Height - Margine);
+            tsc.Notify += NotifyTray;
         }
 
         /// <summary>
@@ -62,6 +34,8 @@ namespace IvsTray
         /// <param name="e"></param>
         private void MainFormOnLoad(object sender, EventArgs e)
         {
+            _logger.Verbose("Form Loaded");
+
             //By default form will be in visible by making opacity to 0.
             Opacity = 0;
 
@@ -71,115 +45,19 @@ namespace IvsTray
             mouseFilter.FormClicked += FormClicked;
             Application.AddMessageFilter(mouseFilter);
 
-            _logger.Debug("Connecting to server");
-            _clientPipe.Connect();
-        }
-
-        private void UpdateStatus(string status)
-        {
-            // Updates a label on the form with the new status. 
-            // Must be done on the UI thread if this method isn't called from the UI thread.
-            if (InvokeRequired)
+            _clientPipe.DataReceived += (sndr, args) =>
             {
-                Invoke((Action<string>)UpdateStatus, status);
-            }
-            else
-            {
-                var toolStatuses = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ToolStatus>>(status);
+                _logger.Verbose("Data Received: {0}", args.String);
+                var toolStatuses = JsonConvert.DeserializeObject<List<ToolStatus>>(args.String);
+                tsc.UpdateToolRunningStatus(toolStatuses);
+            };
 
-                var requireToFillInitialValues = _toolRunningStatuses.Count == 0;
-
-                foreach (var toolStatus in toolStatuses)
-                {
-                    if (requireToFillInitialValues)
-                    {
-                        _toolRunningStatuses.Add(toolStatus.Name, toolStatus.RunningStatus);
-                    }
-
-                    UpdateToolStatus(toolStatus);
-                }
-
-                //Resize window based on number of tools
-                if (requireToFillInitialValues)
-                {
-                    var toolsCount = _toolRunningStatuses.Count;
-                    _logger.Information($"Number of tools: {toolsCount}");
-                }
-            }
-        }
-
-        private void UpdateToolStatus(ToolStatus toolStatus, bool showNotification = false)
-        {
-            if (_toolRunningStatuses.ContainsKey(toolStatus.Name))
+            Task.Run(() =>
             {
-                _toolRunningStatuses[toolStatus.Name] = toolStatus.RunningStatus;
-            }
-
-            var pb = pbInvinsense;
-
-            switch (toolStatus.Name)
-            {
-                case ToolName.EndpointDecetionAndResponse:
-                    pb = pbWazuh;
-                    break;
-                case ToolName.EndpointDeception:
-                    pb = pbDbytes;
-                    break;
-                case ToolName.AdvanceTelemetry:
-                    pb = pbSysmon;
-                    break;
-                case ToolName.EndpointProtection:
-                    pb = pbDefender;
-                    break;
-                case ToolName.UserBehaviorAnalytics:
-                    pb = pbOsquery;
-                    break;
-                case ToolName.LateralMovementProtection:
-                    pb = pbLmp;
-                    break;
-            }
-
-            ToolTipIcon icon;
-            if (toolStatus.RunningStatus == RunningStatus.NotFound)
-            {
-                icon = ToolTipIcon.Error;
-                pb.Image = NotFoundImage;
-                _logger.Fatal($"{toolStatus.Name} not found");
-            }
-            else if (toolStatus.RunningStatus == RunningStatus.Running)
-            {
-                icon = ToolTipIcon.Info;
-                pb.Image = OkImage;
-                _logger.Fatal($"{toolStatus.Name} running");
-            }
-            else if (toolStatus.RunningStatus == RunningStatus.Warning)
-            {
-                icon = ToolTipIcon.Warning;
-                pb.Image = WarnImage;
-                _logger.Fatal($"{toolStatus.Name} warning state");
-            }
-            else
-            {
-                icon = ToolTipIcon.Error;
-                pb.Image = ErrorImage;
-                _logger.Fatal($"{toolStatus.Name} error state");
-            }
-
-            if (_toolRunningStatuses.Any(x => x.Value != RunningStatus.Running))
-            {
-                notifyIcon.Icon = Properties.Resources.red_logo_22_22;
-                notifyIcon.Text = $"{Constants.IvsDescription} - Not all services are healthy";
-            }
-            else
-            {
-                notifyIcon.Icon = Properties.Resources.green_logo_22_22;
-                notifyIcon.Text = $"{Constants.IvsDescription} - Healthy";
-            }
-
-            if (showNotification)
-            {
-                notifyIcon.ShowBalloonTip(5000, toolStatus.Name, $"Status: {toolStatus.RunningStatus}", icon);
-            }
+                _logger.Verbose("Connecting to Agent Service...");
+                _clientPipe.Connect();
+                _logger.Debug("Agent Service connected...");
+            });
         }
 
         private void MainFormClosing(object sender, FormClosingEventArgs e)
@@ -195,6 +73,43 @@ namespace IvsTray
         {
             BringToTop();
         }
+
+        private void ToolContainerSizeChanged(object sender, EventArgs e)
+        {
+            _logger.Verbose("ToolContainerSizeChanged");
+            ResizeWindowAndLocate();
+        }
+
+        private void OnDpiChanged(object sender, DpiChangedEventArgs e)
+        {
+            _logger.Verbose("OnDpiChanged");
+            ResizeWindowAndLocate();
+        }
+
+        private void OnFormClosed(object sender, FormClosedEventArgs e)
+        {
+            _logger.Verbose("OnFormClosed");
+            _clientPipe?.Close();
+        }
+
+        /// <summary>
+        /// Setting location of window.
+        /// </summary>
+        private void ResizeWindowAndLocate()
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => { ResizeWindowAndLocate(); }));
+                return;
+            }
+
+            const int margine = 10;
+
+            Height = tsc.Height + brandingPanel.Height;
+            Rectangle workingArea = Screen.GetWorkingArea(this);
+            Location = new Point(workingArea.Right - Size.Width - margine, workingArea.Bottom - Size.Height - margine);
+        }
+
 
         /// <summary>
         /// This method brings the form to top without stealing focus
@@ -224,7 +139,11 @@ namespace IvsTray
                 //Set form's topmost status back to whatever it was
                 TopMost = top;
             }
+        }
 
+        private void NotifyTray(object sender, Notifier.NotifyEventArgs e)
+        {
+            notifyIcon.ShowBalloonTip(5000, e.Title, e.Message, NotifyEventArgsExtensions.ConvertIcon(e.NotifyType));
         }
     }
 }

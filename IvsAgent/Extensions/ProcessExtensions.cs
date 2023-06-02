@@ -1,7 +1,5 @@
 ﻿using Serilog;
 using System;
-using System.Diagnostics;
-using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace IvsAgent.Extensions

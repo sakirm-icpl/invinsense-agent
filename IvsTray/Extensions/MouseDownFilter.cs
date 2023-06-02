@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace IvsTray
+namespace IvsTray.Extensions
 {
     internal class MouseDownFilter : IMessageFilter
     {

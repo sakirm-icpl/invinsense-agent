@@ -27,7 +27,7 @@ namespace Common.Persistance
             switch (toolId)
             {
                 case 1:
-                    Name = ToolName.EndpointDecetionAndResponse;
+                    Name = ToolName.EndpointDetectionAndResponse;
                     break;
                 case 2:
                     Name = ToolName.EndpointDeception;
@@ -63,7 +63,7 @@ namespace Common.Persistance
             var code = 0;
             switch (Name)
             {
-                case ToolName.EndpointDecetionAndResponse:
+                case ToolName.EndpointDetectionAndResponse:
                     code += 100;
                     break;
                 case ToolName.EndpointDeception:

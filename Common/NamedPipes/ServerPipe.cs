@@ -18,7 +18,6 @@ namespace Common.NamedPipes
             var pipeSecurity = new PipeSecurity();
             pipeSecurity.AddAccessRule(new PipeAccessRule("Everyone", PipeAccessRights.FullControl, System.Security.AccessControl.AccessControlType.Allow));
 
-
             serverPipeStream = new NamedPipeServerStream(
                 pipeName,
                 PipeDirection.InOut,

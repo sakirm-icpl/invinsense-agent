@@ -142,7 +142,7 @@ namespace IvsAgent
             if (status == null)
             {
                 Log.Logger.Information("EndpointDecetionAndResponse NotFound");
-                SendStatusUpdate(new ToolStatus(ToolName.EndpointDecetionAndResponse, InstallStatus.NotFound, RunningStatus.NotFound));
+                SendStatusUpdate(new ToolStatus(ToolName.EndpointDetectionAndResponse, InstallStatus.NotFound, RunningStatus.NotFound));
                 return;
             }
 
@@ -151,15 +151,15 @@ namespace IvsAgent
                 case ServiceControllerStatus.StartPending:
                 case ServiceControllerStatus.Running:
                     Log.Logger.Information("EndpointDecetionAndResponse is Running");
-                    SendStatusUpdate(new ToolStatus(ToolName.EndpointDecetionAndResponse, InstallStatus.Installed, RunningStatus.Running));
+                    SendStatusUpdate(new ToolStatus(ToolName.EndpointDetectionAndResponse, InstallStatus.Installed, RunningStatus.Running));
                     return;
                 case ServiceControllerStatus.Stopped:
                     Log.Logger.Information("EndpointDecetionAndResponse is Stopped");
-                    SendStatusUpdate(new ToolStatus(ToolName.EndpointDecetionAndResponse, InstallStatus.Installed, RunningStatus.Stopped));
+                    SendStatusUpdate(new ToolStatus(ToolName.EndpointDetectionAndResponse, InstallStatus.Installed, RunningStatus.Stopped));
                     return;
                 default:
                     Log.Logger.Information("There is Warning in EndpointDecetionAndResponse");
-                    SendStatusUpdate(new ToolStatus(ToolName.EndpointDecetionAndResponse, InstallStatus.Installed, RunningStatus.Warning));
+                    SendStatusUpdate(new ToolStatus(ToolName.EndpointDetectionAndResponse, InstallStatus.Installed, RunningStatus.Warning));
                     return;
             }
         }
@@ -496,8 +496,8 @@ namespace IvsAgent
                     return new ToolStatus(ToolName.AdvanceTelemetry, AdvanceTelemetryServiceChecker.InstallStatus, AdvanceTelemetryServiceChecker.RunningStatus);
                 case ToolName.EndpointDeception:
                     return new ToolStatus(ToolName.EndpointDeception, EdrServiceChecker.InstallStatus, EdrServiceChecker.RunningStatus);
-                case ToolName.EndpointDecetionAndResponse:
-                    return new ToolStatus(ToolName.EndpointDecetionAndResponse, DeceptionServiceChecker.InstallStatus, DeceptionServiceChecker.RunningStatus);
+                case ToolName.EndpointDetectionAndResponse:
+                    return new ToolStatus(ToolName.EndpointDetectionAndResponse, DeceptionServiceChecker.InstallStatus, DeceptionServiceChecker.RunningStatus);
                 case ToolName.EndpointProtection:
                     var installedAntiviruses = AvMonitor.ListAvStatuses();
                     ToolStatus avStatus;
@@ -531,7 +531,7 @@ namespace IvsAgent
                     GetToolStatus(ToolName.EndpointDeception),
                     GetToolStatus(ToolName.EndpointProtection),
                     GetToolStatus(ToolName.UserBehaviorAnalytics),
-                    GetToolStatus(ToolName.EndpointDecetionAndResponse),
+                    GetToolStatus(ToolName.EndpointDetectionAndResponse),
                     GetToolStatus(ToolName.AdvanceTelemetry),
                     GetToolStatus(ToolName.LateralMovementProtection)
                 };
