@@ -141,25 +141,22 @@ namespace IvsAgent
         {
             if (status == null)
             {
-                Log.Logger.Information("EndpointDecetionAndResponse NotFound");
+                _logger.Information("{Name} not found", ToolName.EndpointDetectionAndResponse);
                 SendStatusUpdate(new ToolStatus(ToolName.EndpointDetectionAndResponse, InstallStatus.NotFound, RunningStatus.NotFound));
                 return;
             }
 
+            _logger.Information("{Name} is {Status}", ToolName.EndpointDetectionAndResponse, status.Value);
+
             switch (status.Value)
             {
-                case ServiceControllerStatus.StartPending:
                 case ServiceControllerStatus.Running:
-                    Log.Logger.Information("EndpointDecetionAndResponse is Running");
                     SendStatusUpdate(new ToolStatus(ToolName.EndpointDetectionAndResponse, InstallStatus.Installed, RunningStatus.Running));
                     return;
                 case ServiceControllerStatus.Stopped:
-                    Log.Logger.Information("EndpointDecetionAndResponse is Stopped");
                     SendStatusUpdate(new ToolStatus(ToolName.EndpointDetectionAndResponse, InstallStatus.Installed, RunningStatus.Stopped));
                     return;
                 default:
-                    Log.Logger.Information("There is Warning in EndpointDecetionAndResponse");
-                    SendStatusUpdate(new ToolStatus(ToolName.EndpointDetectionAndResponse, InstallStatus.Installed, RunningStatus.Warning));
                     return;
             }
         }
@@ -168,25 +165,22 @@ namespace IvsAgent
         {
             if (status == null)
             {
-                Log.Logger.Information("EndpointDeception NotFound");
+                _logger.Information("{Name} not found", ToolName.EndpointDeception);
                 SendStatusUpdate(new ToolStatus(ToolName.EndpointDeception, InstallStatus.NotFound, RunningStatus.NotFound));
                 return;
             }
 
+            _logger.Information("{Name} is {Status}", ToolName.EndpointDeception, status.Value);
+
             switch (status.Value)
             {
-                case ServiceControllerStatus.StartPending:
                 case ServiceControllerStatus.Running:
-                    Log.Logger.Information("EndpointDeception is Running");
                     SendStatusUpdate(new ToolStatus(ToolName.EndpointDeception, InstallStatus.Installed, RunningStatus.Running));
                     return;
                 case ServiceControllerStatus.Stopped:
-                    Log.Logger.Information("EndpointDeception is Stopped");
                     SendStatusUpdate(new ToolStatus(ToolName.EndpointDeception, InstallStatus.Installed, RunningStatus.Stopped));
                     return;
                 default:
-                    Log.Logger.Information("There is Warning in EndpointDeception");
-                    SendStatusUpdate(new ToolStatus(ToolName.EndpointDeception, InstallStatus.Installed, RunningStatus.Warning));
                     return;
             }
         }
@@ -195,25 +189,22 @@ namespace IvsAgent
         {
             if (status == null)
             {
-                Log.Logger.Information("UserBehaviorAnalytics NotFound");
+                _logger.Information("{Name} not found", ToolName.UserBehaviorAnalytics);
                 SendStatusUpdate(new ToolStatus(ToolName.UserBehaviorAnalytics, InstallStatus.NotFound, RunningStatus.NotFound));
                 return;
             }
 
+            _logger.Information("{Name} is {Status}", ToolName.UserBehaviorAnalytics, status.Value);
+
             switch (status.Value)
             {
-                case ServiceControllerStatus.StartPending:
                 case ServiceControllerStatus.Running:
-                    Log.Logger.Information("UserBehaviorAnalytics is Running");
                     SendStatusUpdate(new ToolStatus(ToolName.UserBehaviorAnalytics, InstallStatus.Installed, RunningStatus.Running));
                     return;
                 case ServiceControllerStatus.Stopped:
-                    Log.Logger.Information("UserBehaviorAnalytics is Stopped");
                     SendStatusUpdate(new ToolStatus(ToolName.UserBehaviorAnalytics, InstallStatus.Installed, RunningStatus.Stopped));
                     return;
                 default:
-                    Log.Logger.Information("There is Warning in UserBehaviorAnalytics");
-                    SendStatusUpdate(new ToolStatus(ToolName.UserBehaviorAnalytics, InstallStatus.Installed, RunningStatus.Warning));
                     return;
             }
         }
@@ -222,25 +213,22 @@ namespace IvsAgent
         {
             if (status == null)
             {
-                Log.Logger.Information("AdvanceTelemetry NotFound");
+                _logger.Information("{Name} not found", ToolName.AdvanceTelemetry);
                 SendStatusUpdate(new ToolStatus(ToolName.AdvanceTelemetry, InstallStatus.NotFound, RunningStatus.NotFound));
                 return;
             }
 
+            _logger.Information("{Name} is {Status}", ToolName.AdvanceTelemetry, status.Value);
+
             switch (status.Value)
             {
-                case ServiceControllerStatus.StartPending:
                 case ServiceControllerStatus.Running:
-                    Log.Logger.Information("AdvanceTelemetry is Running");
                     SendStatusUpdate(new ToolStatus(ToolName.AdvanceTelemetry, InstallStatus.Installed, RunningStatus.Running));
                     return;
                 case ServiceControllerStatus.Stopped:
-                    Log.Logger.Information("AdvanceTelemetry is Stopped");
                     SendStatusUpdate(new ToolStatus(ToolName.AdvanceTelemetry, InstallStatus.Installed, RunningStatus.Stopped));
                     return;
                 default:
-                    Log.Logger.Information("There is Warning in AdvanceTelemetry");
-                    SendStatusUpdate(new ToolStatus(ToolName.AdvanceTelemetry, InstallStatus.Installed, RunningStatus.Warning));
                     return;
             }
         }
@@ -249,25 +237,22 @@ namespace IvsAgent
         {
             if (status == null)
             {
-                Log.Logger.Information("LateralMovementProtection NotFound");
+                _logger.Information("{Name} not found", ToolName.LateralMovementProtection);
                 SendStatusUpdate(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.NotFound, RunningStatus.NotFound));
                 return;
             }
 
+            _logger.Information("{Name} is {Status}", ToolName.LateralMovementProtection, status.Value);
+
             switch (status.Value)
             {
-                case ServiceControllerStatus.StartPending:
                 case ServiceControllerStatus.Running:
-                    Log.Logger.Information("LateralMovementProtection is Running");
                     SendStatusUpdate(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.Installed, RunningStatus.Running));
                     return;
                 case ServiceControllerStatus.Stopped:
-                    Log.Logger.Information("LateralMovementProtection is Stopped");
                     SendStatusUpdate(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.Installed, RunningStatus.Stopped));
                     return;
                 default:
-                    Log.Logger.Information("There is Warning in LateralMovementProtection");
-                    SendStatusUpdate(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.Installed, RunningStatus.Warning));
                     return;
             }
         }

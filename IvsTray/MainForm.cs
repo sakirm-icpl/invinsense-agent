@@ -143,6 +143,7 @@ namespace IvsTray
 
         private void NotifyTray(object sender, Notifier.NotifyEventArgs e)
         {
+            _logger.Verbose("NotifyTray: {Message}", e.Message);
             notifyIcon.ShowBalloonTip(5000, e.Title, e.Message, NotifyEventArgsExtensions.ConvertIcon(e.NotifyType));
         }
     }

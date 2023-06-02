@@ -24,6 +24,8 @@ namespace IvsTray.UserControls
 
         private void HandleToolNumberModified(object sender, EventArgs e)
         {
+            _logger.Verbose("Tool number changed. Count = {0}", _toolRunningStatuses.Count);
+
             Controls.Clear();
 
             var index = 0;
@@ -58,13 +60,14 @@ namespace IvsTray.UserControls
 
                     control.Notify += (sndr, args) => { Notify?.Invoke(sndr, args); };
 
+                    _toolRunningStatuses.Add(item.Name, control);
+
                     toolNumbersChanged = true;
                 }
             }
 
             if(toolNumbersChanged)
             {
-                _logger.Verbose("Tool number changed");
                 ToolNumberModified?.Invoke(this, new EventArgs());
             }
         }

@@ -16,22 +16,24 @@ namespace IvsUninstall
     {
         static void Main()
         {
+            Log.Logger = new LoggerConfiguration()
+                   .MinimumLevel.Verbose()
+                   .WriteTo.File(CommonUtils.DataFolder + "\\IvsUninstall.log", rollOnFileSizeLimit: false, fileSizeLimitBytes: 100000)
+                   .WriteTo.Console()
+                   .CreateLogger();
+
+            var logger = Log.ForContext<Program>();
+
             try
             {
-                Log.Logger = new LoggerConfiguration()
-               .MinimumLevel.Verbose()
-               .WriteTo.File(CommonUtils.DataFolder + "\\IvsUninstall.log", rollOnFileSizeLimit: false, fileSizeLimitBytes: 100000)
-               .WriteTo.Console()
-               .CreateLogger();
-
-                Log.Logger.Information("Uninstalling Invinsense 4.0 components");
-                Log.Logger.Information("Finding the Invinsense service.....");
+                logger.Information("Uninstalling Invinsense 4.0 components");
+                logger.Information("Finding the Invinsense service.....");
 
                 var listPrograms = MoWrapper.ListPrograms();
 
                 foreach (var item in listPrograms)
                 {
-                    //Log.Logger.Information($"Program: {item}");
+                    //_logger.Information($"Program: {item}");
                 }
 
                 Thread.Sleep(2000);
@@ -50,43 +52,43 @@ namespace IvsUninstall
                 }
                 else
                 {
-                    Log.Logger.Information("The service has been stopped early..");
+                    logger.Information("The service has been stopped early..");
                 }
 
                 #region Deceptive Bytes - Endpoint Deception
-                Log.Logger.Information("Uninstalling Deceptive Bytes...");
+                logger.Information("Uninstalling Deceptive Bytes...");
 
                if (DBytesWrapper.Verify(true)==0)
                {
                         var dBytesExitCode = DBytesWrapper.Remove();
 
-                        Log.Logger.Information($"Deceptive Bytes remove exit code={dBytesExitCode}");
+                        logger.Information($"Deceptive Bytes remove exit code={dBytesExitCode}");
 
                         Thread.Sleep(3000);
                }
                else
                {
-                    Log.Logger.Information("Deceptive Bytes alreay gets uninstalled");
+                    logger.Information("Deceptive Bytes alreay gets uninstalled");
                }
                 
                 #endregion
 
                 #region OSQUERY
 
-                Log.Logger.Information("Uninstalling OsQuery...");
+                logger.Information("Uninstalling OsQuery...");
 
                 //Checking if file is exists or not
                 if (OsQueryWrapper.Verify(true)==0)
                 {
                         var osQueryExitCode = OsQueryWrapper.Remove();
 
-                        Log.Logger.Information($"OSQUERY remove exit code={osQueryExitCode}");
+                        logger.Information($"OSQUERY remove exit code={osQueryExitCode}");
 
                         Thread.Sleep(3000);
                 }
                 else
                 {
-                    Log.Logger.Information("Osquery already gets uninstalled");
+                    logger.Information("Osquery already gets uninstalled");
                 }
 
                 //TODO:Removing folder : C:\Program Files\osquery
@@ -102,17 +104,17 @@ namespace IvsUninstall
                 //Checking if file is exists or not
                 if (WazuhWrapper.Verify(true)==0)
                 {
-                    Log.Logger.Information("Uninstalling Wazuh...");
+                    logger.Information("Uninstalling Wazuh...");
 
                     var wazuhExitCode = WazuhWrapper.Remove();
 
-                        Log.Logger.Information($"Wazuh remove exit code={wazuhExitCode}");
+                        logger.Information($"Wazuh remove exit code={wazuhExitCode}");
 
                         Thread.Sleep(3000);
                 }
                 else
                 {
-                    Log.Logger.Information("Wazuh alredy gets uninstalled");
+                    logger.Information("Wazuh alredy gets uninstalled");
                 }
                 //TODO:Removing folder : C:\\Program Files (x86)\\ossec
                 var wazuhPath = "C:\\Program Files (x86)\\ossec";
@@ -127,23 +129,23 @@ namespace IvsUninstall
                 //Checking if file is exists or not
                 if(SysmonWrapper.Verify(true)==0)
                 {
-                    Log.Logger.Information("Uninstalling Sysmon...");
+                    logger.Information("Uninstalling Sysmon...");
 
                     var sysmonExitCode = SysmonWrapper.Remove();
 
-                    Log.Logger.Information($"SYSMON remove exit code={sysmonExitCode}");
+                    logger.Information($"SYSMON remove exit code={sysmonExitCode}");
 
                     Thread.Sleep(3000);
                 }
                 else
                 {
-                    Log.Logger.Information("Sysmon alredy gets uninstalled");
+                    logger.Information("Sysmon alredy gets uninstalled");
                 }
                 #endregion
             }
             catch (Exception ex)
             {
-                Log.Logger.Error(ex.Message);
+                logger.Error(ex.Message);
             }
 
 
@@ -152,18 +154,18 @@ namespace IvsUninstall
             {
                 if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
                 {
-                    Log.Logger.Information("MSI Installer is not free.");
+                    logger.Information("MSI Installer is not free.");
                     return;
                 }
 
-                Log.Logger.Information("Agent Uninstallation is ready");
+                logger.Information("Agent Uninstallation is ready");
 
                 var status = MsiPackageWrapper.Uninstall("Invinsense", "UNINSTALL_KEY=\"ICPL_2023\"");
                 
             }
             catch (Exception ex)
             {
-                Log.Logger.Error(ex.Message);
+                logger.Error(ex.Message);
             }
 
             //Unistalling all files from Infopercept folder from ProgramData Folder
@@ -185,7 +187,7 @@ namespace IvsUninstall
             }
             catch (Exception ex)
             {
-                Log.Logger.Error(ex.Message);
+                logger.Error(ex.Message);
             }
 
             //Removing maintanence
@@ -195,9 +197,9 @@ namespace IvsUninstall
                 UserPrincipal user = UserPrincipal.FindByIdentity(pc,username);
                 if (user != null) 
                 {
-                    Log.Logger.Information("Removing maintance user");
+                    logger.Information("Removing maintance user");
                     user.Delete();
-                    Log.Logger.Information("Removing fake file");
+                    logger.Information("Removing fake file");
                     var fakeFilePath = Path.Combine(@"C:\Users", "Users.txt");
                     if (File.Exists(fakeFilePath)) 
                     { 
