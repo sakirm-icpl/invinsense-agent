@@ -50,13 +50,13 @@ namespace IvsTray
 
         public void UpdateRunningStatus(RunningStatus runningStatus)
         {
-            _logger.Verbose("Updating running status for {ToolCategory} to {RunningStatus}", CategoryName, runningStatus);
-
             if (InvokeRequired)
             {
                 Invoke(new MethodInvoker(() => UpdateRunningStatus(runningStatus)));
                 return;
             }
+
+            _logger.Verbose("Updating running status for {ToolCategory} to {RunningStatus}", CategoryName, runningStatus);
 
             _runningStatus = runningStatus;
             pbStatus.Image = StatusIconExtensions.Convert(runningStatus);

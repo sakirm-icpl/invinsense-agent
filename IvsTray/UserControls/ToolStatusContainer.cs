@@ -26,6 +26,12 @@ namespace IvsTray.UserControls
         {
             _logger.Verbose("Tool number changed. Count = {0}", _toolRunningStatuses.Count);
 
+            foreach (var item in _toolRunningStatuses.Keys)
+            {
+                _logger.Verbose("Key:{Item}, Category:{CategoryName}, RunningStatus:{Running}", item, _toolRunningStatuses[item].CategoryName, _toolRunningStatuses[item].GetRunningStatus());
+            }
+
+            /*
             Controls.Clear();
 
             var index = 0;
@@ -38,6 +44,8 @@ namespace IvsTray.UserControls
             }
 
             Height = 40 * index + 20;
+
+            */
         }
 
         public void UpdateToolRunningStatus(List<ToolStatus> statuses)
@@ -52,7 +60,8 @@ namespace IvsTray.UserControls
                 }
                 else
                 {
-                    //Add new tool status bar
+                    _logger.Verbose("Adding new control for {ToolName}", item.Name);
+
                     var control = new ToolStatusBar(item.Name, item.RunningStatus)
                     {
                         Tag = item.Name
