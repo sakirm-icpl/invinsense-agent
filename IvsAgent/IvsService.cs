@@ -19,6 +19,12 @@ using Common.NamedPipes;
 
 namespace IvsAgent
 {
+    /// <summary>
+    /// https://docs.microsoft.com/en-us/dotnet/api/system.serviceprocess.servicebase.requestadditionaltime?view=netframework-4.8
+    /// https://stackoverflow.com/questions/125964/how-to-stop-a-windows-service-that-is-stuck-on-stopping
+    /// Check if installation is in progress and wait for it to complete.
+    /// Try to use : RequestAdditionalTime(1000 * 60 * 2);
+    /// </summary>
     public partial class IvsService : ServiceBase
     {
         private readonly ExtendedServiceController EdrServiceChecker;
@@ -32,8 +38,6 @@ namespace IvsAgent
         private readonly EventLogWatcher avWatcher;
 
         private readonly ILogger _logger = Log.ForContext<IvsService>();
-
-        private bool _isRunning = false;
 
         public IvsService()
         {
@@ -51,6 +55,7 @@ namespace IvsAgent
             //Stop service to pause and continue
             CanPauseAndContinue = false;
 
+            //Allow service to handle session change
             CanHandleSessionChangeEvent = true;
 
             EdrServiceChecker = new ExtendedServiceController("WazuhSvc");
@@ -68,16 +73,161 @@ namespace IvsAgent
             LmpServiceChecker = new ExtendedServiceController("IvsAgent");
             LmpServiceChecker.StatusChanged += (object sender, ServiceStatusEventArgs e) => LmpStatusUpdate(e.Status);
 
-            //Adding AV Watcher
-            //TODO: Need to check if this is the best way to do it
+            //Adding AV Watcher. Can be moved to separate component
             avWatcher = new EventLogWatcher("Microsoft-Windows-Windows Defender/Operational");
             avWatcher.EventRecordWritten += new EventHandler<EventRecordWrittenEventArgs>(DefenderEventWritten);
-            avWatcher.Enabled = true;
 
             _sysTrayTimer.Elapsed += new ElapsedEventHandler(CheckUserSystemTray);
-
-            CreateServerPipe();
         }
+
+        protected override void OnStart(string[] args)
+        {
+            _logger.Verbose("IvsService.OnStart");
+
+            _logger.Information("Starting IPC server");
+            CreateServerPipe();
+
+            _logger.Information("Start watching IvsTray App");
+            _sysTrayTimer.Start();
+
+            _logger.Information("Start watching windows defender events");
+            avWatcher.Enabled = true;
+
+            //TODO: Need to move tool installation logic to separate class.
+            Task.Factory.StartNew(async () =>
+            {
+                _logger.Information("Start waiting for tool verification");
+                await Task.Delay(5000);
+                VerifyDependencyAndInstall();
+            });
+
+            _logger.Information("Invinsense service started.");
+            SendStatusUpdate(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.Installed, RunningStatus.Running));
+        }
+
+        protected override void OnStop()
+        {
+            _logger.Information("Stopping service");
+
+            try
+            {
+                _logger.Information("Stopping IvsTray watcher");
+                _sysTrayTimer.Stop();
+
+                _logger.Information("Stopping windows defender watcher");
+                SendStatusUpdate(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.Installed, RunningStatus.Stopped));
+
+                _logger.Information("Cleaning up pipe server");
+                DestroyServerPipe();
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Error while stopping service");
+            }
+        }
+
+        protected override void OnPause()
+        {
+            _logger.Information("Agent pause requested");
+            base.OnPause();
+        }
+
+        protected override void OnContinue()
+        {
+            _logger.Information("Agent resume requested");
+            base.OnContinue();
+        }
+
+        /// <summary>
+        /// Custom command handler.
+        /// </summary>
+        /// <param name="command"></param>
+        protected override void OnCustomCommand(int command)
+        {
+            _logger.Information($"CustomCommand {command}");
+            base.OnCustomCommand(command);
+
+            if (command == 130)
+            {
+                Stop();
+            }
+        }
+
+        /// <summary>
+        /// Logging unhandled exceptions.
+        /// </summary>
+        protected override void OnShutdown()
+        {
+            _logger.Information("System is shutting down");
+            base.OnShutdown();
+        }
+
+        protected override void OnSessionChange(SessionChangeDescription changeDescription)
+        {
+            var message = $"IvsService.OnSessionChange {DateTime.Now.ToLongTimeString()} - UserSession Changed : {changeDescription.Reason}  Session ID: {changeDescription.SessionId}";
+            _logger.Information(message);
+            EventLog.WriteEntry(message);
+        }
+
+        #region Checking System Tray Periodically
+
+        private readonly Timer _sysTrayTimer = new Timer { AutoReset = true, Interval = 1000 * 60 * 1 }; //1 min
+
+        private bool inTimer = false;
+
+        private void CheckUserSystemTray(object source, ElapsedEventArgs e)
+        {
+            if (inTimer)
+            {
+                return;
+            }
+
+            inTimer = true;
+
+            try
+            {
+                //Check the user seesion is active or not
+                var processes = Process.GetProcesses();
+                bool isSessionActive = processes.Any(p => p.SessionId > 0 && p.ProcessName != "Idel");
+
+                _logger.Verbose($"Is session active: {isSessionActive}");
+
+                if (isSessionActive)
+                {
+                    Process trayApp = processes.FirstOrDefault(pp => pp.ProcessName.StartsWith("IvsTray"));
+
+                    //TODO: Evaluate below scenario for multiple user sessions.
+                    //Process myExplorer = Process.GetProcesses().FirstOrDefault(pp => pp.ProcessName == "explorer" && pp.SessionId == trayApp.SessionId);
+
+                    if (trayApp != null)
+                    {
+                        _logger.Verbose($"Active Session App: {trayApp.ProcessName} - {trayApp.SessionId}");
+
+                        if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Verbose))
+                        {
+                            SendToolStatuses();
+                        }
+                    }
+                    else
+                    {
+                        var ivsTrayFile = CommonUtils.ConstructFromRoot("..\\IvsTray\\IvsTray.exe");
+                        _logger.Information($"IvsTray is not running. Starting... {ivsTrayFile}");
+                        ProcessExtensions.RunInActiveUserSession(null, ivsTrayFile);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "Error while checking system tray");
+            }
+
+            inTimer = false;
+        }
+
+        #endregion
+
+        #region IPC Block
 
         private void CreateServerPipe()
         {
@@ -101,6 +251,94 @@ namespace IvsAgent
                 _logger.Debug("Client is disconnected. Creating new server pipe...");
                 CreateServerPipe();
             };
+        }
+
+        private void DestroyServerPipe()
+        {
+            _serverPipe?.Close();
+            _serverPipe = null;
+        }
+
+        private void SendToolStatuses()
+        {
+            var skipDeception = ToolRepository.CanSkipMonitoring(ToolName.EndpointDeception);
+            var statuses = new List<ToolStatus>();
+            if (!skipDeception)
+            {
+                statuses.Add(GetToolStatus(ToolName.EndpointDeception));
+            }
+
+            statuses.AddRange(new List<ToolStatus>
+                {
+                    GetToolStatus(ToolName.EndpointProtection),
+                    GetToolStatus(ToolName.UserBehaviorAnalytics),
+                    GetToolStatus(ToolName.EndpointDetectionAndResponse),
+                    GetToolStatus(ToolName.AdvanceTelemetry),
+                    GetToolStatus(ToolName.LateralMovementProtection)
+                });
+
+            var message = Newtonsoft.Json.JsonConvert.SerializeObject(statuses);
+            _logger.Verbose($"Sending status to tray {string.Join(", ", statuses.Select(x => x))}");
+            _serverPipe.WriteString(message);
+        }
+
+        private void SendStatusUpdate(ToolStatus status)
+        {
+            //Capture the event in the event logger
+            var eventInstance = new EventInstance(status.GetHashCode(), 0, EventLogEntryType.Information);
+            //var log = new EventLog(Constants.LogGroupName) { Source = Constants.IvsAgentName };
+            EventLog.WriteEvent(eventInstance, status.ToString());
+
+            //Send the status to the client
+            var statuses = new List<ToolStatus> { status };
+
+            var message = Newtonsoft.Json.JsonConvert.SerializeObject(statuses);
+            _logger.Verbose($"Sending status to tray {string.Join(", ", statuses.Select(x => x))}");
+            _serverPipe.WriteString(message);
+        }
+
+        #endregion
+
+        #region ToolStatusCheck
+
+        /// <summary>
+        /// Check the status of the tool
+        /// </summary>
+        /// <param name="toolName"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        private ToolStatus GetToolStatus(string toolName)
+        {
+            switch (toolName)
+            {
+                case ToolName.AdvanceTelemetry:
+                    return new ToolStatus(ToolName.AdvanceTelemetry, AdvanceTelemetryServiceChecker.InstallStatus, AdvanceTelemetryServiceChecker.RunningStatus);
+                case ToolName.EndpointDeception:
+                    return new ToolStatus(ToolName.EndpointDeception, EdrServiceChecker.InstallStatus, EdrServiceChecker.RunningStatus);
+                case ToolName.EndpointDetectionAndResponse:
+                    return new ToolStatus(ToolName.EndpointDetectionAndResponse, DeceptionServiceChecker.InstallStatus, DeceptionServiceChecker.RunningStatus);
+                case ToolName.EndpointProtection:
+                    var installedAntiviruses = AvMonitor.ListAvStatuses();
+                    ToolStatus avStatus;
+                    if (installedAntiviruses.Any(x => x.IsAvEnabled && x.AvName == "Windows Defender"))
+                    {
+                        var defenderStatus = installedAntiviruses.FirstOrDefault(x => x.IsAvEnabled && x.AvName == "Windows Defender");
+                        var runningStatus = (defenderStatus.IsAvEnabled && defenderStatus.IsAvUptoDate) ? RunningStatus.Running : RunningStatus.Warning;
+                        avStatus = new ToolStatus(ToolName.EndpointProtection, InstallStatus.Installed, runningStatus);
+                    }
+                    else
+                    {
+                        avStatus = new ToolStatus(ToolName.EndpointProtection, InstallStatus.Installed, RunningStatus.NotFound);
+                    }
+
+                    return avStatus;
+                case ToolName.LateralMovementProtection:
+                    return new ToolStatus(ToolName.LateralMovementProtection, LmpServiceChecker.InstallStatus, LmpServiceChecker.RunningStatus);
+                case ToolName.UserBehaviorAnalytics:
+                    return new ToolStatus(ToolName.UserBehaviorAnalytics, UserBehaviorServiceChecker.InstallStatus, UserBehaviorServiceChecker.RunningStatus);
+                default:
+                    throw new Exception($"Unknown tool name {toolName}");
+            }
         }
 
         /// <summary>
@@ -128,27 +366,6 @@ namespace IvsAgent
                 _logger.Debug("Windows Defender Event reading error: {Message}", arg.EventException.Message);
             }
         }
-
-        protected override void OnSessionChange(SessionChangeDescription changeDescription)
-        {
-            var message = $"IvsService.OnSessionChange {DateTime.Now.ToLongTimeString()} - Session change notice received: {changeDescription.Reason}  Session ID: {changeDescription.SessionId}";
-
-            _logger.Information(message);
-            EventLog.WriteEntry(message);
-
-            switch (changeDescription.Reason)
-            {
-                case SessionChangeReason.SessionLogon:
-                    EventLog.WriteEntry("IvsService.OnSessionChange: Logon");
-                    break;
-
-                case SessionChangeReason.SessionLogoff:
-                    EventLog.WriteEntry("IvsService.OnSessionChange Logoff");
-                    break;
-            }
-        }
-
-        #region ToolStatusCheck
 
         private void EdrUpdateStatus(ServiceControllerStatus? status)
         {
@@ -272,160 +489,7 @@ namespace IvsAgent
 
         #endregion
 
-        protected override void OnStart(string[] args)
-        {
-            if (_isRunning)
-            {
-                _logger.Information("Invinsense service is already running.");
-                return;
-            }
-
-            _isRunning = true;
-
-            _logger.Information("Starting Invinsense service...");
-
-            _sysTrayTimer.Start();
-
-            _logger.Information("Scheduling dependency after 5 sec...");
-
-            //TODO: Need to move tool installation logic to separate class.
-            Task.Factory.StartNew(async () =>
-            {
-                await Task.Delay(5000);
-                VerifyDependencyAndInstall();
-            });
-
-            _logger.Information("Starting IPC server");
-
-            _logger.Information("Invinsense service started.");
-            SendStatusUpdate(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.Installed, RunningStatus.Running));
-        }
-
-        /// <summary>
-        /// https://docs.microsoft.com/en-us/dotnet/api/system.serviceprocess.servicebase.requestadditionaltime?view=netframework-4.8
-        /// https://stackoverflow.com/questions/125964/how-to-stop-a-windows-service-that-is-stuck-on-stopping
-        /// Check if installation is in progress and wait for it to complete.
-        /// Try to use : RequestAdditionalTime(1000 * 60 * 2);
-        /// </summary>
-        protected override void OnStop()
-        {
-            _isRunning = false;
-
-            _logger.Information("Stopping service");
-
-            try
-            {
-                //Stop the timer.
-                _sysTrayTimer.Stop();
-
-                //Update tray for LMP.
-                SendStatusUpdate(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.Installed, RunningStatus.Stopped));
-
-                //Clean up pipe variables.
-                _logger.Information("Cleaning up pipe server");
-
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "Error while stopping service");
-            }
-
-            base.OnStop();
-        }
-
-        protected override void OnPause()
-        {
-            _logger.Information("Agent pause requested");
-            base.OnPause();
-        }
-
-        protected override void OnContinue()
-        {
-            _logger.Information("Agent resume requested");
-            base.OnContinue();
-        }
-
-        /// <summary>
-        /// Custom command handler.
-        /// </summary>
-        /// <param name="command"></param>
-        protected override void OnCustomCommand(int command)
-        {
-            _logger.Information($"CustomCommand {command}");
-            base.OnCustomCommand(command);
-
-            if (command == 130)
-            {
-                Stop();
-            }
-        }
-
-        /// <summary>
-        /// Logging unhandled exceptions.
-        /// </summary>
-        protected override void OnShutdown()
-        {
-            _logger.Information("System is shutting down");
-            base.OnShutdown();
-        }
-
-        #region Checking System Tray Periodically
-
-        private readonly Timer _sysTrayTimer = new Timer { AutoReset = true, Interval = 1000 * 60 * 1 }; //1 min
-
-        private bool inTimer = false;
-
-        private void CheckUserSystemTray(object source, ElapsedEventArgs e)
-        {
-            if (inTimer)
-            {
-                return;
-            }
-
-            inTimer = true;
-
-            try
-            {
-                //Check the user seesion is active or not
-                var processes = Process.GetProcesses();
-                bool isSessionActive = processes.Any(p => p.SessionId > 0 && p.ProcessName != "Idel");
-
-                _logger.Verbose($"Is session active: {isSessionActive}");
-
-                if (isSessionActive)
-                {
-                    Process trayApp = processes.FirstOrDefault(pp => pp.ProcessName.StartsWith("IvsTray"));
-
-                    //TODO: Evaluate below scenario for multiple user sessions.
-                    //Process myExplorer = Process.GetProcesses().FirstOrDefault(pp => pp.ProcessName == "explorer" && pp.SessionId == trayApp.SessionId);
-
-                    if (trayApp != null)
-                    {
-                        _logger.Verbose($"Active Session App: {trayApp.ProcessName} - {trayApp.SessionId}");
-                       
-                        if(_logger.IsEnabled(Serilog.Events.LogEventLevel.Verbose))
-                        {
-                            SendToolStatuses();
-                        }
-                    }
-                    else
-                    {
-                        var ivsTrayFile = CommonUtils.ConstructFromRoot("..\\IvsTray\\IvsTray.exe");
-                        _logger.Information($"IvsTray is not running. Starting... {ivsTrayFile}");
-                        ProcessExtensions.RunInActiveUserSession(null, ivsTrayFile);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "Error while checking system tray");
-            }
-
-            inTimer = false;
-        }
-
-        #endregion
-
+        #region Tool Instalation For first time
         /// <summary>
         /// TODO: Need to move tool installation logic to separate class.
         /// </summary>
@@ -487,78 +551,6 @@ namespace IvsAgent
 
             _logger.Information("Adding fake user");
             UserExtensions.EnsureFakeUser("maintenance", "P@$$w0rd");
-        }
-
-        private ToolStatus GetToolStatus(string toolName)
-        {
-            switch (toolName)
-            {
-                case ToolName.AdvanceTelemetry:
-                    return new ToolStatus(ToolName.AdvanceTelemetry, AdvanceTelemetryServiceChecker.InstallStatus, AdvanceTelemetryServiceChecker.RunningStatus);
-                case ToolName.EndpointDeception:
-                    return new ToolStatus(ToolName.EndpointDeception, EdrServiceChecker.InstallStatus, EdrServiceChecker.RunningStatus);
-                case ToolName.EndpointDetectionAndResponse:
-                    return new ToolStatus(ToolName.EndpointDetectionAndResponse, DeceptionServiceChecker.InstallStatus, DeceptionServiceChecker.RunningStatus);
-                case ToolName.EndpointProtection:
-                    var installedAntiviruses = AvMonitor.ListAvStatuses();
-                    ToolStatus avStatus;
-                    if (installedAntiviruses.Any(x => x.IsAvEnabled && x.AvName == "Windows Defender"))
-                    {
-                        var defenderStatus = installedAntiviruses.FirstOrDefault(x => x.IsAvEnabled && x.AvName == "Windows Defender");
-                        var runningStatus = (defenderStatus.IsAvEnabled && defenderStatus.IsAvUptoDate) ? RunningStatus.Running : RunningStatus.Warning;
-                        avStatus = new ToolStatus(ToolName.EndpointProtection, InstallStatus.Installed, runningStatus);
-                    }
-                    else
-                    {
-                        avStatus = new ToolStatus(ToolName.EndpointProtection, InstallStatus.Installed, RunningStatus.NotFound);
-                    }
-
-                    return avStatus;
-                case ToolName.LateralMovementProtection:
-                    return new ToolStatus(ToolName.LateralMovementProtection, LmpServiceChecker.InstallStatus, LmpServiceChecker.RunningStatus);
-                case ToolName.UserBehaviorAnalytics:
-                    return new ToolStatus(ToolName.UserBehaviorAnalytics, UserBehaviorServiceChecker.InstallStatus, UserBehaviorServiceChecker.RunningStatus);
-                default:
-                    throw new Exception($"Unknown tool name {toolName}");
-            }
-        }
-
-        #region IPC Block
-
-        private void SendToolStatuses()
-        {
-            var skipDeception = ToolRepository.CanSkipMonitoring(ToolName.EndpointDeception);
-            var statuses = new List<ToolStatus>();
-            if (!skipDeception)
-            {
-                statuses.Add(GetToolStatus(ToolName.EndpointDeception));
-            }
-
-            statuses.AddRange(new List<ToolStatus>
-                {
-                    GetToolStatus(ToolName.EndpointProtection),
-                    GetToolStatus(ToolName.UserBehaviorAnalytics),
-                    GetToolStatus(ToolName.EndpointDetectionAndResponse),
-                    GetToolStatus(ToolName.AdvanceTelemetry),
-                    GetToolStatus(ToolName.LateralMovementProtection)
-                });
-
-            var message = Newtonsoft.Json.JsonConvert.SerializeObject(statuses);
-            _logger.Debug($"Sending status to tray {string.Join(", ", statuses.Select(x => x))}");
-            _serverPipe.WriteString(message);
-        }
-
-        private void SendStatusUpdate(ToolStatus status)
-        {
-            //Capture the event in the event logger
-            ToolRepository.CaptureEvent(status);
-
-            //Send the status to the client
-            var statuses = new List<ToolStatus> { status };
-
-            var message = Newtonsoft.Json.JsonConvert.SerializeObject(statuses);
-            _logger.Information($"Sending status to tray {string.Join(", ", statuses.Select(x => x))}");
-            _serverPipe.WriteString(message);
         }
 
         #endregion

@@ -60,16 +60,5 @@ namespace Common.Persistance
                 _logger.Error($"Error in set registry value:{path} {name} {value}");
             }
         }
-
-        public static void CaptureEvent(ToolStatus toolStatus)
-        {
-            _logger.Information($"{toolStatus}");
-
-            var log = new EventLog(Constants.LogGroupName) { Source = Constants.IvsAgentName };
-
-            var eventInstance = new EventInstance(toolStatus.GetHashCode(), 0, EventLogEntryType.Information);
-
-            log.WriteEvent(eventInstance, $"{toolStatus.Name} Install: {toolStatus.InstallStatus}, Running: {toolStatus.RunningStatus}");
-        }
     }
 }
