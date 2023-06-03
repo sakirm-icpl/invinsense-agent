@@ -1,7 +1,6 @@
 ﻿using Microsoft.Win32;
 using Serilog;
 using System;
-using System.Diagnostics;
 
 namespace Common.Persistance
 {

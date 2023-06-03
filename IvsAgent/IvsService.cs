@@ -7,11 +7,9 @@ using Common.Persistance;
 using ToolManager.AgentWrappers;
 using System.Threading.Tasks;
 using IvsAgent.Extensions;
-using IvsAgent.AvHelper;
 using System.Linq;
 using System.Collections.Generic;
 using Common;
-using System.Diagnostics.Eventing.Reader;
 using Common.NamedPipes;
 
 namespace IvsAgent
