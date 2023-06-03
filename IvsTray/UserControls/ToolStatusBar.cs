@@ -66,7 +66,7 @@ namespace IvsTray
             _runningStatus = runningStatus;
             pbStatus.Image = StatusIconExtensions.Convert(runningStatus);
 
-            Notify?.Invoke(this, new NotifyEventArgs(NotifyEventArgsExtensions.ConvertStatus(runningStatus), lblToolName.Text, NotifyEventArgsExtensions.BuildMessage("Service", RunningStatus.Running)));
+            Notify?.Invoke(this, new NotifyEventArgs(NotifyEventArgsExtensions.ConvertStatus(runningStatus), lblToolName.Text, NotifyEventArgsExtensions.BuildMessage("Service", _runningStatus)));
         }
 
         public RunningStatus GetRunningStatus()
