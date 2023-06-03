@@ -25,7 +25,7 @@ namespace IvsTray
             switch (runningStatus)
             {
                 case RunningStatus.Running:
-                    return NotifyType.Info;
+                    return NotifyType.Error;
                 case RunningStatus.Warning:
                     return NotifyType.Warning;
                 case RunningStatus.NotFound:
@@ -38,7 +38,7 @@ namespace IvsTray
 
         public static string BuildMessage(string toolName, RunningStatus runningStatus)
         {
-            return $"{toolName} running status: {runningStatus}";
+            return $"{toolName} status: {runningStatus}";
         }
     }
 }

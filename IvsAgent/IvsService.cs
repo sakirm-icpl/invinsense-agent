@@ -32,8 +32,6 @@ namespace IvsAgent
 
         private ServerPipe _serverPipe;
 
-        private readonly EventLogWatcher avWatcher;
-
         private readonly ILogger _logger = Log.ForContext<IvsService>();
 
         public IvsService()
@@ -70,10 +68,7 @@ namespace IvsAgent
             LmpServiceChecker = new ExtendedServiceController("IvsAgent");
             LmpServiceChecker.StatusChanged += (object sender, ServiceStatusEventArgs e) => LmpStatusUpdate(e.Status);
 
-            //Adding AV Watcher. Can be moved to separate component
-            avWatcher = new EventLogWatcher("Microsoft-Windows-Windows Defender/Operational");
-            avWatcher.EventRecordWritten += new EventHandler<EventRecordWrittenEventArgs>(DefenderEventWritten);
-
+            AvStatusWatcher.Instance.AvStatusChaned += (object sender, ToolStatus e) => SendStatusUpdate(e);
         }
 
         protected override void OnStart(string[] args)
@@ -87,7 +82,7 @@ namespace IvsAgent
             IvsTrayMonitor.Instance.StartMonitoring();
 
             _logger.Information("Start watching windows defender events");
-            avWatcher.Enabled = true;
+            AvStatusWatcher.Instance.StartMonitoring();
 
             //TODO: Need to move tool installation logic to separate class.
             Task.Factory.StartNew(async () =>
@@ -111,7 +106,7 @@ namespace IvsAgent
                 IvsTrayMonitor.Instance.StopMonitoring();
 
                 _logger.Information("Stopping windows defender watcher");
-                SendStatusUpdate(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.Installed, RunningStatus.Stopped));
+                AvStatusWatcher.Instance.StopMonitoring();
 
                 _logger.Information("Cleaning up pipe server");
                 DestroyServerPipe();
@@ -257,52 +252,13 @@ namespace IvsAgent
                 case ToolName.EndpointDetectionAndResponse:
                     return new ToolStatus(ToolName.EndpointDetectionAndResponse, EdrServiceChecker.InstallStatus, EdrServiceChecker.RunningStatus);
                 case ToolName.EndpointProtection:
-                    var installedAntiviruses = AvMonitor.ListAvStatuses();
-                    ToolStatus avStatus;
-                    if (installedAntiviruses.Any(x => x.IsAvEnabled && x.AvName == "Windows Defender"))
-                    {
-                        var defenderStatus = installedAntiviruses.FirstOrDefault(x => x.IsAvEnabled && x.AvName == "Windows Defender");
-                        var runningStatus = (defenderStatus.IsAvEnabled && defenderStatus.IsAvUptoDate) ? RunningStatus.Running : RunningStatus.Warning;
-                        avStatus = new ToolStatus(ToolName.EndpointProtection, InstallStatus.Installed, runningStatus);
-                    }
-                    else
-                    {
-                        avStatus = new ToolStatus(ToolName.EndpointProtection, InstallStatus.Installed, RunningStatus.NotFound);
-                    }
-
-                    return avStatus;
+                    return AvStatusWatcher.Instance.GetStatus();
                 case ToolName.LateralMovementProtection:
                     return new ToolStatus(ToolName.LateralMovementProtection, LmpServiceChecker.InstallStatus, LmpServiceChecker.RunningStatus);
                 case ToolName.UserBehaviorAnalytics:
                     return new ToolStatus(ToolName.UserBehaviorAnalytics, UbaServiceChecker.InstallStatus, UbaServiceChecker.RunningStatus);
                 default:
                     throw new Exception($"Unknown tool name {toolName}");
-            }
-        }
-
-        /// <summary>
-        /// This method is called when there is any change in windows defender
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <param name="arg"></param>
-        public void DefenderEventWritten(object obj, EventRecordWrittenEventArgs arg)
-        {
-            if (arg.EventRecord != null)
-            {
-                _logger.Debug("Defender EventId: {Id}, Publisher: {ProviderName}", arg.EventRecord.Id, arg.EventRecord.ProviderName);
-
-                if (arg.EventRecord.Id == 5001)
-                {
-                    SendStatusUpdate(new ToolStatus(ToolName.EndpointProtection, InstallStatus.Installed, RunningStatus.Stopped));
-                }
-                else if (arg.EventRecord.Id == 5000)
-                {
-                    SendStatusUpdate(new ToolStatus(ToolName.EndpointProtection, InstallStatus.Installed, RunningStatus.Running));
-                }
-            }
-            else
-            {
-                _logger.Debug("Windows Defender Event reading error: {Message}", arg.EventException.Message);
             }
         }
 

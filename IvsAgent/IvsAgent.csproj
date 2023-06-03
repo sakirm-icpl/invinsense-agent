@@ -50,6 +50,7 @@
     <Compile Include="Extensions\FileFaker.cs" />
     <Compile Include="Extensions\ProcessExtensions.cs" />
     <Compile Include="Extensions\UserExtensions.cs" />
+    <Compile Include="Monitor\AvStatusWatcher.cs" />
     <Compile Include="Monitor\ExtendedServiceController.cs">
       <SubType>Component</SubType>
     </Compile>
