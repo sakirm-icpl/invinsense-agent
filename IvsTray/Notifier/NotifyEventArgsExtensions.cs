@@ -30,6 +30,7 @@ namespace IvsTray
                     return NotifyType.Warning;
                 case RunningStatus.NotFound:
                 case RunningStatus.Error:
+                case RunningStatus.Stopped:
                     return NotifyType.Error;
                 default:
                     return NotifyType.Info;
