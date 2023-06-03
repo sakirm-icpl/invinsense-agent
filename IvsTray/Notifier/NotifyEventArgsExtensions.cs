@@ -25,7 +25,7 @@ namespace IvsTray
             switch (runningStatus)
             {
                 case RunningStatus.Running:
-                    return NotifyType.Error;
+                    return NotifyType.Info;
                 case RunningStatus.Warning:
                     return NotifyType.Warning;
                 case RunningStatus.NotFound:
