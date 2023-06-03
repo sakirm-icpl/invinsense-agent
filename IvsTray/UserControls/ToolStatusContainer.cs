@@ -1,9 +1,11 @@
-﻿using Common.Persistance;
+﻿using Common;
+using Common.Persistance;
 using IvsTray.Notifier;
 using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace IvsTray.UserControls
@@ -80,9 +82,18 @@ namespace IvsTray.UserControls
                 }
             }
 
-            if(toolNumbersChanged)
+            if (toolNumbersChanged)
             {
                 ToolNumberModified?.Invoke(this, new EventArgs());
+            }
+
+            if (_toolRunningStatuses.Values.Any(x => x.GetRunningStatus() != RunningStatus.Running))
+            {
+                Notify?.Invoke(this, new NotifyEventArgs(NotifyType.Error, Constants.IvsTrayName, "Not all services are healthy"));
+            }
+            else
+            {
+                Notify?.Invoke(this, new NotifyEventArgs(NotifyType.Info, Constants.IvsTrayName, "All services are healthy"));
             }
         }
     }

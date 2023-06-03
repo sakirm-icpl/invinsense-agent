@@ -39,7 +39,6 @@ namespace IvsTray
             // 
             // notifyIcon
             // 
-            this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
             this.notifyIcon.Text = "Invinsense 4.0";
             this.notifyIcon.Visible = true;
             this.notifyIcon.Click += new System.EventHandler(this.ShowClick);

@@ -2,6 +2,7 @@ using Common;
 using Common.NamedPipes;
 using Common.Persistance;
 using IvsTray.Extensions;
+using IvsTray.Properties;
 using Newtonsoft.Json;
 using Serilog;
 using System;
@@ -22,6 +23,8 @@ namespace IvsTray
         {
             _logger.Information("Loading MainForm");
             InitializeComponent();
+
+            notifyIcon.Icon = Resources.green_logo_22_22;
 
             _clientPipe = new ClientPipe(".", Constants.IvsName, p => p.StartStringReaderAsync());
             tsc.Notify += NotifyTray;
@@ -149,6 +152,20 @@ namespace IvsTray
         private void NotifyTray(object sender, Notifier.NotifyEventArgs e)
         {
             _logger.Verbose("NotifyTray: {Message}", e.Message);
+
+            if(e.Title == Constants.IvsTrayName)
+            {
+                if(e.NotifyType == NotifyType.Info)
+                {
+                    notifyIcon.Icon = Resources.green_logo_22_22;
+                }
+                else
+                {
+                    notifyIcon.Icon = Resources.red_logo_22_22;
+                }
+                return;
+            }
+
             notifyIcon.ShowBalloonTip(5000, e.Title, e.Message, NotifyEventArgsExtensions.ConvertIcon(e.NotifyType));
         }
     }
