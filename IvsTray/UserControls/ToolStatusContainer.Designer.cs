@@ -28,18 +28,33 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.lblWaiting = new System.Windows.Forms.Label();
             this.SuspendLayout();
+            // 
+            // lblWaiting
+            // 
+            this.lblWaiting.AutoSize = true;
+            this.lblWaiting.Font = new System.Drawing.Font("Calibri", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblWaiting.Location = new System.Drawing.Point(10, 8);
+            this.lblWaiting.Name = "lblWaiting";
+            this.lblWaiting.Size = new System.Drawing.Size(162, 23);
+            this.lblWaiting.TabIndex = 0;
+            this.lblWaiting.Text = "Waiting for status...";
             // 
             // ToolStatusContainer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.lblWaiting);
             this.Name = "ToolStatusContainer";
-            this.Size = new System.Drawing.Size(376, 20);
+            this.Size = new System.Drawing.Size(350, 40);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
+
+        private System.Windows.Forms.Label lblWaiting;
     }
 }

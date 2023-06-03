@@ -1,10 +1,8 @@
 ﻿using IvsAgent.Monitor;
 using Serilog;
-using IvsTray.Monitor;
 using System;
 using System.Diagnostics;
 using System.ServiceProcess;
-using System.Timers;
 using Common.Utils;
 using Common.Persistance;
 using ToolManager.AgentWrappers;
@@ -77,7 +75,7 @@ namespace IvsAgent
             avWatcher = new EventLogWatcher("Microsoft-Windows-Windows Defender/Operational");
             avWatcher.EventRecordWritten += new EventHandler<EventRecordWrittenEventArgs>(DefenderEventWritten);
 
-            _sysTrayTimer.Elapsed += new ElapsedEventHandler(CheckUserSystemTray);
+            _sysTrayTimer.Elapsed += new System.Timers.ElapsedEventHandler(CheckUserSystemTray);
         }
 
         protected override void OnStart(string[] args)
@@ -172,11 +170,11 @@ namespace IvsAgent
 
         #region Checking System Tray Periodically
 
-        private readonly Timer _sysTrayTimer = new Timer { AutoReset = true, Interval = 1000 * 60 * 1 }; //1 min
+        private readonly System.Timers.Timer _sysTrayTimer = new System.Timers.Timer { AutoReset = true, Interval = 1000 * 60 * 1 }; //1 min
 
         private bool inTimer = false;
 
-        private void CheckUserSystemTray(object source, ElapsedEventArgs e)
+        private void CheckUserSystemTray(object source, System.Timers.ElapsedEventArgs e)
         {
             if (inTimer)
             {

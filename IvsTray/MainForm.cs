@@ -39,8 +39,7 @@ namespace IvsTray
             //By default form will be in visible by making opacity to 0.
             Opacity = 0;
 
-            //Making form borderless and rounded in the corners.
-            Region = Region.FromHrgn(MainFormHelpers.CreateRoundRectRgn(0, 0, Width, Height, 20, 20));
+            //Adding mouse filter to the form.
             MouseDownFilter mouseFilter = new MouseDownFilter(this);
             mouseFilter.FormClicked += FormClicked;
             Application.AddMessageFilter(mouseFilter);
@@ -52,12 +51,14 @@ namespace IvsTray
                 tsc.UpdateToolRunningStatus(toolStatuses);
             };
 
+
             Task.Run(() =>
             {
                 _logger.Verbose("Connecting to Agent Service...");
                 _clientPipe.Connect();
                 _logger.Debug("Agent Service connected...");
             });
+
         }
 
         private void MainFormClosing(object sender, FormClosingEventArgs e)
@@ -105,9 +106,14 @@ namespace IvsTray
 
             const int margine = 10;
 
-            Height = tsc.Height + brandingPanel.Height;
+            var newHeight = tsc.Height + fuc.Height;
+
             Rectangle workingArea = Screen.GetWorkingArea(this);
-            Location = new Point(workingArea.Right - Size.Width - margine, workingArea.Bottom - Size.Height - margine);
+            Location = new Point(workingArea.Right - Size.Width - margine, workingArea.Bottom - newHeight - margine);
+            Size = new Size(Size.Width, newHeight);
+
+            //Making form borderless and rounded in the corners.
+            Region = Region.FromHrgn(MainFormHelpers.CreateRoundRectRgn(0, 0, Width, Height, 20, 20));
         }
 
         /// <summary>

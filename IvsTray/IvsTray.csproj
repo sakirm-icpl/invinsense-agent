@@ -50,6 +50,12 @@
     <Compile Include="Notifier\NotifyEventArgs.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserControls\FooterUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\FooterUserControl.Designer.cs">
+      <DependentUpon>FooterUserControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\StatusIconExtensions.cs" />
     <Compile Include="UserControls\ToolStatusBar.cs">
       <SubType>UserControl</SubType>
@@ -70,6 +76,9 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\FooterUserControl.resx">
+      <DependentUpon>FooterUserControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\ToolStatusBar.resx">
       <DependentUpon>ToolStatusBar.cs</DependentUpon>

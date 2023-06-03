@@ -38,7 +38,7 @@
             this.lblToolName.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblToolName.AutoSize = true;
             this.lblToolName.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblToolName.Location = new System.Drawing.Point(0, 11);
+            this.lblToolName.Location = new System.Drawing.Point(8, 11);
             this.lblToolName.Name = "lblToolName";
             this.lblToolName.Size = new System.Drawing.Size(78, 19);
             this.lblToolName.TabIndex = 9;
@@ -49,7 +49,7 @@
             this.pbStatus.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pbStatus.Image = global::IvsTray.Properties.Resources.gray;
             this.pbStatus.InitialImage = null;
-            this.pbStatus.Location = new System.Drawing.Point(346, 15);
+            this.pbStatus.Location = new System.Drawing.Point(322, 14);
             this.pbStatus.Name = "pbStatus";
             this.pbStatus.Size = new System.Drawing.Size(12, 12);
             this.pbStatus.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -63,7 +63,7 @@
             this.Controls.Add(this.lblToolName);
             this.Controls.Add(this.pbStatus);
             this.Name = "ToolStatusBar";
-            this.Size = new System.Drawing.Size(376, 40);
+            this.Size = new System.Drawing.Size(350, 40);
             ((System.ComponentModel.ISupportInitialize)(this.pbStatus)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

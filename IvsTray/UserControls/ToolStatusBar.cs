@@ -50,6 +50,11 @@ namespace IvsTray
 
         public void UpdateRunningStatus(RunningStatus runningStatus)
         {
+            if(_runningStatus == runningStatus)
+            {
+                return;
+            }
+
             if (InvokeRequired)
             {
                 Invoke(new MethodInvoker(() => UpdateRunningStatus(runningStatus)));

@@ -1,5 +1,4 @@
 ﻿using Common.Persistance;
-using IvsTray.Monitor;
 using System;
 using System.Collections.Generic;
 using System.ServiceProcess;

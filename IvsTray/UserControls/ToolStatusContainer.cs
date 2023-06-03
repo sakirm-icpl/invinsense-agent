@@ -3,6 +3,7 @@ using IvsTray.Notifier;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace IvsTray.UserControls
@@ -24,28 +25,32 @@ namespace IvsTray.UserControls
 
         private void HandleToolNumberModified(object sender, EventArgs e)
         {
-            _logger.Verbose("Tool number changed. Count = {0}", _toolRunningStatuses.Count);
-
-            foreach (var item in _toolRunningStatuses.Keys)
+            if (Controls.Count == _toolRunningStatuses.Count)
             {
-                _logger.Verbose("Key:{Item}, Category:{CategoryName}, RunningStatus:{Running}", item, _toolRunningStatuses[item].CategoryName, _toolRunningStatuses[item].GetRunningStatus());
+                return;
             }
 
-            /*
+            if (InvokeRequired)
+            {
+                Invoke(new Action<object, EventArgs>(HandleToolNumberModified), sender, e);
+                return;
+            }
+
+            _logger.Verbose("Tool number changed. Count = {0}", _toolRunningStatuses.Count);
+
             Controls.Clear();
 
             var index = 0;
             foreach (var item in _toolRunningStatuses.Keys)
             {
-                index++;
                 var ctrl = _toolRunningStatuses[item];
-                ctrl.Location = new System.Drawing.Point(0, 10 + index * ctrl.Height);
+                ctrl.Location = new Point(0, 10 + index * 40);
                 Controls.Add(ctrl);
+                index++;
             }
 
-            Height = 40 * index + 20;
-
-            */
+            var newHeight = 40 * index + 20;
+            Size = new Size(Size.Width, newHeight);
         }
 
         public void UpdateToolRunningStatus(List<ToolStatus> statuses)
