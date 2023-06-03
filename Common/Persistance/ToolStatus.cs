@@ -30,7 +30,7 @@ namespace Common.Persistance
                     Name = ToolName.EndpointDetectionAndResponse;
                     break;
                 case 2:
-                    Name = ToolName.EndpointDeception;
+                    Name = ToolName.EndpointCyberDefence;
                     break;
                 case 3:
                     Name = ToolName.UserBehaviorAnalytics;
@@ -66,7 +66,7 @@ namespace Common.Persistance
                 case ToolName.EndpointDetectionAndResponse:
                     code += 100;
                     break;
-                case ToolName.EndpointDeception:
+                case ToolName.EndpointCyberDefence:
                     code += 200;
                     break;
                 case ToolName.UserBehaviorAnalytics:

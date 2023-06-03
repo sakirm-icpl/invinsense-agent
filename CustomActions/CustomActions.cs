@@ -87,8 +87,8 @@ namespace ToolManager
                 return ActionResult.Failure;
             }
 
-            var skipEndpointDeception = session["SKIP_ENDPOINT_DECEPTION"];
-            if (skipEndpointDeception == "Y" || skipEndpointDeception == "y")
+            var skipEndpointCyberDefence = session["SKIP_ENDPOINT_CYBER_DEFENCE"];
+            if (skipEndpointCyberDefence == "Y" || skipEndpointCyberDefence == "y")
             {
                 return ActionResult.Success;
             }

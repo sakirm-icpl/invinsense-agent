@@ -23,8 +23,8 @@ namespace IvsTray
                 case ToolName.EndpointDetectionAndResponse:
                     lblToolName.Text = "Endpoint Detection and Response";
                     break;
-                case ToolName.EndpointDeception:
-                    lblToolName.Text = "Endpoint Deception";
+                case ToolName.EndpointCyberDefence:
+                    lblToolName.Text = "Endpoint Cyber Defence";
                     break;
                 case ToolName.AdvanceTelemetry:
                     lblToolName.Text = "Advance Telemetry";

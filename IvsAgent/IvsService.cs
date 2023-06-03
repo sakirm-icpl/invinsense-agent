@@ -26,9 +26,9 @@ namespace IvsAgent
     public partial class IvsService : ServiceBase
     {
         private readonly ExtendedServiceController EdrServiceChecker;
-        private readonly ExtendedServiceController DeceptionServiceChecker;
-        private readonly ExtendedServiceController UserBehaviorServiceChecker;
-        private readonly ExtendedServiceController AdvanceTelemetryServiceChecker;
+        private readonly ExtendedServiceController EcdServiceChecker;
+        private readonly ExtendedServiceController UbaServiceChecker;
+        private readonly ExtendedServiceController AteleServiceChecker;
         private readonly ExtendedServiceController LmpServiceChecker;
 
         private ServerPipe _serverPipe;
@@ -59,14 +59,14 @@ namespace IvsAgent
             EdrServiceChecker = new ExtendedServiceController("WazuhSvc");
             EdrServiceChecker.StatusChanged += (object sender, ServiceStatusEventArgs e) => EdrUpdateStatus(e.Status);
 
-            DeceptionServiceChecker = new ExtendedServiceController("DBytesService");
-            DeceptionServiceChecker.StatusChanged += (object sender, ServiceStatusEventArgs e) => DeceptionUpdateStatus(e.Status);
+            EcdServiceChecker = new ExtendedServiceController("DBytesService");
+            EcdServiceChecker.StatusChanged += (object sender, ServiceStatusEventArgs e) => EcdUpdateStatus(e.Status);
 
-            UserBehaviorServiceChecker = new ExtendedServiceController("osqueryd");
-            UserBehaviorServiceChecker.StatusChanged += (object sender, ServiceStatusEventArgs e) => OsQueryUpdateStatus(e.Status);
+            UbaServiceChecker = new ExtendedServiceController("osqueryd");
+            UbaServiceChecker.StatusChanged += (object sender, ServiceStatusEventArgs e) => OsQueryUpdateStatus(e.Status);
 
-            AdvanceTelemetryServiceChecker = new ExtendedServiceController("Sysmon64");
-            AdvanceTelemetryServiceChecker.StatusChanged += (object sender, ServiceStatusEventArgs e) => SysmonUpdateStatus(e.Status);
+            AteleServiceChecker = new ExtendedServiceController("Sysmon64");
+            AteleServiceChecker.StatusChanged += (object sender, ServiceStatusEventArgs e) => SysmonUpdateStatus(e.Status);
 
             LmpServiceChecker = new ExtendedServiceController("IvsAgent");
             LmpServiceChecker.StatusChanged += (object sender, ServiceStatusEventArgs e) => LmpStatusUpdate(e.Status);
@@ -259,11 +259,11 @@ namespace IvsAgent
 
         private void SendToolStatuses()
         {
-            var skipDeception = ToolRepository.CanSkipMonitoring(ToolName.EndpointDeception);
+            var skipEndpointCyberDefence = ToolRepository.CanSkipMonitoring(ToolName.EndpointCyberDefence);
             var statuses = new List<ToolStatus>();
-            if (!skipDeception)
+            if (!skipEndpointCyberDefence)
             {
-                statuses.Add(GetToolStatus(ToolName.EndpointDeception));
+                statuses.Add(GetToolStatus(ToolName.EndpointCyberDefence));
             }
 
             statuses.AddRange(new List<ToolStatus>
@@ -310,11 +310,11 @@ namespace IvsAgent
             switch (toolName)
             {
                 case ToolName.AdvanceTelemetry:
-                    return new ToolStatus(ToolName.AdvanceTelemetry, AdvanceTelemetryServiceChecker.InstallStatus, AdvanceTelemetryServiceChecker.RunningStatus);
-                case ToolName.EndpointDeception:
-                    return new ToolStatus(ToolName.EndpointDeception, EdrServiceChecker.InstallStatus, EdrServiceChecker.RunningStatus);
+                    return new ToolStatus(ToolName.AdvanceTelemetry, AteleServiceChecker.InstallStatus, AteleServiceChecker.RunningStatus);
+                case ToolName.EndpointCyberDefence:
+                    return new ToolStatus(ToolName.EndpointCyberDefence, EcdServiceChecker.InstallStatus, EcdServiceChecker.RunningStatus);
                 case ToolName.EndpointDetectionAndResponse:
-                    return new ToolStatus(ToolName.EndpointDetectionAndResponse, DeceptionServiceChecker.InstallStatus, DeceptionServiceChecker.RunningStatus);
+                    return new ToolStatus(ToolName.EndpointDetectionAndResponse, EdrServiceChecker.InstallStatus, EdrServiceChecker.RunningStatus);
                 case ToolName.EndpointProtection:
                     var installedAntiviruses = AvMonitor.ListAvStatuses();
                     ToolStatus avStatus;
@@ -333,7 +333,7 @@ namespace IvsAgent
                 case ToolName.LateralMovementProtection:
                     return new ToolStatus(ToolName.LateralMovementProtection, LmpServiceChecker.InstallStatus, LmpServiceChecker.RunningStatus);
                 case ToolName.UserBehaviorAnalytics:
-                    return new ToolStatus(ToolName.UserBehaviorAnalytics, UserBehaviorServiceChecker.InstallStatus, UserBehaviorServiceChecker.RunningStatus);
+                    return new ToolStatus(ToolName.UserBehaviorAnalytics, UbaServiceChecker.InstallStatus, UbaServiceChecker.RunningStatus);
                 default:
                     throw new Exception($"Unknown tool name {toolName}");
             }
@@ -389,24 +389,24 @@ namespace IvsAgent
             }
         }
 
-        private void DeceptionUpdateStatus(ServiceControllerStatus? status)
+        private void EcdUpdateStatus(ServiceControllerStatus? status)
         {
             if (status == null)
             {
-                _logger.Information("{Name} not found", ToolName.EndpointDeception);
-                SendStatusUpdate(new ToolStatus(ToolName.EndpointDeception, InstallStatus.NotFound, RunningStatus.NotFound));
+                _logger.Information("{Name} not found", ToolName.EndpointCyberDefence);
+                SendStatusUpdate(new ToolStatus(ToolName.EndpointCyberDefence, InstallStatus.NotFound, RunningStatus.NotFound));
                 return;
             }
 
-            _logger.Information("{Name} is {Status}", ToolName.EndpointDeception, status.Value);
+            _logger.Information("{Name} is {Status}", ToolName.EndpointCyberDefence, status.Value);
 
             switch (status.Value)
             {
                 case ServiceControllerStatus.Running:
-                    SendStatusUpdate(new ToolStatus(ToolName.EndpointDeception, InstallStatus.Installed, RunningStatus.Running));
+                    SendStatusUpdate(new ToolStatus(ToolName.EndpointCyberDefence, InstallStatus.Installed, RunningStatus.Running));
                     return;
                 case ServiceControllerStatus.Stopped:
-                    SendStatusUpdate(new ToolStatus(ToolName.EndpointDeception, InstallStatus.Installed, RunningStatus.Stopped));
+                    SendStatusUpdate(new ToolStatus(ToolName.EndpointCyberDefence, InstallStatus.Installed, RunningStatus.Stopped));
                     return;
                 default:
                     return;
@@ -498,10 +498,10 @@ namespace IvsAgent
             _logger.Information("Checking Sysmon");
             if (SysmonWrapper.Verify(true) == 0)
             {
-                _logger.Information($"SysmonServiceVerified with status {AdvanceTelemetryServiceChecker.Status}");
-                AdvanceTelemetryServiceChecker.StartListening();
-                SysmonUpdateStatus(AdvanceTelemetryServiceChecker.Status);
-                _logger.Information($"SysmonServiceListening with status {AdvanceTelemetryServiceChecker.Status}");
+                _logger.Information($"SysmonServiceVerified with status {AteleServiceChecker.Status}");
+                AteleServiceChecker.StartListening();
+                SysmonUpdateStatus(AteleServiceChecker.Status);
+                _logger.Information($"SysmonServiceListening with status {AteleServiceChecker.Status}");
             }
             else
             {
@@ -512,9 +512,9 @@ namespace IvsAgent
             if (OsQueryWrapper.Verify(true) == 0)
             {
                 _logger.Information("OsQueryVerified with status {OsQuery.Status}");
-                UserBehaviorServiceChecker.StartListening();
-                OsQueryUpdateStatus(UserBehaviorServiceChecker.Status);
-                _logger.Information($"OsQueryListening with status {UserBehaviorServiceChecker.Status}");
+                UbaServiceChecker.StartListening();
+                OsQueryUpdateStatus(UbaServiceChecker.Status);
+                _logger.Information($"OsQueryListening with status {UbaServiceChecker.Status}");
             }
             else
             {
@@ -537,10 +537,10 @@ namespace IvsAgent
             _logger.Information("Checking DBytes");
             if (DBytesWrapper.Verify(true) == 0)
             {
-                _logger.Information($"DbytesServiceVerified with status {DeceptionServiceChecker.Status}");
-                DeceptionServiceChecker.StartListening();
-                DeceptionUpdateStatus(DeceptionServiceChecker.Status);
-                _logger.Information($"DbytesServiceListening with status {DeceptionServiceChecker.Status}");
+                _logger.Information($"DbytesServiceVerified with status {EcdServiceChecker.Status}");
+                EcdServiceChecker.StartListening();
+                EcdUpdateStatus(EcdServiceChecker.Status);
+                _logger.Information($"DbytesServiceListening with status {EcdServiceChecker.Status}");
             }
             else
             {

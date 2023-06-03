@@ -42,10 +42,10 @@ namespace IvsUninstall
 
                 ServiceController[] services = ServiceController.GetServices();
                 ServiceController sc = services.FirstOrDefault(s => s.ServiceName == serviceName);
-                if(sc != null) 
-                { 
-                    if(sc.Status==ServiceControllerStatus.Running) 
-                    { 
+                if (sc != null)
+                {
+                    if (sc.Status == ServiceControllerStatus.Running)
+                    {
                         sc.Stop();
                         Thread.Sleep(4000);
                     }
@@ -55,22 +55,22 @@ namespace IvsUninstall
                     logger.Information("The service has been stopped early..");
                 }
 
-                #region Deceptive Bytes - Endpoint Deception
+                #region Endpoint Cyber Defence
                 logger.Information("Uninstalling Deceptive Bytes...");
 
-               if (DBytesWrapper.Verify(true)==0)
-               {
-                        var dBytesExitCode = DBytesWrapper.Remove();
+                if (DBytesWrapper.Verify(true) == 0)
+                {
+                    var dBytesExitCode = DBytesWrapper.Remove();
 
-                        logger.Information($"Deceptive Bytes remove exit code={dBytesExitCode}");
+                    logger.Information($"Deceptive Bytes remove exit code={dBytesExitCode}");
 
-                        Thread.Sleep(3000);
-               }
-               else
-               {
+                    Thread.Sleep(3000);
+                }
+                else
+                {
                     logger.Information("Deceptive Bytes alreay gets uninstalled");
-               }
-                
+                }
+
                 #endregion
 
                 #region OSQUERY
@@ -78,13 +78,13 @@ namespace IvsUninstall
                 logger.Information("Uninstalling OsQuery...");
 
                 //Checking if file is exists or not
-                if (OsQueryWrapper.Verify(true)==0)
+                if (OsQueryWrapper.Verify(true) == 0)
                 {
-                        var osQueryExitCode = OsQueryWrapper.Remove();
+                    var osQueryExitCode = OsQueryWrapper.Remove();
 
-                        logger.Information($"OSQUERY remove exit code={osQueryExitCode}");
+                    logger.Information($"OSQUERY remove exit code={osQueryExitCode}");
 
-                        Thread.Sleep(3000);
+                    Thread.Sleep(3000);
                 }
                 else
                 {
@@ -102,15 +102,15 @@ namespace IvsUninstall
                 #region WAZUH
 
                 //Checking if file is exists or not
-                if (WazuhWrapper.Verify(true)==0)
+                if (WazuhWrapper.Verify(true) == 0)
                 {
                     logger.Information("Uninstalling Wazuh...");
 
                     var wazuhExitCode = WazuhWrapper.Remove();
 
-                        logger.Information($"Wazuh remove exit code={wazuhExitCode}");
+                    logger.Information($"Wazuh remove exit code={wazuhExitCode}");
 
-                        Thread.Sleep(3000);
+                    Thread.Sleep(3000);
                 }
                 else
                 {
@@ -127,7 +127,7 @@ namespace IvsUninstall
                 #region SYSMON
 
                 //Checking if file is exists or not
-                if(SysmonWrapper.Verify(true)==0)
+                if (SysmonWrapper.Verify(true) == 0)
                 {
                     logger.Information("Uninstalling Sysmon...");
 
@@ -148,7 +148,6 @@ namespace IvsUninstall
                 logger.Error(ex.Message);
             }
 
-
             //Removing Agent with uninstall key
             try
             {
@@ -161,7 +160,7 @@ namespace IvsUninstall
                 logger.Information("Agent Uninstallation is ready");
 
                 var status = MsiPackageWrapper.Uninstall("Invinsense", "UNINSTALL_KEY=\"ICPL_2023\"");
-                
+
             }
             catch (Exception ex)
             {
@@ -177,7 +176,7 @@ namespace IvsUninstall
                     DateTime cutoffDate = DateTime.Now;
                     foreach (FileInfo file in directory.GetFiles())
                     {
-                        if (file.LastWriteTime < cutoffDate && file.Name!= "IvsUninstall.log" && file.Name!= "ivsuninstall.log")
+                        if (file.LastWriteTime < cutoffDate && file.Name != "IvsUninstall.log" && file.Name != "ivsuninstall.log")
                         {
                             file.Delete();
                         }
@@ -192,17 +191,17 @@ namespace IvsUninstall
 
             //Removing maintanence
             string username = "maintenance";
-            using (PrincipalContext pc =new PrincipalContext(ContextType.Machine))
+            using (PrincipalContext pc = new PrincipalContext(ContextType.Machine))
             {
-                UserPrincipal user = UserPrincipal.FindByIdentity(pc,username);
-                if (user != null) 
+                UserPrincipal user = UserPrincipal.FindByIdentity(pc, username);
+                if (user != null)
                 {
                     logger.Information("Removing maintance user");
                     user.Delete();
                     logger.Information("Removing fake file");
                     var fakeFilePath = Path.Combine(@"C:\Users", "Users.txt");
-                    if (File.Exists(fakeFilePath)) 
-                    { 
+                    if (File.Exists(fakeFilePath))
+                    {
                         File.Delete(fakeFilePath);
                     }
                 }
