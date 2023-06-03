@@ -41,7 +41,7 @@ namespace ToolManager.AgentWrappers
 
                 _logger.Information("OSQUERY installation is ready");
 
-                var msiPath = Path.Combine(CommonUtils.ArtifactsFolder, "osquery-5.5.1.msi");
+                var msiPath = Path.Combine(CommonUtils.ArtifactsFolder, "osquery-5.8.2.msi");
                 var logPath = Path.Combine(CommonUtils.LogsFolder, "osqueryInstall.log");
 
                 _logger.Information($"OsQuery msiPath {msiPath}");
