@@ -53,6 +53,7 @@
     <Compile Include="Monitor\ExtendedServiceController.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Monitor\IvsTrayMonitor.cs" />
     <Compile Include="Monitor\ServiceHelper.cs" />
     <Compile Include="Monitor\ServiceStatusEventArgs.cs" />
     <Compile Include="IvsService.cs">

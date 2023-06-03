@@ -3,7 +3,6 @@ using Serilog;
 using System;
 using System.Diagnostics;
 using System.ServiceProcess;
-using Common.Utils;
 using Common.Persistance;
 using ToolManager.AgentWrappers;
 using System.Threading.Tasks;
@@ -75,7 +74,6 @@ namespace IvsAgent
             avWatcher = new EventLogWatcher("Microsoft-Windows-Windows Defender/Operational");
             avWatcher.EventRecordWritten += new EventHandler<EventRecordWrittenEventArgs>(DefenderEventWritten);
 
-            _sysTrayTimer.Elapsed += new System.Timers.ElapsedEventHandler(CheckUserSystemTray);
         }
 
         protected override void OnStart(string[] args)
@@ -86,7 +84,7 @@ namespace IvsAgent
             CreateServerPipe();
 
             _logger.Information("Start watching IvsTray App");
-            _sysTrayTimer.Start();
+            IvsTrayMonitor.Instance.StartMonitoring();
 
             _logger.Information("Start watching windows defender events");
             avWatcher.Enabled = true;
@@ -110,7 +108,7 @@ namespace IvsAgent
             try
             {
                 _logger.Information("Stopping IvsTray watcher");
-                _sysTrayTimer.Stop();
+                IvsTrayMonitor.Instance.StopMonitoring();
 
                 _logger.Information("Stopping windows defender watcher");
                 SendStatusUpdate(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.Installed, RunningStatus.Stopped));
@@ -167,63 +165,6 @@ namespace IvsAgent
             _logger.Information(message);
             EventLog.WriteEntry(message);
         }
-
-        #region Checking System Tray Periodically
-
-        private readonly System.Timers.Timer _sysTrayTimer = new System.Timers.Timer { AutoReset = true, Interval = 1000 * 60 * 1 }; //1 min
-
-        private bool inTimer = false;
-
-        private void CheckUserSystemTray(object source, System.Timers.ElapsedEventArgs e)
-        {
-            if (inTimer)
-            {
-                return;
-            }
-
-            inTimer = true;
-
-            try
-            {
-                //Check the user seesion is active or not
-                var processes = Process.GetProcesses();
-                bool isSessionActive = processes.Any(p => p.SessionId > 0 && p.ProcessName != "Idel");
-
-                _logger.Verbose($"Is session active: {isSessionActive}");
-
-                if (isSessionActive)
-                {
-                    Process trayApp = processes.FirstOrDefault(pp => pp.ProcessName.StartsWith("IvsTray"));
-
-                    //TODO: Evaluate below scenario for multiple user sessions.
-                    //Process myExplorer = Process.GetProcesses().FirstOrDefault(pp => pp.ProcessName == "explorer" && pp.SessionId == trayApp.SessionId);
-
-                    if (trayApp != null)
-                    {
-                        _logger.Verbose($"Active Session App: {trayApp.ProcessName} - {trayApp.SessionId}");
-
-                        if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Verbose))
-                        {
-                            SendToolStatuses();
-                        }
-                    }
-                    else
-                    {
-                        var ivsTrayFile = CommonUtils.ConstructFromRoot("..\\IvsTray\\IvsTray.exe");
-                        _logger.Information($"IvsTray is not running. Starting... {ivsTrayFile}");
-                        ProcessExtensions.RunInActiveUserSession(null, ivsTrayFile);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex, "Error while checking system tray");
-            }
-
-            inTimer = false;
-        }
-
-        #endregion
 
         #region IPC Block
 
