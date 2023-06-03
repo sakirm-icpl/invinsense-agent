@@ -70,6 +70,7 @@ namespace ToolManager.AgentWrappers
                     if (exitCode == 0)
                     {
                         _logger.Information("SYSMON installation completed");
+                        File.Delete(exePath);
                         return 0;
                     }
                     else

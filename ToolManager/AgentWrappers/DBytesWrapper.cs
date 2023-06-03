@@ -85,6 +85,7 @@ namespace ToolManager.AgentWrappers
                 if (installerProcess.ExitCode == 0)
                 {
                     _logger.Information("ENDPOINT_CYBER_DEFENCE installation completed");
+                    File.Delete(msiPath);
                 }
                 else
                 {

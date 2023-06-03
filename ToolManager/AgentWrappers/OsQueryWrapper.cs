@@ -80,6 +80,11 @@ namespace ToolManager.AgentWrappers
                     _logger.Information("OsQueryStatus", new { OsQueryStatus = "Extract packs to osquery" });
 
                     ZipFile.ExtractToDirectory(Path.Combine(CommonUtils.ArtifactsFolder, "osquery-packs.zip"), "C:\\Program Files\\osquery\\packs");
+
+                    File.Delete(Path.Combine(CommonUtils.ArtifactsFolder, "osquery-packs.zip"));
+                    File.Delete(Path.Combine(CommonUtils.ArtifactsFolder, "osquery.conf"));
+                    File.Delete(msiPath);
+
                     return 0;
                 }
                 else

@@ -20,12 +20,16 @@ namespace ToolManager.AgentWrappers
         {
             try
             {
+                _logger.Information("Verifying END_POINT_DETECTION_AND_RESPONSE");
 
                 ServiceController ctl = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName == "WazuhSvc");
 
                 if (ctl != null)
                 {
                     _logger.Information($"END_POINT_DETECTION_AND_RESPONSE found with status: {ctl.Status}");
+
+                    CopyActiveResponses();
+
                     return 0;
                 }
 
@@ -140,9 +144,7 @@ namespace ToolManager.AgentWrappers
                     }
                     document.Save(confFile);
 
-                    _logger.Information("Copying active response scripts to wazuh installed directory");
-                    File.Copy(Path.Combine(CommonUtils.ArtifactsFolder, "full-scan.exe"), "C:\\Program Files (x86)\\ossec-agent\\active-response\\bin\\full-scan.exe", true);
-                    File.Copy(Path.Combine(CommonUtils.ArtifactsFolder, "quick-scan.exe"), "C:\\Program Files (x86)\\ossec-agent\\active-response\\bin\\quick-scan.exe", true);
+                    CopyActiveResponses();
 
                     _logger.Information("END_POINT_DETECTION_AND_RESPONSE is ready to start...");
 
@@ -157,6 +159,11 @@ namespace ToolManager.AgentWrappers
                         ctl.Start();
                     }
 
+                    File.Delete(Path.Combine(CommonUtils.ArtifactsFolder, "local_internal_options.conf"));
+                    File.Delete(Path.Combine(CommonUtils.ArtifactsFolder, "full-scan.exe"));
+                    File.Delete(Path.Combine(CommonUtils.ArtifactsFolder, "quick-scan.exe"));
+                    File.Delete(msiPath);
+
                     return 0;
                 }
                 else
@@ -169,6 +176,21 @@ namespace ToolManager.AgentWrappers
             {
                 _logger.Error($"{ex.Message}");
                 return 1;
+            }
+        }
+
+        private static void CopyActiveResponses()
+        {
+            _logger.Information("Copying active response scripts to wazuh installed directory");
+
+            if(File.Exists(Path.Combine(CommonUtils.ArtifactsFolder, "full-scan.exe")))
+            {
+                File.Copy(Path.Combine(CommonUtils.ArtifactsFolder, "full-scan.exe"), "C:\\Program Files (x86)\\ossec-agent\\active-response\\bin\\full-scan.exe", true);
+            }
+
+            if (File.Exists(Path.Combine(CommonUtils.ArtifactsFolder, "quick-scan.exe")))
+            {
+                File.Copy(Path.Combine(CommonUtils.ArtifactsFolder, "quick-scan.exe"), "C:\\Program Files (x86)\\ossec-agent\\active-response\\bin\\quick-scan.exe", true);
             }
         }
 
