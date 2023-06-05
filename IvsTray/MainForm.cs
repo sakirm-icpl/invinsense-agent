@@ -24,8 +24,8 @@ namespace IvsTray
             _logger.Information("Loading MainForm");
             InitializeComponent();
 
-            Icon = Resources.red_logo_22_22;
-            notifyIcon.Icon = Resources.red_logo_22_22;
+            Icon = Resources.green_logo_22_22;
+            notifyIcon.Icon = Resources.green_logo_22_22;
 
             _clientPipe = new ClientPipe(".", Constants.IvsName, p => p.StartStringReaderAsync());
             tsc.Notify += NotifyTray;
