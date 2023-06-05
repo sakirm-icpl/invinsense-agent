@@ -158,10 +158,12 @@ namespace IvsTray
             {
                 if(e.NotifyType == NotifyType.Info)
                 {
+                    Icon = Resources.green_logo_22_22;
                     notifyIcon.Icon = Resources.green_logo_22_22;
                 }
                 else
                 {
+                    Icon = Resources.red_logo_22_22;
                     notifyIcon.Icon = Resources.red_logo_22_22;
                 }
                 return;
