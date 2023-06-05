@@ -193,11 +193,11 @@ namespace IvsAgent
 
         private void SendToolStatuses()
         {
-            var skipEndpointCyberDefence = ToolRepository.CanSkipMonitoring(ToolName.EndpointCyberDefence);
+            var skipEndpointDeception = ToolRepository.CanSkipMonitoring(ToolName.EndpointDeception);
             var statuses = new List<ToolStatus>();
-            if (!skipEndpointCyberDefence)
+            if (!skipEndpointDeception)
             {
-                statuses.Add(GetToolStatus(ToolName.EndpointCyberDefence));
+                statuses.Add(GetToolStatus(ToolName.EndpointDeception));
             }
 
             statuses.AddRange(new List<ToolStatus>
@@ -245,8 +245,8 @@ namespace IvsAgent
             {
                 case ToolName.AdvanceTelemetry:
                     return new ToolStatus(ToolName.AdvanceTelemetry, AteleServiceChecker.InstallStatus, AteleServiceChecker.RunningStatus);
-                case ToolName.EndpointCyberDefence:
-                    return new ToolStatus(ToolName.EndpointCyberDefence, EcdServiceChecker.InstallStatus, EcdServiceChecker.RunningStatus);
+                case ToolName.EndpointDeception:
+                    return new ToolStatus(ToolName.EndpointDeception, EcdServiceChecker.InstallStatus, EcdServiceChecker.RunningStatus);
                 case ToolName.EndpointDetectionAndResponse:
                     return new ToolStatus(ToolName.EndpointDetectionAndResponse, EdrServiceChecker.InstallStatus, EdrServiceChecker.RunningStatus);
                 case ToolName.EndpointProtection:
@@ -288,20 +288,20 @@ namespace IvsAgent
         {
             if (status == null)
             {
-                _logger.Information("{Name} not found", ToolName.EndpointCyberDefence);
-                SendStatusUpdate(new ToolStatus(ToolName.EndpointCyberDefence, InstallStatus.NotFound, RunningStatus.NotFound));
+                _logger.Information("{Name} not found", ToolName.EndpointDeception);
+                SendStatusUpdate(new ToolStatus(ToolName.EndpointDeception, InstallStatus.NotFound, RunningStatus.NotFound));
                 return;
             }
 
-            _logger.Information("{Name} is {Status}", ToolName.EndpointCyberDefence, status.Value);
+            _logger.Information("{Name} is {Status}", ToolName.EndpointDeception, status.Value);
 
             switch (status.Value)
             {
                 case ServiceControllerStatus.Running:
-                    SendStatusUpdate(new ToolStatus(ToolName.EndpointCyberDefence, InstallStatus.Installed, RunningStatus.Running));
+                    SendStatusUpdate(new ToolStatus(ToolName.EndpointDeception, InstallStatus.Installed, RunningStatus.Running));
                     return;
                 case ServiceControllerStatus.Stopped:
-                    SendStatusUpdate(new ToolStatus(ToolName.EndpointCyberDefence, InstallStatus.Installed, RunningStatus.Stopped));
+                    SendStatusUpdate(new ToolStatus(ToolName.EndpointDeception, InstallStatus.Installed, RunningStatus.Stopped));
                     return;
                 default:
                     return;

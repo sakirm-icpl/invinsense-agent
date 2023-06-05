@@ -55,7 +55,7 @@ namespace IvsUninstall
                     logger.Information("The service has been stopped early..");
                 }
 
-                #region Endpoint Cyber Defence
+                #region Endpoint Deception
                 logger.Information("Uninstalling Deceptive Bytes...");
 
                 if (DBytesWrapper.Verify(true) == 0)

@@ -22,31 +22,31 @@ namespace ToolManager.AgentWrappers
 
                 if (ctl != null)
                 {
-                    _logger.Information($"ENDPOINT_CYBER_DEFENCE found with status: {ctl.Status}");
+                    _logger.Information($"ENDPOINT_DECEPTION found with status: {ctl.Status}");
                     return 0;
                 }
 
                 if (ctl == null && !isInstall)
                 {
-                    _logger.Information("ENDPOINT_CYBER_DEFENCE not found and set for skip.");
+                    _logger.Information("ENDPOINT_DECEPTION not found and set for skip.");
                     return -1;
                 }
 
-                var skipInstall = ToolRepository.CanSkipMonitoring(ToolName.EndpointCyberDefence);
+                var skipInstall = ToolRepository.CanSkipMonitoring(ToolName.EndpointDeception);
 
                 if (skipInstall)
                 {
-                    _logger.Information("ENDPOINT_CYBER_DEFENCE not found and set for skip by configuration.");
+                    _logger.Information("ENDPOINT_DECEPTION not found and set for skip by configuration.");
                     return -1;
                 }
-                _logger.Information("ENDPOINT_CYBER_DEFENCE not found. Preparing installation" );
+                _logger.Information("ENDPOINT_DECEPTION not found. Preparing installation" );
 
                 if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
                 {
                     _logger.Information("MSI Installer is not free.");
                     return 1618;
                 }
-                _logger.Information("ENDPOINT_CYBER_DEFENCE installation is ready");
+                _logger.Information("ENDPOINT_DECEPTION installation is ready");
 
                 var msiPath = Path.Combine(CommonUtils.ArtifactsFolder, "DeceptiveBytes.EPS.x64.msi");
                 var logPath = Path.Combine(CommonUtils.LogsFolder, "dbytesInstall.log");
@@ -54,8 +54,8 @@ namespace ToolManager.AgentWrappers
                 _logger.Information($"DBytes msiPath {msiPath}");
                 _logger.Information($"DBytes logPath {logPath}");
 
-                var serverIp = ToolRepository.GetPropertyByName(ToolName.EndpointCyberDefence, "SERVER_ADDR");
-                var apiKey = ToolRepository.GetPropertyByName(ToolName.EndpointCyberDefence, "APIKEY");
+                var serverIp = ToolRepository.GetPropertyByName(ToolName.EndpointDeception, "SERVER_ADDR");
+                var apiKey = ToolRepository.GetPropertyByName(ToolName.EndpointDeception, "APIKEY");
 
                 _logger.Information($"DBytes's ServerIp {serverIp}");
                 _logger.Information($"DBytes's ApiKey {apiKey}");
@@ -78,18 +78,18 @@ namespace ToolManager.AgentWrappers
 
                 installerProcess.Start();
 
-                _logger.Information("ENDPOINT_CYBER_DEFENCE Installation started...");
+                _logger.Information("ENDPOINT_DECEPTION Installation started...");
 
                 installerProcess.WaitForExit();
 
                 if (installerProcess.ExitCode == 0)
                 {
-                    _logger.Information("ENDPOINT_CYBER_DEFENCE installation completed");
+                    _logger.Information("ENDPOINT_DECEPTION installation completed");
                     File.Delete(msiPath);
                 }
                 else
                 {
-                    _logger.Information($"ENDPOINT_CYBER_DEFENCE installation fault: {installerProcess.ExitCode}");
+                    _logger.Information($"ENDPOINT_DECEPTION installation fault: {installerProcess.ExitCode}");
                 }
 
                 return installerProcess.ExitCode;
@@ -103,17 +103,17 @@ namespace ToolManager.AgentWrappers
 
         private static void InstallerProcess_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            _logger.Information($"ENDPOINT_CYBER_DEFENCE installation error data: {e.Data}");
+            _logger.Information($"ENDPOINT_DECEPTION installation error data: {e.Data}");
         }
 
         private static void InstallerProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            _logger.Information($"ENDPOINT_CYBER_DEFENCE error data: {e.Data}");
+            _logger.Information($"ENDPOINT_DECEPTION error data: {e.Data}");
         }
 
         private static void InstallerProcess_Exited(object sender, EventArgs e)
         {
-            _logger.Information($"ENDPOINT_CYBER_DEFENCE process exited.");
+            _logger.Information($"ENDPOINT_DECEPTION process exited.");
         }
 
         public static int Remove()
@@ -125,21 +125,21 @@ namespace ToolManager.AgentWrappers
 
                 if (ctl == null)
                 {
-                    _logger.Information($"ENDPOINT_CYBER_DEFENCE not found and set for skip.");
+                    _logger.Information($"ENDPOINT_DECEPTION not found and set for skip.");
                     return -1;
                 }
-                _logger.Information("ENDPOINT_CYBER_DEFENCEfound. Preparing uninstallation");
+                _logger.Information("ENDPOINT_DECEPTIONfound. Preparing uninstallation");
 
                 if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
                 {
                     _logger.Information("MSI Installer is not free.");
                     return 1618;
                 }
-                _logger.Information("ENDPOINT_CYBER_DEFENCE Uninstallation is ready");
+                _logger.Information("ENDPOINT_DECEPTION Uninstallation is ready");
                   
                 if(Verify(true)==0)
                 {
-                    status = MsiPackageWrapper.Uninstall("Deceptive Bytes - Endpoint Cyber Defence");
+                    status = MsiPackageWrapper.Uninstall("Deceptive Bytes - Endpoint Deception");
                 }  
                     
                 return status ? 0 : 1;

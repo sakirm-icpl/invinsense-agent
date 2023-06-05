@@ -58,9 +58,9 @@
 			<RegistrySearch Id="WazuhCertPath" Root="HKLM" Key="SOFTWARE\infopercxept" Name="WAZUH_REGISTRATION_CERTIFICATE" Type="raw" />
 		</Property>
 
-		<!--Fetch property of SKIP_ENDPOINT_CYBER_DEFENCE-->
-		<Property Id="SKIP_ENDPOINT_CYBER_DEFENCE">
-			<RegistrySearch Id="SkipDbytesId" Root="HKLM" Key="SOFTWARE\infopercxept" Name="SKIP_ENDPOINT_CYBER_DEFENCE" Type="raw" />
+		<!--Fetch property of SKIP_ENDPOINT_DECEPTION-->
+		<Property Id="SKIP_ENDPOINT_DECEPTION">
+			<RegistrySearch Id="SkipDbytesId" Root="HKLM" Key="SOFTWARE\infopercxept" Name="SKIP_ENDPOINT_DECEPTION" Type="raw" />
 		</Property>
 
 		<!--Fetch property of DBYTES_SERVER-->
@@ -136,10 +136,10 @@
 					<RegistryValue Name="REGISTRATION_KEY" Value="[WAZUH_REGISTRATION_KEY]" Type="string"></RegistryValue>
 				</RegistryKey>
 
-				<!--add property of ENDPOINT_CYBER_DEFENCE with value and place it to "SOFTWARE\infopercept" -->
-				<RegistryKey Key="ENDPOINT_CYBER_DEFENCE">
+				<!--add property of ENDPOINT_DECEPTION with value and place it to "SOFTWARE\infopercept" -->
+				<RegistryKey Key="ENDPOINT_DECEPTION">
 					<!--add property of SKIP_DBYTES with value and place it to "SOFTWARE\infopercept" -->
-					<RegistryValue Name="SKIP_MONITORING" Value="[SKIP_ENDPOINT_CYBER_DEFENCE]" Type="string" />
+					<RegistryValue Name="SKIP_MONITORING" Value="[SKIP_ENDPOINT_DECEPTION]" Type="string" />
 
 					<!--add property of DBYTES_SERVER with value and place it to "SOFTWARE\infopercept" -->
 					<RegistryValue Name="SERVER_ADDR" Value="[DBYTES_SERVER]" Type="string" />
