@@ -227,7 +227,7 @@
 				<File Id="c03" Source="..\artifacts\osquery\osquery-5.8.2.msi" />
 				<File Id="c04" Source="..\artifacts\osquery\osquery.conf" />
 				<File Id="c05" Source="..\artifacts\osquery\osquery-packs.zip" />
-				<File Id="c06" Source="..\artifacts\wazuh\wazuh-agent-4.4.2-1.msi" />
+				<File Id="c06" Source="..\artifacts\wazuh\wazuh-agent-4.4.1-1.msi" />
 
 				<File Id="c06_1" Source="..\artifacts\wazuh\active-response\full-scan.exe" />
 				<File Id="c06_2" Source="..\artifacts\wazuh\active-response\quick-scan.exe" />

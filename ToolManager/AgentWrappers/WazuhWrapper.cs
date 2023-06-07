@@ -49,7 +49,7 @@ namespace ToolManager.AgentWrappers
 
                 _logger.Information("END_POINT_DETECTION_AND_RESPONSE installation is ready");
 
-                var msiPath = Path.Combine(CommonUtils.ArtifactsFolder, "wazuh-agent-4.4.2-1.msi");
+                var msiPath = Path.Combine(CommonUtils.ArtifactsFolder, "wazuh-agent-4.4.1-1.msi");
 
                 var logPath = Path.Combine(CommonUtils.LogsFolder, "wazuhInstall.log");
 
