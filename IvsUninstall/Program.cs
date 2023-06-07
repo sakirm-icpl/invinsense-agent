@@ -18,7 +18,7 @@ namespace IvsUninstall
         {
             Log.Logger = new LoggerConfiguration()
                    .MinimumLevel.Verbose()
-                   .WriteTo.File(CommonUtils.DataFolder + "\\IvsUninstall.log", rollOnFileSizeLimit: false, fileSizeLimitBytes: 100000)
+                   .WriteTo.File(CommonUtils.DataFolder + "IvsUninstall.log", rollOnFileSizeLimit: true, retainedFileCountLimit: 5, fileSizeLimitBytes: 30000, rollingInterval: RollingInterval.Day)
                    .WriteTo.Console()
                    .CreateLogger();
 
@@ -58,7 +58,7 @@ namespace IvsUninstall
                 #region Endpoint Deception
                 logger.Information("Uninstalling Deceptive Bytes...");
 
-                if (DBytesWrapper.Verify(true) == 0)
+                if (DBytesWrapper.Verify() == 0)
                 {
                     var dBytesExitCode = DBytesWrapper.Remove();
 
@@ -78,7 +78,7 @@ namespace IvsUninstall
                 logger.Information("Uninstalling OsQuery...");
 
                 //Checking if file is exists or not
-                if (OsQueryWrapper.Verify(true) == 0)
+                if (OsQueryWrapper.Verify() == 0)
                 {
                     var osQueryExitCode = OsQueryWrapper.Remove();
 
@@ -102,7 +102,7 @@ namespace IvsUninstall
                 #region WAZUH
 
                 //Checking if file is exists or not
-                if (WazuhWrapper.Verify(true) == 0)
+                if (WazuhWrapper.Verify() == 0)
                 {
                     logger.Information("Uninstalling Wazuh...");
 
@@ -127,7 +127,7 @@ namespace IvsUninstall
                 #region SYSMON
 
                 //Checking if file is exists or not
-                if (SysmonWrapper.Verify(true) == 0)
+                if (SysmonWrapper.Verify() == 0)
                 {
                     logger.Information("Uninstalling Sysmon...");
 

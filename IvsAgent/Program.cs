@@ -4,7 +4,6 @@ using Serilog;
 using System;
 using System.Diagnostics;
 using System.ServiceProcess;
-using Serilog.Formatting.Json;
 
 namespace IvsAgent
 {
@@ -18,7 +17,7 @@ namespace IvsAgent
             //Logging the ivsagent.json
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
-                .WriteTo.File(new JsonFormatter(), CommonUtils.DataFolder + "\\ivsagent.json", rollOnFileSizeLimit: false, fileSizeLimitBytes: 30000)
+                .WriteTo.File(CommonUtils.DataFolder + "IvsAgnt.log", rollOnFileSizeLimit: true, retainedFileCountLimit:5, fileSizeLimitBytes: 30000, rollingInterval: RollingInterval.Day)
                 .CreateLogger();
 
             Log.Information("Initializing service");

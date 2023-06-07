@@ -14,6 +14,11 @@ namespace ToolManager.AgentWrappers
     {
         private static readonly ILogger _logger = Log.ForContext(typeof(DBytesWrapper));
      
+        /// <summary>
+        /// Verify installer of Endpoint Deception
+        /// </summary>
+        /// <param name="isInstall">TRUE - Install is not found. FALSE - SKIP</param>
+        /// <returns></returns>
         public static int Verify(bool isInstall = false)
         {
             try
