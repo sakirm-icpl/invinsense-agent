@@ -3,9 +3,9 @@ using Serilog.Events;
 using Serilog.Formatting;
 using System.IO;
 
-namespace IvsAgent
+namespace Serilogger
 {
-    public class CustomJsonFormatter : ITextFormatter
+    public class CustomLogFormatter : ITextFormatter
     {
         private const string TimestampPropertyName = "@timestamp";
         private const string LevelPropertyName = "level";
