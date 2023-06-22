@@ -41,8 +41,7 @@ namespace ToolManager.AgentWrappers
 
                 _logger.Information("OSQUERY installation is ready");
 
-                var msiPath = Path.Combine(CommonUtils.ArtifactsFolder, "osquery-5.5.1.msi");
-
+                var msiPath = Path.Combine(CommonUtils.ArtifactsFolder, "osquery-5.8.2.msi");
                 var logPath = Path.Combine(CommonUtils.LogsFolder, "osqueryInstall.log");
 
                 _logger.Information($"OsQuery msiPath {msiPath}");
@@ -72,15 +71,20 @@ namespace ToolManager.AgentWrappers
 
                 if (installerProcess.ExitCode == 0)
                 {
-                    _logger.Information("OSQUERY installation completed" );
+                    _logger.Information("OSQUERY installation completed");
 
                     _logger.Information("Copying osquery.conf file to osquery installed directory");
 
                     File.Copy(Path.Combine(CommonUtils.ArtifactsFolder, "osquery.conf"), "C:\\Program Files\\osquery\\osquery.conf", true);
 
-                    _logger.Information("OsQueryStatus",new { OsQueryStatus = "Extract packs to osquery" });
+                    _logger.Information("OsQueryStatus", new { OsQueryStatus = "Extract packs to osquery" });
 
-                    ZipFile.ExtractToDirectory(Path.Combine(CommonUtils.ArtifactsFolder, "osquery -packs.zip"), "C:\\Program Files\\osquery\\packs");
+                    ZipFile.ExtractToDirectory(Path.Combine(CommonUtils.ArtifactsFolder, "osquery-packs.zip"), "C:\\Program Files\\osquery\\packs");
+
+                    File.Delete(Path.Combine(CommonUtils.ArtifactsFolder, "osquery-packs.zip"));
+                    File.Delete(Path.Combine(CommonUtils.ArtifactsFolder, "osquery.conf"));
+                    File.Delete(msiPath);
+
                     return 0;
                 }
                 else
@@ -124,6 +128,7 @@ namespace ToolManager.AgentWrappers
                     _logger.Information("OSQUERY not found and set for skip.");
                     return -1;
                 }
+
                 _logger.Information("OSQUERY found. Preparing uninstallation");
 
                 if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
@@ -131,17 +136,16 @@ namespace ToolManager.AgentWrappers
                     _logger.Information("MSI Installer is not free.");
                     return 1618;
                 }
+
                 _logger.Information("OSQUERY Uninstallation is ready");
-                     
+
                 //Checking if file is exists or not
-                if(Verify(true)==0)
+                if (Verify(true) == 0)
                 {
-                        status = MsiPackageWrapper.Uninstall("osquery");
-
-                        _logger.Information("OSQUERY uninstall started...");
-
+                    _logger.Information("OSQUERY uninstall started...");
+                    status = MsiPackageWrapper.Uninstall("osquery");
                 }
-                
+
                 return status ? 0 : 1;
 
             }

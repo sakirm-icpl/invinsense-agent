@@ -37,21 +37,24 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>green_logo_22_22.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="AvHelper\AvMonitor.cs" />
+    <Compile Include="AvHelper\AvStatus.cs" />
     <Compile Include="AvHelper\AVStatusFlags.cs" />
     <Compile Include="AvHelper\ProviderFlags.cs" />
     <Compile Include="AvHelper\ProviderStatus.cs" />
     <Compile Include="AvHelper\SignatureStatusFlags.cs" />
-    <Compile Include="AvHelper\WinDefender.cs" />
-    <Compile Include="CustomJsonFormatter.cs" />
     <Compile Include="Extensions\FileFaker.cs" />
     <Compile Include="Extensions\ProcessExtensions.cs" />
     <Compile Include="Extensions\UserExtensions.cs" />
-    <Compile Include="LoggingConfig.cs" />
+    <Compile Include="Monitor\AvStatusWatcher.cs" />
     <Compile Include="Monitor\ExtendedServiceController.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Monitor\IvsTrayMonitor.cs" />
     <Compile Include="Monitor\ServiceHelper.cs" />
     <Compile Include="Monitor\ServiceStatusEventArgs.cs" />
     <Compile Include="IvsService.cs">
@@ -129,6 +132,9 @@
     <PackageReference Include="System.Xml.XmlDocument">
       <Version>4.3.0</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="green_logo_22_22.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

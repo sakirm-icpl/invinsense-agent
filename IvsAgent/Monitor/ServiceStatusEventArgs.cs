@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ServiceProcess;
 
-namespace IvsTray.Monitor
+namespace IvsAgent.Monitor
 {
     public class ServiceStatusEventArgs : EventArgs
     {

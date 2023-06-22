@@ -1,7 +1,10 @@
-﻿namespace Common.Persistance
+﻿using Newtonsoft.Json;
+
+namespace Common.Persistance
 {
     public class ToolStatus
     {
+        [JsonConstructor]
         public ToolStatus(string name, InstallStatus installStatus, RunningStatus runningStatus)
         {
             Name = name;
@@ -24,7 +27,7 @@
             switch (toolId)
             {
                 case 1:
-                    Name = ToolName.EndpointDecetionAndResponse;
+                    Name = ToolName.EndpointDetectionAndResponse;
                     break;
                 case 2:
                     Name = ToolName.EndpointDeception;
@@ -60,7 +63,7 @@
             var code = 0;
             switch (Name)
             {
-                case ToolName.EndpointDecetionAndResponse:
+                case ToolName.EndpointDetectionAndResponse:
                     code += 100;
                     break;
                 case ToolName.EndpointDeception:
@@ -88,9 +91,9 @@
             return code;
         }
 
-        /*public override string ToString()
+        public override string ToString()
         {
             return $"{Name} Install: {InstallStatus} Running: {RunningStatus}";
-        }*/
+        }
     }
 }

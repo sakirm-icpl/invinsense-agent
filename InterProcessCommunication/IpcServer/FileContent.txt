@@ -1,0 +1,1 @@
+﻿This is sample file content to send via IPC (Windows named pipes).

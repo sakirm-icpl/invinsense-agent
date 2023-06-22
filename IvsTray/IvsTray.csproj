@@ -34,8 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>Assets\green_logo_22_22.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="MainForm.cs">
@@ -44,10 +43,32 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="MainFormHelpers.cs" />
-    <Compile Include="MouseDownFilter.cs" />
+    <Compile Include="Extensions\MainFormHelpers.cs" />
+    <Compile Include="Extensions\MouseDownFilter.cs" />
+    <Compile Include="Notifier\NotifyEventArgsExtensions.cs" />
+    <Compile Include="Notifier\NotifyType.cs" />
+    <Compile Include="Notifier\NotifyEventArgs.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserControls\FooterUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\FooterUserControl.Designer.cs">
+      <DependentUpon>FooterUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\StatusIconExtensions.cs" />
+    <Compile Include="UserControls\ToolStatusBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ToolStatusBar.Designer.cs">
+      <DependentUpon>ToolStatusBar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ToolStatusContainer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ToolStatusContainer.Designer.cs">
+      <DependentUpon>ToolStatusContainer.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -56,9 +77,15 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="..\.editorconfig">
-      <Link>.editorconfig</Link>
-    </None>
+    <EmbeddedResource Include="UserControls\FooterUserControl.resx">
+      <DependentUpon>FooterUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ToolStatusBar.resx">
+      <DependentUpon>ToolStatusBar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ToolStatusContainer.resx">
+      <DependentUpon>ToolStatusContainer.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -94,17 +121,15 @@
       <Project>{0698eb58-dee6-4285-baef-872887ff15cb}</Project>
       <Name>Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\IvsAgent\IvsAgent.csproj">
-      <Project>{8256e95f-31d8-4f30-9cd3-b7d0c3d3ce74}</Project>
-      <Name>IvsAgent</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FluentAssertions">

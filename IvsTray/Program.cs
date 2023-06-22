@@ -1,4 +1,6 @@
-﻿using Serilog;
+﻿using Common.Utils;
+using Serilog;
+using Serilog.Formatting.Json;
 using System;
 using System.Threading;
 using System.Windows.Forms;
@@ -16,13 +18,13 @@ namespace IvsTray
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            /*Log.Logger = new LoggerConfiguration()
-               .MinimumLevel.Debug()
-               .WriteTo.File(new JsonFormatter(),CommonUtils.DataFolder + "\\IvsTray.json", rollOnFileSizeLimit: false, fileSizeLimitBytes: 100000)
-               .CreateLogger();*/
+            Log.Logger = new LoggerConfiguration()
+               .MinimumLevel.Verbose()
+               .WriteTo.File(CommonUtils.DataFolder + "IvsTray.log", rollOnFileSizeLimit: true, retainedFileCountLimit: 5, fileSizeLimitBytes: 30000, rollingInterval: RollingInterval.Day)
+               .CreateLogger();
 
             Log.Information("Initializing program");
-                
+
             AppDomain.CurrentDomain.UnhandledException += GlobalHandler;
 
             Application.ThreadException += ApplicationThreadException;

@@ -20,12 +20,16 @@ namespace ToolManager.AgentWrappers
         {
             try
             {
+                _logger.Information("Verifying END_POINT_DETECTION_AND_RESPONSE");
 
                 ServiceController ctl = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName == "WazuhSvc");
 
                 if (ctl != null)
                 {
                     _logger.Information($"END_POINT_DETECTION_AND_RESPONSE found with status: {ctl.Status}");
+
+                    CopyActiveResponses();
+
                     return 0;
                 }
 
@@ -45,7 +49,7 @@ namespace ToolManager.AgentWrappers
 
                 _logger.Information("END_POINT_DETECTION_AND_RESPONSE installation is ready");
 
-                var msiPath = Path.Combine(CommonUtils.ArtifactsFolder, "wazuh-agent-4.4.2-1.msi");
+                var msiPath = Path.Combine(CommonUtils.ArtifactsFolder, "wazuh-agent-4.4.1-1.msi");
 
                 var logPath = Path.Combine(CommonUtils.LogsFolder, "wazuhInstall.log");
 
@@ -54,26 +58,26 @@ namespace ToolManager.AgentWrappers
 
                 var inputParameterBuilder = new StringBuilder();
 
-                var managerIp = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "MANAGER_ADDR");
+                var managerIp = ToolRepository.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "MANAGER_ADDR");
                 _logger.Information($"Wazuh's ManagerIp {managerIp}");
                 inputParameterBuilder.Append($"WAZUH_MANAGER=\"{managerIp}\"");
                 inputParameterBuilder.Append(" ");
 
-                var registrationIp = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "REGISTRATION_SERVER_ADDR");
+                var registrationIp = ToolRepository.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "REGISTRATION_SERVER_ADDR");
                 _logger.Information($"Wazuh's RegistrationIP {registrationIp}");
                 inputParameterBuilder.Append($"WAZUH_REGISTRATION_SERVER=\"{registrationIp}\"");
                 inputParameterBuilder.Append(" ");
 
-                var agentGroup = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "AGENT_GROUP");
+                var agentGroup = ToolRepository.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "AGENT_GROUP");
                 _logger.Information($"Wazuh's AgentGroup {agentGroup}");
                 inputParameterBuilder.Append($"WAZUH_AGENT_GROUP=\"{agentGroup}\"");
                 inputParameterBuilder.Append(" ");
 
-                var authType = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "REGISTRATION_TYPE");
+                var authType = ToolRepository.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "REGISTRATION_TYPE");
 
                 if (authType == "PASSWORD")
                 {
-                    var registrationPassword = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "REGISTRATION_PASSWORD");
+                    var registrationPassword = ToolRepository.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "REGISTRATION_PASSWORD");
                     _logger.Information($"Wazuh's RegistrationPassword {registrationPassword}");
                     inputParameterBuilder.Append($"WAZUH_REGISTRATION_PASSWORD=\"{registrationPassword}\"");
                     inputParameterBuilder.Append(" ");
@@ -81,12 +85,12 @@ namespace ToolManager.AgentWrappers
 
                 if(authType == "CERTIFICATE")
                 {
-                    var certificatePath = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "REGISTRATION_CERTIFICATE");
+                    var certificatePath = ToolRepository.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "REGISTRATION_CERTIFICATE");
                     _logger.Information($"Wazuh's Certificate File Path {certificatePath}");
                     inputParameterBuilder.Append($"WAZUH_REGISTRATION_CERTIFICATE=\"{certificatePath}\"");
                     inputParameterBuilder.Append(" ");
 
-                    var keyPath = ToolRepository.GetPropertyByName(ToolName.EndpointDecetionAndResponse, "REGISTRATION_KEY");
+                    var keyPath = ToolRepository.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "REGISTRATION_KEY");
                     _logger.Information($"Wazuh's Certificate Key File Path {keyPath}");
                     inputParameterBuilder.Append($"WAZUH_REGISTRATION_KEY=\"{keyPath}\"");
                     inputParameterBuilder.Append(" ");
@@ -140,9 +144,7 @@ namespace ToolManager.AgentWrappers
                     }
                     document.Save(confFile);
 
-                    _logger.Information("Copying active response scripts to wazuh installed directory");
-                    File.Copy(Path.Combine(CommonUtils.ArtifactsFolder, "full-scan.exe"), "C:\\Program Files (x86)\\ossec-agent\\active-response", true);
-                    File.Copy(Path.Combine(CommonUtils.ArtifactsFolder, "qick-scan.exe"), "C:\\Program Files (x86)\\ossec-agent\\active-response", true);
+                    CopyActiveResponses();
 
                     _logger.Information("END_POINT_DETECTION_AND_RESPONSE is ready to start...");
 
@@ -157,6 +159,11 @@ namespace ToolManager.AgentWrappers
                         ctl.Start();
                     }
 
+                    File.Delete(Path.Combine(CommonUtils.ArtifactsFolder, "local_internal_options.conf"));
+                    File.Delete(Path.Combine(CommonUtils.ArtifactsFolder, "full-scan.exe"));
+                    File.Delete(Path.Combine(CommonUtils.ArtifactsFolder, "quick-scan.exe"));
+                    File.Delete(msiPath);
+
                     return 0;
                 }
                 else
@@ -169,6 +176,21 @@ namespace ToolManager.AgentWrappers
             {
                 _logger.Error($"{ex.Message}");
                 return 1;
+            }
+        }
+
+        private static void CopyActiveResponses()
+        {
+            _logger.Information("Copying active response scripts to wazuh installed directory");
+
+            if(File.Exists(Path.Combine(CommonUtils.ArtifactsFolder, "full-scan.exe")))
+            {
+                File.Copy(Path.Combine(CommonUtils.ArtifactsFolder, "full-scan.exe"), "C:\\Program Files (x86)\\ossec-agent\\active-response\\bin\\full-scan.exe", true);
+            }
+
+            if (File.Exists(Path.Combine(CommonUtils.ArtifactsFolder, "quick-scan.exe")))
+            {
+                File.Copy(Path.Combine(CommonUtils.ArtifactsFolder, "quick-scan.exe"), "C:\\Program Files (x86)\\ossec-agent\\active-response\\bin\\quick-scan.exe", true);
             }
         }
 

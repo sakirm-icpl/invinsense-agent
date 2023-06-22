@@ -134,22 +134,9 @@
 
 					<!--add property of REGISTRATION_KEY with value and place it to "SOFTWARE\infopercept" -->
 					<RegistryValue Name="REGISTRATION_KEY" Value="[WAZUH_REGISTRATION_KEY]" Type="string"></RegistryValue>
-					
-					
-					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string"></RegistryValue>
-					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string"></RegistryValue>
 				</RegistryKey>
 
-				<RegistryKey Key="ADVANCE_TELEMETRY">
-					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string"></RegistryValue>
-					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string"></RegistryValue>
-				</RegistryKey>
-
-				<RegistryKey Key="USER_BEHAVIOUR_ANALYTICS">
-					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string"></RegistryValue>
-					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string"></RegistryValue>
-				</RegistryKey>
-
+				<!--add property of ENDPOINT_DECEPTION with value and place it to "SOFTWARE\infopercept" -->
 				<RegistryKey Key="ENDPOINT_DECEPTION">
 					<!--add property of SKIP_DBYTES with value and place it to "SOFTWARE\infopercept" -->
 					<RegistryValue Name="SKIP_MONITORING" Value="[SKIP_ENDPOINT_DECEPTION]" Type="string" />
@@ -159,19 +146,6 @@
 
 					<!--add property of DBYTES_APIKEY with value and place it to "SOFTWARE\infopercept" -->
 					<RegistryValue Name="APIKEY" Value="[DBYTES_APIKEY]" Type="string" />
-
-					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string"></RegistryValue>
-					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string"></RegistryValue>
-				</RegistryKey>
-
-				<RegistryKey Key="ENDPOINT_PROTECTION">
-					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string"></RegistryValue>
-					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string"></RegistryValue>
-				</RegistryKey>
-
-				<RegistryKey Key="LMP">
-					<RegistryValue Name="INSTALL_STATUS" Value="NotFound" Type="string"></RegistryValue>
-					<RegistryValue Name="RUNNING_STATUS" Value="NotFound" Type="string"></RegistryValue>
 				</RegistryKey>
 
 			</RegistryKey>
@@ -250,10 +224,10 @@
 		<ComponentGroup Id="ToolComponents" Directory="ARTIFACTSFOLDER">
 			<Component Id="c00" Guid="DEF1F99A-A721-4F70-87BC-92E13E47B0B1" Bitness="always64">
 				<File Id="c02" Source="..\artifacts\Sysmon\Sysmon64.exe" />
-				<File Id="c03" Source="..\artifacts\osquery\osquery-5.5.1.msi" />
+				<File Id="c03" Source="..\artifacts\osquery\osquery-5.8.2.msi" />
 				<File Id="c04" Source="..\artifacts\osquery\osquery.conf" />
 				<File Id="c05" Source="..\artifacts\osquery\osquery-packs.zip" />
-				<File Id="c06" Source="..\artifacts\wazuh\wazuh-agent-4.4.2-1.msi" />
+				<File Id="c06" Source="..\artifacts\wazuh\wazuh-agent-4.4.1-1.msi" />
 
 				<File Id="c06_1" Source="..\artifacts\wazuh\active-response\full-scan.exe" />
 				<File Id="c06_2" Source="..\artifacts\wazuh\active-response\quick-scan.exe" />
