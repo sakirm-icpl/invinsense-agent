@@ -9,6 +9,7 @@ using ToolManager;
 using ToolManager.MsiWrapper;
 using System.DirectoryServices.AccountManagement;
 using ToolManager.AgentWrappers;
+using Common.Persistance;
 
 namespace IvsUninstall
 {
@@ -102,9 +103,9 @@ namespace IvsUninstall
                 #region WAZUH
 
                 //Checking if file is exists or not
-                if (WazuhWrapper.Verify() == 0)
+                if (WazuhWrapper.Verify(out Version edrVersion))
                 {
-                    logger.Information("Uninstalling Wazuh...");
+                    logger.Information($"Uninstalling {ToolName.EndpointDetectionAndResponse} - {edrVersion}");
 
                     var wazuhExitCode = WazuhWrapper.Remove();
 
@@ -116,6 +117,7 @@ namespace IvsUninstall
                 {
                     logger.Information("Wazuh alredy gets uninstalled");
                 }
+
                 //TODO:Removing folder : C:\\Program Files (x86)\\ossec
                 var wazuhPath = "C:\\Program Files (x86)\\ossec";
                 if (Directory.Exists(wazuhPath)) Directory.Delete(wazuhPath, true);

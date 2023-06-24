@@ -416,18 +416,36 @@ namespace IvsAgent
                 _logger.Error("Error in OSQuery installer");
             }
 
-            _logger.Information("Checking Wazuh");
-            if (WazuhWrapper.Verify(true) == 0)
+            _logger.Information($"Checking {ToolName.EndpointDetectionAndResponse}");
+
+            var edrAgentInstallRequired = false;
+            if (WazuhWrapper.Verify(out Version edrVersion))
             {
-                _logger.Information($"WazuhServiceVerified with status {EdrServiceChecker.Status}");
-                EdrServiceChecker.StartListening();
-                EdrUpdateStatus(EdrServiceChecker.Status);
-                _logger.Information($"WazuhServiceListening with status {EdrServiceChecker.Status}");
+                _logger.Information($"WazuhService {edrVersion} with status {EdrServiceChecker.Status}");
+
+                if (edrVersion < new Version("4.4.1"))
+                {
+                    edrAgentInstallRequired = true;
+                }
             }
             else
             {
-                _logger.Error("Error in Wazuh installer");
+                _logger.Information($"{ToolName.EndpointDetectionAndResponse} does not verified.");
+                edrAgentInstallRequired = true;
             }
+
+            if (edrAgentInstallRequired)
+            {
+                var installCode = WazuhWrapper.Install();
+                if (installCode == 0)
+                {
+                    WazuhWrapper.PostInstall();
+                }
+            }
+
+            EdrServiceChecker.StartListening();
+            EdrUpdateStatus(EdrServiceChecker.Status);
+            _logger.Information($"WazuhServiceListening with status {EdrServiceChecker.Status}");
 
             _logger.Information("Checking DBytes");
             if (DBytesWrapper.Verify(true) == 0)

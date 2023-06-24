@@ -12,34 +12,57 @@ using System.Text;
 
 namespace ToolManager.AgentWrappers
 {
+    /// <summary>
+    /// TODO: Need to create new logic that checks agent install status with currupted files.
+    /// </summary>
     public static class WazuhWrapper
     {
         private static readonly ILogger _logger = Log.ForContext(typeof(WazuhWrapper));
 
-        public static int Verify(bool isInstall = false)
+        public static bool Verify(out Version productVersion)
         {
+            productVersion = new Version();
+
             try
             {
                 _logger.Information("Verifying END_POINT_DETECTION_AND_RESPONSE");
 
                 ServiceController ctl = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName == "WazuhSvc");
 
-                if (ctl != null)
+                if (ctl == null)
                 {
-                    _logger.Information($"END_POINT_DETECTION_AND_RESPONSE found with status: {ctl.Status}");
-
-                    CopyActiveResponses();
-
-                    return 0;
+                    _logger.Information("END_POINT_DETECTION_AND_RESPONSE is not present.");
+                    return false;
                 }
 
-                _logger.Information("END_POINT_DETECTION_AND_RESPONSE not found.");
+                var filePath = "C:\\Program Files (x86)\\ossec-agent\\VERSION";
 
-                if (ctl == null && !isInstall)
+                if (!File.Exists(filePath))
                 {
-                    _logger.Information("END_POINT_DETECTION_AND_RESPONSE set for skip.");
-                    return -1;
+                    _logger.Error("END_POINT_DETECTION_AND_RESPONSE VERSION file does not exist.");
+                    return false;
                 }
+
+                var versionContent = File.ReadLines(filePath).First().Substring(1);
+
+                _logger.Information($"END_POINT_DETECTION_AND_RESPONSE version: {versionContent}");
+
+                productVersion = new Version(versionContent);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"{ex.Message}");
+                return false;
+            }
+        }
+
+        public static int Install()
+        {
+            try
+            {
+                _logger.Information("Checking MSI status for executing installer...");
 
                 if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
                 {
@@ -50,7 +73,6 @@ namespace ToolManager.AgentWrappers
                 _logger.Information("END_POINT_DETECTION_AND_RESPONSE installation is ready");
 
                 var msiPath = Path.Combine(CommonUtils.ArtifactsFolder, "wazuh-agent-4.4.1-1.msi");
-
                 var logPath = Path.Combine(CommonUtils.LogsFolder, "wazuhInstall.log");
 
                 _logger.Information($"Wazuh's msiPath {msiPath}");
@@ -83,7 +105,7 @@ namespace ToolManager.AgentWrappers
                     inputParameterBuilder.Append(" ");
                 }
 
-                if(authType == "CERTIFICATE")
+                if (authType == "CERTIFICATE")
                 {
                     var certificatePath = ToolRepository.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "REGISTRATION_CERTIFICATE");
                     _logger.Information($"Wazuh's Certificate File Path {certificatePath}");
@@ -121,49 +143,6 @@ namespace ToolManager.AgentWrappers
                 if (installerProcess.ExitCode == 0)
                 {
                     _logger.Information("END_POINT_DETECTION_AND_RESPONSE installation completed");
-
-                    _logger.Information("Copying local_internal_options.conf file to wazuh installed directory");
-
-                    File.Copy(Path.Combine(CommonUtils.ArtifactsFolder, "local_internal_options.conf"), "C:\\Program Files (x86)\\ossec-agent\\local_internal_options.conf", true);
-
-                    _logger.Information("Enable osquery for END_POINT_DETECTION_AND_RESPONSE");
-
-                    var confFile = "C:\\Program Files (x86)\\ossec-agent\\ossec.conf";
-                    XmlDocument document = new XmlDocument();
-                    document.Load(confFile);
-                    XmlNodeList osQueryDisableNodeItems = document.SelectNodes("/ossec_config/wodle[@name='osquery']/disabled");
-                    if (osQueryDisableNodeItems.Count > 0)
-                    {
-                        osQueryDisableNodeItems[0].InnerText = "no";
-                    }
-
-                    XmlNodeList osQueryRunDaemonNodeItems = document.SelectNodes("/ossec_config/wodle[@name='osquery']/run_daemon");
-                    if (osQueryRunDaemonNodeItems.Count > 0)
-                    {
-                        osQueryRunDaemonNodeItems[0].InnerText = "no";
-                    }
-                    document.Save(confFile);
-
-                    CopyActiveResponses();
-
-                    _logger.Information("END_POINT_DETECTION_AND_RESPONSE is ready to start...");
-
-                    ctl = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName == "WazuhSvc");
-
-                    if (ctl == null)
-                    {
-                        _logger.Information("END_POINT_DETECTION_AND_RESPONSE installed but service not registered. Please check installation logs.");
-                    }
-                    else
-                    {
-                        ctl.Start();
-                    }
-
-                    File.Delete(Path.Combine(CommonUtils.ArtifactsFolder, "local_internal_options.conf"));
-                    File.Delete(Path.Combine(CommonUtils.ArtifactsFolder, "full-scan.exe"));
-                    File.Delete(Path.Combine(CommonUtils.ArtifactsFolder, "quick-scan.exe"));
-                    File.Delete(msiPath);
-
                     return 0;
                 }
                 else
@@ -179,18 +158,68 @@ namespace ToolManager.AgentWrappers
             }
         }
 
-        private static void CopyActiveResponses()
+        public static int PostInstall()
+        {
+            try
+            {
+                EnsureLocalInternalOptions();
+
+                EnsureActiveResponse();
+
+                _logger.Information("Enable osquery for END_POINT_DETECTION_AND_RESPONSE");
+                var confFile = "C:\\Program Files (x86)\\ossec-agent\\ossec.conf";
+                XmlDocument document = new XmlDocument();
+                document.Load(confFile);
+                XmlNodeList osQueryDisableNodeItems = document.SelectNodes("/ossec_config/wodle[@name='osquery']/disabled");
+                if (osQueryDisableNodeItems.Count > 0)
+                {
+                    osQueryDisableNodeItems[0].InnerText = "no";
+                }
+
+                XmlNodeList osQueryRunDaemonNodeItems = document.SelectNodes("/ossec_config/wodle[@name='osquery']/run_daemon");
+                if (osQueryRunDaemonNodeItems.Count > 0)
+                {
+                    osQueryRunDaemonNodeItems[0].InnerText = "no";
+                }
+                document.Save(confFile);
+
+                _logger.Information("Copying active responses to wazuh installed directory");
+
+                //Removing the msi file
+                var msiPath = Path.Combine(CommonUtils.ArtifactsFolder, "wazuh-agent-4.4.1-1.msi");
+                File.Delete(msiPath);
+
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"{ex.Message}");
+                return -1;
+            }
+        }
+
+        private static void EnsureLocalInternalOptions()
+        {
+            _logger.Information("Copying local_internal_options.conf file to wazuh installed directory");
+
+            File.Copy(Path.Combine(CommonUtils.ArtifactsFolder, "local_internal_options.conf"), "C:\\Program Files (x86)\\ossec-agent\\local_internal_options.conf", true);
+            File.Delete(Path.Combine(CommonUtils.ArtifactsFolder, "local_internal_options.conf"));
+        }
+
+        private static void EnsureActiveResponse()
         {
             _logger.Information("Copying active response scripts to wazuh installed directory");
 
-            if(File.Exists(Path.Combine(CommonUtils.ArtifactsFolder, "full-scan.exe")))
+            if (File.Exists(Path.Combine(CommonUtils.ArtifactsFolder, "full-scan.exe")))
             {
                 File.Copy(Path.Combine(CommonUtils.ArtifactsFolder, "full-scan.exe"), "C:\\Program Files (x86)\\ossec-agent\\active-response\\bin\\full-scan.exe", true);
+                File.Delete(Path.Combine(CommonUtils.ArtifactsFolder, "full-scan.exe"));
             }
 
             if (File.Exists(Path.Combine(CommonUtils.ArtifactsFolder, "quick-scan.exe")))
             {
                 File.Copy(Path.Combine(CommonUtils.ArtifactsFolder, "quick-scan.exe"), "C:\\Program Files (x86)\\ossec-agent\\active-response\\bin\\quick-scan.exe", true);
+                File.Delete(Path.Combine(CommonUtils.ArtifactsFolder, "quick-scan.exe"));
             }
         }
 
@@ -221,6 +250,7 @@ namespace ToolManager.AgentWrappers
                     _logger.Information("END_POINT_DETECTION_AND_RESPONSE not found. Skipping...");
                     return -1;
                 }
+
                 _logger.Information("END_POINT_DETECTION_AND_RESPONSE found. Preparing uninstallation");
 
                 if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
@@ -228,13 +258,10 @@ namespace ToolManager.AgentWrappers
                     _logger.Information("MSI Installer is not free.");
                     return 1618;
                 }
+
                 _logger.Information("END_POINT_DETECTION_AND_RESPONSE Uninstallation is ready");
 
-                //Checking if file is exists or not
-                if (Verify(true) == 0)
-                {
-                    status = MsiPackageWrapper.Uninstall("Wazuh Agent");
-                }
+                status = MsiPackageWrapper.Uninstall("Wazuh Agent");
 
                 return status ? 0 : 1;
 
