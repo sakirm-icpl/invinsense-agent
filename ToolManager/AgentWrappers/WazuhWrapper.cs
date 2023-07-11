@@ -162,6 +162,8 @@ namespace ToolManager.AgentWrappers
         {
             try
             {
+                EnsureCredential();
+
                 EnsureLocalInternalOptions();
 
                 EnsureActiveResponse();
@@ -195,6 +197,18 @@ namespace ToolManager.AgentWrappers
             {
                 _logger.Error($"{ex.Message}");
                 return -1;
+            }
+        }
+
+        private static void EnsureCredential()
+        {
+            var authType = ToolRepository.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "REGISTRATION_TYPE");
+
+            if (authType == "PASSWORD")
+            {
+                var registrationPassword = ToolRepository.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "REGISTRATION_PASSWORD");
+                _logger.Information($"Wazuh's RegistrationPassword {registrationPassword}");
+                File.WriteAllText("C:\\Program Files (x86)\\ossec-agent\\authd.pass", registrationPassword);
             }
         }
 
