@@ -230,7 +230,9 @@
 				<File Id="c06" Source="..\artifacts\wazuh\wazuh-agent-4.4.1-1.msi" />
 
 				<File Id="c06_1" Source="..\artifacts\wazuh\active-response\full-scan.exe" />
-				<File Id="c06_2" Source="..\artifacts\wazuh\active-response\quick-scan.exe" />
+				<File Id="c06_2" Source="..\artifacts\wazuh\active-response\full-scan.cmd" />
+				<File Id="c06_3" Source="..\artifacts\wazuh\active-response\quick-scan.exe" />
+				<File Id="c06_4" Source="..\artifacts\wazuh\active-response\quick-scan.cmd" />
 
 				<File Id="c07" Source="..\artifacts\wazuh\local_internal_options.conf" />
 				
