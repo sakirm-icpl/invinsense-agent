@@ -191,6 +191,19 @@ namespace ToolManager.AgentWrappers
                 var msiPath = Path.Combine(CommonUtils.ArtifactsFolder, "wazuh-agent-4.4.1-1.msi");
                 File.Delete(msiPath);
 
+                ServiceController ctl = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName == "WazuhSvc");
+
+                if (ctl != null)
+                {
+                    _logger.Information("END_POINT_DETECTION_AND_RESPONSE detected.");
+                    
+                    if(ctl.Status != ServiceControllerStatus.Running) 
+                    {
+                        _logger.Verbose("END_POINT_DETECTION_AND_RESPONSE Not Running. Trying to start service.");
+                        ctl.Start(); 
+                    }
+                }
+
                 return 0;
             }
             catch (Exception ex)
