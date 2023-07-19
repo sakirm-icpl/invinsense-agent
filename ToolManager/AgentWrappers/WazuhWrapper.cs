@@ -237,16 +237,27 @@ namespace ToolManager.AgentWrappers
         {
             _logger.Information("Copying active response scripts to wazuh installed directory");
 
-            if (File.Exists(Path.Combine(CommonUtils.ArtifactsFolder, "full-scan.exe")))
-            {
-                File.Copy(Path.Combine(CommonUtils.ArtifactsFolder, "full-scan.exe"), "C:\\Program Files (x86)\\ossec-agent\\active-response\\bin\\full-scan.exe", true);
-                File.Delete(Path.Combine(CommonUtils.ArtifactsFolder, "full-scan.exe"));
-            }
+            var pf86 = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
 
-            if (File.Exists(Path.Combine(CommonUtils.ArtifactsFolder, "quick-scan.exe")))
+            var wazuhAgentActiveResponseBinPath = Path.Combine(pf86, "ossec-agent\\active-response\\bin");
+
+            _logger.Information($"Wazuh Agent Active Response Bin Path:{wazuhAgentActiveResponseBinPath}");
+
+            EnsureFile(Path.Combine(CommonUtils.ArtifactsFolder, "full-scan.exe"), Path.Combine(wazuhAgentActiveResponseBinPath, "full-scan.exe"));
+
+            EnsureFile(Path.Combine(CommonUtils.ArtifactsFolder, "full-scan.cmd"), Path.Combine(wazuhAgentActiveResponseBinPath, "full-scan.cmd"));
+
+            EnsureFile(Path.Combine(CommonUtils.ArtifactsFolder, "quick-scan.exe"), Path.Combine(wazuhAgentActiveResponseBinPath, "quick-scan.exe"));
+
+            EnsureFile(Path.Combine(CommonUtils.ArtifactsFolder, "quick-scan.cmd"), Path.Combine(wazuhAgentActiveResponseBinPath, "quick-scan.cmd"));
+        }
+
+        private static void EnsureFile(string source, string destination)
+        {
+            if (File.Exists(source))
             {
-                File.Copy(Path.Combine(CommonUtils.ArtifactsFolder, "quick-scan.exe"), "C:\\Program Files (x86)\\ossec-agent\\active-response\\bin\\quick-scan.exe", true);
-                File.Delete(Path.Combine(CommonUtils.ArtifactsFolder, "quick-scan.exe"));
+                File.Copy(source, destination, true);
+                File.Delete(source);
             }
         }
 
