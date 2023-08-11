@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Management;
+using System.Collections.Generic;
 
 namespace SystemManagementTest
 {
@@ -7,30 +7,38 @@ namespace SystemManagementTest
     {
         static void Main(string[] args)
         {
-            RunManagementEventWatcherForWindowsServices();
-
+            DisplayAllHardwareInfo();
             Console.ReadLine();
         }
 
-        public static void RunManagementEventWatcherForWindowsServices()
+        static void DisplayAllHardwareInfo()
         {
-            EventQuery eventQuery = new EventQuery
+            Dictionary<string, string> infos = new Dictionary<string, string>
             {
-                QueryString = "SELECT * FROM __InstanceModificationEvent within 2 WHERE targetinstance isa 'Win32_Service'"
+                { "Proccesor Id", HardwareInfo.GetProcessorId() },
+                { "HDD SerialNo", HardwareInfo.GetHDDSerialNo() },
+                { "Mac Address", HardwareInfo.GetMACAddress() },
+                { "Board Maker", HardwareInfo.GetBoardMaker() },
+                { "Board Product Id", HardwareInfo.GetBoardProductId() },
+                { "CdRomDrive", HardwareInfo.GetCdRomDrive() },
+                { "Bios Maker", HardwareInfo.GetBIOSmaker() },
+                { "Bios Serial Number", HardwareInfo.GetBIOSserNo() },
+                { "Bios Caption", HardwareInfo.GetBIOScaption() },
+                { "Account Name", HardwareInfo.GetAccountName() },
+                { "Physcial Memory", HardwareInfo.GetAccountName() },
+                { "Ram Slots", HardwareInfo.GetNoRamSlots() },
+                { "Cpu Manufacturer", HardwareInfo.GetCPUManufacturer() },
+                { "IP Gateway", HardwareInfo.GetDefaultIPGateway() },
+                { "CPU Speed", HardwareInfo.GetCpuSpeedInGHz().ToString() },
+                { "Username", HardwareInfo.GetCurrentUserName() },
+                { "Hostname", HardwareInfo.GetHostName() }
             };
 
-            ManagementEventWatcher demoWatcher = new ManagementEventWatcher(eventQuery);
-            demoWatcher.Options.Timeout = new TimeSpan(1, 0, 0);
-            Console.WriteLine("Perform the appropriate change in a Windows service according to your query");
-            ManagementBaseObject nextEvent = demoWatcher.WaitForNextEvent();
-            ManagementBaseObject targetInstance = (ManagementBaseObject)nextEvent["targetinstance"];
-            PropertyDataCollection props = targetInstance.Properties;
-            foreach (PropertyData prop in props)
+            Console.WriteLine("---------- ----  ---- Hardware information of the device is as follows : ----  ----  ----------\n");
+            foreach (KeyValuePair<string, string> item in infos)
             {
-                Console.WriteLine("Property name: {0}, property value: {1}", prop.Name, prop.Value);
+                Console.WriteLine($"   {item.Key}: {item.Value}");
             }
-
-            demoWatcher.Stop();
         }
     }
 }
