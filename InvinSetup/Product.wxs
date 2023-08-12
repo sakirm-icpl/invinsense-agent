@@ -232,6 +232,7 @@
 				<File Id="c06_1" Source="..\artifacts\wazuh\active-response\full-scan.exe" />
 				<File Id="c06_3" Source="..\artifacts\wazuh\active-response\quick-scan.exe" />
 				<File Id="c06_5" Source="..\artifacts\wazuh\active-response\isolation.exe" />
+				<File Id="c06_7" Source="..\artifacts\wazuh\active-response\unisolation.exe" />
 
 				<File Id="c07" Source="..\artifacts\wazuh\local_internal_options.conf" />
 				
