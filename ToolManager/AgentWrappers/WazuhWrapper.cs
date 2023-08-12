@@ -245,11 +245,9 @@ namespace ToolManager.AgentWrappers
 
             EnsureFile(Path.Combine(CommonUtils.ArtifactsFolder, "full-scan.exe"), Path.Combine(wazuhAgentActiveResponseBinPath, "full-scan.exe"));
 
-            EnsureFile(Path.Combine(CommonUtils.ArtifactsFolder, "full-scan.cmd"), Path.Combine(wazuhAgentActiveResponseBinPath, "full-scan.cmd"));
-
             EnsureFile(Path.Combine(CommonUtils.ArtifactsFolder, "quick-scan.exe"), Path.Combine(wazuhAgentActiveResponseBinPath, "quick-scan.exe"));
 
-            EnsureFile(Path.Combine(CommonUtils.ArtifactsFolder, "quick-scan.cmd"), Path.Combine(wazuhAgentActiveResponseBinPath, "quick-scan.cmd"));
+            EnsureFile(Path.Combine(CommonUtils.ArtifactsFolder, "isolation.exe"), Path.Combine(wazuhAgentActiveResponseBinPath, "isolation.exe"));
         }
 
         private static void EnsureFile(string source, string destination)
