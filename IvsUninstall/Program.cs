@@ -19,7 +19,7 @@ namespace IvsUninstall
         {
             Log.Logger = new LoggerConfiguration()
                    .MinimumLevel.Verbose()
-                   .WriteTo.File(CommonUtils.DataFolder + "IvsUninstall.log", rollOnFileSizeLimit: true, retainedFileCountLimit: 5, fileSizeLimitBytes: 30000, rollingInterval: RollingInterval.Day)
+                   .WriteTo.File(CommonUtils.GetLogFilePath("IvsUninstall.log"), rollOnFileSizeLimit: true, retainedFileCountLimit: 5, fileSizeLimitBytes: 30000, rollingInterval: RollingInterval.Day)
                    .WriteTo.Console()
                    .CreateLogger();
 
@@ -163,28 +163,6 @@ namespace IvsUninstall
 
                 var status = MsiPackageWrapper.Uninstall("Invinsense", "UNINSTALL_KEY=\"ICPL_2023\"");
 
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex.Message);
-            }
-
-            //Unistalling all files from Infopercept folder from ProgramData Folder
-            try
-            {
-                if (Directory.Exists(CommonUtils.DataFolder))
-                {
-                    DirectoryInfo directory = new DirectoryInfo(CommonUtils.DataFolder);
-                    DateTime cutoffDate = DateTime.Now;
-                    foreach (FileInfo file in directory.GetFiles())
-                    {
-                        if (file.LastWriteTime < cutoffDate && file.Name != "IvsUninstall.log" && file.Name != "ivsuninstall.log")
-                        {
-                            file.Delete();
-                        }
-                    }
-                    Thread.Sleep(1000);
-                }
             }
             catch (Exception ex)
             {

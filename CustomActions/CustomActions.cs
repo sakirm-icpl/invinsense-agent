@@ -16,25 +16,7 @@ namespace ToolManager
         public static ActionResult RemoveOldDataFiles(Session session)
         {
             session.Log("RemoveOldDataFiles");
-
-            //Uninstalling the files before installing the agent
-            try
-            {
-                if (Directory.Exists(CommonUtils.DataFolder))
-                {
-                    DirectoryInfo directory = new DirectoryInfo(CommonUtils.DataFolder);
-                    DateTime cutoffDate = DateTime.Now;
-                    foreach (FileInfo file in directory.GetFiles())
-                    {
-                        if (file.LastWriteTime < cutoffDate)
-                        {
-                            file.Delete();
-                        }
-                    }
-                }
-            }
-            catch { }
-
+            session.Log("We do not need to remove old data files.");
             return ActionResult.Success;
         }
 

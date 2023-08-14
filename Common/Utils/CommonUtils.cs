@@ -19,7 +19,9 @@ namespace Common.Utils
 
         public static string LogsFolder => Path.Combine(DataFolder, "logs");
 
-        public static string DataFolder => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Infopercept");
+        public static string GetLogFilePath(string fileName) => Path.Combine(LogsFolder, fileName);
+
+        private static string DataFolder => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Infopercept");
 
         static CommonUtils()
         {

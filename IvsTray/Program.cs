@@ -19,7 +19,7 @@ namespace IvsTray
 
             Log.Logger = new LoggerConfiguration()
                .MinimumLevel.Verbose()
-               .WriteTo.File(CommonUtils.DataFolder + "IvsTray.log", rollOnFileSizeLimit: true, retainedFileCountLimit: 5, fileSizeLimitBytes: 30000, rollingInterval: RollingInterval.Day)
+               .WriteTo.File(CommonUtils.GetLogFilePath("IvsTray.log"), rollOnFileSizeLimit: true, retainedFileCountLimit: 5, fileSizeLimitBytes: 30000, rollingInterval: RollingInterval.Day)
                .CreateLogger();
 
             Log.Information("Initializing program");
