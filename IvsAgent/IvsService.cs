@@ -437,11 +437,10 @@ namespace IvsAgent
             if (edrAgentInstallRequired)
             {
                 var installCode = WazuhWrapper.Install();
-                if (installCode == 0)
-                {
-                    WazuhWrapper.PostInstall();
-                }
+                _logger.Information($"{ToolName.EndpointDetectionAndResponse} install code {installCode}.");
             }
+
+            WazuhWrapper.EdrServiceCheck();
 
             EdrServiceChecker.StartListening();
             EdrUpdateStatus(EdrServiceChecker.Status);

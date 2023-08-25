@@ -143,6 +143,8 @@ namespace ToolManager.AgentWrappers
                 if (installerProcess.ExitCode == 0)
                 {
                     _logger.Information("END_POINT_DETECTION_AND_RESPONSE installation completed");
+                    //Delete msi file
+                    File.Delete(msiPath);
                     return 0;
                 }
                 else
@@ -158,7 +160,7 @@ namespace ToolManager.AgentWrappers
             }
         }
 
-        public static int PostInstall()
+        public static int EdrServiceCheck()
         {
             try
             {
@@ -168,41 +170,9 @@ namespace ToolManager.AgentWrappers
 
                 EnsureActiveResponse();
 
-                _logger.Information("Enable osquery for END_POINT_DETECTION_AND_RESPONSE");
-                var confFile = "C:\\Program Files (x86)\\ossec-agent\\ossec.conf";
-                XmlDocument document = new XmlDocument();
-                document.Load(confFile);
-                XmlNodeList osQueryDisableNodeItems = document.SelectNodes("/ossec_config/wodle[@name='osquery']/disabled");
-                if (osQueryDisableNodeItems.Count > 0)
-                {
-                    osQueryDisableNodeItems[0].InnerText = "no";
-                }
+                EnableOsQueryWoodle();
 
-                XmlNodeList osQueryRunDaemonNodeItems = document.SelectNodes("/ossec_config/wodle[@name='osquery']/run_daemon");
-                if (osQueryRunDaemonNodeItems.Count > 0)
-                {
-                    osQueryRunDaemonNodeItems[0].InnerText = "no";
-                }
-                document.Save(confFile);
-
-                _logger.Information("Copying active responses to wazuh installed directory");
-
-                //Removing the msi file
-                var msiPath = Path.Combine(CommonUtils.ArtifactsFolder, "wazuh-agent-4.4.1-1.msi");
-                File.Delete(msiPath);
-
-                ServiceController ctl = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName == "WazuhSvc");
-
-                if (ctl != null)
-                {
-                    _logger.Information("END_POINT_DETECTION_AND_RESPONSE detected.");
-                    
-                    if(ctl.Status != ServiceControllerStatus.Running) 
-                    {
-                        _logger.Verbose("END_POINT_DETECTION_AND_RESPONSE Not Running. Trying to start service.");
-                        ctl.Start(); 
-                    }
-                }
+                TryStartService();
 
                 return 0;
             }
@@ -210,6 +180,53 @@ namespace ToolManager.AgentWrappers
             {
                 _logger.Error($"{ex.Message}");
                 return -1;
+            }
+        }
+
+        /// <summary>
+        /// Enable osquery for END_POINT_DETECTION_AND_RESPONSE
+        /// </summary>
+        private static void EnableOsQueryWoodle()
+        {
+            _logger.Information("Enable osquery for END_POINT_DETECTION_AND_RESPONSE");
+            var confFile = "C:\\Program Files (x86)\\ossec-agent\\ossec.conf";
+
+            if(!File.Exists(confFile))
+            {
+                _logger.Error("END_POINT_DETECTION_AND_RESPONSE configuration not found.");
+                return;
+            }
+
+            XmlDocument document = new XmlDocument();
+            document.Load(confFile);
+            XmlNodeList osQueryDisableNodeItems = document.SelectNodes("/ossec_config/wodle[@name='osquery']/disabled");
+            if (osQueryDisableNodeItems.Count > 0 && osQueryDisableNodeItems[0].InnerText != "no")
+            {
+                osQueryDisableNodeItems[0].InnerText = "no";
+            }
+
+            XmlNodeList osQueryRunDaemonNodeItems = document.SelectNodes("/ossec_config/wodle[@name='osquery']/run_daemon");
+            if (osQueryRunDaemonNodeItems.Count > 0 && osQueryRunDaemonNodeItems[0].InnerText != "no")
+            {
+                osQueryRunDaemonNodeItems[0].InnerText = "no";
+            }
+
+            document.Save(confFile);
+        }
+
+        private static void TryStartService()
+        {
+            ServiceController ctl = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName == "WazuhSvc");
+
+            if (ctl != null)
+            {
+                _logger.Information("END_POINT_DETECTION_AND_RESPONSE detected.");
+
+                if (ctl.Status == ServiceControllerStatus.Stopped)
+                {
+                    _logger.Verbose("END_POINT_DETECTION_AND_RESPONSE Not Running. Trying to start service.");
+                    ctl.Start();
+                }
             }
         }
 
@@ -254,11 +271,47 @@ namespace ToolManager.AgentWrappers
 
         private static void EnsureFile(string source, string destination)
         {
-            if (File.Exists(source))
+            /*if (File.Exists(source))
             {
                 File.Copy(source, destination, true);
                 File.Delete(source);
+            }*/
+
+            var sourceLastModified = File.GetLastWriteTime(source);
+            var destinationLastModified = File.GetLastWriteTime(destination);
+
+            //logic 1 
+            if(File.Exists(source))
+            {
+                if (File.Exists(destination))
+                {
+                    File.Delete(destination);
+                    _logger.Information($"File exists at destination {destination} , So deleting file from destination.");
+                }
+                File.Copy(source, destination, true);
+                _logger.Information($"File Copied from {source} to destination {destination}");
+                File.Delete(source);
             }
+            else
+            {
+                _logger.Information($"File does not exist at source {source}");
+            }
+
+            //logic 2
+            if (File.Exists(source))
+            {
+                if (File.Exists(destination))
+                {
+                    if (sourceLastModified > destinationLastModified)
+                    {
+                        File.Delete(destination);
+                    }
+                    File.Copy(source, destination, true);
+                    File.Delete(source);
+                }
+
+            }
+
         }
 
         private static void InstallerProcess_OutputDataReceived(object sender, DataReceivedEventArgs e)
@@ -311,4 +364,5 @@ namespace ToolManager.AgentWrappers
             }
         }
     }
+
 }
