@@ -90,6 +90,10 @@ namespace ToolManager.AgentWrappers
                 inputParameterBuilder.Append($"WAZUH_REGISTRATION_SERVER=\"{registrationIp}\"");
                 inputParameterBuilder.Append(" ");
 
+                //settig wazuh manager and registeration server ip in environment variable
+                Environment.SetEnvironmentVariable("WAZUH_MANAGER", managerIp,EnvironmentVariableTarget.Machine);
+                Environment.SetEnvironmentVariable("WAZUH_REGISTRATION_SERVER", registrationIp,EnvironmentVariableTarget.Machine);
+
                 var agentGroup = ToolRepository.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "AGENT_GROUP");
                 _logger.Information($"Wazuh's AgentGroup {agentGroup}");
                 inputParameterBuilder.Append($"WAZUH_AGENT_GROUP=\"{agentGroup}\"");
@@ -267,6 +271,9 @@ namespace ToolManager.AgentWrappers
             EnsureFile(Path.Combine(CommonUtils.ArtifactsFolder, "isolation.exe"), Path.Combine(wazuhAgentActiveResponseBinPath, "isolation.exe"));
 
             EnsureFile(Path.Combine(CommonUtils.ArtifactsFolder, "unisolation.exe"), Path.Combine(wazuhAgentActiveResponseBinPath, "unisolation.exe"));
+
+            EnsureFile(Path.Combine(CommonUtils.ArtifactsFolder, "isolation-anydesk.exe"), Path.Combine(wazuhAgentActiveResponseBinPath, "isolation-anydesk.exe"));
+
         }
 
         private static void EnsureFile(string source, string destination)
