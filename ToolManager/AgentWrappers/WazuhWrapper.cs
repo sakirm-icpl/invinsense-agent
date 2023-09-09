@@ -91,6 +91,7 @@ namespace ToolManager.AgentWrappers
                 inputParameterBuilder.Append(" ");
 
                 //settig wazuh manager and registeration server ip in environment variable
+                _logger.Information($"Setting Environment Variables WAZUH_MANAGER=\"{managerIp}\" and REGISTRATION_SERVER=\"{registrationIp}\"");
                 Environment.SetEnvironmentVariable("WAZUH_MANAGER", managerIp,EnvironmentVariableTarget.Machine);
                 Environment.SetEnvironmentVariable("WAZUH_REGISTRATION_SERVER", registrationIp,EnvironmentVariableTarget.Machine);
 
@@ -177,6 +178,8 @@ namespace ToolManager.AgentWrappers
                 EnableOsQueryWoodle();
 
                 TryStartService();
+
+                EnsureEnvironmentVariables();
 
                 return 0;
             }
@@ -320,6 +323,28 @@ namespace ToolManager.AgentWrappers
             }
 
         }
+
+        public static void  EnsureEnvironmentVariables()
+        {
+            var currentManagerIp = Environment.GetEnvironmentVariable("WAZUH_MANAGER");
+            var currentRegistrationIp = Environment.GetEnvironmentVariable("WAZUH_REGISTRATION_SERVER");
+
+            var managerIp = ToolRepository.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "MANAGER_ADDR");
+            var registrationIp = ToolRepository.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "REGISTRATION_SERVER_ADDR");
+            if (currentRegistrationIp == null && currentRegistrationIp==null) {
+                Environment.SetEnvironmentVariable("WAZUH_MANAGER", managerIp, EnvironmentVariableTarget.Machine);
+                Environment.SetEnvironmentVariable("WAZUH_REGISTRATION_SERVER", registrationIp, EnvironmentVariableTarget.Machine);
+            }
+            else
+            {
+                if (!currentManagerIp.Equals(managerIp) && !currentRegistrationIp.Equals(registrationIp))
+                {
+                    Environment.SetEnvironmentVariable("WAZUH_MANAGER", managerIp, EnvironmentVariableTarget.Machine);
+                    Environment.SetEnvironmentVariable("WAZUH_REGISTRATION_SERVER", registrationIp, EnvironmentVariableTarget.Machine);
+                }
+            }
+        }
+        
 
         private static void InstallerProcess_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
