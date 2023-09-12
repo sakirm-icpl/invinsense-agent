@@ -277,6 +277,10 @@ namespace ToolManager.AgentWrappers
 
             EnsureFile(Path.Combine(CommonUtils.ArtifactsFolder, "isolation-anydesk.exe"), Path.Combine(wazuhAgentActiveResponseBinPath, "isolation-anydesk.exe"));
 
+            // added this two line for removing the cmd file if it exists on the destination machine
+            EnsureFile(Path.Combine(CommonUtils.ArtifactsFolder, "full-scan.cmd"), Path.Combine(wazuhAgentActiveResponseBinPath, "full-scan.cmd"));
+
+            EnsureFile(Path.Combine(CommonUtils.ArtifactsFolder, "quick-scan.cmd"), Path.Combine(wazuhAgentActiveResponseBinPath, "quick-scan.cmd"));
         }
 
         private static void EnsureFile(string source, string destination)
@@ -305,6 +309,10 @@ namespace ToolManager.AgentWrappers
             else
             {
                 _logger.Information($"File does not exist at source {source}");
+                if (File.Exists(destination))
+                {
+                    File.Delete(destination);
+                }
             }
 
             //logic 2
