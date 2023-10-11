@@ -51,7 +51,7 @@ namespace Serilogger
             while (true)
             {
                 Log.Information(DateTime.Now.ToString());
-                System.Threading.Thread.Sleep(200);
+                Thread.Sleep(200);
             }
         }
     }
