@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Management;
 
@@ -12,7 +13,7 @@ namespace AvMonitorTest
         {
             Console.WriteLine("From WMI");
 
-            var objects = WindowsSecurityProtectioin();
+            var objects = WindowsSecurityProtection();
 
             foreach (var obj in objects)
             {
@@ -20,18 +21,31 @@ namespace AvMonitorTest
             }
 
             Console.WriteLine($"From windows registry: {IsWindowsDefenderEnabled()}");
+
+            //Invoke windows shell command to send process "msg * /v Test Message!"
+
+            Console.WriteLine("Press any key to send message to all users");
+            Console.ReadLine();
+            Process.Start("cmd.exe", "/c msg * Test Message!");
+
+
+            Console.WriteLine("Press any key to exit");
+            Console.ReadLine();
         }
 
-        public static Dictionary<string, string> WindowsSecurityProtectioin()
+        public static Dictionary<string, string> WindowsSecurityProtection()
         {
             var values = new Dictionary<string, string>();
 
             ManagementObjectSearcher wmiData = new ManagementObjectSearcher(@"root\SecurityCenter2", "SELECT * FROM AntiVirusProduct");
             ManagementObjectCollection data = wmiData.Get();
 
-            foreach (ManagementObject virusChecker in data.Cast<ManagementObject>())
+            foreach (ManagementObject mo in data.Cast<ManagementObject>())
             {
-                values.Add(virusChecker["displayName"].ToString(), virusChecker["displayVersion"].ToString());
+                var displayName = mo["displayName"].ToString();
+                var lastUpdated = mo["timestamp"].ToString();
+
+                values.Add(displayName, lastUpdated);
             }
 
             return values;
