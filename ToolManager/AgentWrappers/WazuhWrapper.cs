@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.ServiceProcess;
 using System.Xml;
-using Common.Persistance;
+using Common.Persistence;
 using ToolManager.MsiWrapper;
 using System.IO;
 using System.Text;

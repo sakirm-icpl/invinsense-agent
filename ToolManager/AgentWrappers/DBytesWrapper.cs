@@ -5,7 +5,7 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.ServiceProcess;
-using Common.Persistance;
+using Common.Persistence;
 using System.IO;
 
 namespace ToolManager.AgentWrappers

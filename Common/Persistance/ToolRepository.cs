@@ -2,7 +2,7 @@
 using Serilog;
 using System;
 
-namespace Common.Persistance
+namespace Common.Persistence
 {
     public static class ToolRepository
     {

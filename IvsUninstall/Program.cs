@@ -9,7 +9,7 @@ using ToolManager;
 using ToolManager.MsiWrapper;
 using System.DirectoryServices.AccountManagement;
 using ToolManager.AgentWrappers;
-using Common.Persistance;
+using Common.Persistence;
 
 namespace IvsUninstall
 {

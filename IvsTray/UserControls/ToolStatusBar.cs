@@ -1,4 +1,4 @@
-﻿using Common.Persistance;
+﻿using Common.Persistence;
 using IvsTray.Notifier;
 using Serilog;
 using System;

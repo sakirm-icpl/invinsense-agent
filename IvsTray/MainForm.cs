@@ -1,6 +1,6 @@
 using Common;
 using Common.NamedPipes;
-using Common.Persistance;
+using Common.Persistence;
 using IvsTray.Extensions;
 using IvsTray.Properties;
 using Newtonsoft.Json;
@@ -48,7 +48,7 @@ namespace IvsTray
             mouseFilter.FormClicked += FormClicked;
             Application.AddMessageFilter(mouseFilter);
 
-            _clientPipe.DataReceived += (sndr, args) =>
+            _clientPipe.DataReceived += (sander, args) =>
             {
                 _logger.Verbose("Data Received: {0}", args.String);
                 var toolStatuses = JsonConvert.DeserializeObject<List<ToolStatus>>(args.String);

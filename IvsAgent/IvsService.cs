@@ -3,7 +3,7 @@ using Serilog;
 using System;
 using System.Diagnostics;
 using System.ServiceProcess;
-using Common.Persistance;
+using Common.Persistence;
 using ToolManager.AgentWrappers;
 using System.Threading.Tasks;
 using IvsAgent.Extensions;

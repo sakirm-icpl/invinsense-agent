@@ -1,4 +1,4 @@
-﻿using Common.Persistance;
+﻿using Common.Persistence;
 using System.Windows.Forms;
 
 namespace IvsTray

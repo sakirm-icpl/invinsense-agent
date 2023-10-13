@@ -1,4 +1,4 @@
-﻿namespace Common.Persistance
+﻿namespace Common.Persistence
 {
     public enum InstallStatus
     {
