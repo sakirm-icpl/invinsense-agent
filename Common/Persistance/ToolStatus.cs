@@ -12,50 +12,13 @@ namespace Common.Persistence
             RunningStatus = runningStatus;
         }
 
-        public ToolStatus(long eventId)
-        {
-            int toolId = (int)(eventId / 100);
-
-            if (toolId == 0 || toolId > 6)
-            {
-                Name = "";
-                InstallStatus = InstallStatus.NotFound;
-                RunningStatus = RunningStatus.NotFound;
-                return;
-            }
-
-            switch (toolId)
-            {
-                case 1:
-                    Name = ToolName.EndpointDetectionAndResponse;
-                    break;
-                case 2:
-                    Name = ToolName.EndpointDeception;
-                    break;
-                case 3:
-                    Name = ToolName.UserBehaviorAnalytics;
-                    break;
-                case 4:
-                    Name = ToolName.AdvanceTelemetry;
-                    break;
-                case 5:
-                    Name = ToolName.EndpointProtection;
-                    break;
-                case 6:
-                    Name = ToolName.LateralMovementProtection;
-                    break;
-                default:
-                    break;
-            }
-
-            InstallStatus = (InstallStatus) ((eventId - toolId * 100) / 10);
-            RunningStatus = (RunningStatus) (eventId - toolId * 100 - (int) InstallStatus * 10);
-        }
-
+        [JsonProperty("name")]
         public string Name { get; }
 
+        [JsonProperty("installStatus")]
         public InstallStatus InstallStatus { get; }
 
+        [JsonProperty("runningStatus")]
         public RunningStatus RunningStatus { get; }
 
         public override int GetHashCode()

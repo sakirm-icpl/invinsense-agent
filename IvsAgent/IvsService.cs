@@ -194,13 +194,17 @@ namespace IvsAgent
         private void SendToolStatuses()
         {
             var skipEndpointDeception = ToolRepository.CanSkipMonitoring(ToolName.EndpointDeception);
-            var statuses = new List<ToolStatus>();
+            
+            var trayStatus = new TrayStatus();
+            
+            //Reading system variable for isolation mode
+            
             if (!skipEndpointDeception)
             {
-                statuses.Add(GetToolStatus(ToolName.EndpointDeception));
+                trayStatus.ToolStatuses.Add(GetToolStatus(ToolName.EndpointDeception));
             }
 
-            statuses.AddRange(new List<ToolStatus>
+            trayStatus.ToolStatuses.AddRange(new List<ToolStatus>
                 {
                     GetToolStatus(ToolName.EndpointProtection),
                     GetToolStatus(ToolName.UserBehaviorAnalytics),
@@ -209,8 +213,8 @@ namespace IvsAgent
                     GetToolStatus(ToolName.LateralMovementProtection)
                 });
 
-            var message = Newtonsoft.Json.JsonConvert.SerializeObject(statuses);
-            _logger.Verbose($"Sending status to tray {string.Join(", ", statuses.Select(x => x))}");
+            var message = Newtonsoft.Json.JsonConvert.SerializeObject(trayStatus);
+            _logger.Verbose($"Sending status to tray. ErrorCode:{trayStatus.ErrorCode}, Message:{trayStatus.ErrorMessage}, {string.Join(", ", trayStatus.ToolStatuses.Select(x => x))}");
             _serverPipe.WriteString(message);
         }
 

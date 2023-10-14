@@ -51,8 +51,13 @@ namespace IvsTray
             _clientPipe.DataReceived += (sander, args) =>
             {
                 _logger.Verbose("Data Received: {0}", args.String);
-                var toolStatuses = JsonConvert.DeserializeObject<List<ToolStatus>>(args.String);
-                tsc.UpdateToolRunningStatus(toolStatuses);
+                var trayStatus = JsonConvert.DeserializeObject<TrayStatus>(args.String);
+                if(trayStatus.ErrorCode != 0)
+                {
+                    MessageBox.Show(trayStatus.ErrorMessage);
+                }
+
+                tsc.UpdateToolRunningStatus(trayStatus.ToolStatuses);
             };
 
 
@@ -61,6 +66,12 @@ namespace IvsTray
                 _logger.Verbose("Connecting to Agent Service...");
                 _clientPipe.Connect();
                 _logger.Debug("Agent Service connected...");
+            });
+
+            Task.Run(async () =>
+            {
+                await Task.Delay(1000);
+                MessageBox.Show("IvsTray is running in the background.", "IvsTray", MessageBoxButtons.OK, MessageBoxIcon.Information);
             });
 
         }

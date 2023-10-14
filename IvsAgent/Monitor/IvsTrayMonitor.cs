@@ -78,7 +78,7 @@ namespace IvsAgent.Monitor
 
             try
             {
-                //Check the user seesion is active or not
+                //Check the user session is active or not
                 var processes = Process.GetProcesses();
                 bool isSessionActive = processes.Any(p => p.SessionId > 0 && p.ProcessName != "Idel");
 

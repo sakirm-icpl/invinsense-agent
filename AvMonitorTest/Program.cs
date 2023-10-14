@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Management;
+using Microsoft.Diagnostics.Tracing.Parsers;
+using Microsoft.Diagnostics.Tracing.Session;
 
 namespace AvMonitorTest
 {
@@ -11,6 +13,23 @@ namespace AvMonitorTest
     {
         static void Main()
         {
+            KernelEventTracer();
+            Console.ReadLine();
+
+            using (RegistryKey key = Registry.LocalMachine.OpenSubKey("SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment"))
+            {
+                if (key != null)
+                {
+                    object value = key.GetValue("TEST");
+                    Console.WriteLine($"'TEST' key has been modified. New value: {value}");
+                }
+            }
+
+            var test = Environment.GetEnvironmentVariable("TEST", EnvironmentVariableTarget.Machine);
+            Console.WriteLine($"TEST: {test}");
+
+            WatchEnvironmentVariable();
+
             Console.WriteLine("From WMI");
 
             var objects = WindowsSecurityProtection();
@@ -57,12 +76,81 @@ namespace AvMonitorTest
             if (key != null)
             {
                 object value = key.GetValue("DisableRealtimeMonitoring");
-                if (value != null && value is int && (int)value != 0)
+                if (value != null && value is int v && v != 0)
                 {
                     return false;
                 }
             }
             return true;
+        }
+
+        public static void WatchEnvironmentVariable()
+        {
+            // set up a scope and a query to watch for changes to the registry key
+            ManagementScope scope = new ManagementScope("\\\\.\\root\\default");
+
+            // WMI query to watch for changes to the specified registry key
+            WqlEventQuery query = new WqlEventQuery(
+                "SELECT * FROM RegistryKeyChangeEvent " +
+                "WHERE Hive = 'HKEY_LOCAL_MACHINE'" +
+                "AND KeyPath = 'SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment'");
+
+            // Initialize watcher and set query
+            ManagementEventWatcher watcher = new ManagementEventWatcher(scope, query);
+
+            // Event handler to be called when the registry key changes
+            watcher.EventArrived += (sender, args) =>
+            {
+                // Read the updated value of the "TEST" key
+                using (RegistryKey key = Registry.LocalMachine.OpenSubKey("SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment"))
+                {
+                    if (key != null)
+                    {
+                        object value = key.GetValue("TEST");
+                        Console.WriteLine($"'TEST' key has been modified. New value: {value}");
+                    }
+                }
+            };
+
+            // Start watching
+            watcher.Start();
+
+            Console.WriteLine("Watching for changes... Press any key to exit.");
+            Console.ReadKey();
+
+            // Stop watching
+            watcher.Stop();
+
+        }
+
+        static void KernelEventTracer()
+        {
+            // Run as Admin
+            using (var session = new TraceEventSession("MyKernelSession", KernelTraceEventParser.KernelSessionName))
+            {
+                // Enable registry events
+                session.EnableKernelProvider(KernelTraceEventParser.Keywords.Registry);
+
+                Console.WriteLine("Monitoring registry changes. Press any key to exit...");
+
+                // Subscribe to the event
+                session.Source.Kernel.RegistrySetValue += data =>
+                {
+                    // Check for our specific registry key
+                    //if (data.KeyPath.Contains(@"CurrentControlSet\\Control\\Session Manager\\Environment"))
+                    {
+                        Console.WriteLine($"Registry Key Modified: {data.ActivityID}");
+                        Console.WriteLine($"Value Name: {data.ValueName}");
+                        Console.WriteLine($"New Value: {BitConverter.ToString(data.EventData())}");
+                    }
+                };
+
+                // Process the events
+                session.Source.Process();
+
+                // Close when a key is pressed
+                Console.ReadKey();
+            }
         }
     }
 }
