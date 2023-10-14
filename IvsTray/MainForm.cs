@@ -70,10 +70,19 @@ namespace IvsTray
 
             Task.Run(async () =>
             {
-                await Task.Delay(1000);
-                MessageBox.Show("IvsTray is running in the background.", "IvsTray", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                while(true)
+                {
+                    await Task.Delay(1000);
+                    var test = Environment.GetEnvironmentVariable("isolation_state", EnvironmentVariableTarget.Machine);
+                    if(test != "true")
+                    {
+                        continue;
+                    }
+                    MessageBox.Show("Your device administrator has disconnected your device from all of the organization's networks for security reasons. " +
+                        "Please contact your local IT Help Desk for assistance.", "Network Disconnected", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    break;
+                }
             });
-
         }
 
         private void MainFormClosing(object sender, FormClosingEventArgs e)
