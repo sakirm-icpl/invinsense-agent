@@ -271,16 +271,18 @@ namespace ToolManager.AgentWrappers
 
             EnsureFile(Path.Combine(CommonUtils.ArtifactsFolder, "quick-scan.exe"), Path.Combine(wazuhAgentActiveResponseBinPath, "quick-scan.exe"));
 
-            EnsureFile(Path.Combine(CommonUtils.ArtifactsFolder, "isolation.exe"), Path.Combine(wazuhAgentActiveResponseBinPath, "isolation.exe"));
+            EnsureFile(Path.Combine(CommonUtils.ArtifactsFolder, "scheduled-scan.exe"), Path.Combine(wazuhAgentActiveResponseBinPath, "scheduled-scan.exe"));
 
-            EnsureFile(Path.Combine(CommonUtils.ArtifactsFolder, "unisolation.exe"), Path.Combine(wazuhAgentActiveResponseBinPath, "unisolation.exe"));
+            EnsureFile(Path.Combine(CommonUtils.ArtifactsFolder, "isolation.exe"), Path.Combine(wazuhAgentActiveResponseBinPath, "isolation.exe"));
 
             EnsureFile(Path.Combine(CommonUtils.ArtifactsFolder, "isolation-anydesk.exe"), Path.Combine(wazuhAgentActiveResponseBinPath, "isolation-anydesk.exe"));
 
-            // added this two line for removing the cmd file if it exists on the destination machine
-            EnsureFile(Path.Combine(CommonUtils.ArtifactsFolder, "full-scan.cmd"), Path.Combine(wazuhAgentActiveResponseBinPath, "full-scan.cmd"));
+            EnsureFile(Path.Combine(CommonUtils.ArtifactsFolder, "isolation-rdp.exe"), Path.Combine(wazuhAgentActiveResponseBinPath, "isolation-rdp.exe"));
 
-            EnsureFile(Path.Combine(CommonUtils.ArtifactsFolder, "quick-scan.cmd"), Path.Combine(wazuhAgentActiveResponseBinPath, "quick-scan.cmd"));
+            EnsureFile(Path.Combine(CommonUtils.ArtifactsFolder, "unisolation.exe"), Path.Combine(wazuhAgentActiveResponseBinPath, "unisolation.exe"));
+
+            EnsureFile(Path.Combine(CommonUtils.ArtifactsFolder, "unisolation-rdp.exe"), Path.Combine(wazuhAgentActiveResponseBinPath, "unisolation-rdp.exe"));
+
         }
 
         private static void EnsureFile(string source, string destination)
