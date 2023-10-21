@@ -6,9 +6,15 @@ using System.Linq;
 using System.Management;
 using Microsoft.Diagnostics.Tracing.Parsers;
 using Microsoft.Diagnostics.Tracing.Session;
+using System.Threading;
 
 namespace AvMonitorTest
 {
+    /// <summary>
+    /// https://erikengberg.com/4-ways-to-monitor-windows-registry-using-c/#Method_3_Process_Hooking
+    /// https://learn.microsoft.com/en-us/windows/win32/api/_etw/
+    /// https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regnotifychangekeyvalue?redirectedfrom=MSDN
+    /// </summary>
     internal class Program
     {
         static void Main()
