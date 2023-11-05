@@ -6,7 +6,6 @@ using System.Linq;
 using System.Management;
 using Microsoft.Diagnostics.Tracing.Parsers;
 using Microsoft.Diagnostics.Tracing.Session;
-using System.Threading;
 
 namespace AvMonitorTest
 {

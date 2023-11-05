@@ -5,14 +5,21 @@ namespace FormsTest
 {
     public partial class MainFrm : Form
     {
+        /// <summary>
+        /// https://azuliadesigns.com/c-sharp-tutorials/list-net-culture-country-codes/
+        /// </summary>
         public MainFrm()
         {
             InitializeComponent();
+
+            //use localizable strings
+            Text = Properties.Resources.MainFormTitle;
+            ToolTipButton.Text = Properties.Resources.ButtonText;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void ButtonClick(object sender, EventArgs e)
         {
-            notifyIcon1.ShowBalloonTip(1000, "test", "Hello tray", ToolTipIcon.Info);
+            NotifyTrayIcon.ShowBalloonTip(1000, Properties.Resources.IsolationDialogTitle, Properties.Resources.IsolationDialogMessage, ToolTipIcon.Info);
         }
     }
 }

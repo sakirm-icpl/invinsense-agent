@@ -1,5 +1,3 @@
-using Common.Utils;
-
 namespace CommonTests
 {
     public class EnvvironmentVariableTests

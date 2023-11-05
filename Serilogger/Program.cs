@@ -1,8 +1,6 @@
-﻿using Common.Utils;
-using Serilog;
+﻿using Serilog;
 using Serilog.Core;
 using Serilog.Events;
-using Serilog.Formatting.Json;
 using System;
 using System.Threading;
 
