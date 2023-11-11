@@ -32,27 +32,60 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainFrm));
             this.NotifyTrayIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.ToolTipButton = new System.Windows.Forms.Button();
+            this.readFirstFile = new System.Windows.Forms.Button();
+            this.lblConfigValue = new System.Windows.Forms.Label();
+            this.lblCulture = new System.Windows.Forms.Label();
+            this.readSecondFile = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // notifyIcon1
+            // NotifyTrayIcon
             // 
             this.NotifyTrayIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            resources.ApplyResources(this.NotifyTrayIcon, "notifyIcon1");
+            resources.ApplyResources(this.NotifyTrayIcon, "NotifyTrayIcon");
             // 
-            // button1
+            // ToolTipButton
             // 
-            resources.ApplyResources(this.ToolTipButton, "button1");
-            this.ToolTipButton.Name = "button1";
+            resources.ApplyResources(this.ToolTipButton, "ToolTipButton");
+            this.ToolTipButton.Name = "ToolTipButton";
             this.ToolTipButton.UseVisualStyleBackColor = true;
-            this.ToolTipButton.Click += new System.EventHandler(this.ButtonClick);
+            this.ToolTipButton.Click += new System.EventHandler(this.ShowToolTipClick);
+            // 
+            // readFirstFile
+            // 
+            resources.ApplyResources(this.readFirstFile, "readFirstFile");
+            this.readFirstFile.Name = "readFirstFile";
+            this.readFirstFile.UseVisualStyleBackColor = true;
+            this.readFirstFile.Click += new System.EventHandler(this.ReadFirstFileClick);
+            // 
+            // lblConfigValue
+            // 
+            resources.ApplyResources(this.lblConfigValue, "lblConfigValue");
+            this.lblConfigValue.Name = "lblConfigValue";
+            // 
+            // lblCulture
+            // 
+            resources.ApplyResources(this.lblCulture, "lblCulture");
+            this.lblCulture.Name = "lblCulture";
+            // 
+            // readSecondFile
+            // 
+            resources.ApplyResources(this.readSecondFile, "readSecondFile");
+            this.readSecondFile.Name = "readSecondFile";
+            this.readSecondFile.UseVisualStyleBackColor = true;
+            this.readSecondFile.Click += new System.EventHandler(this.ReadSecondFileClick);
             // 
             // MainFrm
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.readSecondFile);
+            this.Controls.Add(this.lblCulture);
+            this.Controls.Add(this.lblConfigValue);
+            this.Controls.Add(this.readFirstFile);
             this.Controls.Add(this.ToolTipButton);
             this.Name = "MainFrm";
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -60,6 +93,10 @@
 
         private System.Windows.Forms.NotifyIcon NotifyTrayIcon;
         private System.Windows.Forms.Button ToolTipButton;
+        private System.Windows.Forms.Button readFirstFile;
+        private System.Windows.Forms.Label lblConfigValue;
+        private System.Windows.Forms.Label lblCulture;
+        private System.Windows.Forms.Button readSecondFile;
     }
 }
 

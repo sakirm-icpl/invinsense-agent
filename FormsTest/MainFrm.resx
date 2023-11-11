@@ -117,11 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="notifyIcon1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="NotifyTrayIcon.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="notifyIcon1.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="NotifyTrayIcon.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABAAEAFhYAAAEAIAAQCAAAFgAAACgAAAAWAAAALAAAAAEAIAAAAAAAkAcAAAAAAAAAAAAAAAAAAAAA
         AAAAAAAAAAAAAAAAAAAAAAAASq8LAEqwDABKsAwASrAMEkqwDHdKsAzUSrAM+UqwDPlKsAzVSrAMeUqw
@@ -160,35 +160,147 @@
         PAD4AHwA/AD8APwA/AD4AHwA8AA8APAAPADgABwAwAAMAIAABACAAAQAgAAEAA==
 </value>
   </data>
-  <data name="notifyIcon1.Text" xml:space="preserve">
+  <data name="NotifyTrayIcon.Text" xml:space="preserve">
     <value>notifyIcon1</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="notifyIcon1.Visible" type="System.Boolean, mscorlib">
+  <data name="NotifyTrayIcon.Visible" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="button1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 12</value>
+  <data name="ToolTipButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>339, 198</value>
   </data>
-  <data name="button1.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="ToolTipButton.Size" type="System.Drawing.Size, System.Drawing">
     <value>130, 23</value>
   </data>
-  <data name="button1.TabIndex" type="System.Int32, mscorlib">
+  <data name="ToolTipButton.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
   </data>
-  <data name="button1.Text" xml:space="preserve">
+  <data name="ToolTipButton.Text" xml:space="preserve">
     <value>Show ToolTip</value>
   </data>
-  <data name="&gt;&gt;button1.Name" xml:space="preserve">
-    <value>button1</value>
+  <data name="&gt;&gt;ToolTipButton.Name" xml:space="preserve">
+    <value>ToolTipButton</value>
   </data>
-  <data name="&gt;&gt;button1.Type" xml:space="preserve">
+  <data name="&gt;&gt;ToolTipButton.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;button1.Parent" xml:space="preserve">
+  <data name="&gt;&gt;ToolTipButton.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;button1.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;ToolTipButton.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="readFirstFile.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="readFirstFile.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 12</value>
+  </data>
+  <data name="readFirstFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>63, 23</value>
+  </data>
+  <data name="readFirstFile.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="readFirstFile.Text" xml:space="preserve">
+    <value>Read 1</value>
+  </data>
+  <data name="&gt;&gt;readFirstFile.Name" xml:space="preserve">
+    <value>readFirstFile</value>
+  </data>
+  <data name="&gt;&gt;readFirstFile.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;readFirstFile.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;readFirstFile.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="lblConfigValue.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblConfigValue.Location" type="System.Drawing.Point, System.Drawing">
+    <value>176, 17</value>
+  </data>
+  <data name="lblConfigValue.Size" type="System.Drawing.Size, System.Drawing">
+    <value>64, 13</value>
+  </data>
+  <data name="lblConfigValue.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="lblConfigValue.Text" xml:space="preserve">
+    <value>Not Defined</value>
+  </data>
+  <data name="&gt;&gt;lblConfigValue.Name" xml:space="preserve">
+    <value>lblConfigValue</value>
+  </data>
+  <data name="&gt;&gt;lblConfigValue.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblConfigValue.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;lblConfigValue.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="lblCulture.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblCulture.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblCulture.Location" type="System.Drawing.Point, System.Drawing">
+    <value>405, 22</value>
+  </data>
+  <data name="lblCulture.Size" type="System.Drawing.Size, System.Drawing">
+    <value>37, 13</value>
+  </data>
+  <data name="lblCulture.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="lblCulture.Text" xml:space="preserve">
+    <value>en-US</value>
+  </data>
+  <data name="&gt;&gt;lblCulture.Name" xml:space="preserve">
+    <value>lblCulture</value>
+  </data>
+  <data name="&gt;&gt;lblCulture.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblCulture.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;lblCulture.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="readSecondFile.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="readSecondFile.Location" type="System.Drawing.Point, System.Drawing">
+    <value>81, 12</value>
+  </data>
+  <data name="readSecondFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>63, 23</value>
+  </data>
+  <data name="readSecondFile.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="readSecondFile.Text" xml:space="preserve">
+    <value>Read 2</value>
+  </data>
+  <data name="&gt;&gt;readSecondFile.Name" xml:space="preserve">
+    <value>readSecondFile</value>
+  </data>
+  <data name="&gt;&gt;readSecondFile.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;readSecondFile.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;readSecondFile.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -203,10 +315,10 @@
   <data name="$this.Text" xml:space="preserve">
     <value>Form1</value>
   </data>
-  <data name="&gt;&gt;notifyIcon1.Name" xml:space="preserve">
-    <value>notifyIcon1</value>
+  <data name="&gt;&gt;NotifyTrayIcon.Name" xml:space="preserve">
+    <value>NotifyTrayIcon</value>
   </data>
-  <data name="&gt;&gt;notifyIcon1.Type" xml:space="preserve">
+  <data name="&gt;&gt;NotifyTrayIcon.Type" xml:space="preserve">
     <value>System.Windows.Forms.NotifyIcon, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
