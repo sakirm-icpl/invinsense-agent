@@ -32,6 +32,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -57,7 +60,12 @@
     <EmbeddedResource Include="MainFrm.resx">
       <DependentUpon>MainFrm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.hi-IN.resx" />
+    <EmbeddedResource Include="Properties\Resources.id.resx" />
+    <EmbeddedResource Include="Properties\Resources.ms.resx" />
+    <EmbeddedResource Include="Properties\Resources.th.resx" />
+    <EmbeddedResource Include="Properties\Resources.fil.resx" />
+    <EmbeddedResource Include="Properties\Resources.vi.resx" />
+    <EmbeddedResource Include="Properties\Resources.en.resx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -68,14 +76,35 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="..\artifacts\wazuh\samples\ossec_1.conf">
-      <Link>ossec_1.conf</Link>
+    <None Include="..\artifacts\wazuh\samples\ossec.conf">
+      <Link>ossec.conf</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\artifacts\wazuh\samples\ossec_2.conf">
-      <Link>ossec_2.conf</Link>
+    <None Include="..\artifacts\wazuh\samples\ossec.en-SG.conf">
+      <Link>ossec.en-SG.conf</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="..\artifacts\wazuh\samples\ossec.fil-PH.conf">
+      <Link>ossec.fil-PH.conf</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\artifacts\wazuh\samples\ossec.id-ID.conf">
+      <Link>ossec.id-ID.conf</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\artifacts\wazuh\samples\ossec.ms-MY.conf">
+      <Link>ossec.ms-MY.conf</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\artifacts\wazuh\samples\ossec.th-TH.conf">
+      <Link>ossec.th-TH.conf</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\artifacts\wazuh\samples\ossec.vi-VN.conf">
+      <Link>ossec.vi-VN.conf</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

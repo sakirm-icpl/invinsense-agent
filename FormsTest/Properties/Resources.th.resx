@@ -118,15 +118,17 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ButtonText" xml:space="preserve">
-    <value>टूल टिप दिखाएँ</value>
+    <value>แสดงเคล็ดลับเครื่องมือ</value>
   </data>
   <data name="IsolationDialogMessage" xml:space="preserve">
-    <value>आपका उपकरण पृथक है. कृपया सहायता के लिए व्यवस्थापक से संपर्क करें.</value>
+    <value>ผู้ดูแลอุปกรณ์ของคุณได้ตัดการเชื่อมต่อของอุปกรณ์ของคุณออกจากเครือข่ายขององค์กรทั้งหมดเพื่อเหตุผลด้านความปลอดภัย
+กรุณาติดต่อแผนก IT เพื่อขอรับความช่วยเหลือ
+Your device administrator has disconnected your device from all of the networks for security reasons. Please contact your local IT Help Desk for assistance</value>
   </data>
   <data name="IsolationDialogTitle" xml:space="preserve">
-    <value>डिवाइस अलगाव</value>
+    <value>แจ้งระงับการเชื่อมต่อระบบของนินจาแวนทั้งหมด</value>
   </data>
   <data name="MainFormTitle" xml:space="preserve">
-    <value>मुख्य विंडो</value>
+    <value>แบบฟอร์มหลัก</value>
   </data>
 </root>

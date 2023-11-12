@@ -168,7 +168,7 @@
     <value>True</value>
   </data>
   <data name="ToolTipButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>339, 198</value>
+    <value>424, 198</value>
   </data>
   <data name="ToolTipButton.Size" type="System.Drawing.Size, System.Drawing">
     <value>130, 23</value>
@@ -189,41 +189,41 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;ToolTipButton.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>12</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="readFirstFile.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="btnReadDefault.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="readFirstFile.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="btnReadDefault.Location" type="System.Drawing.Point, System.Drawing">
     <value>12, 12</value>
   </data>
-  <data name="readFirstFile.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="btnReadDefault.Size" type="System.Drawing.Size, System.Drawing">
     <value>63, 23</value>
   </data>
-  <data name="readFirstFile.TabIndex" type="System.Int32, mscorlib">
+  <data name="btnReadDefault.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
-  <data name="readFirstFile.Text" xml:space="preserve">
-    <value>Read 1</value>
+  <data name="btnReadDefault.Text" xml:space="preserve">
+    <value>Default</value>
   </data>
-  <data name="&gt;&gt;readFirstFile.Name" xml:space="preserve">
-    <value>readFirstFile</value>
+  <data name="&gt;&gt;btnReadDefault.Name" xml:space="preserve">
+    <value>btnReadDefault</value>
   </data>
-  <data name="&gt;&gt;readFirstFile.Type" xml:space="preserve">
+  <data name="&gt;&gt;btnReadDefault.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;readFirstFile.Parent" xml:space="preserve">
+  <data name="&gt;&gt;btnReadDefault.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;readFirstFile.ZOrder" xml:space="preserve">
-    <value>3</value>
+  <data name="&gt;&gt;btnReadDefault.ZOrder" xml:space="preserve">
+    <value>11</value>
   </data>
   <data name="lblConfigValue.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="lblConfigValue.Location" type="System.Drawing.Point, System.Drawing">
-    <value>176, 17</value>
+    <value>88, 78</value>
   </data>
   <data name="lblConfigValue.Size" type="System.Drawing.Size, System.Drawing">
     <value>64, 13</value>
@@ -244,7 +244,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;lblConfigValue.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>10</value>
   </data>
   <data name="lblCulture.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -253,7 +253,7 @@
     <value>NoControl</value>
   </data>
   <data name="lblCulture.Location" type="System.Drawing.Point, System.Drawing">
-    <value>405, 22</value>
+    <value>88, 106</value>
   </data>
   <data name="lblCulture.Size" type="System.Drawing.Size, System.Drawing">
     <value>37, 13</value>
@@ -274,33 +274,252 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;lblCulture.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>9</value>
   </data>
-  <data name="readSecondFile.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="btnReadSingapore.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="readSecondFile.Location" type="System.Drawing.Point, System.Drawing">
-    <value>81, 12</value>
+  <data name="btnReadSingapore.Location" type="System.Drawing.Point, System.Drawing">
+    <value>91, 12</value>
   </data>
-  <data name="readSecondFile.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="btnReadSingapore.Size" type="System.Drawing.Size, System.Drawing">
     <value>63, 23</value>
   </data>
-  <data name="readSecondFile.TabIndex" type="System.Int32, mscorlib">
+  <data name="btnReadSingapore.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
   </data>
-  <data name="readSecondFile.Text" xml:space="preserve">
-    <value>Read 2</value>
+  <data name="btnReadSingapore.Text" xml:space="preserve">
+    <value>Singapore</value>
   </data>
-  <data name="&gt;&gt;readSecondFile.Name" xml:space="preserve">
-    <value>readSecondFile</value>
+  <data name="&gt;&gt;btnReadSingapore.Name" xml:space="preserve">
+    <value>btnReadSingapore</value>
   </data>
-  <data name="&gt;&gt;readSecondFile.Type" xml:space="preserve">
+  <data name="&gt;&gt;btnReadSingapore.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;readSecondFile.Parent" xml:space="preserve">
+  <data name="&gt;&gt;btnReadSingapore.Parent" xml:space="preserve">
     <value>$this</value>
   </data>
-  <data name="&gt;&gt;readSecondFile.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;btnReadSingapore.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="restartButton.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="restartButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 198</value>
+  </data>
+  <data name="restartButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>63, 23</value>
+  </data>
+  <data name="restartButton.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="restartButton.Text" xml:space="preserve">
+    <value>Restart</value>
+  </data>
+  <data name="&gt;&gt;restartButton.Name" xml:space="preserve">
+    <value>restartButton</value>
+  </data>
+  <data name="&gt;&gt;restartButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;restartButton.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;restartButton.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="btnReadPhilippines.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnReadPhilippines.Location" type="System.Drawing.Point, System.Drawing">
+    <value>407, 12</value>
+  </data>
+  <data name="btnReadPhilippines.Size" type="System.Drawing.Size, System.Drawing">
+    <value>63, 23</value>
+  </data>
+  <data name="btnReadPhilippines.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="btnReadPhilippines.Text" xml:space="preserve">
+    <value>Philippines</value>
+  </data>
+  <data name="&gt;&gt;btnReadPhilippines.Name" xml:space="preserve">
+    <value>btnReadPhilippines</value>
+  </data>
+  <data name="&gt;&gt;btnReadPhilippines.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnReadPhilippines.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btnReadPhilippines.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="btnReadThailand.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnReadThailand.Location" type="System.Drawing.Point, System.Drawing">
+    <value>249, 12</value>
+  </data>
+  <data name="btnReadThailand.Size" type="System.Drawing.Size, System.Drawing">
+    <value>63, 23</value>
+  </data>
+  <data name="btnReadThailand.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="btnReadThailand.Text" xml:space="preserve">
+    <value>Thailand</value>
+  </data>
+  <data name="&gt;&gt;btnReadThailand.Name" xml:space="preserve">
+    <value>btnReadThailand</value>
+  </data>
+  <data name="&gt;&gt;btnReadThailand.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnReadThailand.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btnReadThailand.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="btnReadVietnam.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnReadVietnam.Location" type="System.Drawing.Point, System.Drawing">
+    <value>486, 12</value>
+  </data>
+  <data name="btnReadVietnam.Size" type="System.Drawing.Size, System.Drawing">
+    <value>63, 23</value>
+  </data>
+  <data name="btnReadVietnam.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="btnReadVietnam.Text" xml:space="preserve">
+    <value>Vietnam</value>
+  </data>
+  <data name="&gt;&gt;btnReadVietnam.Name" xml:space="preserve">
+    <value>btnReadVietnam</value>
+  </data>
+  <data name="&gt;&gt;btnReadVietnam.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnReadVietnam.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btnReadVietnam.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="btnReadIndonesia.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnReadIndonesia.Location" type="System.Drawing.Point, System.Drawing">
+    <value>328, 12</value>
+  </data>
+  <data name="btnReadIndonesia.Size" type="System.Drawing.Size, System.Drawing">
+    <value>63, 23</value>
+  </data>
+  <data name="btnReadIndonesia.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="btnReadIndonesia.Text" xml:space="preserve">
+    <value>Indonesia</value>
+  </data>
+  <data name="&gt;&gt;btnReadIndonesia.Name" xml:space="preserve">
+    <value>btnReadIndonesia</value>
+  </data>
+  <data name="&gt;&gt;btnReadIndonesia.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnReadIndonesia.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btnReadIndonesia.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="btnReadMalaysia.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnReadMalaysia.Location" type="System.Drawing.Point, System.Drawing">
+    <value>170, 12</value>
+  </data>
+  <data name="btnReadMalaysia.Size" type="System.Drawing.Size, System.Drawing">
+    <value>63, 23</value>
+  </data>
+  <data name="btnReadMalaysia.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="btnReadMalaysia.Text" xml:space="preserve">
+    <value>Malaysia</value>
+  </data>
+  <data name="&gt;&gt;btnReadMalaysia.Name" xml:space="preserve">
+    <value>btnReadMalaysia</value>
+  </data>
+  <data name="&gt;&gt;btnReadMalaysia.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnReadMalaysia.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btnReadMalaysia.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="label1.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>24, 78</value>
+  </data>
+  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>36, 13</value>
+  </data>
+  <data name="label1.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="label1.Text" xml:space="preserve">
+    <value>Group</value>
+  </data>
+  <data name="&gt;&gt;label1.Name" xml:space="preserve">
+    <value>label1</value>
+  </data>
+  <data name="&gt;&gt;label1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="label2.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>24, 106</value>
+  </data>
+  <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>40, 13</value>
+  </data>
+  <data name="label2.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="label2.Text" xml:space="preserve">
+    <value>Culture</value>
+  </data>
+  <data name="&gt;&gt;label2.Name" xml:space="preserve">
+    <value>label2</value>
+  </data>
+  <data name="&gt;&gt;label2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label2.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -310,7 +529,7 @@
     <value>6, 13</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>481, 233</value>
+    <value>566, 233</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>Form1</value>

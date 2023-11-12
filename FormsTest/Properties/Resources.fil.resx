@@ -118,15 +118,16 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ButtonText" xml:space="preserve">
-    <value>Show Tool Tip</value>
+    <value>Ipakita ang Tip sa Tool</value>
   </data>
   <data name="IsolationDialogMessage" xml:space="preserve">
-    <value>Your device administrator has disconnected your device from all of the networks for security reasons. Please contact your local IT Help Desk for assistance</value>
+    <value>Nadiskonekta ng administrator ng iyong device ang iyong device mula sa lahat ng network ng organisasyon para sa mga kadahilanang panseguridad. Mangyaring makipag-ugnayan sa iyong lokal na IT Help Desk para sa tulong
+Your device administrator has disconnected your device from all of the networks for security reasons. Please contact your local IT Help Desk for assistance</value>
   </data>
   <data name="IsolationDialogTitle" xml:space="preserve">
-    <value>Network Disconnected</value>
+    <value>Nadiskonekta ang Network</value>
   </data>
   <data name="MainFormTitle" xml:space="preserve">
-    <value>Main Form</value>
+    <value>Pangunahing Anyo</value>
   </data>
 </root>

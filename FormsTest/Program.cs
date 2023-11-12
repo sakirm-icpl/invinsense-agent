@@ -10,20 +10,18 @@ namespace FormsTest
     {
         /// <summary>
         /// The main entry point for the application.
+        /// https://devforid.medium.com/localization-in-c-using-resource-resx-file-a90117f04d4a
         /// </summary>
         [STAThread]
         static void Main()
         {
-            Debug.WriteLine("CurrentCulture: " + CultureInfo.CurrentCulture);
-            Debug.WriteLine("CurrentUICulture: " + CultureInfo.CurrentUICulture);
+            var cultureValue = Environment.GetEnvironmentVariable("IVS_CULTURE", EnvironmentVariableTarget.Machine);
+            var culture = new CultureInfo(string.IsNullOrEmpty(cultureValue) ? "en-US" : cultureValue);
 
+            Debug.WriteLine("CurrentCulture: " + culture);
 
-            // Set the current thread's culture to the OS culture
-            //Thread.CurrentThread.CurrentCulture = CultureInfo.CurrentCulture;
-            //Thread.CurrentThread.CurrentUICulture = CultureInfo.CurrentUICulture;
-
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("hi-IN");
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo("hi-IN");
+            Thread.CurrentThread.CurrentCulture = culture;
+            Thread.CurrentThread.CurrentUICulture = culture;
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

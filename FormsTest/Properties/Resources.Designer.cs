@@ -70,7 +70,7 @@ namespace FormsTest.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your device is isolated. Please contact admin for support..
+        ///   Looks up a localized string similar to Your device administrator has disconnected your device from all of the networks for security reasons. Please contact your local IT Help Desk for assistance.
         /// </summary>
         internal static string IsolationDialogMessage {
             get {
@@ -79,7 +79,7 @@ namespace FormsTest.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Device Isolation.
+        ///   Looks up a localized string similar to Network Disconnected.
         /// </summary>
         internal static string IsolationDialogTitle {
             get {

@@ -23,39 +23,33 @@ namespace FormsTest
 
         private void ShowToolTipClick(object sender, EventArgs e)
         {
+            MessageBox.Show(Properties.Resources.IsolationDialogMessage, Properties.Resources.IsolationDialogTitle, MessageBoxButtons.OK);
             NotifyTrayIcon.ShowBalloonTip(1000, Properties.Resources.IsolationDialogTitle, Properties.Resources.IsolationDialogMessage, ToolTipIcon.Info);
         }
 
-        private void ReadFirstFileClick(object sender, EventArgs e)
+        private void ReadConfigFileClick(object sender, EventArgs e)
         {
-            var (success, error, configValues) = ReadFile("ossec_1.conf");
+            var tag = ((Control)sender).Tag.ToString();
+            var configName = string.IsNullOrEmpty(tag) ? "ossec.conf" : $"ossec.{tag}.conf";
+            
+            var (success, error, configValues) = ReadFile(configName);
 
             if(success)
             {
                 lblConfigValue.Text = string.Join(",", configValues);
-                lblCulture.Text = MapRequiredCulture(configValues);
+                SetCulture(MapRequiredCulture(configValues));
             }
             else
             {
                 lblConfigValue.Text = error;
-                lblCulture.Text = "en-US";
+                SetCulture("en-US");
             }
         }
 
-        private void ReadSecondFileClick(object sender, EventArgs e)
+        private void SetCulture(string culture)
         {
-            var (success, error, configValues) = ReadFile("ossec_2.conf");
-
-            if (success)
-            {
-                lblConfigValue.Text = string.Join(",", configValues);
-                lblCulture.Text = MapRequiredCulture(configValues);
-            }
-            else
-            {
-                lblConfigValue.Text = error;
-                lblCulture.Text = "en-US";
-            }
+            Environment.SetEnvironmentVariable("IVS_CULTURE", culture, EnvironmentVariableTarget.Machine);
+            lblCulture.Text = culture;
         }
 
         private (bool, string, IEnumerable<string>) ReadFile(string configPath)
@@ -118,6 +112,11 @@ namespace FormsTest
             }
             
             return "en-US";
+        }
+
+        private void RestartButtonClick(object sender, EventArgs e)
+        {
+            Application.Restart();
         }
     }
 }

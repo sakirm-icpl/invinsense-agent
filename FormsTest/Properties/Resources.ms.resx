@@ -118,15 +118,15 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ButtonText" xml:space="preserve">
-    <value>Show Tool Tip</value>
+    <value>Tunjukkan Petua Alat</value>
   </data>
   <data name="IsolationDialogMessage" xml:space="preserve">
-    <value>Your device administrator has disconnected your device from all of the networks for security reasons. Please contact your local IT Help Desk for assistance</value>
+    <value>Pentadbir peranti anda telah memutuskan sambungan peranti anda daripada semua rangkaian organisasi atas sebab keselamatan. Sila hubungi pusat sokongan IT anda untuk mendapatkan bantuan.</value>
   </data>
   <data name="IsolationDialogTitle" xml:space="preserve">
-    <value>Network Disconnected</value>
+    <value>Rangkaian Terputus</value>
   </data>
   <data name="MainFormTitle" xml:space="preserve">
-    <value>Main Form</value>
+    <value>Borang Utama</value>
   </data>
 </root>

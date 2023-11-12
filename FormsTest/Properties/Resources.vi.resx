@@ -118,15 +118,16 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ButtonText" xml:space="preserve">
-    <value>Show Tool Tip</value>
+    <value>Hiển thị mẹo công cụ</value>
   </data>
   <data name="IsolationDialogMessage" xml:space="preserve">
-    <value>Your device administrator has disconnected your device from all of the networks for security reasons. Please contact your local IT Help Desk for assistance</value>
+    <value>Quản trị viên đã ngắt kết nối các thiết bị của bạn khỏi tất cả các mạng của tổ chức vì lý do bảo mật. Vui lòng liên hệ IT Help Desk để được hỗ trợ.
+Your device administrator has disconnected your device from all of the networks for security reasons. Please contact your local IT Help Desk for assistance</value>
   </data>
   <data name="IsolationDialogTitle" xml:space="preserve">
-    <value>Network Disconnected</value>
+    <value>Mất kết nối mạng</value>
   </data>
   <data name="MainFormTitle" xml:space="preserve">
-    <value>Main Form</value>
+    <value>Mẫu chính</value>
   </data>
 </root>
