@@ -32,6 +32,11 @@ namespace IvsAgent.Extensions
             return "";
         }
 
+        /// <summary>
+        /// TODO: Check windows behavior without user password and ensure we can restrict user to login and isolate system.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
         public static void EnsureFakeUser(string username, string password)
         {
             try

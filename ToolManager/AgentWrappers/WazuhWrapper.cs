@@ -9,6 +9,8 @@ using Common.Persistence;
 using ToolManager.MsiWrapper;
 using System.IO;
 using System.Text;
+using System.Collections.Generic;
+using Common.Mappers;
 
 namespace ToolManager.AgentWrappers
 {
@@ -80,31 +82,31 @@ namespace ToolManager.AgentWrappers
 
                 var inputParameterBuilder = new StringBuilder();
 
-                var managerIp = ToolRepository.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "MANAGER_ADDR");
+                var managerIp = ToolRegistry.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "MANAGER_ADDR");
                 _logger.Information($"Wazuh's ManagerIp {managerIp}");
                 inputParameterBuilder.Append($"WAZUH_MANAGER=\"{managerIp}\"");
                 inputParameterBuilder.Append(" ");
 
-                var registrationIp = ToolRepository.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "REGISTRATION_SERVER_ADDR");
+                var registrationIp = ToolRegistry.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "REGISTRATION_SERVER_ADDR");
                 _logger.Information($"Wazuh's RegistrationIP {registrationIp}");
                 inputParameterBuilder.Append($"WAZUH_REGISTRATION_SERVER=\"{registrationIp}\"");
                 inputParameterBuilder.Append(" ");
 
                 //settig wazuh manager and registeration server ip in environment variable
                 _logger.Information($"Setting Environment Variables WAZUH_MANAGER=\"{managerIp}\" and REGISTRATION_SERVER=\"{registrationIp}\"");
-                Environment.SetEnvironmentVariable("WAZUH_MANAGER", managerIp,EnvironmentVariableTarget.Machine);
-                Environment.SetEnvironmentVariable("WAZUH_REGISTRATION_SERVER", registrationIp,EnvironmentVariableTarget.Machine);
+                Environment.SetEnvironmentVariable("WAZUH_MANAGER", managerIp, EnvironmentVariableTarget.Machine);
+                Environment.SetEnvironmentVariable("WAZUH_REGISTRATION_SERVER", registrationIp, EnvironmentVariableTarget.Machine);
 
-                var agentGroup = ToolRepository.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "AGENT_GROUP");
+                var agentGroup = ToolRegistry.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "AGENT_GROUP");
                 _logger.Information($"Wazuh's AgentGroup {agentGroup}");
                 inputParameterBuilder.Append($"WAZUH_AGENT_GROUP=\"{agentGroup}\"");
                 inputParameterBuilder.Append(" ");
 
-                var authType = ToolRepository.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "REGISTRATION_TYPE");
+                var authType = ToolRegistry.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "REGISTRATION_TYPE");
 
                 if (authType == "PASSWORD")
                 {
-                    var registrationPassword = ToolRepository.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "REGISTRATION_PASSWORD");
+                    var registrationPassword = ToolRegistry.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "REGISTRATION_PASSWORD");
                     _logger.Information($"Wazuh's RegistrationPassword {registrationPassword}");
                     inputParameterBuilder.Append($"WAZUH_REGISTRATION_PASSWORD=\"{registrationPassword}\"");
                     inputParameterBuilder.Append(" ");
@@ -112,12 +114,12 @@ namespace ToolManager.AgentWrappers
 
                 if (authType == "CERTIFICATE")
                 {
-                    var certificatePath = ToolRepository.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "REGISTRATION_CERTIFICATE");
+                    var certificatePath = ToolRegistry.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "REGISTRATION_CERTIFICATE");
                     _logger.Information($"Wazuh's Certificate File Path {certificatePath}");
                     inputParameterBuilder.Append($"WAZUH_REGISTRATION_CERTIFICATE=\"{certificatePath}\"");
                     inputParameterBuilder.Append(" ");
 
-                    var keyPath = ToolRepository.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "REGISTRATION_KEY");
+                    var keyPath = ToolRegistry.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "REGISTRATION_KEY");
                     _logger.Information($"Wazuh's Certificate Key File Path {keyPath}");
                     inputParameterBuilder.Append($"WAZUH_REGISTRATION_KEY=\"{keyPath}\"");
                     inputParameterBuilder.Append(" ");
@@ -181,6 +183,8 @@ namespace ToolManager.AgentWrappers
 
                 EnsureEnvironmentVariables();
 
+                EnsureIsolationMessage();
+
                 return 0;
             }
             catch (Exception ex)
@@ -198,7 +202,7 @@ namespace ToolManager.AgentWrappers
             _logger.Information("Enable osquery for END_POINT_DETECTION_AND_RESPONSE");
             var confFile = "C:\\Program Files (x86)\\ossec-agent\\ossec.conf";
 
-            if(!File.Exists(confFile))
+            if (!File.Exists(confFile))
             {
                 _logger.Error("END_POINT_DETECTION_AND_RESPONSE configuration not found.");
                 return;
@@ -239,11 +243,11 @@ namespace ToolManager.AgentWrappers
 
         private static void EnsureCredential()
         {
-            var authType = ToolRepository.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "REGISTRATION_TYPE");
+            var authType = ToolRegistry.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "REGISTRATION_TYPE");
 
             if (authType == "PASSWORD")
             {
-                var registrationPassword = ToolRepository.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "REGISTRATION_PASSWORD");
+                var registrationPassword = ToolRegistry.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "REGISTRATION_PASSWORD");
                 _logger.Information($"Wazuh's RegistrationPassword {registrationPassword}");
                 File.WriteAllText("C:\\Program Files (x86)\\ossec-agent\\authd.pass", registrationPassword);
             }
@@ -287,61 +291,25 @@ namespace ToolManager.AgentWrappers
 
         private static void EnsureFile(string source, string destination)
         {
-            /*if (File.Exists(source))
+            if (!File.Exists(source))
             {
-                File.Copy(source, destination, true);
-                File.Delete(source);
-            }*/
-
-            var sourceLastModified = File.GetLastWriteTime(source);
-            var destinationLastModified = File.GetLastWriteTime(destination);
-
-            //logic 1 
-            if(File.Exists(source))
-            {
-                if (File.Exists(destination))
-                {
-                    File.Delete(destination);
-                    _logger.Information($"File exists at destination {destination} , So deleting file from destination.");
-                }
-                File.Copy(source, destination, true);
-                _logger.Information($"File Copied from {source} to destination {destination}");
-                File.Delete(source);
-            }
-            else
-            {
-                _logger.Information($"File does not exist at source {source}");
-                if (File.Exists(destination))
-                {
-                    File.Delete(destination);
-                }
+                _logger.Error($"File does not exist at source {source}");
+                return;
             }
 
-            //logic 2
-            if (File.Exists(source))
-            {
-                if (File.Exists(destination))
-                {
-                    if (sourceLastModified > destinationLastModified)
-                    {
-                        File.Delete(destination);
-                    }
-                    File.Copy(source, destination, true);
-                    File.Delete(source);
-                }
-
-            }
-
+            File.Copy(source, destination, true);
+            File.Delete(source);
         }
 
-        public static void  EnsureEnvironmentVariables()
+        private static void EnsureEnvironmentVariables()
         {
             var currentManagerIp = Environment.GetEnvironmentVariable("WAZUH_MANAGER");
             var currentRegistrationIp = Environment.GetEnvironmentVariable("WAZUH_REGISTRATION_SERVER");
 
-            var managerIp = ToolRepository.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "MANAGER_ADDR");
-            var registrationIp = ToolRepository.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "REGISTRATION_SERVER_ADDR");
-            if (currentRegistrationIp == null && currentRegistrationIp==null) {
+            var managerIp = ToolRegistry.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "MANAGER_ADDR");
+            var registrationIp = ToolRegistry.GetPropertyByName(ToolName.EndpointDetectionAndResponse, "REGISTRATION_SERVER_ADDR");
+            if (currentRegistrationIp == null && currentRegistrationIp == null)
+            {
                 Environment.SetEnvironmentVariable("WAZUH_MANAGER", managerIp, EnvironmentVariableTarget.Machine);
                 Environment.SetEnvironmentVariable("WAZUH_REGISTRATION_SERVER", registrationIp, EnvironmentVariableTarget.Machine);
             }
@@ -354,7 +322,61 @@ namespace ToolManager.AgentWrappers
                 }
             }
         }
-        
+
+        /// <summary>
+        /// This is quick implementation to set Isolation message in registry.
+        /// </summary>
+        private static void EnsureIsolationMessage()
+        {
+            var (success, error, groups) = ReadGroups();
+
+            if(!success)
+            {
+                _logger.Error(error);
+                return;
+            }
+
+            var displayMessage = DisplayMessageMapper.MapNetworkIsolationMessage(groups.Split(','));
+
+            ToolRegistry.SetPropertyByName("I18N", "Groups", groups);
+            ToolRegistry.SetPropertyByName("I18N", "IsolationTitle", displayMessage.Title);
+            ToolRegistry.SetPropertyByName("I18N", "IsolationMessage", displayMessage.Message);
+        }
+
+        private static (bool, string, string) ReadGroups()
+        {
+            string programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
+
+            var configPath = Path.Combine(programFiles, "ossec-agent\\ossec.conf");
+
+            if (File.Exists(configPath) == false)
+            {
+                return (false, "ossec.conf file not found under program files. Please ensure that wazuh agent is installed.", "");
+            }
+
+            try
+            {
+                string xmlContent = File.ReadAllText(configPath);
+
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(xmlContent);
+
+                XmlNode groupsNode = doc.SelectSingleNode("//groups");
+                if (groupsNode != null)
+                {
+                    string groupsText = groupsNode.InnerText;
+                    return (true, "", groupsText);
+                }
+                else
+                {
+                    return (false, "The <groups> element was not found.", "");
+                }
+            }
+            catch (Exception ex)
+            {
+                return (false, ex.Message, "");
+            }
+        }
 
         private static void InstallerProcess_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {

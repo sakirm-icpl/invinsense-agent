@@ -193,7 +193,7 @@ namespace IvsAgent
 
         private void SendToolStatuses()
         {
-            var skipEndpointDeception = ToolRepository.CanSkipMonitoring(ToolName.EndpointDeception);
+            var skipEndpointDeception = ToolRegistry.CanSkipMonitoring(ToolName.EndpointDeception);
             
             var trayStatus = new TrayStatus();
             
@@ -394,30 +394,30 @@ namespace IvsAgent
         {
             _logger.Information("Starting dependency check and installation");
 
-            _logger.Information("Checking Sysmon");
+            _logger.Information($"Checking {ToolName.AdvanceTelemetry}");
             if (SysmonWrapper.Verify(true) == 0)
             {
-                _logger.Information($"SysmonServiceVerified with status {AteleServiceChecker.Status}");
+                _logger.Information($"{ToolName.AdvanceTelemetry} ServiceVerified with status {AteleServiceChecker.Status}");
                 AteleServiceChecker.StartListening();
                 SysmonUpdateStatus(AteleServiceChecker.Status);
-                _logger.Information($"SysmonServiceListening with status {AteleServiceChecker.Status}");
+                _logger.Information($"{ToolName.AdvanceTelemetry} ServiceListening with status {AteleServiceChecker.Status}");
             }
             else
             {
-                _logger.Error("Error in Sysmon installer");
+                _logger.Error($"Error in {ToolName.AdvanceTelemetry} installer");
             }
 
-            _logger.Information("Checking OsQuery");
+            _logger.Information($"Checking {ToolName.UserBehaviorAnalytics}");
             if (OsQueryWrapper.Verify(true) == 0)
             {
-                _logger.Information("OsQueryVerified with status {OsQuery.Status}");
+                _logger.Information($"{ToolName.UserBehaviorAnalytics} Verified with status {UbaServiceChecker.Status}");
                 UbaServiceChecker.StartListening();
                 OsQueryUpdateStatus(UbaServiceChecker.Status);
-                _logger.Information($"OsQueryListening with status {UbaServiceChecker.Status}");
+                _logger.Information($"{ToolName.UserBehaviorAnalytics} Listening with status {UbaServiceChecker.Status}");
             }
             else
             {
-                _logger.Error("Error in OSQuery installer");
+                _logger.Error($"Error in {ToolName.UserBehaviorAnalytics} installer");
             }
 
             _logger.Information($"Checking {ToolName.EndpointDetectionAndResponse}");
@@ -425,7 +425,7 @@ namespace IvsAgent
             var edrAgentInstallRequired = false;
             if (WazuhWrapper.Verify(out Version edrVersion))
             {
-                _logger.Information($"WazuhService {edrVersion} with status {EdrServiceChecker.Status}");
+                _logger.Information($"{ToolName.EndpointDeception} Service {edrVersion} with status {EdrServiceChecker.Status}");
 
                 if (edrVersion < new Version("4.4.1"))
                 {
@@ -448,15 +448,15 @@ namespace IvsAgent
 
             EdrServiceChecker.StartListening();
             EdrUpdateStatus(EdrServiceChecker.Status);
-            _logger.Information($"WazuhServiceListening with status {EdrServiceChecker.Status}");
+            _logger.Information($"{ToolName.EndpointDetectionAndResponse} with status {EdrServiceChecker.Status}");
 
-            _logger.Information("Checking DBytes");
+            _logger.Information($"Checking {ToolName.EndpointDeception}");
             if (DBytesWrapper.Verify(true) == 0)
             {
-                _logger.Information($"DbytesServiceVerified with status {EcdServiceChecker.Status}");
+                _logger.Information($"{ToolName.EndpointDeception} with status {EcdServiceChecker.Status}");
                 EcdServiceChecker.StartListening();
                 EcdUpdateStatus(EcdServiceChecker.Status);
-                _logger.Information($"DbytesServiceListening with status {EcdServiceChecker.Status}");
+                _logger.Information($"{ToolName.EndpointDeception} with status {EcdServiceChecker.Status}");
             }
             else
             {

@@ -1,5 +1,6 @@
-﻿using Common.Persistence;
-using IvsTray.Notifier;
+﻿using Common.Events;
+using Common.Persistence;
+using IvsTray.Extensions;
 using Serilog;
 using System;
 using System.Windows.Forms;

@@ -1,6 +1,7 @@
 ﻿using Common;
+using Common.Events;
+using Common.Models;
 using Common.Persistence;
-using IvsTray.Notifier;
 using Serilog;
 using System;
 using System.Collections.Generic;

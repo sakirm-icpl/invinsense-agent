@@ -37,7 +37,7 @@ namespace ToolManager.AgentWrappers
                     return -1;
                 }
 
-                var skipInstall = ToolRepository.CanSkipMonitoring(ToolName.EndpointDeception);
+                var skipInstall = ToolRegistry.CanSkipMonitoring(ToolName.EndpointDeception);
 
                 if (skipInstall)
                 {
@@ -59,8 +59,8 @@ namespace ToolManager.AgentWrappers
                 _logger.Information($"DBytes msiPath {msiPath}");
                 _logger.Information($"DBytes logPath {logPath}");
 
-                var serverIp = ToolRepository.GetPropertyByName(ToolName.EndpointDeception, "SERVER_ADDR");
-                var apiKey = ToolRepository.GetPropertyByName(ToolName.EndpointDeception, "APIKEY");
+                var serverIp = ToolRegistry.GetPropertyByName(ToolName.EndpointDeception, "SERVER_ADDR");
+                var apiKey = ToolRegistry.GetPropertyByName(ToolName.EndpointDeception, "APIKEY");
 
                 _logger.Information($"DBytes's ServerIp {serverIp}");
                 _logger.Information($"DBytes's ApiKey {apiKey}");

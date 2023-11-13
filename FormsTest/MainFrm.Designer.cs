@@ -44,6 +44,7 @@
             this.btnReadMalaysia = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.showDialogButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // NotifyTrayIcon
@@ -141,10 +142,18 @@
             resources.ApplyResources(this.label2, "label2");
             this.label2.Name = "label2";
             // 
+            // showDialogButton
+            // 
+            resources.ApplyResources(this.showDialogButton, "showDialogButton");
+            this.showDialogButton.Name = "showDialogButton";
+            this.showDialogButton.UseVisualStyleBackColor = true;
+            this.showDialogButton.Click += new System.EventHandler(this.ShowDialogButtonClick);
+            // 
             // MainFrm
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.showDialogButton);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnReadMalaysia);
@@ -180,6 +189,7 @@
         private System.Windows.Forms.Button btnReadMalaysia;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button showDialogButton;
     }
 }
 

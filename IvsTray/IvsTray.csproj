@@ -45,9 +45,7 @@
     </Compile>
     <Compile Include="Extensions\MainFormHelpers.cs" />
     <Compile Include="Extensions\MouseDownFilter.cs" />
-    <Compile Include="Notifier\NotifyEventArgsExtensions.cs" />
-    <Compile Include="Notifier\NotifyType.cs" />
-    <Compile Include="Notifier\NotifyEventArgs.cs" />
+    <Compile Include="Extensions\NotifyEventArgsExtensions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserControls\FooterUserControl.cs">

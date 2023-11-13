@@ -40,9 +40,13 @@
   <ItemGroup>
     <Compile Include="Encryption\FileEncryptDecrypt.cs" />
     <Compile Include="Enumeration.cs" />
+    <Compile Include="Events\NotifyEventArgs.cs" />
+    <Compile Include="Mappers\DisplayMessageMapper.cs" />
     <Compile Include="Models\ApiResponse.cs" />
+    <Compile Include="Models\DisplayMessage.cs" />
     <Compile Include="Models\Error.cs" />
     <Compile Include="Models\IModel.cs" />
+    <Compile Include="Models\NotifyType.cs" />
     <Compile Include="Models\ProcessResult.cs" />
     <Compile Include="NamedPipes\BasicPipe.cs" />
     <Compile Include="NamedPipes\ClientPipe.cs" />
@@ -57,7 +61,7 @@
     <Compile Include="Persistance\RunningStatus.cs" />
     <Compile Include="Persistance\ToolDetail.cs" />
     <Compile Include="Persistance\ToolName.cs" />
-    <Compile Include="Persistance\ToolRepository.cs" />
+    <Compile Include="Persistance\ToolRegistry.cs" />
     <Compile Include="Persistance\ToolStatus.cs" />
     <Compile Include="Persistance\TrayMapper.cs" />
     <Compile Include="Persistance\TrayStatus.cs" />

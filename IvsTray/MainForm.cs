@@ -1,4 +1,6 @@
 using Common;
+using Common.Events;
+using Common.Models;
 using Common.NamedPipes;
 using Common.Persistence;
 using IvsTray.Extensions;
@@ -170,7 +172,7 @@ namespace IvsTray
             }
         }
 
-        private void NotifyTray(object sender, Notifier.NotifyEventArgs e)
+        private void NotifyTray(object sender, NotifyEventArgs e)
         {
             _logger.Verbose("NotifyTray: {Message}", e.Message);
 

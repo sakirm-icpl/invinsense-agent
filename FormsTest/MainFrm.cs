@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Common.Mappers;
+using Common.Models;
+using Common.Persistence;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -38,6 +41,8 @@ namespace FormsTest
             {
                 lblConfigValue.Text = string.Join(",", configValues);
                 SetCulture(MapRequiredCulture(configValues));
+
+                EnsureIsolationMessage(configValues.ToArray());
             }
             else
             {
@@ -84,6 +89,18 @@ namespace FormsTest
             }
         }
 
+        /// <summary>
+        /// This is quick implementation to set Isolation message in registry.
+        /// </summary>
+        private static void EnsureIsolationMessage(params string[] groups)
+        {
+            var displayMessage = DisplayMessageMapper.MapNetworkIsolationMessage(groups);
+
+            ToolRegistry.SetPropertyByName("I18N", "Groups", string.Join(",", groups));
+            ToolRegistry.SetPropertyByName("I18N", "IsolationTitle", displayMessage.Title);
+            ToolRegistry.SetPropertyByName("I18N", "IsolationMessage", displayMessage.Message);
+        }
+
         private string MapRequiredCulture(IEnumerable<string> groups)
         {
             if(groups.Any(x => x == "singapore"))
@@ -112,6 +129,13 @@ namespace FormsTest
             }
             
             return "en-US";
+        }
+
+        private void ShowDialogButtonClick(object sender, EventArgs e)
+        {
+            var title = ToolRegistry.GetPropertyByName("I18N", "IsolationTitle");
+            var message = ToolRegistry.GetPropertyByName("I18N", "IsolationMessage");
+            MessageBox.Show(message, title, MessageBoxButtons.OK);
         }
 
         private void RestartButtonClick(object sender, EventArgs e)
