@@ -8,7 +8,6 @@ using IvsTray.Properties;
 using Newtonsoft.Json;
 using Serilog;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -75,13 +74,16 @@ namespace IvsTray
                 while(true)
                 {
                     await Task.Delay(1000);
-                    var test = Environment.GetEnvironmentVariable("isolation_state", EnvironmentVariableTarget.Machine);
-                    if(test != "true")
+                    var isolationState = Environment.GetEnvironmentVariable("isolation_state", EnvironmentVariableTarget.Machine);
+                    if(isolationState != "true")
                     {
                         continue;
                     }
-                    MessageBox.Show("Your device administrator has disconnected your device from all of the organization's networks for security reasons. " +
-                        "Please contact your local IT Help Desk for assistance.", "Network Disconnected", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+
+                    var title = ToolRegistry.GetPropertyByName("I18N", "IsolationTitle");
+                    var message = ToolRegistry.GetPropertyByName("I18N", "IsolationMessage");
+
+                    MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
                 }
             });

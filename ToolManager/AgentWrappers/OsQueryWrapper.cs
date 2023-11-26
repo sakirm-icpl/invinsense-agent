@@ -31,6 +31,7 @@ namespace ToolManager.AgentWrappers
                     _logger.Information("OSQUERY not found and set for skip.");
                     return -1;
                 }
+
                 _logger.Information("OSQUERY not found. Preparing installation");
 
                 if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
@@ -41,7 +42,7 @@ namespace ToolManager.AgentWrappers
 
                 _logger.Information("OSQUERY installation is ready");
 
-                var msiPath = Path.Combine(CommonUtils.ArtifactsFolder, "osquery-5.8.2.msi");
+                var msiPath = Path.Combine(CommonUtils.ArtifactsFolder, "osquery-5.10.2.msi");
                 var logPath = Path.Combine(CommonUtils.LogsFolder, "osqueryInstall.log");
 
                 _logger.Information($"OsQuery msiPath {msiPath}");

@@ -9,7 +9,6 @@ using Common.Persistence;
 using ToolManager.MsiWrapper;
 using System.IO;
 using System.Text;
-using System.Collections.Generic;
 using Common.Mappers;
 
 namespace ToolManager.AgentWrappers
@@ -287,6 +286,7 @@ namespace ToolManager.AgentWrappers
 
             EnsureFile(Path.Combine(CommonUtils.ArtifactsFolder, "unisolation-rdp.exe"), Path.Combine(wazuhAgentActiveResponseBinPath, "unisolation-rdp.exe"));
 
+            EnsureFile(Path.Combine(CommonUtils.ArtifactsFolder, "block-domain.exe"), Path.Combine(wazuhAgentActiveResponseBinPath, "block-domain.exe"));
         }
 
         private static void EnsureFile(string source, string destination)

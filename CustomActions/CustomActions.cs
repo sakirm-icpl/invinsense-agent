@@ -1,8 +1,5 @@
-﻿using System.IO;
-using System;
-using System.Linq;
+﻿using System.Linq;
 using System.ServiceProcess;
-using Common.Utils;
 using WixToolset.Dtf.WindowsInstaller;
 
 namespace ToolManager
