@@ -69,7 +69,7 @@ namespace IvsUninstall
                 }
                 else
                 {
-                    logger.Information("Deceptive Bytes alreay gets uninstalled");
+                    logger.Information("DeceptiveBytes is already uninstalled");
                 }
 
                 #endregion
@@ -89,7 +89,7 @@ namespace IvsUninstall
                 }
                 else
                 {
-                    logger.Information("Osquery already gets uninstalled");
+                    logger.Information("Osquery is already uninstalled");
                 }
 
                 //TODO:Removing folder : C:\Program Files\osquery
@@ -115,7 +115,7 @@ namespace IvsUninstall
                 }
                 else
                 {
-                    logger.Information("Wazuh alredy gets uninstalled");
+                    logger.Information("Wazuh is already uninstalled");
                 }
 
                 //TODO:Removing folder : C:\\Program Files (x86)\\ossec
@@ -141,7 +141,7 @@ namespace IvsUninstall
                 }
                 else
                 {
-                    logger.Information("Sysmon alredy gets uninstalled");
+                    logger.Information("Sysmon is already uninstalled");
                 }
                 #endregion
             }

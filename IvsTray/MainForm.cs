@@ -149,7 +149,7 @@ namespace IvsTray
         /// </summary>
         private void BringToTop()
         {
-            //When we click on notification icon the form gets visible by making Opacity to true.
+            //When we click on notification icon, the form gets visible by making Opacity to true.
             Opacity = 1;
 
             //Checks if the method is called from UI thread or not
