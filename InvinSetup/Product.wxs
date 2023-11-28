@@ -255,7 +255,7 @@
     <ComponentGroup Id="PostInstallation" Directory="AGENTFOLDER">
       <Component Id="s0" Guid="868F4F33-6851-4169-B814-F25842A2D414" Bitness="always64">
         <File Id="AgentEXE" Name="IvsAgent" DiskId="1" Source="$(var.IvsAgent.TargetPath)" KeyPath="yes" />
-        <ServiceInstall Id="s1" Name="IvsAgent" DisplayName="Invinsense 4.0" Description="Invinsense Service" ErrorControl="normal" Start="auto" Type="ownProcess" />
+        <ServiceInstall Id="s1" Name="IvsAgent" DisplayName="Invinsense 4.1" Description="Invinsense Service" ErrorControl="normal" Start="auto" Type="ownProcess" />
         <ServiceControl Id="s2" Name="IvsAgent" Start="install" Stop="both" Remove="both" Wait="yes" />
       </Component>
     </ComponentGroup>

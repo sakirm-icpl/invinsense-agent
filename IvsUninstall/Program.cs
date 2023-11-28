@@ -27,7 +27,7 @@ namespace IvsUninstall
 
             try
             {
-                logger.Information("Uninstalling Invinsense 4.0 components");
+                logger.Information("Uninstalling Invinsense 4.1 components");
                 logger.Information("Finding the Invinsense service.....");
 
                 var listPrograms = MoWrapper.ListPrograms();

@@ -44,7 +44,7 @@
             this.lblVersion.Name = "lblVersion";
             this.lblVersion.Size = new System.Drawing.Size(73, 39);
             this.lblVersion.TabIndex = 19;
-            this.lblVersion.Text = "v4.0";
+            this.lblVersion.Text = "v4.1";
             // 
             // pbLogo
             // 
