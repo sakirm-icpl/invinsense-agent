@@ -1,5 +1,5 @@
 ﻿using Common.Utils;
-using ToolManager.MsiWrapper;
+using MsiWrapper;
 using Serilog;
 using System;
 using System.Diagnostics;
@@ -8,7 +8,7 @@ using System.ServiceProcess;
 using Common.Persistence;
 using System.IO;
 
-namespace ToolManager.AgentWrappers
+namespace ToolManager
 {
     public static class DBytesWrapper
     {
@@ -133,7 +133,7 @@ namespace ToolManager.AgentWrappers
                     _logger.Information($"ENDPOINT_DECEPTION not found and set for skip.");
                     return -1;
                 }
-                _logger.Information("ENDPOINT_DECEPTIONfound. Preparing uninstallation");
+                _logger.Information("ENDPOINT_DECEPTION found. Preparing uninstallation");
 
                 if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
                 {

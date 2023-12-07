@@ -1,5 +1,4 @@
 ﻿using Common.Utils;
-using Microsoft.Win32;
 using Serilog;
 using System;
 using System.Diagnostics;
@@ -7,19 +6,40 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.ServiceProcess;
-using ToolManager.MsiWrapper;
+using MsiWrapper;
 
-namespace ToolManager.AgentWrappers
+namespace ToolManager
 {
     public static class OsQueryWrapper
     {
         private static readonly ILogger _logger = Log.ForContext(typeof(OsQueryWrapper));
 
+        private static string OsqueryPath = @"C:\Program Files\osquery\osqueryi.exe"; // Adjust the path as needed
+
+        public static Version GetInstalledVersion()
+        {
+            // Check if osqueryi exists
+            if (!File.Exists(OsqueryPath))
+            {
+                return null;
+            }
+
+            // Get product version from file properties
+            var fileInfo = FileVersionInfo.GetVersionInfo(OsqueryPath);
+            var versionString = fileInfo.ProductVersion;
+
+            if (!string.IsNullOrWhiteSpace(versionString))
+            {
+                return new Version(versionString.Split(' ')[0]); // ProductVersion might include additional text
+            }
+
+            return null;
+        }
+
         public static int Verify(bool isInstall = false)
         {
             try
             {
-
                 ServiceController ctl = ServiceController.GetServices().FirstOrDefault(s => s.ServiceName == "osqueryd");
 
                 if (ctl != null)

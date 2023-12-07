@@ -41,6 +41,8 @@
     <Compile Include="Encryption\FileEncryptDecrypt.cs" />
     <Compile Include="Enumeration.cs" />
     <Compile Include="Events\NotifyEventArgs.cs" />
+    <Compile Include="Extensions\EnumExtensions.cs" />
+    <Compile Include="Helpers\ProcessHelper.cs" />
     <Compile Include="Mappers\DisplayMessageMapper.cs" />
     <Compile Include="Models\ApiResponse.cs" />
     <Compile Include="Models\DisplayMessage.cs" />

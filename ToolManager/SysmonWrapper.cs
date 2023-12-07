@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.ServiceProcess;
 
-namespace ToolManager.AgentWrappers
+namespace ToolManager
 {
     /// <summary>
     /// https://www.blumira.com/enable-sysmon/

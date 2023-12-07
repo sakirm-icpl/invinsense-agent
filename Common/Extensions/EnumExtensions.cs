@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Linq;
 
-namespace ToolManager.MsiWrapper
+namespace Common.Extensions
 {
     /// <summary>
     /// Provides Enum Extension Methods.

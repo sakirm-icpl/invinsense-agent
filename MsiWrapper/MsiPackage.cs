@@ -1,9 +1,11 @@
 ﻿using Serilog;
 using System;
+using Common.Extensions;
 using System.Diagnostics;
 using System.Threading;
+using Common.Helpers;
 
-namespace ToolManager.MsiWrapper
+namespace MsiWrapper
 {
     /// <summary>
     /// Encapsulates MSI package installation/uninstallation operations.

@@ -6,10 +6,9 @@ using System.Linq;
 using System.ServiceProcess;
 using System.Threading;
 using ToolManager;
-using ToolManager.MsiWrapper;
 using System.DirectoryServices.AccountManagement;
-using ToolManager.AgentWrappers;
 using Common.Persistence;
+using MsiWrapper;
 
 namespace IvsUninstall
 {
@@ -169,14 +168,14 @@ namespace IvsUninstall
                 logger.Error(ex.Message);
             }
 
-            //Removing maintanence
+            //Removing maintenance
             string username = "maintenance";
             using (PrincipalContext pc = new PrincipalContext(ContextType.Machine))
             {
                 UserPrincipal user = UserPrincipal.FindByIdentity(pc, username);
                 if (user != null)
                 {
-                    logger.Information("Removing maintance user");
+                    logger.Information("Removing maintenance user");
                     user.Delete();
                     logger.Information("Removing fake file");
                     var fakeFilePath = Path.Combine(@"C:\Users", "Users.txt");

@@ -1,5 +1,4 @@
 ﻿using Common.Mappers;
-using Common.Models;
 using Common.Persistence;
 using System;
 using System.Collections.Generic;

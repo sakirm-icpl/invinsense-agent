@@ -6,15 +6,15 @@ using System.Linq;
 using System.ServiceProcess;
 using System.Xml;
 using Common.Persistence;
-using ToolManager.MsiWrapper;
+using MsiWrapper;
 using System.IO;
 using System.Text;
 using Common.Mappers;
 
-namespace ToolManager.AgentWrappers
+namespace ToolManager
 {
     /// <summary>
-    /// TODO: Need to create new logic that checks agent install status with currupted files.
+    /// TODO: Need to create new logic that checks agent install status with corrupted files.
     /// </summary>
     public static class WazuhWrapper
     {
@@ -91,7 +91,7 @@ namespace ToolManager.AgentWrappers
                 inputParameterBuilder.Append($"WAZUH_REGISTRATION_SERVER=\"{registrationIp}\"");
                 inputParameterBuilder.Append(" ");
 
-                //settig wazuh manager and registeration server ip in environment variable
+                //setting wazuh manager and registration server ip in environment variable
                 _logger.Information($"Setting Environment Variables WAZUH_MANAGER=\"{managerIp}\" and REGISTRATION_SERVER=\"{registrationIp}\"");
                 Environment.SetEnvironmentVariable("WAZUH_MANAGER", managerIp, EnvironmentVariableTarget.Machine);
                 Environment.SetEnvironmentVariable("WAZUH_REGISTRATION_SERVER", registrationIp, EnvironmentVariableTarget.Machine);

@@ -4,7 +4,7 @@ using System;
 using System.Diagnostics;
 using System.ServiceProcess;
 using Common.Persistence;
-using ToolManager.AgentWrappers;
+using ToolManager;
 using System.Threading.Tasks;
 using IvsAgent.Extensions;
 using System.Linq;
