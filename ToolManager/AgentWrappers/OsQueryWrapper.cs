@@ -1,4 +1,5 @@
 ﻿using Common.Utils;
+using Microsoft.Win32;
 using Serilog;
 using System;
 using System.Diagnostics;
@@ -13,6 +14,7 @@ namespace ToolManager.AgentWrappers
     public static class OsQueryWrapper
     {
         private static readonly ILogger _logger = Log.ForContext(typeof(OsQueryWrapper));
+
         public static int Verify(bool isInstall = false)
         {
             try

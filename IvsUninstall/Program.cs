@@ -103,7 +103,7 @@ namespace IvsUninstall
                 #region WAZUH
 
                 //Checking if file is exists or not
-                if (WazuhWrapper.Verify(out Version edrVersion))
+                if (WazuhWrapper.GetInstalledVersion(out Version edrVersion))
                 {
                     logger.Information($"Uninstalling {ToolName.EndpointDetectionAndResponse} - {edrVersion}");
 

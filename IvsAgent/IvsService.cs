@@ -423,7 +423,7 @@ namespace IvsAgent
             _logger.Information($"Checking {ToolName.EndpointDetectionAndResponse}");
 
             var edrAgentInstallRequired = false;
-            if (WazuhWrapper.Verify(out Version edrVersion))
+            if (WazuhWrapper.GetInstalledVersion(out Version edrVersion))
             {
                 _logger.Information($"{ToolName.EndpointDeception} Service {edrVersion} with status {EdrServiceChecker.Status}");
 

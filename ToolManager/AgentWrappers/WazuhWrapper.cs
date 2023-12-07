@@ -20,7 +20,7 @@ namespace ToolManager.AgentWrappers
     {
         private static readonly ILogger _logger = Log.ForContext(typeof(WazuhWrapper));
 
-        public static bool Verify(out Version productVersion)
+        public static bool GetInstalledVersion(out Version productVersion)
         {
             productVersion = new Version();
 
