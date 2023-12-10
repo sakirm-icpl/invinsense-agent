@@ -5,15 +5,22 @@ namespace Common.Persistence
     public class ToolStatus
     {
         [JsonConstructor]
-        public ToolStatus(string name, InstallStatus installStatus, RunningStatus runningStatus)
+        public ToolStatus(int groupId, InstallStatus installStatus, RunningStatus runningStatus)
         {
-            Name = name;
+            Group = groupId;
             InstallStatus = installStatus;
             RunningStatus = runningStatus;
         }
 
-        [JsonProperty("name")]
-        public string Name { get; }
+        public ToolStatus(long eventId)
+        {
+            Group = (int) (eventId / 100) * 100;
+            InstallStatus = (InstallStatus)((eventId - Group * 100) / 10);
+            RunningStatus = (RunningStatus)(eventId - Group * 100 - (int)InstallStatus * 10);
+        }
+
+        [JsonProperty("group")]
+        public int Group { get; }
 
         [JsonProperty("installStatus")]
         public InstallStatus InstallStatus { get; }
@@ -23,40 +30,15 @@ namespace Common.Persistence
 
         public override int GetHashCode()
         {
-            var code = 0;
-            switch (Name)
-            {
-                case ToolName.EndpointDetectionAndResponse:
-                    code += 100;
-                    break;
-                case ToolName.EndpointDeception:
-                    code += 200;
-                    break;
-                case ToolName.UserBehaviorAnalytics:
-                    code += 300;
-                    break;
-                case ToolName.AdvanceTelemetry:
-                    code += 400;
-                    break;
-                case ToolName.EndpointProtection:
-                    code += 500;
-                    break;
-                case ToolName.LateralMovementProtection:
-                    code += 600;
-                    break;
-                default:
-                    break;
-            }
-
+            var code = Group;
             code += (int)InstallStatus * 10;
             code += (int)RunningStatus;
-
             return code;
         }
 
         public override string ToString()
         {
-            return $"{Name} Install: {InstallStatus} Running: {RunningStatus}";
+            return $"{ToolGroup.FromId<ToolGroup>(Group).Name} Install: {InstallStatus} Running: {RunningStatus}";
         }
-    }
+    }    
 }

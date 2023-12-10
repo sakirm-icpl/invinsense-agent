@@ -4,6 +4,7 @@ using Common.Extensions;
 using System.Diagnostics;
 using System.Threading;
 using Common.Helpers;
+using System.Text.RegularExpressions;
 
 namespace MsiWrapper
 {
@@ -20,6 +21,21 @@ namespace MsiWrapper
         #endregion
 
         #region Methods
+
+        public static bool GetMsiVersion(string msiPath, out Version version)
+        {
+            // Use a regular expression to find version numbers in the file name
+            var match = Regex.Match(msiPath, @"(\d+\.\d+\.\d+)");
+            if (match.Success)
+            {
+                version = new Version(match.Groups[1].Value);
+                Log.Information("Found MSI version {0} in file name {1}", version, msiPath);
+                return true;
+            }
+
+            version = null;
+            return false;
+        }
 
         /// <summary>
         /// Installs the program.

@@ -40,9 +40,11 @@
   <ItemGroup>
     <Compile Include="Encryption\FileEncryptDecrypt.cs" />
     <Compile Include="Enumeration.cs" />
+    <Compile Include="GenericEnum.cs" />
     <Compile Include="Events\NotifyEventArgs.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Helpers\ProcessHelper.cs" />
+    <Compile Include="IntEnumeration.cs" />
     <Compile Include="Mappers\DisplayMessageMapper.cs" />
     <Compile Include="Models\ApiResponse.cs" />
     <Compile Include="Models\DisplayMessage.cs" />
@@ -60,15 +62,18 @@
     <Compile Include="Net\NetworkUtils.cs" />
     <Compile Include="Net\RetryPolicyHandler.cs" />
     <Compile Include="Persistance\InstallStatus.cs" />
+    <Compile Include="Persistance\InstallType.cs" />
+    <Compile Include="Persistance\ProcessType.cs" />
     <Compile Include="Persistance\RunningStatus.cs" />
-    <Compile Include="Persistance\ToolDetail.cs" />
-    <Compile Include="Persistance\ToolName.cs" />
+    <Compile Include="Persistance\RunType.cs" />
+    <Compile Include="Persistance\ToolDescriptor.cs" />
+    <Compile Include="Persistance\ToolGroup.cs" />
     <Compile Include="Persistance\ToolRegistry.cs" />
     <Compile Include="Persistance\ToolStatus.cs" />
-    <Compile Include="Persistance\TrayMapper.cs" />
     <Compile Include="Persistance\TrayStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="StringEnumeration.cs" />
     <Compile Include="Utils\CommonUtils.cs" />
     <Compile Include="Utils\FileConfigProvider.cs" />
     <Compile Include="Utils\JsonSerialization.cs" />

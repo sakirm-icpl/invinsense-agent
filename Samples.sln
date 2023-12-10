@@ -43,7 +43,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsiWrapper", "MsiWrapper\Ms
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolManager", "ToolManager\ToolManager.csproj", "{B04124BA-1758-4AA2-8D3C-9BC0FB9C0E33}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsQueryVersionManager", "OsQueryVersionManager\OsQueryVersionManager.csproj", "{11A76F5A-1BBB-477C-8C3D-BC66035C8E06}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsQueryManager", "OsQueryManager\OsQueryManager.csproj", "{11A76F5A-1BBB-477C-8C3D-BC66035C8E06}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

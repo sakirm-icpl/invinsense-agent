@@ -31,10 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="DBytesWrapper.cs" />
     <Compile Include="OsQueryWrapper.cs" />
-    <Compile Include="SysmonWrapper.cs" />
-    <Compile Include="WazuhWrapper.cs" />
+    <Compile Include="ProductManager.cs" />
+    <Compile Include="ToolDescriptors.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
