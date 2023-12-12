@@ -1,13 +1,13 @@
-﻿using Common.Utils;
+﻿using System;
+using Common.Utils;
 using Serilog;
-using System;
 using ToolManager;
 
 namespace OsQueryChecker
 {
     internal class Program
     {
-        static void Main()
+        private static void Main()
         {
             Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
 

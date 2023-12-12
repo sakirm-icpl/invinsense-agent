@@ -7,12 +7,12 @@ namespace SystemManagementTest
     {
         public static void RunManagementEventWatcherForWindowsServices()
         {
-            EventQuery eventQuery = new EventQuery
+            var eventQuery = new EventQuery
             {
                 QueryString = "SELECT * FROM __InstanceModificationEvent within 2 WHERE targetinstance isa 'Win32_Service'"
             };
 
-            ManagementEventWatcher demoWatcher = new ManagementEventWatcher(eventQuery);
+            var demoWatcher = new ManagementEventWatcher(eventQuery);
             demoWatcher.Options.Timeout = new TimeSpan(1, 0, 0);
             Console.WriteLine("Perform the appropriate change in a Windows service according to your query");
             ManagementBaseObject nextEvent = demoWatcher.WaitForNextEvent();
@@ -25,6 +25,5 @@ namespace SystemManagementTest
 
             demoWatcher.Stop();
         }
-
     }
 }

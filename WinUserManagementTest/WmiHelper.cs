@@ -6,22 +6,19 @@ namespace WinUserManagementTest
     public static class WmiHelper
     {
         /// <summary>
-        /// Performs queries against WMI and returns an object with the specified property
+        ///     Performs queries against WMI and returns an object with the specified property
         /// </summary>
         /// <param name="query">The WMI query</param>
         /// <param name="property">The property that you want returned</param>
         /// <returns>WMI object</returns>
         public static object QueryWmi(string query, string property)
         {
-            foreach (ManagementObject item in new ManagementObjectSearcher(query).Get())
-            {
-                return item[property];
-            }
+            foreach (ManagementObject item in new ManagementObjectSearcher(query).Get()) return item[property];
             return null;
         }
 
         /// <summary>
-        /// Performs queries against WMI and returns a list of objects with the specified property
+        ///     Performs queries against WMI and returns a list of objects with the specified property
         /// </summary>
         /// <param name="query">The WMI query</param>
         /// <param name="property">The property that you want from each item</param>
@@ -29,15 +26,13 @@ namespace WinUserManagementTest
         /// <returns>List of items with the specified property</returns>
         public static List<object> QueryWmi(string query, string property, int numItems)
         {
-            List<object> items = new List<object>();
+            var items = new List<object>();
             foreach (ManagementObject item in new ManagementObjectSearcher(query).Get())
             {
                 items.Add(item[property]);
-                if (numItems != 0 && items.Count == numItems)
-                {
-                    break;
-                }
+                if (numItems != 0 && items.Count == numItems) break;
             }
+
             return items;
         }
     }

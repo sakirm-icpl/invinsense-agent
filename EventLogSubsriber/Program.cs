@@ -1,24 +1,26 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
+using Common;
 
 namespace EventLogSubscriber
 {
     /// <summary>
-    /// 
     /// </summary>
     internal class Program
     {
         /// <summary>
-        /// Default constructor
+        ///     Default constructor
         /// </summary>
-        protected Program() { }
+        protected Program()
+        {
+        }
 
         /// <summary>
-        /// 
         /// </summary>
-        static void Main()
+        private static void Main()
         {
-            var log = new EventLog(Common.Constants.LogGroupName)
+            var log = new EventLog(Constants.LogGroupName)
             {
                 EnableRaisingEvents = true
             };
@@ -26,7 +28,7 @@ namespace EventLogSubscriber
             log.EntryWritten += Log_EntryWritten;
 
             Console.WriteLine("Press any key to exit");
-            while (!Console.KeyAvailable) System.Threading.Thread.Sleep(50);
+            while (!Console.KeyAvailable) Thread.Sleep(50);
 
             log.EntryWritten -= Log_EntryWritten;
 
@@ -34,7 +36,6 @@ namespace EventLogSubscriber
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

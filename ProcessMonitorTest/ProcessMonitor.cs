@@ -7,16 +7,18 @@ using System.Threading;
 namespace ProcessMonitorTest
 {
     /// <summary>
-    /// https://weblog.west-wind.com/posts/2014/Sep/27/Capturing-Performance-Counter-Data-for-a-Process-by-Process-Id
+    ///     https://weblog.west-wind.com/posts/2014/Sep/27/Capturing-Performance-Counter-Data-for-a-Process-by-Process-Id
     /// </summary>
     internal class ProcessMonitor
     {
+        private static readonly PerformanceCounter perfCounter =
+            new PerformanceCounter("Process", "% Processor Time", "msedge");
+
         //Private declarations.
-        private string processname;
+        private readonly string processname;
 
         public ProcessMonitor()
         {
-
         }
 
         public ProcessMonitor(string program)
@@ -25,29 +27,26 @@ namespace ProcessMonitorTest
             Name = processname;
         }
 
-        public string Name
-        {
-            get;
-            set;
-        }
+        public string Name { get; set; }
 
         public bool IsProcessRunning()
         {
-            Process[] proc = Process.GetProcessesByName(processname);
+            var proc = Process.GetProcessesByName(processname);
             return !(proc.Length == 0 && proc == null);
         }
 
         public void Monitor()
         {
             Console.WriteLine("Monitoring {0} for high CPU usage...", processname);
-            int intInterval = 10000; // 10 seconds
+            var intInterval = 10000; // 10 seconds
 
-            while (IsProcessRunning() == true)
+            while (IsProcessRunning())
             {
                 Thread.Sleep(1000);
 
 
-                Console.WriteLine("Process:{0} TCPU:{1} CPU% {2}", processname, GetTotalCpuTime(), GetCurrentUsageIndividually());
+                Console.WriteLine("Process:{0} TCPU:{1} CPU% {2}", processname, GetTotalCpuTime(),
+                    GetCurrentUsageIndividually());
 
                 /*
                    if (pcProcess.NextValue() > float.Parse("10") ? true : false)
@@ -71,19 +70,16 @@ namespace ProcessMonitorTest
             double totalCpuTime = 0;
 
             foreach (var process in processes)
-            {
-                totalCpuTime += 100 * process.TotalProcessorTime.TotalSeconds / (DateTime.Now - process.StartTime).TotalSeconds;
-            }
+                totalCpuTime += 100 * process.TotalProcessorTime.TotalSeconds /
+                                (DateTime.Now - process.StartTime).TotalSeconds;
 
             return Math.Round(totalCpuTime / processes.Count(), 2);
         }
 
-        private static PerformanceCounter perfCounter = new PerformanceCounter("Process", "% Processor Time", "msedge");
-
 
         public double GetCurrentUsage()
         {
-            return Math.Round(perfCounter.NextValue() , 2);
+            return Math.Round(perfCounter.NextValue(), 2);
         }
 
         public double GetCurrentUsageIndividually()
@@ -95,23 +91,22 @@ namespace ProcessMonitorTest
             // grab all process instances
             var processes = Process.GetProcessesByName(processname);
 
-            string processName = Path.GetFileNameWithoutExtension(processname);
+            var processName = Path.GetFileNameWithoutExtension(processname);
 
-            PerformanceCounterCategory cat = new PerformanceCounterCategory("Process");
+            var cat = new PerformanceCounterCategory("Process");
 
             var instances = cat.GetInstanceNames()
                 .Where(inst => inst.StartsWith(processName))
                 .ToArray();
 
-            var processIds = processes.Select(x=>x.Id).ToArray();
+            var processIds = processes.Select(x => x.Id).ToArray();
 
-            foreach (string instance in instances)
-            {
+            foreach (var instance in instances)
                 try
                 {
-                    using (PerformanceCounter cnt = new PerformanceCounter("Process", "ID Process", instance, true))
+                    using (var cnt = new PerformanceCounter("Process", "ID Process", instance, true))
                     {
-                        int val = (int)cnt.RawValue;
+                        var val = (int)cnt.RawValue;
                         if (processIds.Contains(val))
                         {
                             var counter = new PerformanceCounter("Process", "% Processor Time", instance);
@@ -127,9 +122,9 @@ namespace ProcessMonitorTest
                         }
                     }
                 }
-                catch { }
-                
-            }
+                catch
+                {
+                }
 
             watch.Stop();
 
@@ -140,18 +135,18 @@ namespace ProcessMonitorTest
 
         public void KillProcess()
         {
-            string TaskKiller = "taskkill /f /im " + processname;
+            var TaskKiller = "taskkill /f /im " + processname;
 
             try
             {
-                ProcessStartInfo info = new ProcessStartInfo("cmd.exe", "/c " + TaskKiller);
+                var info = new ProcessStartInfo("cmd.exe", "/c " + TaskKiller);
                 info.RedirectStandardError = true;
                 info.RedirectStandardInput = true;
                 info.RedirectStandardOutput = true;
                 info.UseShellExecute = false;
                 info.CreateNoWindow = true;
 
-                Process process = new Process
+                var process = new Process
                 {
                     StartInfo = info
                 };
@@ -167,17 +162,17 @@ namespace ProcessMonitorTest
 
         public void KillProcess(string program)
         {
-            string TaskKiller = "taskkill /f /im " + program;
+            var TaskKiller = "taskkill /f /im " + program;
             try
             {
-                ProcessStartInfo info = new ProcessStartInfo("cmd.exe", "/c " + TaskKiller);
+                var info = new ProcessStartInfo("cmd.exe", "/c " + TaskKiller);
                 info.RedirectStandardError = true;
                 info.RedirectStandardInput = true;
                 info.RedirectStandardOutput = true;
                 info.UseShellExecute = false;
                 info.CreateNoWindow = true;
 
-                Process process = new Process
+                var process = new Process
                 {
                     StartInfo = info
                 };
@@ -192,6 +187,8 @@ namespace ProcessMonitorTest
         }
 
         public void FreezeOnScreen()
-        { Console.Read(); }
+        {
+            Console.Read();
+        }
     }
 }

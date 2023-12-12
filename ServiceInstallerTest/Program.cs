@@ -6,17 +6,19 @@ namespace ServiceInstallerTest
 {
     internal class Program
     {
-        private static readonly string path = Path.GetFullPath(new Uri(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "..\\..\\..\\SampleService\\bin\\Debug\\SampleService.exe")).LocalPath);
+        private static readonly string path = Path.GetFullPath(new Uri(Path.Combine(
+            Path.GetDirectoryName(Assembly.GetEntryAssembly().Location),
+            "..\\..\\..\\SampleService\\bin\\Debug\\SampleService.exe")).LocalPath);
+
         private static readonly string _serviceName = "SimpleService";
-        
-        static void Main(string[] args)
+
+        private static void Main(string[] args)
         {
             Console.WriteLine("Please type command");
 
             string input;
 
             while ((input = Console.ReadLine().ToLower()) != "q")
-            {
                 switch (input)
                 {
                     case "i":
@@ -50,7 +52,6 @@ namespace ServiceInstallerTest
                         Console.WriteLine("Please select correct switch");
                         break;
                 }
-            }
         }
     }
 }

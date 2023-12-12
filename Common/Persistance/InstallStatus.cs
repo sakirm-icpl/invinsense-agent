@@ -2,6 +2,10 @@
 {
     public enum InstallStatus
     {
-        Unknown, NotFound, Outdated, Error, Installed
+        Unknown,
+        NotFound,
+        Outdated,
+        Error,
+        Installed
     }
 }

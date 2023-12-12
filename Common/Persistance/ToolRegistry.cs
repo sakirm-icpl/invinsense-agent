@@ -1,6 +1,6 @@
-﻿using Microsoft.Win32;
+﻿using System;
+using Microsoft.Win32;
 using Serilog;
-using System;
 
 namespace Common.Persistence
 {
@@ -51,7 +51,7 @@ namespace Common.Persistence
                 using (var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
                 using (var key = hklm.OpenSubKey($"SOFTWARE\\Infopercept\\{path}", true))
                 {
-                    if(key == null)
+                    if (key == null)
                     {
                         var newKey = hklm.CreateSubKey($"SOFTWARE\\Infopercept\\{path}");
                         newKey.SetValue(name, value);

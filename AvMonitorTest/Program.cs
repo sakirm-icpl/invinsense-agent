@@ -1,31 +1,32 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Management;
 using Microsoft.Diagnostics.Tracing.Parsers;
 using Microsoft.Diagnostics.Tracing.Session;
+using Microsoft.Win32;
 
 namespace AvMonitorTest
 {
     /// <summary>
-    /// https://erikengberg.com/4-ways-to-monitor-windows-registry-using-c/#Method_3_Process_Hooking
-    /// https://learn.microsoft.com/en-us/windows/win32/api/_etw/
-    /// https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regnotifychangekeyvalue?redirectedfrom=MSDN
+    ///     https://erikengberg.com/4-ways-to-monitor-windows-registry-using-c/#Method_3_Process_Hooking
+    ///     https://learn.microsoft.com/en-us/windows/win32/api/_etw/
+    ///     https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regnotifychangekeyvalue?redirectedfrom=MSDN
     /// </summary>
     internal class Program
     {
-        static void Main()
+        private static void Main()
         {
             KernelEventTracer();
             Console.ReadLine();
 
-            using (RegistryKey key = Registry.LocalMachine.OpenSubKey("SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment"))
+            using (var key = Registry.LocalMachine.OpenSubKey(
+                       "SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment"))
             {
                 if (key != null)
                 {
-                    object value = key.GetValue("TEST");
+                    var value = key.GetValue("TEST");
                     Console.WriteLine($"'TEST' key has been modified. New value: {value}");
                 }
             }
@@ -39,10 +40,7 @@ namespace AvMonitorTest
 
             var objects = WindowsSecurityProtection();
 
-            foreach (var obj in objects)
-            {
-                Console.WriteLine(obj.Key + " " + obj.Value);
-            }
+            foreach (var obj in objects) Console.WriteLine(obj.Key + " " + obj.Value);
 
             Console.WriteLine($"From windows registry: {IsWindowsDefenderEnabled()}");
 
@@ -61,10 +59,10 @@ namespace AvMonitorTest
         {
             var values = new Dictionary<string, string>();
 
-            ManagementObjectSearcher wmiData = new ManagementObjectSearcher(@"root\SecurityCenter2", "SELECT * FROM AntiVirusProduct");
-            ManagementObjectCollection data = wmiData.Get();
+            var wmiData = new ManagementObjectSearcher(@"root\SecurityCenter2", "SELECT * FROM AntiVirusProduct");
+            var data = wmiData.Get();
 
-            foreach (ManagementObject mo in data.Cast<ManagementObject>())
+            foreach (var mo in data.Cast<ManagementObject>())
             {
                 var displayName = mo["displayName"].ToString();
                 var lastUpdated = mo["timestamp"].ToString();
@@ -77,41 +75,40 @@ namespace AvMonitorTest
 
         public static bool IsWindowsDefenderEnabled()
         {
-            RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows Defender");
+            var key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows Defender");
             if (key != null)
             {
-                object value = key.GetValue("DisableRealtimeMonitoring");
-                if (value != null && value is int v && v != 0)
-                {
-                    return false;
-                }
+                var value = key.GetValue("DisableRealtimeMonitoring");
+                if (value != null && value is int v && v != 0) return false;
             }
+
             return true;
         }
 
         public static void WatchEnvironmentVariable()
         {
             // set up a scope and a query to watch for changes to the registry key
-            ManagementScope scope = new ManagementScope("\\\\.\\root\\default");
+            var scope = new ManagementScope("\\\\.\\root\\default");
 
             // WMI query to watch for changes to the specified registry key
-            WqlEventQuery query = new WqlEventQuery(
+            var query = new WqlEventQuery(
                 "SELECT * FROM RegistryKeyChangeEvent " +
                 "WHERE Hive = 'HKEY_LOCAL_MACHINE'" +
                 "AND KeyPath = 'SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment'");
 
             // Initialize watcher and set query
-            ManagementEventWatcher watcher = new ManagementEventWatcher(scope, query);
+            var watcher = new ManagementEventWatcher(scope, query);
 
             // Event handler to be called when the registry key changes
             watcher.EventArrived += (sender, args) =>
             {
                 // Read the updated value of the "TEST" key
-                using (RegistryKey key = Registry.LocalMachine.OpenSubKey("SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment"))
+                using (var key = Registry.LocalMachine.OpenSubKey(
+                           "SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment"))
                 {
                     if (key != null)
                     {
-                        object value = key.GetValue("TEST");
+                        var value = key.GetValue("TEST");
                         Console.WriteLine($"'TEST' key has been modified. New value: {value}");
                     }
                 }
@@ -125,10 +122,9 @@ namespace AvMonitorTest
 
             // Stop watching
             watcher.Stop();
-
         }
 
-        static void KernelEventTracer()
+        private static void KernelEventTracer()
         {
             // Run as Admin
             using (var session = new TraceEventSession("MyKernelSession", KernelTraceEventParser.KernelSessionName))

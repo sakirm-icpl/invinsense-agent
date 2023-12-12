@@ -6,11 +6,7 @@ namespace Common.NamedPipes
 {
     public class ServerPipe : BasicPipe
     {
-        public event EventHandler<EventArgs> Connected;
-
         protected NamedPipeServerStream serverPipeStream;
-
-        protected string PipeName { get; set; }
 
         public ServerPipe(string pipeName, Action<BasicPipe> asyncReaderStart) : base(pipeName)
         {
@@ -32,8 +28,11 @@ namespace Common.NamedPipes
                 pipeSecurity);
 
             pipeStream = serverPipeStream;
-            serverPipeStream.BeginWaitForConnection(new AsyncCallback(PipeConnected), null);
+            serverPipeStream.BeginWaitForConnection(PipeConnected, null);
         }
+
+        protected string PipeName { get; set; }
+        public event EventHandler<EventArgs> Connected;
 
         protected void PipeConnected(IAsyncResult ar)
         {

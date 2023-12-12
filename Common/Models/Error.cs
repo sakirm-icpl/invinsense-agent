@@ -3,11 +3,12 @@
 namespace Common.Models
 {
     /// <summary>
-    /// 
     /// </summary>
     public class Error : IException
     {
-        public Error() { }
+        public Error()
+        {
+        }
 
         public Error(string code, string message)
         {
@@ -15,16 +16,14 @@ namespace Common.Models
             Message = message;
         }
 
+        [JsonProperty("code")] public string Code { get; set; }
+
+        [JsonProperty("message")] public string Message { get; set; }
+
         public static Error Create(string code, string message)
         {
             return new Error(code, message);
         }
-
-        [JsonProperty("code")]
-        public string Code { get; set; }
-
-        [JsonProperty("message")]
-        public string Message { get; set; }
 
         public override int GetHashCode()
         {
@@ -34,10 +33,7 @@ namespace Common.Models
         public override bool Equals(object obj)
         {
             //types must be the exactly the same for non-sealed classes
-            if (obj == null || obj.GetType() != GetType())
-            {
-                return false;
-            }
+            if (obj == null || obj.GetType() != GetType()) return false;
 
             return string.Equals(Code, ((Error)obj).Code);
         }

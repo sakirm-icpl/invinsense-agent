@@ -1,42 +1,44 @@
-﻿using Common.Mappers;
-using Common.Persistence;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
+using Common.Mappers;
+using Common.Persistence;
+using FormsTest.Properties;
 
 namespace FormsTest
 {
     public partial class MainFrm : Form
     {
         /// <summary>
-        /// https://azuliadesigns.com/c-sharp-tutorials/list-net-culture-country-codes/
+        ///     https://azuliadesigns.com/c-sharp-tutorials/list-net-culture-country-codes/
         /// </summary>
         public MainFrm()
         {
             InitializeComponent();
 
             //use localizable strings
-            Text = Properties.Resources.MainFormTitle;
-            ToolTipButton.Text = Properties.Resources.ButtonText;
+            Text = Resources.MainFormTitle;
+            ToolTipButton.Text = Resources.ButtonText;
         }
 
         private void ShowToolTipClick(object sender, EventArgs e)
         {
-            MessageBox.Show(Properties.Resources.IsolationDialogMessage, Properties.Resources.IsolationDialogTitle, MessageBoxButtons.OK);
-            NotifyTrayIcon.ShowBalloonTip(1000, Properties.Resources.IsolationDialogTitle, Properties.Resources.IsolationDialogMessage, ToolTipIcon.Info);
+            MessageBox.Show(Resources.IsolationDialogMessage, Resources.IsolationDialogTitle, MessageBoxButtons.OK);
+            NotifyTrayIcon.ShowBalloonTip(1000, Resources.IsolationDialogTitle, Resources.IsolationDialogMessage,
+                ToolTipIcon.Info);
         }
 
         private void ReadConfigFileClick(object sender, EventArgs e)
         {
             var tag = ((Control)sender).Tag.ToString();
             var configName = string.IsNullOrEmpty(tag) ? "ossec.conf" : $"ossec.{tag}.conf";
-            
+
             var (success, error, configValues) = ReadFile(configName);
 
-            if(success)
+            if (success)
             {
                 lblConfigValue.Text = string.Join(",", configValues);
                 SetCulture(MapRequiredCulture(configValues));
@@ -58,29 +60,24 @@ namespace FormsTest
 
         private (bool, string, IEnumerable<string>) ReadFile(string configPath)
         {
-            if(File.Exists(configPath) == false)
-            {
-                return (false, "File not found", Array.Empty<string>());
-            }
+            if (File.Exists(configPath) == false) return (false, "File not found", Array.Empty<string>());
 
             try
             {
-                string xmlContent = File.ReadAllText(configPath);
+                var xmlContent = File.ReadAllText(configPath);
 
-                XmlDocument doc = new XmlDocument();
+                var doc = new XmlDocument();
                 doc.LoadXml(xmlContent);
 
-                XmlNode groupsNode = doc.SelectSingleNode("//groups");
+                var groupsNode = doc.SelectSingleNode("//groups");
                 if (groupsNode != null)
                 {
-                    string groupsText = groupsNode.InnerText;
-                    string[] values = groupsText.Split(',');
+                    var groupsText = groupsNode.InnerText;
+                    var values = groupsText.Split(',');
                     return (true, "", values);
                 }
-                else
-                {
-                    return (false, "The <groups> element was not found.", Array.Empty<string>());
-                }
+
+                return (false, "The <groups> element was not found.", Array.Empty<string>());
             }
             catch (Exception ex)
             {
@@ -89,7 +86,7 @@ namespace FormsTest
         }
 
         /// <summary>
-        /// This is quick implementation to set Isolation message in registry.
+        ///     This is quick implementation to set Isolation message in registry.
         /// </summary>
         private static void EnsureIsolationMessage(params string[] groups)
         {
@@ -102,31 +99,18 @@ namespace FormsTest
 
         private string MapRequiredCulture(IEnumerable<string> groups)
         {
-            if(groups.Any(x => x == "singapore"))
-            {
+            if (groups.Any(x => x == "singapore"))
                 return "en-SG";
-            }
-            else if(groups.Any(x => x == "malaysia"))
-            {
+            if (groups.Any(x => x == "malaysia"))
                 return "ms-MY";
-            }
-            else if(groups.Any(x => x == "thailand"))
-            {
+            if (groups.Any(x => x == "thailand"))
                 return "th-TH";
-            }
-            else if(groups.Any(x => x == "indonesia"))
-            {
+            if (groups.Any(x => x == "indonesia"))
                 return "id-ID";
-            }
-            else if(groups.Any(x => x == "philippines"))
-            {
+            if (groups.Any(x => x == "philippines"))
                 return "fil-PH";
-            }
-            else if(groups.Any(x => x == "vietnam"))
-            {
-                return "vi-VN";
-            }
-            
+            if (groups.Any(x => x == "vietnam")) return "vi-VN";
+
             return "en-US";
         }
 

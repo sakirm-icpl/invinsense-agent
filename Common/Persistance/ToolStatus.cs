@@ -14,19 +14,16 @@ namespace Common.Persistence
 
         public ToolStatus(long eventId)
         {
-            Group = (int) (eventId / 100) * 100;
+            Group = (int)(eventId / 100) * 100;
             InstallStatus = (InstallStatus)((eventId - Group * 100) / 10);
             RunningStatus = (RunningStatus)(eventId - Group * 100 - (int)InstallStatus * 10);
         }
 
-        [JsonProperty("group")]
-        public int Group { get; }
+        [JsonProperty("group")] public int Group { get; }
 
-        [JsonProperty("installStatus")]
-        public InstallStatus InstallStatus { get; }
+        [JsonProperty("installStatus")] public InstallStatus InstallStatus { get; }
 
-        [JsonProperty("runningStatus")]
-        public RunningStatus RunningStatus { get; }
+        [JsonProperty("runningStatus")] public RunningStatus RunningStatus { get; }
 
         public override int GetHashCode()
         {
@@ -40,5 +37,5 @@ namespace Common.Persistence
         {
             return $"{ToolGroup.FromId<ToolGroup>(Group).Name} Install: {InstallStatus} Running: {RunningStatus}";
         }
-    }    
+    }
 }

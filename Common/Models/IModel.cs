@@ -18,13 +18,16 @@ namespace Common.Models
 
     public class ModelList<T> : List<T>, IModel
     {
-        public ModelList() { }
+        public ModelList()
+        {
+        }
 
         public ModelList(IEnumerable<T> data) : base(data)
         {
-
         }
     }
 
-    public interface IException { }
+    public interface IException
+    {
+    }
 }

@@ -16,8 +16,9 @@ namespace ServiceMonitorTest.Helper
         UserDefinedControl = 0x100,
         Delete = 0x00010000,
         StandardRightsRequired = 0xF0000,
+
         AllAccess = StandardRightsRequired | QueryConfig | ChangeConfig |
-                     QueryStatus | EnumerateDependants | Start | Stop | PauseContinue |
-                     Interrogate | UserDefinedControl
+                    QueryStatus | EnumerateDependants | Start | Stop | PauseContinue |
+                    Interrogate | UserDefinedControl
     }
 }

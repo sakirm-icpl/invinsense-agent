@@ -1,22 +1,23 @@
 ﻿using System;
-using Common;
 using System.Diagnostics;
+using Common;
 
 namespace EventLogPublisher
 {
     /// <summary>
-    /// Powershell Commands:
+    ///     Powershell Commands:
     ///     Remove-EventLog -LogName "Invinsense"
-    ///     
     /// </summary>
     internal class Program
     {
         /// <summary>
-        /// default constructor
+        ///     default constructor
         /// </summary>
-        protected Program() { }
+        protected Program()
+        {
+        }
 
-        static void Main()
+        private static void Main()
         {
             Console.WriteLine("Press \"q\" to stop");
 
@@ -28,11 +29,12 @@ namespace EventLogPublisher
                     // Create the source, if it does not already exist.
                     if (EventLog.SourceExists(Constants.IvsAgentName))
                     {
-                        Console.WriteLine($"Source exists from {EventLog.LogNameFromSourceName(Constants.IvsAgentName, ".")}");
+                        Console.WriteLine(
+                            $"Source exists from {EventLog.LogNameFromSourceName(Constants.IvsAgentName, ".")}");
 
                         EventLog.WriteEntry(Constants.IvsAgentName, "Test message", EventLogEntryType.Warning);
 
-                        EventLog log = new EventLog
+                        var log = new EventLog
                         {
                             Source = Constants.IvsAgentName
                         };
@@ -56,7 +58,8 @@ namespace EventLogPublisher
                 {
                     if (EventLog.SourceExists(Constants.IvsAgentName))
                     {
-                        Console.WriteLine($"Source exists from {EventLog.LogNameFromSourceName(Constants.IvsAgentName, ".")}");
+                        Console.WriteLine(
+                            $"Source exists from {EventLog.LogNameFromSourceName(Constants.IvsAgentName, ".")}");
                         EventLog.DeleteEventSource(Constants.IvsAgentName);
                     }
                     else
@@ -86,22 +89,19 @@ namespace EventLogPublisher
                         EventLog.Delete("MyNewLog");
                         continue;
                     }
-                    else
-                    {
-                        Console.WriteLine("Source not exists. creating...");
-                        EventLog.CreateEventSource("MySource", "MyNewLog");
-                        continue;
-                    }
+
+                    Console.WriteLine("Source not exists. creating...");
+                    EventLog.CreateEventSource("MySource", "MyNewLog");
+                    continue;
                 }
 
                 if (str.StartsWith("clear all"))
-                {
                     foreach (var log in EventLog.GetEventLogs())
                     {
-                        Console.WriteLine($"Clearing logs for : {log.Source}, Grouop: {log.Log}, LogDisplay: {log.LogDisplayName}");
+                        Console.WriteLine(
+                            $"Clearing logs for : {log.Source}, Grouop: {log.Log}, LogDisplay: {log.LogDisplayName}");
                         log.Clear();
                     }
-                }
             }
         }
     }

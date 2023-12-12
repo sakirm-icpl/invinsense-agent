@@ -1,12 +1,11 @@
-namespace CommonTests
+namespace CommonTests;
+
+public class EnvvironmentVariableTests
 {
-    public class EnvvironmentVariableTests
+    [Fact]
+    public void ShouldCreateAndReadSystemEnvironmentVariable()
     {
-        [Fact]
-        public void ShouldCreateAndReadSystemEnvironmentVariable()
-        {
-            Environment.SetEnvironmentVariable("DEVICE_ISOLATE", "YES", EnvironmentVariableTarget.User);
-            Assert.Equal("YES", Environment.GetEnvironmentVariable("DEVICE_ISOLATE", EnvironmentVariableTarget.User));
-        }
+        Environment.SetEnvironmentVariable("DEVICE_ISOLATE", "YES", EnvironmentVariableTarget.User);
+        Assert.Equal("YES", Environment.GetEnvironmentVariable("DEVICE_ISOLATE", EnvironmentVariableTarget.User));
     }
 }

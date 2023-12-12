@@ -10,13 +10,10 @@ namespace Common.Persistence
             ToolStatuses = new List<ToolStatus>();
         }
 
-        [JsonProperty("errorCode")]
-        public int ErrorCode { get; set; }
+        [JsonProperty("errorCode")] public int ErrorCode { get; set; }
 
-        [JsonProperty("errorMessage")]
-        public string ErrorMessage { get; set; }
+        [JsonProperty("errorMessage")] public string ErrorMessage { get; set; }
 
-        [JsonProperty("toolStatuses")]
-        public List<ToolStatus> ToolStatuses { get; set; }
+        [JsonProperty("toolStatuses")] public List<ToolStatus> ToolStatuses { get; set; }
     }
 }

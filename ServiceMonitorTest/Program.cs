@@ -1,19 +1,19 @@
-﻿using System.Diagnostics;
-using System;
-using ServiceMonitorTest.Monitor;
+﻿using System;
+using System.Diagnostics;
 using System.ServiceProcess;
 using ServiceMonitorTest.Helper;
+using ServiceMonitorTest.Monitor;
 
 namespace ServiceMonitorTest
 {
     internal class Program
     {
-        static void Main()
+        private static void Main()
         {
             ExtendedServiceController serviceControl;
 
             serviceControl = new ExtendedServiceController("SampleService");
-            serviceControl.StatusChanged += (object sender, ServiceStatusEventArgs e) => ServiceUpdateStatus(e.Status);
+            serviceControl.StatusChanged += (sender, e) => ServiceUpdateStatus(e.Status);
 
             Console.WriteLine("Ready to take command");
 
@@ -42,35 +42,30 @@ namespace ServiceMonitorTest
 
                 var tokens = line.Split(' ');
 
-                if (line.Equals("s"))
-                {
-                    Console.WriteLine($"CurrentStatus: {serviceControl.Status}");
-                }
+                if (line.Equals("s")) Console.WriteLine($"CurrentStatus: {serviceControl.Status}");
 
-                if(line.Equals("l"))
+                if (line.Equals("l"))
                 {
                     serviceControl.StartListening();
                     Console.WriteLine("Started listening");
                 }
 
-                if(line.Equals("c"))
+                if (line.Equals("c"))
                 {
                     serviceControl.Dispose();
 
                     serviceControl = new ExtendedServiceController("SampleService");
-                    serviceControl.StatusChanged += (object sender, ServiceStatusEventArgs e) => ServiceUpdateStatus(e.Status);
+                    serviceControl.StatusChanged += (sender, e) => ServiceUpdateStatus(e.Status);
                 }
 
-                if(line.Equals("i"))
+                if (line.Equals("i"))
                 {
-                    string[] args = new string[] { };
-                    ServiceHelper.InstallAndStart("SampleService", "My Sample Service", "C:\\Code\\invinsense-agent\\SampleService\\bin\\Debug\\SampleService.exe", args);
+                    string[] args = { };
+                    ServiceHelper.InstallAndStart("SampleService", "My Sample Service",
+                        "C:\\Code\\invinsense-agent\\SampleService\\bin\\Debug\\SampleService.exe", args);
                 }
 
-                if (line.Equals("u"))
-                {
-                    ServiceHelper.Uninstall("SampleService");
-                }
+                if (line.Equals("u")) ServiceHelper.Uninstall("SampleService");
             }
         }
 

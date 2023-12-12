@@ -7,29 +7,42 @@ namespace Common
 {
     public abstract class Enumeration : IComparable
     {
-        public int Id { get; private set; }
+        protected Enumeration(int id, string name)
+        {
+            (Id, Name) = (id, name);
+        }
 
-        public string Name { get; private set; }
+        public int Id { get; }
 
-        protected Enumeration(int id, string name) => (Id, Name) = (id, name);
+        public string Name { get; }
 
-        public override int GetHashCode() => Id;
+        public int CompareTo(object obj)
+        {
+            return Id.CompareTo(((Enumeration)obj).Id);
+        }
 
-        public override string ToString() => Name;
+        public override int GetHashCode()
+        {
+            return Id;
+        }
 
-        public static IEnumerable<T> GetAll<T>() where T : Enumeration =>
-            typeof(T).GetFields(BindingFlags.Public |
-                                BindingFlags.Static |
-                                BindingFlags.DeclaredOnly)
-                     .Select(f => f.GetValue(null))
-                     .Cast<T>();
+        public override string ToString()
+        {
+            return Name;
+        }
+
+        public static IEnumerable<T> GetAll<T>() where T : Enumeration
+        {
+            return typeof(T).GetFields(BindingFlags.Public |
+                                       BindingFlags.Static |
+                                       BindingFlags.DeclaredOnly)
+                .Select(f => f.GetValue(null))
+                .Cast<T>();
+        }
 
         public override bool Equals(object obj)
         {
-            if (!(obj is Enumeration otherValue))
-            {
-                return false;
-            }
+            if (!(obj is Enumeration otherValue)) return false;
 
             var typeMatches = GetType().Equals(obj.GetType());
             var valueMatches = Id.Equals(otherValue.Id);
@@ -37,14 +50,9 @@ namespace Common
             return typeMatches && valueMatches;
         }
 
-        public int CompareTo(object obj) => Id.CompareTo(((Enumeration)obj).Id);
-
         public static bool operator ==(Enumeration left, Enumeration right)
         {
-            if (left is null)
-            {
-                return right is null;
-            }
+            if (left is null) return right is null;
 
             return left.Equals(right);
         }

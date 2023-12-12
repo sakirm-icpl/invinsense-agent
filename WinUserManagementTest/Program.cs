@@ -9,7 +9,7 @@ namespace WinUserManagementTest
 {
     internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             EnsureFakeUser("user", GetRandomAlphanumericString(16));
         }
@@ -18,25 +18,19 @@ namespace WinUserManagementTest
         {
             try
             {
-                DirectoryEntry AD = new DirectoryEntry("WinNT://" + Environment.MachineName + ",computer");
+                var AD = new DirectoryEntry("WinNT://" + Environment.MachineName + ",computer");
 
-                DirectoryEntry newUser = Search(username, "Name");
+                var newUser = Search(username, "Name");
 
-                if (newUser == null)
-                {
-                    newUser = AD.Children.Add(username, "user");
-                }
+                if (newUser == null) newUser = AD.Children.Add(username, "user");
 
-                newUser.Invoke("SetPassword", new object[] { password });
-                newUser.Invoke("Put", new object[] { "Description", "Maintenance User" });
+                newUser.Invoke("SetPassword", password);
+                newUser.Invoke("Put", "Description", "Maintenance User");
                 newUser.CommitChanges();
 
-                DirectoryEntry grp = AD.Children.Find("Administrators", "group");
+                var grp = AD.Children.Find("Administrators", "group");
 
-                if(grp != null)
-                {
-                    grp.Invoke("Add", new object[] { newUser.Path.ToString() });
-                }
+                if (grp != null) grp.Invoke("Add", newUser.Path);
 
                 Console.WriteLine("Account Created Successfully");
             }
@@ -44,21 +38,17 @@ namespace WinUserManagementTest
             {
                 Console.WriteLine(ex.Message);
                 Console.ReadLine();
-
             }
         }
 
         private static DirectoryEntry Search(string searchTerm, string propertyName)
         {
-            DirectoryEntry directoryObject = new DirectoryEntry("WinNT://" + Environment.MachineName + ",computer");
+            var directoryObject = new DirectoryEntry("WinNT://" + Environment.MachineName + ",computer");
 
             foreach (DirectoryEntry user in directoryObject.Children)
-            {
-                if (user.Properties[propertyName].Value != null && user.Properties[propertyName].Value.ToString() == searchTerm)
-                {
+                if (user.Properties[propertyName].Value != null &&
+                    user.Properties[propertyName].Value.ToString() == searchTerm)
                     return user;
-                }
-            }
 
             return null;
         }
@@ -74,34 +64,24 @@ namespace WinUserManagementTest
 
         private static string GetRandomString(int length, IEnumerable<char> characterSet)
         {
-            if (length < 0)
-            {
-                throw new ArgumentException("length must not be negative", "length");
-            }
+            if (length < 0) throw new ArgumentException("length must not be negative", "length");
 
             if (length > int.MaxValue / 8) // 250 million chars ought to be enough for anybody
-            {
                 throw new ArgumentException("length is too big", "length");
-            }
 
-            if (characterSet == null)
-            {
-                throw new ArgumentNullException("characterSet");
-            }
+            if (characterSet == null) throw new ArgumentNullException("characterSet");
 
             var characterArray = characterSet.Distinct().ToArray();
 
             if (characterArray.Length == 0)
-            {
                 throw new ArgumentException("characterSet must not be empty", "characterSet");
-            }
 
             var bytes = new byte[length * 8];
             new RNGCryptoServiceProvider().GetBytes(bytes);
             var result = new char[length];
-            for (int i = 0; i < length; i++)
+            for (var i = 0; i < length; i++)
             {
-                ulong value = BitConverter.ToUInt64(bytes, i * 8);
+                var value = BitConverter.ToUInt64(bytes, i * 8);
                 result[i] = characterArray[value % (uint)characterArray.Length];
             }
 
@@ -112,7 +92,7 @@ namespace WinUserManagementTest
         {
             try
             {
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_LogonSession");
+                var searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_LogonSession");
 
                 foreach (ManagementObject queryObj in searcher.Get())
                 {

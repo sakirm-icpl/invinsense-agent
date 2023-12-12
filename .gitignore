@@ -9,6 +9,8 @@ bin
 obj
 packages
 
+.idea
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 

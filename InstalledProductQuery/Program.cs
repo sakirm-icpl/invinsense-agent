@@ -1,7 +1,9 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
+using Microsoft.Win32;
 
 namespace InstalledProductQuery
 {
@@ -15,28 +17,20 @@ namespace InstalledProductQuery
 
         public override string ToString()
         {
-            return $"Name: {Name}\nVersion: {Version}\nInstall Path: {InstallPath}\nFileDate Date: {FileDate}\nInstalledDate: {InstalledDate}";
+            return
+                $"Name: {Name}\nVersion: {Version}\nInstall Path: {InstallPath}\nFileDate Date: {FileDate}\nInstalledDate: {InstalledDate}";
         }
     }
 
     internal class Program
     {
-        static void Main()
+        private static void Main()
         {
-            if (GetServiceInfo("Sysmon64", out ServiceProductInfo sysmonInfo))
-            {
-                Console.WriteLine(sysmonInfo);
-            }
+            if (GetServiceInfo("Sysmon64", out var sysmonInfo)) Console.WriteLine(sysmonInfo);
 
-            if (GetProductInfoReg("7-Zip", out ServiceProductInfo _7zip))
-            {
-                Console.WriteLine(_7zip);
-            }
+            if (GetProductInfoReg("7-Zip", out var _7zip)) Console.WriteLine(_7zip);
 
-            if (GetProductInfoReg("Git", out ServiceProductInfo git))
-            {
-                Console.WriteLine(git);
-            }
+            if (GetProductInfoReg("Git", out var git)) Console.WriteLine(git);
 
             Console.WriteLine("Press any key to exit...");
             Console.ReadLine();
@@ -47,43 +41,34 @@ namespace InstalledProductQuery
             var found = false;
 
             // You need to check both the 64-bit registry and the 32-bit registry.
-            string uninstallKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
-            using (RegistryKey rk = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
+            var uninstallKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
+            using (var rk = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
             {
-                if (GetProductInfoRegByKey(productName, rk.OpenSubKey(uninstallKey), out productInfo))
-                {
-                    return true;
-                }
+                if (GetProductInfoRegByKey(productName, rk.OpenSubKey(uninstallKey), out productInfo)) return true;
             }
 
-            using (RegistryKey rk = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32))
+            using (var rk = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32))
             {
-                if (GetProductInfoRegByKey(productName, rk.OpenSubKey(uninstallKey), out productInfo))
-                {
-                    return true;
-                }
+                if (GetProductInfoRegByKey(productName, rk.OpenSubKey(uninstallKey), out productInfo)) return true;
             }
 
             return found;
         }
 
-        private static bool GetProductInfoRegByKey(string productName, RegistryKey uninstallKey, out ServiceProductInfo productInfo)
+        private static bool GetProductInfoRegByKey(string productName, RegistryKey uninstallKey,
+            out ServiceProductInfo productInfo)
         {
             productInfo = new ServiceProductInfo();
             var found = false;
 
-            foreach (string skName in uninstallKey.GetSubKeyNames())
-            {
-                using (RegistryKey subkey = uninstallKey.OpenSubKey(skName))
+            foreach (var skName in uninstallKey.GetSubKeyNames())
+                using (var subkey = uninstallKey.OpenSubKey(skName))
                 {
                     try
                     {
-                        string displayName = (string)subkey.GetValue("DisplayName");
+                        var displayName = (string)subkey.GetValue("DisplayName");
 
-                        if (displayName == null || !displayName.Contains(productName))
-                        {
-                            continue;
-                        }
+                        if (displayName == null || !displayName.Contains(productName)) continue;
 
                         found = true;
                         productInfo.Name = displayName;
@@ -98,7 +83,6 @@ namespace InstalledProductQuery
                         Console.WriteLine(ex.Message);
                     }
                 }
-            }
 
             return found;
         }
@@ -107,8 +91,8 @@ namespace InstalledProductQuery
         {
             productInfo = new ServiceProductInfo();
 
-            string registryKeyPath = $@"SYSTEM\CurrentControlSet\Services\{productName}";
-            using (RegistryKey key = Registry.LocalMachine.OpenSubKey(registryKeyPath))
+            var registryKeyPath = $@"SYSTEM\CurrentControlSet\Services\{productName}";
+            using (var key = Registry.LocalMachine.OpenSubKey(registryKeyPath))
             {
                 if (key == null)
                 {
@@ -117,7 +101,7 @@ namespace InstalledProductQuery
                 }
 
                 productInfo.Name = key.GetValue("DisplayName") as string;
-                string imagePath = key.GetValue("ImagePath") as string;
+                var imagePath = key.GetValue("ImagePath") as string;
                 productInfo.InstallPath = ExtractExecutableFilePath(imagePath);
                 productInfo.Version = GetFileVersion(productInfo.InstallPath);
                 productInfo.FileDate = GetFileDate(productInfo.InstallPath);
@@ -128,33 +112,25 @@ namespace InstalledProductQuery
 
         private static string ExtractExecutableFilePath(string path)
         {
-            string absoluteImagePath = Regex.Replace(path, "%(.*?)%", m => Environment.GetEnvironmentVariable(m.Groups[1].Value));
+            var absoluteImagePath =
+                Regex.Replace(path, "%(.*?)%", m => Environment.GetEnvironmentVariable(m.Groups[1].Value));
 
-            if (absoluteImagePath.Length == 0)
-            {
-                return "";
-            }
+            if (absoluteImagePath.Length == 0) return "";
 
-            return (absoluteImagePath[0] == '\"') ? absoluteImagePath.Split('\"')[1] : absoluteImagePath.Split(' ')[0];
+            return absoluteImagePath[0] == '\"' ? absoluteImagePath.Split('\"')[1] : absoluteImagePath.Split(' ')[0];
         }
 
         private static string GetFileVersion(string path)
         {
-            if (!File.Exists(path))
-            {
-                return "";
-            }
+            if (!File.Exists(path)) return "";
 
-            var versionInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(path);
+            var versionInfo = FileVersionInfo.GetVersionInfo(path);
             return versionInfo.ProductVersion;
         }
 
         private static DateTime? GetFileDate(string path)
         {
-            if (!File.Exists(path))
-            {
-                return null;
-            }
+            if (!File.Exists(path)) return null;
 
             return File.GetCreationTime(path);
         }
@@ -162,10 +138,8 @@ namespace InstalledProductQuery
         private static DateTime? ConvertToDateTime(string installDateStr)
         {
             // The install date string format is YYYYMMDD
-            if (DateTime.TryParseExact(installDateStr, "yyyyMMdd", null, System.Globalization.DateTimeStyles.None, out DateTime date))
-            {
+            if (DateTime.TryParseExact(installDateStr, "yyyyMMdd", null, DateTimeStyles.None, out var date))
                 return date;
-            }
 
             return null;
         }

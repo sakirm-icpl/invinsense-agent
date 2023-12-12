@@ -1,5 +1,5 @@
-﻿using Common.Persistence;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Common.Persistence;
 
 namespace ToolManager
 {
@@ -9,8 +9,8 @@ namespace ToolManager
         {
             Name = "osquery",
             InstallationPath = @"C:\Program Files\osquery",
-            ExecutableFiles = new []{ "osqueryi.exe", "osqueryd\\osqueryd.exe" },
-            
+            ExecutableFiles = new[] { "osqueryi.exe", "osqueryd\\osqueryd.exe" },
+
             InstallType = InstallType.Installer,
             InstallStatus = InstallStatus.Unknown,
             RunningStatus = RunningStatus.Unknown,
@@ -21,7 +21,7 @@ namespace ToolManager
             ServiceNames = new[] { "osqueryd" },
             ProcessType = ProcessType.Service,
             ToolGroup = ToolGroup.UserBehaviorAnalytics,
-            UninstallParameters = new List<string> { }
+            UninstallParameters = new List<string>()
         };
 
         public static ToolDescriptor Sysmon = new ToolDescriptor
@@ -29,7 +29,7 @@ namespace ToolManager
             Name = "sysmon",
             InstallationPath = @"C:\Program Files\Sysmon",
             ExecutableFiles = new[] { "sysmon.exe" },
-            
+
             InstallType = InstallType.Installer,
             InstallStatus = InstallStatus.Unknown,
             RunningStatus = RunningStatus.Unknown
@@ -40,7 +40,7 @@ namespace ToolManager
             Name = "sysmonview",
             InstallationPath = @"C:\Program Files\Sysmon",
             ExecutableFiles = new[] { "SysmonView.exe" },
-            
+
             InstallType = InstallType.Installer,
             InstallStatus = InstallStatus.Unknown,
             RunningStatus = RunningStatus.Unknown
@@ -51,7 +51,7 @@ namespace ToolManager
             Name = "sysmon-tools",
             InstallationPath = @"C:\Program Files\Sysmon",
             ExecutableFiles = new[] { "SysmonTools.exe" },
-            
+
             InstallType = InstallType.Installer,
             InstallStatus = InstallStatus.Unknown,
             RunningStatus = RunningStatus.Unknown
@@ -62,7 +62,7 @@ namespace ToolManager
             Name = "sysmon-config",
             InstallationPath = @"C:\Program Files\Sysmon",
             ExecutableFiles = new[] { "SysmonConfig.exe" },
-            
+
             InstallType = InstallType.Installer,
             InstallStatus = InstallStatus.Unknown,
             RunningStatus = RunningStatus.Unknown

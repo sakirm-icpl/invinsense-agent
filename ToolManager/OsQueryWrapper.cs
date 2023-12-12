@@ -1,8 +1,7 @@
-﻿using Common.Utils;
-using Serilog;
-using System;
+﻿using System;
 using System.IO;
-using Common.Persistence;
+using Common.Utils;
+using Serilog;
 
 namespace ToolManager
 {
@@ -18,15 +17,9 @@ namespace ToolManager
             try
             {
                 var exitCode = InstallMsi();
-                if (exitCode != 0)
-                {
-                    return exitCode;
-                }
+                if (exitCode != 0) return exitCode;
 
-                if(!ToolDescriptor.IsActive)
-                {
-                    return 0;
-                }
+                if (!ToolDescriptor.IsActive) return 0;
 
                 var configSource = Path.Combine(CommonUtils.ArtifactsFolder, "osquery.conf");
                 var configDestination = Path.Combine(ToolDescriptor.InstallationPath, "osquery.conf");

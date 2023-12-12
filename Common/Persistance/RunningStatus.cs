@@ -2,6 +2,10 @@
 {
     public enum RunningStatus
     {
-        Unknown, Stopped, Error, Warning, Running
+        Unknown,
+        Stopped,
+        Error,
+        Warning,
+        Running
     }
 }

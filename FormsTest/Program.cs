@@ -9,11 +9,11 @@ namespace FormsTest
     internal static class Program
     {
         /// <summary>
-        /// The main entry point for the application.
-        /// https://devforid.medium.com/localization-in-c-using-resource-resx-file-a90117f04d4a
+        ///     The main entry point for the application.
+        ///     https://devforid.medium.com/localization-in-c-using-resource-resx-file-a90117f04d4a
         /// </summary>
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             var cultureValue = Environment.GetEnvironmentVariable("IVS_CULTURE", EnvironmentVariableTarget.Machine);
             var culture = new CultureInfo(string.IsNullOrEmpty(cultureValue) ? "en-US" : cultureValue);
@@ -25,7 +25,7 @@ namespace FormsTest
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            
+
             Application.Run(new MainFrm());
         }
     }

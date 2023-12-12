@@ -5,15 +5,15 @@ namespace SystemManagementTest
 {
     internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             DisplayAllHardwareInfo();
             Console.ReadLine();
         }
 
-        static void DisplayAllHardwareInfo()
+        private static void DisplayAllHardwareInfo()
         {
-            Dictionary<string, string> infos = new Dictionary<string, string>
+            var infos = new Dictionary<string, string>
             {
                 { "Proccesor Id", HardwareInfo.GetProcessorId() },
                 { "HDD SerialNo", HardwareInfo.GetHDDSerialNo() },

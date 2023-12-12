@@ -7,6 +7,6 @@ namespace AvMonitorTest
     {
         Unknown = 1,
         Enabled = 16,
-        Disabled = 32,
+        Disabled = 32
     }
 }

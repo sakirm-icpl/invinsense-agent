@@ -17,23 +17,14 @@ namespace Common.Utils
 
         public static T Load<T>(string name)
         {
-            if (CachedConfig.ContainsKey(name))
-            {
-                return (T)CachedConfig[name];
-            }
+            if (CachedConfig.ContainsKey(name)) return (T)CachedConfig[name];
 
             lock (SyncObj)
             {
-                if (CachedConfig.ContainsKey(name))
-                {
-                    return (T)CachedConfig[name];
-                }
+                if (CachedConfig.ContainsKey(name)) return (T)CachedConfig[name];
 
                 var file = CommonUtils.ConfigFolder + name + ".json";
-                if (!File.Exists(file))
-                {
-                    throw new FileNotFoundException("File not found", name);
-                }
+                if (!File.Exists(file)) throw new FileNotFoundException("File not found", name);
 
                 var obj = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(File.ReadAllText(file));
                 CachedConfig.Add(name, obj);
@@ -51,16 +42,13 @@ namespace Common.Utils
             var file = CommonUtils.ConfigFolder + name + ".json";
             lock (SyncObj)
             {
-                File.WriteAllText(file, Newtonsoft.Json.JsonConvert.SerializeObject(value, Newtonsoft.Json.Formatting.Indented));
+                File.WriteAllText(file,
+                    Newtonsoft.Json.JsonConvert.SerializeObject(value, Newtonsoft.Json.Formatting.Indented));
 
                 if (CachedConfig.ContainsKey(name))
-                {
                     CachedConfig[name] = value;
-                }
                 else
-                {
                     CachedConfig.Add(name, value);
-                }
             }
         }
     }

@@ -12,7 +12,8 @@ namespace ServiceMonitorTest.Helper
         QueryLockStatus = 0x0010,
         ModifyBootConfig = 0x0020,
         StandardRightsRequired = 0xF0000,
+
         AllAccess = StandardRightsRequired | Connect | CreateService |
-                     EnumerateService | Lock | QueryLockStatus | ModifyBootConfig
+                    EnumerateService | Lock | QueryLockStatus | ModifyBootConfig
     }
 }

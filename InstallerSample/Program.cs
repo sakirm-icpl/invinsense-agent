@@ -1,41 +1,40 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Management;
 using System.ServiceProcess;
+using Microsoft.Win32;
 
 namespace InstallerSample
 {
     internal class Program
     {
-        static void Main()
+        private static void Main()
         {
             var targetLogFile = new FileInfo("./uninstall.log");
-            Logger.LogToConsole = true;  // Print log entries to console (optional).
+            Logger.LogToConsole = true; // Print log entries to console (optional).
             Logger.Start(targetLogFile); // Loggers will complains if you skip initialization
 
             var logger = new Logger(typeof(Program));
 
             try
             {
+                /*   List<string> programs = new List<string>();
 
-             /*   List<string> programs = new List<string>();
-
-                ManagementObjectSearcher mos = new ManagementObjectSearcher("SELECT * FROM Win32_Product");
-                foreach (ManagementObject mo in mos.Get())
-                {
-                    try
-                    {
-                        var name = mo["Name"].ToString();
-                        programs.Add(name);
-                        logger.Info($"Program: {name}");
-                    }
-                    catch
-                    {
-                        //this program may not have a name property
-                    }
-                }*/
+                   ManagementObjectSearcher mos = new ManagementObjectSearcher("SELECT * FROM Win32_Product");
+                   foreach (ManagementObject mo in mos.Get())
+                   {
+                       try
+                       {
+                           var name = mo["Name"].ToString();
+                           programs.Add(name);
+                           logger.Info($"Program: {name}");
+                       }
+                       catch
+                       {
+                           //this program may not have a name property
+                       }
+                   }*/
                 logger.Info("Stopping Invinsense service");
 
                 var service = new ServiceController("Invinsense Agent");
@@ -62,32 +61,32 @@ namespace InstallerSample
                 }
 
                 logger.Info("Removing Service");
-                var exePath ="C:\\Windows\\System32\\sc.exe";
-                Process installerProcess = new Process
+                var exePath = "C:\\Windows\\System32\\sc.exe";
+                var installerProcess = new Process
                 {
                     StartInfo = new ProcessStartInfo
                     {
-                         FileName = exePath,
-                         Arguments = "delete \"Invinsense Agent\"",
-                         WindowStyle = ProcessWindowStyle.Hidden,
-                         CreateNoWindow = true
-                     }
-                 };
+                        FileName = exePath,
+                        Arguments = "delete \"Invinsense Agent\"",
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        CreateNoWindow = true
+                    }
+                };
 
                 installerProcess.Start();
                 logger.Info("Remove Service Successfully");
-                
+
                 logger.Info("Uninstalling Invinsense Agent");
 
                 var unInstallStatus = UninstallProgram("Invinsense Single Agent 3.0");
 
                 logger.Info($"Agent uninstall status: {unInstallStatus}");
 
-               // logger.Info($"Removing Startup");
+                // logger.Info($"Removing Startup");
 
-               // SetStartup("IvsTray", "C:\\ProgramFiles\\Invinsense\\IvsTray.exe", false);
+                // SetStartup("IvsTray", "C:\\ProgramFiles\\Invinsense\\IvsTray.exe", false);
 
-               // logger.Info("Startup removed");
+                // logger.Info("Startup removed");
             }
             catch (Exception ex)
             {
@@ -100,21 +99,21 @@ namespace InstallerSample
             }
 
             Console.WriteLine("Done.");
-        }     
+        }
 
         public static bool UninstallProgram(string ProgramName)
         {
             try
             {
-                ManagementObjectSearcher mos = new ManagementObjectSearcher("SELECT * FROM Win32_Product WHERE Name = '" + ProgramName + "'");
+                var mos = new ManagementObjectSearcher("SELECT * FROM Win32_Product WHERE Name = '" + ProgramName +
+                                                       "'");
 
                 foreach (ManagementObject mo in mos.Get())
-                {
                     try
                     {
                         if (mo["Name"].ToString() == ProgramName)
                         {
-                            object hr = mo.InvokeMethod("Uninstall", null);
+                            var hr = mo.InvokeMethod("Uninstall", null);
 
                             Console.WriteLine($"Uninstall invoke return code: {hr}");
 
@@ -125,60 +124,54 @@ namespace InstallerSample
                     {
                         //this program may not have a name property, so an exception will be thrown
                     }
-                }
 
                 //was not found...
                 return false;
-
             }
             catch
             {
                 return false;
             }
         }
-        void UnInstallPackage(string packageName)
-        {
-            string searchString = $"SELECT * FROM Win32_Product WHERE Name LIKE '{packageName}'";
 
-            ManagementObjectSearcher mos = new ManagementObjectSearcher(searchString);
+        private void UnInstallPackage(string packageName)
+        {
+            var searchString = $"SELECT * FROM Win32_Product WHERE Name LIKE '{packageName}'";
+
+            var mos = new ManagementObjectSearcher(searchString);
 
             foreach (ManagementObject mo in mos.Get())
-            {
                 // Will return Name, IdentifyingNumber and Version
                 try
                 {
                     Console.WriteLine("Properties");
                     foreach (var item in mo.Properties)
-                    {
                         try
                         {
-                            Console.WriteLine(item.Name + "-" + item.Value.ToString());
+                            Console.WriteLine(item.Name + "-" + item.Value);
                         }
                         catch (Exception ex)
                         {
                             Console.WriteLine($"Error in property: {ex.Message}");
                         }
-                    }
 
                     Console.WriteLine("System Properties");
                     foreach (var item in mo.SystemProperties)
-                    {
                         try
                         {
-                            Console.WriteLine(item.Name + "-" + item.Value.ToString());
+                            Console.WriteLine(item.Name + "-" + item.Value);
                         }
                         catch (Exception ex)
                         {
                             Console.WriteLine($"Error in property: {ex.Message}");
                         }
-                    }
 
                     if (mo["Name"].ToString().Contains(packageName))
                     {
                         //object arp = mo.InvokeMethod("Uninstall", null);
-                        Process process = new Process();
+                        var process = new Process();
                         process.StartInfo.FileName = "msiexec.exe";
-                        process.StartInfo.Arguments = "/X" + mo["IdentifyingNumber"].ToString() + " /q";
+                        process.StartInfo.Arguments = "/X" + mo["IdentifyingNumber"] + " /q";
                         process.StartInfo.UseShellExecute = false;
                         process.StartInfo.RedirectStandardInput = true;
                         process.StartInfo.RedirectStandardOutput = true;
@@ -193,12 +186,12 @@ namespace InstallerSample
                     //this program may not have a name property, so an exception will be thrown
                     //handle your exception here
                     Console.WriteLine(ex.Message);
-                }            
-            }
+                }
         }
+
         private static void SetStartup(string name, string path, bool addOrRemove)
         {
-            RegistryKey rk = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+            var rk = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
 
             if (addOrRemove)
                 rk.SetValue(name, path);

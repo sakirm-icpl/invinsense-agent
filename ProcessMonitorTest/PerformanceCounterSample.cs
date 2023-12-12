@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Diagnostics;
+using System.Threading;
 
 namespace ProcessMonitorTest
 {
     /// <summary>
-    /// https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.performancecounter?view=dotnet-plat-ext-7.0
+    ///     https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.performancecounter?view=dotnet-plat-ext-7.0
     /// </summary>
     internal class PerformanceCounterSample
     {
@@ -14,19 +15,15 @@ namespace ProcessMonitorTest
 
         public static void Run()
         {
-
-            ArrayList samplesList = new ArrayList();
+            var samplesList = new ArrayList();
 
             // If the category does not exist, create the category and exit.
             // Performance counters should not be created and immediately used.
             // There is a latency time to enable the counters, they should be created
             // prior to executing the application that uses the counters.
             // Execute this sample a second time to use the category.
-            if (SetupCategory())
-            {
-                return;
-            }
-                
+            if (SetupCategory()) return;
+
             CreateCounters();
             CollectSamples(samplesList);
             CalculateResults(samplesList);
@@ -36,17 +33,16 @@ namespace ProcessMonitorTest
         {
             if (!PerformanceCounterCategory.Exists("AverageCounter64SampleCategory"))
             {
-
-                CounterCreationDataCollection counterDataCollection = new CounterCreationDataCollection();
+                var counterDataCollection = new CounterCreationDataCollection();
 
                 // Add the counter.
-                CounterCreationData averageCount64 = new CounterCreationData();
+                var averageCount64 = new CounterCreationData();
                 averageCount64.CounterType = PerformanceCounterType.AverageCount64;
                 averageCount64.CounterName = "AverageCounter64Sample";
                 counterDataCollection.Add(averageCount64);
 
                 // Add the base counter.
-                CounterCreationData averageCount64Base = new CounterCreationData();
+                var averageCount64Base = new CounterCreationData();
                 averageCount64Base.CounterType = PerformanceCounterType.AverageBase;
                 averageCount64Base.CounterName = "AverageCounter64SampleBase";
                 counterDataCollection.Add(averageCount64Base);
@@ -56,21 +52,21 @@ namespace ProcessMonitorTest
                     "Demonstrates usage of the AverageCounter64 performance counter type.",
                     PerformanceCounterCategoryType.SingleInstance, counterDataCollection);
 
-                return (true);
+                return true;
             }
-            else
-            {
-                Console.WriteLine("Category exists - AverageCounter64SampleCategory");
-                return (false);
-            }
+
+            Console.WriteLine("Category exists - AverageCounter64SampleCategory");
+            return false;
         }
 
         private static void CreateCounters()
         {
             // Create the counters.
-            avgCounter64Sample = new PerformanceCounter("AverageCounter64SampleCategory", "AverageCounter64Sample", false);
+            avgCounter64Sample =
+                new PerformanceCounter("AverageCounter64SampleCategory", "AverageCounter64Sample", false);
 
-            avgCounter64SampleBase = new PerformanceCounter("AverageCounter64SampleCategory", "AverageCounter64SampleBase", false);
+            avgCounter64SampleBase =
+                new PerformanceCounter("AverageCounter64SampleCategory", "AverageCounter64SampleBase", false);
 
             avgCounter64Sample.RawValue = 0;
             avgCounter64SampleBase.RawValue = 0;
@@ -78,20 +74,19 @@ namespace ProcessMonitorTest
 
         private static void CollectSamples(ArrayList samplesList)
         {
-            Random r = new Random(DateTime.Now.Millisecond);
+            var r = new Random(DateTime.Now.Millisecond);
 
             // Loop for the samples.
-            for (int j = 0; j < 100; j++)
+            for (var j = 0; j < 100; j++)
             {
-
-                int value = r.Next(1, 10);
+                var value = r.Next(1, 10);
                 Console.Write(j + " = " + value);
 
                 avgCounter64Sample.IncrementBy(value);
 
                 avgCounter64SampleBase.Increment();
 
-                if ((j % 10) == 9)
+                if (j % 10 == 9)
                 {
                     OutputSample(avgCounter64Sample.NextSample());
                     samplesList.Add(avgCounter64Sample.NextSample());
@@ -101,23 +96,27 @@ namespace ProcessMonitorTest
                     Console.WriteLine();
                 }
 
-                System.Threading.Thread.Sleep(50);
+                Thread.Sleep(50);
             }
         }
 
         private static void CalculateResults(ArrayList samplesList)
         {
-            for (int i = 0; i < (samplesList.Count - 1); i++)
+            for (var i = 0; i < samplesList.Count - 1; i++)
             {
                 // Output the sample.
                 OutputSample((CounterSample)samplesList[i]);
                 OutputSample((CounterSample)samplesList[i + 1]);
 
                 // Use .NET to calculate the counter value.
-                Console.WriteLine(".NET computed counter value = " + CounterSampleCalculator.ComputeCounterValue((CounterSample)samplesList[i], (CounterSample)samplesList[i + 1]));
+                Console.WriteLine(".NET computed counter value = " +
+                                  CounterSampleCalculator.ComputeCounterValue((CounterSample)samplesList[i],
+                                      (CounterSample)samplesList[i + 1]));
 
                 // Calculate the counter value manually.
-                Console.WriteLine("My computed counter value = " + MyComputeCounterValue((CounterSample)samplesList[i], (CounterSample)samplesList[i + 1]));
+                Console.WriteLine("My computed counter value = " +
+                                  MyComputeCounterValue((CounterSample)samplesList[i],
+                                      (CounterSample)samplesList[i + 1]));
             }
         }
 
@@ -135,12 +134,12 @@ namespace ProcessMonitorTest
         //    Average (Nx - N0) / (Dx - D0)
         //    Example PhysicalDisk\ Avg. Disk Bytes/Transfer
         //++++++++//++++++++//++++++++//++++++++//++++++++//++++++++//++++++++//++++++++
-        private static Single MyComputeCounterValue(CounterSample s0, CounterSample s1)
+        private static float MyComputeCounterValue(CounterSample s0, CounterSample s1)
         {
-            Single numerator = (Single)s1.RawValue - (Single)s0.RawValue;
-            Single denomenator = (Single)s1.BaseValue - (Single)s0.BaseValue;
-            Single counterValue = numerator / denomenator;
-            return (counterValue);
+            var numerator = s1.RawValue - (float)s0.RawValue;
+            var denomenator = s1.BaseValue - (float)s0.BaseValue;
+            var counterValue = numerator / denomenator;
+            return counterValue;
         }
 
         // Output information about the counter sample.

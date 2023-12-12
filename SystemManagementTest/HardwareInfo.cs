@@ -5,322 +5,291 @@ using System.Net;
 
 namespace SystemManagementTest
 {
-
     public static class HardwareInfo
     {
         /// <summary>
-        /// Retrieving Processor Id.
+        ///     Retrieving Processor Id.
         /// </summary>
         /// <returns></returns>
-        /// 
-
         public static string GetProcessorId()
         {
-
-            ManagementClass mc = new ManagementClass("win32_processor");
-            ManagementObjectCollection moc = mc.GetInstances();
-            string Id = string.Empty;
-            foreach (ManagementObject mo in moc.Cast<ManagementObject>())
+            var mc = new ManagementClass("win32_processor");
+            var moc = mc.GetInstances();
+            var Id = string.Empty;
+            foreach (var mo in moc.Cast<ManagementObject>())
             {
-
                 Id = mo.Properties["processorID"].Value.ToString();
                 break;
             }
-            return Id;
 
+            return Id;
         }
+
         /// <summary>
-        /// Retrieving HDD Serial No.
+        ///     Retrieving HDD Serial No.
         /// </summary>
         /// <returns></returns>
         public static string GetHDDSerialNo()
         {
-            ManagementClass mangnmt = new ManagementClass("Win32_LogicalDisk");
-            ManagementObjectCollection mcol = mangnmt.GetInstances();
-            string result = "";
-            foreach (ManagementObject strt in mcol.Cast<ManagementObject>())
-            {
-                result += Convert.ToString(strt["VolumeSerialNumber"]);
-            }
+            var mangnmt = new ManagementClass("Win32_LogicalDisk");
+            var mcol = mangnmt.GetInstances();
+            var result = "";
+            foreach (var strt in mcol.Cast<ManagementObject>()) result += Convert.ToString(strt["VolumeSerialNumber"]);
             return result;
         }
+
         /// <summary>
-        /// Retrieving System MAC Address.
+        ///     Retrieving System MAC Address.
         /// </summary>
         /// <returns></returns>
         public static string GetMACAddress()
         {
-            ManagementClass mc = new ManagementClass("Win32_NetworkAdapterConfiguration");
-            ManagementObjectCollection moc = mc.GetInstances();
-            string MACAddress = string.Empty;
-            foreach (ManagementObject mo in moc.Cast<ManagementObject>())
+            var mc = new ManagementClass("Win32_NetworkAdapterConfiguration");
+            var moc = mc.GetInstances();
+            var MACAddress = string.Empty;
+            foreach (var mo in moc.Cast<ManagementObject>())
             {
                 if (MACAddress == string.Empty)
-                {
-                    if ((bool)mo["IPEnabled"] == true) MACAddress = mo["MacAddress"].ToString();
-                }
+                    if ((bool)mo["IPEnabled"])
+                        MACAddress = mo["MacAddress"].ToString();
                 mo.Dispose();
             }
 
             MACAddress = MACAddress.Replace(":", "");
             return MACAddress;
         }
+
         /// <summary>
-        /// Retrieving Motherboard Manufacturer.
+        ///     Retrieving Motherboard Manufacturer.
         /// </summary>
         /// <returns></returns>
         public static string GetBoardMaker()
         {
+            var searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BaseBoard");
 
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BaseBoard");
-
-            foreach (ManagementObject wmi in searcher.Get().Cast<ManagementObject>())
-            {
+            foreach (var wmi in searcher.Get().Cast<ManagementObject>())
                 try
                 {
                     return wmi.GetPropertyValue("Manufacturer").ToString();
                 }
 
-                catch { }
-
-            }
+                catch
+                {
+                }
 
             return "Board Maker: Unknown";
-
         }
+
         /// <summary>
-        /// Retrieving Motherboard Product Id.
+        ///     Retrieving Motherboard Product Id.
         /// </summary>
         /// <returns></returns>
         public static string GetBoardProductId()
         {
+            var searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BaseBoard");
 
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BaseBoard");
-
-            foreach (ManagementObject wmi in searcher.Get().Cast<ManagementObject>())
-            {
+            foreach (var wmi in searcher.Get().Cast<ManagementObject>())
                 try
                 {
                     return wmi.GetPropertyValue("Product").ToString();
-
                 }
 
-                catch { }
-
-            }
+                catch
+                {
+                }
 
             return "Product: Unknown";
-
         }
+
         /// <summary>
-        /// Retrieving CD-DVD Drive Path.
+        ///     Retrieving CD-DVD Drive Path.
         /// </summary>
         /// <returns></returns>
         public static string GetCdRomDrive()
         {
+            var searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_CDROMDrive");
 
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_CDROMDrive");
-
-            foreach (ManagementObject wmi in searcher.Get().Cast<ManagementObject>())
-            {
+            foreach (var wmi in searcher.Get().Cast<ManagementObject>())
                 try
                 {
                     return wmi.GetPropertyValue("Drive").ToString();
-
                 }
 
-                catch { }
-
-            }
+                catch
+                {
+                }
 
             return "CD ROM Drive Letter: Unknown";
-
         }
+
         /// <summary>
-        /// Retrieving BIOS Maker.
+        ///     Retrieving BIOS Maker.
         /// </summary>
         /// <returns></returns>
         public static string GetBIOSmaker()
         {
+            var searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BIOS");
 
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BIOS");
-
-            foreach (ManagementObject wmi in searcher.Get().Cast<ManagementObject>())
-            {
+            foreach (var wmi in searcher.Get().Cast<ManagementObject>())
                 try
                 {
                     return wmi.GetPropertyValue("Manufacturer").ToString();
-
                 }
 
-                catch { }
-
-            }
+                catch
+                {
+                }
 
             return "BIOS Maker: Unknown";
-
         }
+
         /// <summary>
-        /// Retrieving BIOS Serial No.
+        ///     Retrieving BIOS Serial No.
         /// </summary>
         /// <returns></returns>
         public static string GetBIOSserNo()
         {
+            var searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BIOS");
 
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BIOS");
-
-            foreach (ManagementObject wmi in searcher.Get().Cast<ManagementObject>())
-            {
+            foreach (var wmi in searcher.Get().Cast<ManagementObject>())
                 try
                 {
                     return wmi.GetPropertyValue("SerialNumber").ToString();
-
                 }
 
-                catch { }
-
-            }
+                catch
+                {
+                }
 
             return "BIOS Serial Number: Unknown";
-
         }
+
         /// <summary>
-        /// Retrieving BIOS Caption.
+        ///     Retrieving BIOS Caption.
         /// </summary>
         /// <returns></returns>
         public static string GetBIOScaption()
         {
+            var searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BIOS");
 
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BIOS");
-
-            foreach (ManagementObject wmi in searcher.Get().Cast<ManagementObject>())
-            {
+            foreach (var wmi in searcher.Get().Cast<ManagementObject>())
                 try
                 {
                     return wmi.GetPropertyValue("Caption").ToString();
-
                 }
-                catch { }
-            }
+                catch
+                {
+                }
+
             return "BIOS Caption: Unknown";
         }
+
         /// <summary>
-        /// Retrieving System Account Name.
+        ///     Retrieving System Account Name.
         /// </summary>
         /// <returns></returns>
         public static string GetAccountName()
         {
+            var searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_UserAccount");
 
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_UserAccount");
-
-            foreach (ManagementObject wmi in searcher.Get().Cast<ManagementObject>())
-            {
+            foreach (var wmi in searcher.Get().Cast<ManagementObject>())
                 try
                 {
-
                     return wmi.GetPropertyValue("Name").ToString();
                 }
-                catch { }
-            }
-            return "User Account Name: Unknown";
+                catch
+                {
+                }
 
+            return "User Account Name: Unknown";
         }
+
         /// <summary>
-        /// Retrieving Physical Ram Memory.
+        ///     Retrieving Physical Ram Memory.
         /// </summary>
         /// <returns></returns>
         public static string GetPhysicalMemory()
         {
-            ManagementScope oMs = new ManagementScope();
-            ObjectQuery oQuery = new ObjectQuery("SELECT Capacity FROM Win32_PhysicalMemory");
-            ManagementObjectSearcher oSearcher = new ManagementObjectSearcher(oMs, oQuery);
-            ManagementObjectCollection oCollection = oSearcher.Get();
+            var oMs = new ManagementScope();
+            var oQuery = new ObjectQuery("SELECT Capacity FROM Win32_PhysicalMemory");
+            var oSearcher = new ManagementObjectSearcher(oMs, oQuery);
+            var oCollection = oSearcher.Get();
 
             long MemSize = 0;
 
             // In case more than one Memory sticks are installed
-            foreach (ManagementObject obj in oCollection.Cast<ManagementObject>())
+            foreach (var obj in oCollection.Cast<ManagementObject>())
             {
-                long mCap = Convert.ToInt64(obj["Capacity"]);
+                var mCap = Convert.ToInt64(obj["Capacity"]);
                 MemSize += mCap;
             }
 
-            MemSize = (MemSize / 1024) / 1024;
-            return MemSize.ToString() + "MB";
+            MemSize = MemSize / 1024 / 1024;
+            return MemSize + "MB";
         }
+
         /// <summary>
-        /// Retrieving No of Ram Slot on Motherboard.
+        ///     Retrieving No of Ram Slot on Motherboard.
         /// </summary>
         /// <returns></returns>
         public static string GetNoRamSlots()
         {
-
-            int MemSlots = 0;
-            ManagementScope oMs = new ManagementScope();
-            ObjectQuery oQuery2 = new ObjectQuery("SELECT MemoryDevices FROM Win32_PhysicalMemoryArray");
-            ManagementObjectSearcher oSearcher2 = new ManagementObjectSearcher(oMs, oQuery2);
-            ManagementObjectCollection oCollection2 = oSearcher2.Get();
-            foreach (ManagementObject obj in oCollection2.Cast<ManagementObject>())
-            {
-                MemSlots = Convert.ToInt32(obj["MemoryDevices"]);
-
-            }
+            var MemSlots = 0;
+            var oMs = new ManagementScope();
+            var oQuery2 = new ObjectQuery("SELECT MemoryDevices FROM Win32_PhysicalMemoryArray");
+            var oSearcher2 = new ManagementObjectSearcher(oMs, oQuery2);
+            var oCollection2 = oSearcher2.Get();
+            foreach (var obj in oCollection2.Cast<ManagementObject>()) MemSlots = Convert.ToInt32(obj["MemoryDevices"]);
             return MemSlots.ToString();
         }
+
         //Get CPU Temprature.
         /// <summary>
-        /// method for retrieving the CPU Manufacturer
-        /// using the WMI class
+        ///     method for retrieving the CPU Manufacturer
+        ///     using the WMI class
         /// </summary>
         /// <returns>CPU Manufacturer</returns>
         public static string GetCPUManufacturer()
         {
-            string cpuMan = string.Empty;
+            var cpuMan = string.Empty;
             //create an instance of the Managemnet class with the
             //Win32_Processor class
-            ManagementClass mgmt = new ManagementClass("Win32_Processor");
+            var mgmt = new ManagementClass("Win32_Processor");
             //create a ManagementObjectCollection to loop through
-            ManagementObjectCollection objCol = mgmt.GetInstances();
+            var objCol = mgmt.GetInstances();
             //start our loop for all processors found
-            foreach (ManagementObject obj in objCol.Cast<ManagementObject>())
-            {
+            foreach (var obj in objCol.Cast<ManagementObject>())
                 if (cpuMan == string.Empty)
-                {
                     // only return manufacturer from first CPU
                     cpuMan = obj.Properties["Manufacturer"].Value.ToString();
-                }
-            }
             return cpuMan;
         }
 
         /// <summary>
-        /// method to retrieve the CPU's current
-        /// clock speed using the WMI class
+        ///     method to retrieve the CPU's current
+        ///     clock speed using the WMI class
         /// </summary>
         /// <returns>Clock speed</returns>
         public static int GetCPUCurrentClockSpeed()
         {
-            int cpuClockSpeed = 0;
+            var cpuClockSpeed = 0;
             //create an instance of the Managemnet class with the
             //Win32_Processor class
-            ManagementClass mgmt = new ManagementClass("Win32_Processor");
+            var mgmt = new ManagementClass("Win32_Processor");
             //create a ManagementObjectCollection to loop through
-            ManagementObjectCollection objCol = mgmt.GetInstances();
+            var objCol = mgmt.GetInstances();
             //start our loop for all processors found
-            foreach (ManagementObject obj in objCol.Cast<ManagementObject>())
-            {
+            foreach (var obj in objCol.Cast<ManagementObject>())
                 if (cpuClockSpeed == 0)
-                {
                     // only return cpuStatus from first CPU
                     cpuClockSpeed = Convert.ToInt32(obj.Properties["CurrentClockSpeed"].Value.ToString());
-                }
-            }
             //return the status
             return cpuClockSpeed;
         }
+
         /// <summary>
-        /// method to retrieve the network adapters
-        /// default IP gateway using WMI
+        ///     method to retrieve the network adapters
+        ///     default IP gateway using WMI
         /// </summary>
         /// <returns>adapters default IP gateway</returns>
         public static string GetDefaultIPGateway()
@@ -328,50 +297,48 @@ namespace SystemManagementTest
             //create out management class object using the
             //Win32_NetworkAdapterConfiguration class to get the attributes
             //of the network adapter
-            ManagementClass mgmt = new ManagementClass("Win32_NetworkAdapterConfiguration");
+            var mgmt = new ManagementClass("Win32_NetworkAdapterConfiguration");
             //create our ManagementObjectCollection to get the attributes with
-            ManagementObjectCollection objCol = mgmt.GetInstances();
-            string gateway = string.Empty;
+            var objCol = mgmt.GetInstances();
+            var gateway = string.Empty;
             //loop through all the objects we find
-            foreach (ManagementObject obj in objCol.Cast<ManagementObject>())
+            foreach (var obj in objCol.Cast<ManagementObject>())
             {
-                if (gateway == string.Empty)  // only return MAC Address from first card
-                {
+                if (gateway == string.Empty) // only return MAC Address from first card
                     //grab the value from the first network adapter we find
                     //you can change the string to an array and get all
                     //network adapters found as well
                     //check to see if the adapter's IPEnabled
                     //equals true
-                    if ((bool)obj["IPEnabled"] == true)
-                    {
+                    if ((bool)obj["IPEnabled"])
                         gateway = obj["DefaultIPGateway"].ToString();
-                    }
-                }
                 //dispose of our object
                 obj.Dispose();
             }
+
             //replace the ":" with an empty space, this could also
             //be removed if you wish
             gateway = gateway.Replace(":", "");
             //return the mac address
             return gateway;
         }
+
         /// <summary>
-        /// Retrieve CPU Speed.
+        ///     Retrieve CPU Speed.
         /// </summary>
         /// <returns></returns>
-
         public static double? GetCpuSpeedInGHz()
         {
             double? GHz = null;
-            using (ManagementClass mc = new ManagementClass("Win32_Processor"))
+            using (var mc = new ManagementClass("Win32_Processor"))
             {
-                foreach (ManagementObject mo in mc.GetInstances().Cast<ManagementObject>())
+                foreach (var mo in mc.GetInstances().Cast<ManagementObject>())
                 {
                     GHz = 0.001 * (uint)mo.Properties["CurrentClockSpeed"].Value;
                     break;
                 }
             }
+
             return GHz;
         }
 

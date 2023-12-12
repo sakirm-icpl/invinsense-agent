@@ -7,10 +7,16 @@ namespace ServiceMonitorTest.Monitor
 {
     public class ExtendedServiceController : ServiceController
     {
-        public event EventHandler<ServiceStatusEventArgs> StatusChanged;
-        private readonly Dictionary<ServiceControllerStatus, Task> _tasks = new Dictionary<ServiceControllerStatus, Task>();
+        private readonly Dictionary<ServiceControllerStatus, Task> _tasks =
+            new Dictionary<ServiceControllerStatus, Task>();
 
-        new public ServiceControllerStatus? Status
+        public ExtendedServiceController(string ServiceName) : base(ServiceName)
+        {
+            foreach (ServiceControllerStatus status in Enum.GetValues(typeof(ServiceControllerStatus)))
+                _tasks.Add(status, null);
+        }
+
+        public new ServiceControllerStatus? Status
         {
             get
             {
@@ -26,25 +32,14 @@ namespace ServiceMonitorTest.Monitor
             }
         }
 
-        public ExtendedServiceController(string ServiceName) : base(ServiceName)
-        {
-            foreach (ServiceControllerStatus status in Enum.GetValues(typeof(ServiceControllerStatus)))
-            {
-                _tasks.Add(status, null);
-            }
-        }
+        public event EventHandler<ServiceStatusEventArgs> StatusChanged;
 
         public void StartListening()
         {
-            if(Status == null)
-            {
-                return;
-            }
+            if (Status == null) return;
 
             foreach (ServiceControllerStatus status in Enum.GetValues(typeof(ServiceControllerStatus)))
-            {
                 if (Status != status && (_tasks[status] == null || _tasks[status].IsCompleted))
-                {
                     _tasks[status] = Task.Run(() =>
                     {
                         try
@@ -59,13 +54,11 @@ namespace ServiceMonitorTest.Monitor
                             // since it most likely means the service was uninstalled/lost communication
                         }
                     });
-                }
-            }
         }
 
         protected virtual void OnStatusChanged(ServiceStatusEventArgs e)
         {
-            EventHandler<ServiceStatusEventArgs> handler = StatusChanged;
+            var handler = StatusChanged;
             handler?.Invoke(this, e);
         }
     }

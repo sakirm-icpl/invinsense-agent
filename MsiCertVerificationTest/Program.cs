@@ -1,13 +1,13 @@
-﻿using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
+﻿using System;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
-using System;
+using System.Security.Cryptography.X509Certificates;
 
 namespace MsiCertVerificationTest
 {
     internal class Program
     {
-        static void Main()
+        private static void Main()
         {
             ShowCertificateInfo("../../../artifacts/wazuh/wazuh-agent-4.3.9-1.msi");
             ShowCertificateInfo("../../../artifacts/wazuh/wazuh-agent-4.3.10-1.msi");
@@ -19,25 +19,20 @@ namespace MsiCertVerificationTest
             Console.ReadLine();
         }
 
-        static void ShowCertificateInfo(string msiPath)
+        private static void ShowCertificateInfo(string msiPath)
         {
             try
             {
-                X509Certificate x509 = X509Certificate.CreateFromSignedFile(msiPath);
+                var x509 = X509Certificate.CreateFromSignedFile(msiPath);
                 if (x509.GetHashCode() != 0)
-                {
                     Console.WriteLine(x509.ToString(true));
-                }
                 else
-                {
                     Console.WriteLine("Assembly isn't signed by a software publisher certificate");
-                }
             }
             catch (COMException ce)
             {
                 // using a test certificate without trusting the test root ?
                 Console.WriteLine(ce.Message);
-
             }
             catch (CryptographicException e)
             {

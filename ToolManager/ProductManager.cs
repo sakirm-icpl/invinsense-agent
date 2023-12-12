@@ -1,14 +1,13 @@
-﻿using Common.Helpers;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.ServiceProcess;
+using System.Text.RegularExpressions;
+using Common.Helpers;
 using Common.Persistence;
 using Common.Utils;
 using MsiWrapper;
 using Serilog;
-using System;
-using System.Diagnostics;
-using System.IO;
-using System.IO.Compression;
-using System.ServiceProcess;
-using System.Text.RegularExpressions;
 
 namespace ToolManager
 {
@@ -18,7 +17,7 @@ namespace ToolManager
 
         protected readonly ToolDescriptor ToolDescriptor;
 
-        public ProductManager( ILogger logger, ToolDescriptor toolDescriptor)
+        public ProductManager(ILogger logger, ToolDescriptor toolDescriptor)
         {
             _logger = logger;
             ToolDescriptor = toolDescriptor;
@@ -32,7 +31,7 @@ namespace ToolManager
 
         protected string GetLatestPath(string toolName, string extension)
         {
-            string[] files = Directory.GetFiles(CommonUtils.ArtifactsFolder, $"{toolName}-*.{extension}");
+            var files = Directory.GetFiles(CommonUtils.ArtifactsFolder, $"{toolName}-*.{extension}");
 
             _logger.Information($"Found files: {string.Join(",", files)}");
 
@@ -56,8 +55,8 @@ namespace ToolManager
 
                     if (matchA.Success && matchB.Success)
                     {
-                        Version versionA = new Version(matchA.Groups[1].Value);
-                        Version versionB = new Version(matchB.Groups[1].Value);
+                        var versionA = new Version(matchA.Groups[1].Value);
+                        var versionB = new Version(matchB.Groups[1].Value);
 
                         return versionB.CompareTo(versionA); // Sort in descending order
                     }
@@ -66,7 +65,7 @@ namespace ToolManager
                 });
 
                 // Keep the latest file and delete the rest
-                for (int i = 1; i < files.Length; i++)
+                for (var i = 1; i < files.Length; i++)
                 {
                     File.Delete(files[i]);
                     _logger.Information($"Deleted: {files[i]}");
@@ -86,19 +85,15 @@ namespace ToolManager
 
         protected bool IsServiceInstalled(string serviceName)
         {
-            ServiceController[] services = ServiceController.GetServices();
-            foreach (ServiceController service in services)
-            {
+            var services = ServiceController.GetServices();
+            foreach (var service in services)
                 if (service.ServiceName.Equals(serviceName, StringComparison.OrdinalIgnoreCase))
-                {
                     return true;
-                }
-            }
             return false;
         }
 
         /// <summary>
-        /// Get the latest version of executable from the default path
+        ///     Get the latest version of executable from the default path
         /// </summary>
         /// <param name="version"></param>
         /// <returns>true: without error, false: with error</returns>
@@ -119,10 +114,8 @@ namespace ToolManager
                 var versionString = fileInfo.ProductVersion;
 
                 if (!string.IsNullOrWhiteSpace(versionString))
-                {
                     // ProductVersion might include additional text, e.g. "5.10.2 (build 5.10.2-1.win64)"
                     version = new Version(versionString.Split(' ')[0]);
-                }
                 return true;
             }
             catch (Exception ex)
@@ -139,13 +132,13 @@ namespace ToolManager
             {
                 _logger.Information($"Preparing installation for {ToolDescriptor.Name}");
 
-                if(!ToolDescriptor.IsActive)
+                if (!ToolDescriptor.IsActive)
                 {
                     _logger.Information($"{ToolDescriptor.Name} is not active");
                     return 0;
                 }
 
-                var isInstalledVersionFetched = GetInstalledVersion(out Version installedVersion);
+                var isInstalledVersionFetched = GetInstalledVersion(out var installedVersion);
                 Log.Logger.Information($"Installed version: {installedVersion}");
 
                 //get latest msi file from artifacts folder
@@ -156,7 +149,7 @@ namespace ToolManager
                     return installedVersion == null ? -1 : 0;
                 }
 
-                var isNewVersionFetched = MsiPackageWrapper.GetMsiVersion(msiPath, out Version newVersion);
+                var isNewVersionFetched = MsiPackageWrapper.GetMsiVersion(msiPath, out var newVersion);
 
                 if (!isInstalledVersionFetched || !isNewVersionFetched)
                 {
@@ -173,10 +166,7 @@ namespace ToolManager
                     return 0;
                 }
 
-                if (!IsMsiInstallerBusy())
-                {
-                    return 1;
-                }
+                if (!IsMsiInstallerBusy()) return 1;
 
                 _logger.Information("MSI installer is ready");
 
@@ -209,6 +199,7 @@ namespace ToolManager
                 _logger.Error("MSI installer is not ready. 1618");
                 return false;
             }
+
             return true;
         }
 
@@ -224,19 +215,18 @@ namespace ToolManager
                     return 1618;
                 }
 
-                bool status = true;
+                var status = true;
 
                 _logger.Information("MSI installer is ready");
 
                 //Checking if file is exists or not
-                if (GetInstalledVersion(out Version version) && version != null)
+                if (GetInstalledVersion(out var version) && version != null)
                 {
                     _logger.Information($"{ToolDescriptor.Name} uninstall started...");
                     status = MsiPackageWrapper.Uninstall(ToolDescriptor.Name);
                 }
 
                 return status ? 0 : 1;
-
             }
             catch (Exception ex)
             {

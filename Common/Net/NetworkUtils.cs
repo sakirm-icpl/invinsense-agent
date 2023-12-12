@@ -9,8 +9,8 @@ namespace Common.Net
         //http://logger.io/ip
         public static string PublicIPAddress()
         {
-            string uri = $"http://checkip.dyndns.org/";
-            string ip = string.Empty;
+            var uri = "http://checkip.dyndns.org/";
+            var ip = string.Empty;
 
             using (var client = new HttpClient())
             {
@@ -33,15 +33,9 @@ namespace Common.Net
             foreach (var hostIp in hostIPs)
             {
                 // is localhost
-                if (IPAddress.IsLoopback(hostIp))
-                {
-                    return true;
-                }
+                if (IPAddress.IsLoopback(hostIp)) return true;
                 // is local address
-                if (localIPs.Contains(hostIp))
-                {
-                    return true;
-                }
+                if (localIPs.Contains(hostIp)) return true;
             }
 
             return false;

@@ -9,9 +9,9 @@ namespace Serilogger
     internal static class Program
     {
         /// <summary>
-        /// The main entry point for the application.
+        ///     The main entry point for the application.
         /// </summary>
-        static void Main()
+        private static void Main()
         {
             Log.Logger = new LoggerConfiguration().CreateLogger();
             Log.Information("No one listens to me!");
@@ -26,22 +26,25 @@ namespace Serilogger
             Log.Information("Ah, there you are!");
 
             Log.Logger = new LoggerConfiguration()
-                   .MinimumLevel.Verbose()
-                   .WriteTo.File(new CustomLogFormatter(), "logs.json", rollOnFileSizeLimit: false, restrictedToMinimumLevel: LogEventLevel.Information, fileSizeLimitBytes: 10000)
-                   .CreateLogger();
+                .MinimumLevel.Verbose()
+                .WriteTo.File(new CustomLogFormatter(), "logs.json", rollOnFileSizeLimit: false,
+                    restrictedToMinimumLevel: LogEventLevel.Information, fileSizeLimitBytes: 10000)
+                .CreateLogger();
 
             Log.Information("Ah, there you are!");
 
             Log.Logger = new LoggerConfiguration()
                 .Enrich.With(new ThreadIdEnricher())
-                .WriteTo.Console(outputTemplate: "{Timestamp:HH:mm} [{Level}] ({ThreadId}) {Message}{NewLine}{Exception}")
+                .WriteTo.Console(
+                    outputTemplate: "{Timestamp:HH:mm} [{Level}] ({ThreadId}) {Message}{NewLine}{Exception}")
                 .CreateLogger();
 
             Log.Information("Ah, there you are!");
 
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
-                .WriteTo.File("log", rollOnFileSizeLimit: true, fileSizeLimitBytes: 500, retainedFileCountLimit: 1, rollingInterval: RollingInterval.Infinite)
+                .WriteTo.File("log", rollOnFileSizeLimit: true, fileSizeLimitBytes: 500, retainedFileCountLimit: 1,
+                    rollingInterval: RollingInterval.Infinite)
                 .CreateLogger();
 
             Log.Information("Initializing service");
@@ -54,11 +57,12 @@ namespace Serilogger
         }
     }
 
-    class ThreadIdEnricher : ILogEventEnricher
+    internal class ThreadIdEnricher : ILogEventEnricher
     {
         public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
         {
-            logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("ThreadId", Thread.CurrentThread.ManagedThreadId));
+            logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("ThreadId",
+                Thread.CurrentThread.ManagedThreadId));
         }
     }
 }

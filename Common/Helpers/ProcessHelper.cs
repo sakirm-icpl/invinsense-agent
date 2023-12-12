@@ -4,14 +4,14 @@ using System.Diagnostics;
 namespace Common.Helpers
 {
     /// <summary>
-    /// Provides methods to help with interacting with processes.
+    ///     Provides methods to help with interacting with processes.
     /// </summary>
     public class ProcessHelper
     {
         #region Methods
 
         /// <summary>
-        /// Creates a process that runs in the background with no UI.
+        ///     Creates a process that runs in the background with no UI.
         /// </summary>
         /// <param name="processFilePath">The file path for the process to start</param>
         /// <param name="processArguments">The command-line arguments to use</param>

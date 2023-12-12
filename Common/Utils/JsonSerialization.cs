@@ -1,5 +1,4 @@
-﻿
-namespace Common.Utils
+﻿namespace Common.Utils
 {
     public static class SerializationExtension
     {
