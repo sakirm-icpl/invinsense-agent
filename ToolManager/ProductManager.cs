@@ -1,4 +1,5 @@
-﻿using Common.Persistence;
+﻿using Common.Helpers;
+using Common.Persistence;
 using Common.Utils;
 using MsiWrapper;
 using Serilog;
@@ -267,8 +268,8 @@ namespace ToolManager
                 _logger.Error($"{sourcePath} not found");
                 return;
             }
-            
-            ZipFile.ExtractToDirectory(sourcePath, destinationPath);
+
+            ZipArchiveHelper.ExtractZipFileWithOverwrite(sourcePath, destinationPath);
 
             _logger.Information($"Removing {sourcePath}");
             File.Delete(sourcePath);
