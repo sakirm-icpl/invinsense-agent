@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0A9DF203-D636-4FA7-AAD6-6E508135C20B}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>EventLogSubscriber</RootNamespace>
-    <AssemblyName>EventLogSubscriber</AssemblyName>
+    <ProjectGuid>{51A8F89B-689A-4F15-B250-01C943630838}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Common.Localization</RootNamespace>
+    <AssemblyName>Common.Localization</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -33,36 +33,28 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Management" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="DisplayMessage.cs" />
+    <Compile Include="DisplayMessageMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <None Include="app.manifest" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{0698eb58-dee6-4285-baef-872887ff15cb}</Project>
-      <Name>Common</Name>
+    <ProjectReference Include="..\Common.Core\Common.Core.csproj">
+      <Project>{12bbb8a8-535c-48b1-a50e-22acd920a478}</Project>
+      <Name>Common.Core</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="System.Management">
-      <Version>8.0.0</Version>
-    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,0 +1,38 @@
+﻿- name: Ping Pong Playbook
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  tasks:
+    # This unzips a library that was downloaded with win_get_url, and removes the file after extraction
+    # $ ansible -i hosts -m win_unzip -a "src=C:\LibraryToUnzip.zip dest=C:\Lib remove=yes" all
+    - name: Unzip a bz2 (BZip) file
+      community.windows.win_unzip:
+        src: C:\Users\Phil\Logs.bz2
+        dest: C:\Users\Phil\OldLogs
+        creates: C:\Users\Phil\OldLogs
+    
+    - name: Unzip gz log
+      community.windows.win_unzip:
+        src: C:\Logs\application-error-logs.gz
+        dest: C:\ExtractedLogs\application-error-logs
+    
+    # Unzip .zip file, recursively decompresses the contained .gz files and removes all unneeded compressed files after completion.
+    - name: Recursively decompress GZ files in ApplicationLogs.zip
+      community.windows.win_unzip:
+        src: C:\Downloads\ApplicationLogs.zip
+        dest: C:\Application\Logs
+        recurse: yes
+        delete_archive: yes
+    
+    - name: Install PSCX
+      community.windows.win_psmodule:
+        name: Pscx
+        state: present
+    
+    - name: Unzip .7z file which is password encrypted
+      community.windows.win_unzip:
+        src: C:\Downloads\ApplicationLogs.7z
+        dest: C:\Application\Logs
+        password: abcd
+        delete_archive: yes

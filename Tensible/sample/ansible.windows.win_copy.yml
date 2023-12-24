@@ -1,0 +1,60 @@
+﻿- name: Ping Pong Playbook
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: Copy a single file
+      ansible.windows.win_copy:
+        src: /srv/myfiles/foo.conf
+        dest: C:\Temp\renamed-foo.conf
+    
+    - name: Copy a single file, but keep a backup
+      ansible.windows.win_copy:
+        src: /srv/myfiles/foo.conf
+        dest: C:\Temp\renamed-foo.conf
+        backup: yes
+    
+    - name: Copy a single file keeping the filename
+      ansible.windows.win_copy:
+        src: /src/myfiles/foo.conf
+        dest: C:\Temp\
+    
+    - name: Copy folder to C:\Temp (results in C:\Temp\temp_files)
+      ansible.windows.win_copy:
+        src: files/temp_files
+        dest: C:\Temp
+    
+    - name: Copy folder contents recursively
+      ansible.windows.win_copy:
+        src: files/temp_files/
+        dest: C:\Temp
+    
+    - name: Copy a single file where the source is on the remote host
+      ansible.windows.win_copy:
+        src: C:\Temp\foo.txt
+        dest: C:\ansible\foo.txt
+        remote_src: true
+    
+    - name: Copy a folder recursively where the source is on the remote host
+      ansible.windows.win_copy:
+        src: C:\Temp
+        dest: C:\ansible
+        remote_src: true
+    
+    - name: Set the contents of a file
+      ansible.windows.win_copy:
+        content: abc123
+        dest: C:\Temp\foo.txt
+    
+    - name: Copy a single file as another user
+      ansible.windows.win_copy:
+        src: NuGet.config
+        dest: '%AppData%\NuGet\NuGet.config'
+      vars:
+        ansible_become_user: user
+        ansible_become_password: pass
+        # The tmp dir must be set when using win_copy as another user
+        # This ensures the become user will have permissions for the operation
+        # Make sure to specify a folder both the ansible_user and the become_user have access to (i.e not %TEMP% which is user specific and requires Admin)
+        ansible_remote_tmp: 'c:\tmp'

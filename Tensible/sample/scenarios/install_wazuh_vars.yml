@@ -1,0 +1,4 @@
+﻿# vars/windows_vars.yml
+wazuh_manager_ip: "your_manager_ip"
+wazuh_agent_version: "4.7.1-1"
+wazuh_agent_download_url: "https://packages.wazuh.com/4.x/windows/wazuh-agent-{{ wazuh_agent_version }}.msi"

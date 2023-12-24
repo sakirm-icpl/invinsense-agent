@@ -1,0 +1,22 @@
+﻿- name: Install Wazuh Agent on Windows
+  hosts: localhost
+  gather_facts: no
+  vars_files:
+    - vars/windows_vars.yml
+  tasks:
+    - name: Download Wazuh Agent
+      ansible.windows.win_get_url:
+        url: "{{ wazuh_agent_download_url }}"
+        dest: "C:\\temp\\wazuh-agent.msi"
+        force: yes
+
+    - name: Install Wazuh Agent
+      ansible.windows.win_package:
+        path: "C:\\temp\\wazuh-agent.msi"
+        arguments: '/q ADDRESS="{{ wazuh_manager_ip }}" AUTHD_SERVER="{{ wazuh_manager_ip }}"'
+        state: present
+
+    - name: Start Wazuh Service
+      ansible.windows.win_service:
+        name: WazuhSvc
+        state: started

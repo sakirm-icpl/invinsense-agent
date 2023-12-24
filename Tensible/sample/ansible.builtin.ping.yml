@@ -1,0 +1,12 @@
+﻿- name: Ping Pong Playbook
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: Ping test without data
+      ansible.builtin.ping:
+
+    - name: Ping test with data
+      ansible.builtin.ping:
+        data: "hello"

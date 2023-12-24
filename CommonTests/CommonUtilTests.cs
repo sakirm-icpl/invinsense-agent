@@ -1,4 +1,4 @@
-using Common.Utils;
+using Common.ConfigProvider;
 
 namespace CommonTests;
 
