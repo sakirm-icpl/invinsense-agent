@@ -1,0 +1,4 @@
+{
+    "dotnet.defaultSolution": "Samples.sln",
+    "dotnet.preferCSharpExtension": true
+}

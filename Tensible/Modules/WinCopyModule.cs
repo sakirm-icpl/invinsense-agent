@@ -1,7 +1,7 @@
-﻿using Tensible.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Tensible.Models;
 
 namespace Tensible.Modules
 {
@@ -22,11 +22,11 @@ namespace Tensible.Modules
         }
 
         public string Source { get; set; }
-        
+
         public string Destination { get; set; }
 
         public bool RemoteSource { get; set; }
-        
+
         public bool Backup { get; set; }
 
         public override bool Validate()

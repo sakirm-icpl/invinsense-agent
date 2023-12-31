@@ -3,9 +3,10 @@ using System.Diagnostics;
 using System.IO;
 using System.ServiceProcess;
 using System.Text.RegularExpressions;
+using Common.ConfigProvider;
 using Common.Helpers;
 using Common.Persistence;
-using Common.Utils;
+using Common.RegistryHelpers;
 using MsiWrapper;
 using Serilog;
 
@@ -15,18 +16,200 @@ namespace ToolManager
     {
         protected readonly ILogger _logger;
 
-        protected readonly ToolDescriptor ToolDescriptor;
-
-        public ProductManager(ILogger logger, ToolDescriptor toolDescriptor)
+        public ProductManager(ILogger logger)
         {
             _logger = logger;
-            ToolDescriptor = toolDescriptor;
         }
 
-        public bool GetInstalledVersion(out Version version)
+        protected bool GetInstalledVersion(VersionDetectionInstruction model, out Version version)
         {
-            var osqDemonPath = Path.Combine(ToolDescriptor.InstallationPath, ToolDescriptor.ExecutableFiles[0]);
-            return GetFileVersion(osqDemonPath, out version);
+            if (model.Type == VersionDetectionType.FileInfo)
+                return GetFileVersion(model.Path, out version);
+
+            if (model.Type == VersionDetectionType.FileContent)
+                return GetFileContentVersion(model.Path, model.Pattern, out version);
+
+            if (model.Type == VersionDetectionType.Registry)
+                return GetRegistryVersion(model.Path, model.Pattern, out version);
+
+            version = null;
+            return false;
+        }
+
+        protected int InstallMsi(InstallInstruction instruction, VersionDetectionInstruction vdInstruction)
+        {
+            try
+            {
+                _logger.Information($"Preparing installation for {instruction.Name}");
+
+                var isInstalledVersionFetched = GetInstalledVersion(vdInstruction, out var installedVersion);
+                Log.Logger.Information($"Installed version: {installedVersion}");
+
+                //get latest msi file from artifacts folder
+                var msiPath = GetLatestPath(instruction.Name, "msi");
+                if (string.IsNullOrEmpty(msiPath))
+                {
+                    _logger.Error("Exiting process as MSI file not supplied.");
+                    return installedVersion == null ? -1 : 0;
+                }
+
+                var isNewVersionFetched = MsiPackageWrapper.GetMsiVersion(msiPath, out var newVersion);
+
+                if (!isInstalledVersionFetched || !isNewVersionFetched)
+                {
+                    _logger.Error("Error fetching file version.");
+                    return -1;
+                }
+
+                _logger.Information($"MSI Path: {msiPath}, version: {newVersion}");
+
+                if (installedVersion != null && newVersion <= installedVersion)
+                {
+                    _logger.Error($"{instruction.Name} is already installed.");
+                    File.Delete(msiPath);
+                    return 0;
+                }
+
+                if (!IsMsiInstallerBusy()) return 1;
+
+                _logger.Information("MSI installer is ready");
+
+                var logPath = Path.Combine(CommonUtils.LogsFolder, $"{instruction.Name}-install.log");
+
+                _logger.Information($"{instruction.Name} msiPath {msiPath}");
+                _logger.Information($"{instruction.Name} logPath {logPath}");
+
+                var isSuccess = MsiPackageWrapper.Install(msiPath, logPath, instruction.InstallArgs.ToArray());
+
+                if (isSuccess)
+                {
+                    _logger.Information($"{instruction.Name} installation completed");
+                    File.Delete(msiPath);
+                    return 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"{ex.Message}");
+            }
+
+            return 1;
+        }
+
+        protected int UninstallMsi(InstallInstruction instruction)
+        {
+            try
+            {
+                _logger.Information($"Preparing un-installation for {instruction.Name}");
+
+                if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
+                {
+                    _logger.Error("MSI installer is not ready.");
+                    return 1618;
+                }
+
+                var status = true;
+
+                _logger.Information("MSI installer is ready");
+
+                _logger.Information($"{instruction.Name} uninstall started...");
+                status = MsiPackageWrapper.Uninstall(instruction.Name);
+
+                return status ? 0 : 1;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"{ex.Message}");
+                return 1;
+            }
+        }
+
+        /// <summary>
+        ///     Get the latest version of executable from the default path
+        /// </summary>
+        /// <param name="version"></param>
+        /// <returns>true: without error, false: with error</returns>
+        private bool GetFileVersion(string executablePath, out Version version)
+        {
+            version = null;
+
+            try
+            {
+                if (!File.Exists(executablePath))
+                {
+                    _logger.Information(executablePath + " not found");
+                    return true;
+                }
+
+                // Get product version from file properties
+                var fileInfo = FileVersionInfo.GetVersionInfo(executablePath);
+                var versionString = fileInfo.ProductVersion;
+
+                if (!string.IsNullOrWhiteSpace(versionString))
+                    // ProductVersion might include additional text, e.g. "5.10.2 (build 5.10.2-1.win64)"
+                    version = new Version(versionString.Split(' ')[0]);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"{ex.Message}");
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        ///     Get version from file content
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="pattern"></param>
+        /// <param name="version"></param>
+        /// <returns></returns>
+        private bool GetFileContentVersion(string filePath, string pattern, out Version version)
+        {
+            version = null;
+
+            try
+            {
+                if (!File.Exists(filePath))
+                {
+                    _logger.Information(filePath + " not found");
+                    return true;
+                }
+
+                var fileContent = File.ReadAllText(filePath);
+                var match = Regex.Match(fileContent, pattern);
+
+                if (match.Success)
+                {
+                    version = new Version(match.Groups[1].Value);
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"{ex.Message}");
+            }
+
+            return false;
+        }
+
+        private bool GetRegistryVersion(string registryPath, string pattern, out Version version)
+        {
+            version = null;
+
+            try
+            {
+                var value = ToolRegistry.GetPropertyByName(registryPath, pattern);
+                version = new Version(value);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"{ex.Message}");
+            }
+
+            return false;
         }
 
         protected string GetLatestPath(string toolName, string extension)
@@ -92,106 +275,6 @@ namespace ToolManager
             return false;
         }
 
-        /// <summary>
-        ///     Get the latest version of executable from the default path
-        /// </summary>
-        /// <param name="version"></param>
-        /// <returns>true: without error, false: with error</returns>
-        protected bool GetFileVersion(string executablePath, out Version version)
-        {
-            version = null;
-
-            try
-            {
-                if (!File.Exists(executablePath))
-                {
-                    _logger.Information(executablePath + " not found");
-                    return true;
-                }
-
-                // Get product version from file properties
-                var fileInfo = FileVersionInfo.GetVersionInfo(executablePath);
-                var versionString = fileInfo.ProductVersion;
-
-                if (!string.IsNullOrWhiteSpace(versionString))
-                    // ProductVersion might include additional text, e.g. "5.10.2 (build 5.10.2-1.win64)"
-                    version = new Version(versionString.Split(' ')[0]);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                _logger.Error($"{ex.Message}");
-            }
-
-            return false;
-        }
-
-        protected int InstallMsi()
-        {
-            try
-            {
-                _logger.Information($"Preparing installation for {ToolDescriptor.Name}");
-
-                if (!ToolDescriptor.IsActive)
-                {
-                    _logger.Information($"{ToolDescriptor.Name} is not active");
-                    return 0;
-                }
-
-                var isInstalledVersionFetched = GetInstalledVersion(out var installedVersion);
-                Log.Logger.Information($"Installed version: {installedVersion}");
-
-                //get latest msi file from artifacts folder
-                var msiPath = GetLatestPath(ToolDescriptor.Name, "msi");
-                if (string.IsNullOrEmpty(msiPath))
-                {
-                    _logger.Error("Exiting process as MSI file not supplied.");
-                    return installedVersion == null ? -1 : 0;
-                }
-
-                var isNewVersionFetched = MsiPackageWrapper.GetMsiVersion(msiPath, out var newVersion);
-
-                if (!isInstalledVersionFetched || !isNewVersionFetched)
-                {
-                    _logger.Error("Error fetching file version.");
-                    return -1;
-                }
-
-                _logger.Information($"MSI Path: {msiPath}, version: {newVersion}");
-
-                if (installedVersion != null && newVersion <= installedVersion)
-                {
-                    _logger.Error($"{ToolDescriptor.Name} is already installed.");
-                    File.Delete(msiPath);
-                    return 0;
-                }
-
-                if (!IsMsiInstallerBusy()) return 1;
-
-                _logger.Information("MSI installer is ready");
-
-                var logPath = Path.Combine(CommonUtils.LogsFolder, $"{ToolDescriptor.Name}-install.log");
-
-                _logger.Information($"{ToolDescriptor.Name} msiPath {msiPath}");
-                _logger.Information($"{ToolDescriptor.Name} logPath {logPath}");
-
-                var isSuccess = MsiPackageWrapper.Install(msiPath, logPath, ToolDescriptor.InstallParameters.ToArray());
-
-                if (isSuccess)
-                {
-                    _logger.Information($"{ToolDescriptor.Name} installation completed");
-                    File.Delete(msiPath);
-                    return 0;
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Error($"{ex.Message}");
-            }
-
-            return 1;
-        }
-
         private bool IsMsiInstallerBusy()
         {
             if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
@@ -201,38 +284,6 @@ namespace ToolManager
             }
 
             return true;
-        }
-
-        protected int UninstallMsi()
-        {
-            try
-            {
-                _logger.Information($"Preparing un-installation for {ToolDescriptor.Name}");
-
-                if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
-                {
-                    _logger.Error("MSI installer is not ready.");
-                    return 1618;
-                }
-
-                var status = true;
-
-                _logger.Information("MSI installer is ready");
-
-                //Checking if file is exists or not
-                if (GetInstalledVersion(out var version) && version != null)
-                {
-                    _logger.Information($"{ToolDescriptor.Name} uninstall started...");
-                    status = MsiPackageWrapper.Uninstall(ToolDescriptor.Name);
-                }
-
-                return status ? 0 : 1;
-            }
-            catch (Exception ex)
-            {
-                _logger.Error($"{ex.Message}");
-                return 1;
-            }
         }
 
         protected void EnsureSourceToDestination(string sourcePath, string destinationPath)

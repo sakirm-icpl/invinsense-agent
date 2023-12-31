@@ -139,12 +139,14 @@ namespace ProcessMonitorTest
 
             try
             {
-                var info = new ProcessStartInfo("cmd.exe", "/c " + TaskKiller);
-                info.RedirectStandardError = true;
-                info.RedirectStandardInput = true;
-                info.RedirectStandardOutput = true;
-                info.UseShellExecute = false;
-                info.CreateNoWindow = true;
+                var info = new ProcessStartInfo("cmd.exe", "/c " + TaskKiller)
+                {
+                    RedirectStandardError = true,
+                    RedirectStandardInput = true,
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
 
                 var process = new Process
                 {
@@ -165,12 +167,14 @@ namespace ProcessMonitorTest
             var TaskKiller = "taskkill /f /im " + program;
             try
             {
-                var info = new ProcessStartInfo("cmd.exe", "/c " + TaskKiller);
-                info.RedirectStandardError = true;
-                info.RedirectStandardInput = true;
-                info.RedirectStandardOutput = true;
-                info.UseShellExecute = false;
-                info.CreateNoWindow = true;
+                var info = new ProcessStartInfo("cmd.exe", "/c " + TaskKiller)
+                {
+                    RedirectStandardError = true,
+                    RedirectStandardInput = true,
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
 
                 var process = new Process
                 {

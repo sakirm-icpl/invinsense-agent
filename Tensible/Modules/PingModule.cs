@@ -1,7 +1,6 @@
-﻿using Tensible.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using Tensible.Models;
 
 namespace Tensible.Modules
 {
@@ -21,12 +20,12 @@ namespace Tensible.Modules
         {
             var module = new PingModule();
 
-            if(dict == null)
+            if (dict == null)
             {
                 return module;
             }
 
-            if(dict.ContainsKey("data"))
+            if (dict.ContainsKey("data"))
             {
                 module.Data = dict["data"].ToString();
             }

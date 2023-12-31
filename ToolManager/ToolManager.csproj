@@ -1,67 +1,99 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')"/>
-    <PropertyGroup>
-        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-        <ProjectGuid>{B04124BA-1758-4AA2-8D3C-9BC0FB9C0E33}</ProjectGuid>
-        <OutputType>Library</OutputType>
-        <AppDesignerFolder>Properties</AppDesignerFolder>
-        <RootNamespace>ToolManager</RootNamespace>
-        <AssemblyName>ToolManager</AssemblyName>
-        <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-        <FileAlignment>512</FileAlignment>
-        <Deterministic>true</Deterministic>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-        <DebugSymbols>true</DebugSymbols>
-        <DebugType>full</DebugType>
-        <Optimize>false</Optimize>
-        <OutputPath>bin\Debug\</OutputPath>
-        <DefineConstants>DEBUG;TRACE</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-        <DebugType>pdbonly</DebugType>
-        <Optimize>true</Optimize>
-        <OutputPath>bin\Release\</OutputPath>
-        <DefineConstants>TRACE</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-    </PropertyGroup>
-    <ItemGroup>
-        <Compile Include="OsQueryWrapper.cs"/>
-        <Compile Include="ProductManager.cs"/>
-        <Compile Include="ToolDescriptors.cs"/>
-        <Compile Include="Properties\AssemblyInfo.cs"/>
-    </ItemGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\Common\Common.csproj">
-            <Project>{0698eb58-dee6-4285-baef-872887ff15cb}</Project>
-            <Name>Common</Name>
-        </ProjectReference>
-        <ProjectReference Include="..\MsiWrapper\MsiWrapper.csproj">
-            <Project>{fd09ba89-ba8f-4720-86be-1ff16bfbddf6}</Project>
-            <Name>MsiWrapper</Name>
-        </ProjectReference>
-    </ItemGroup>
-    <ItemGroup>
-        <Reference Include="Microsoft.CSharp"/>
-        <Reference Include="System"/>
-        <Reference Include="System.ServiceProcess"/>
-        <Reference Include="System.Xml"/>
-    </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="Serilog">
-            <Version>3.1.1</Version>
-        </PackageReference>
-        <PackageReference Include="System.Management">
-            <Version>8.0.0</Version>
-        </PackageReference>
-    </ItemGroup>
-    <ItemGroup>
-        <WCFMetadata Include="Connected Services\"/>
-    </ItemGroup>
-    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B04124BA-1758-4AA2-8D3C-9BC0FB9C0E33}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ToolManager</RootNamespace>
+    <AssemblyName>ToolManager</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Models\ExecutableFile.cs" />
+    <Compile Include="Models\FileCopy.cs" />
+    <Compile Include="Models\FileExistsAction.cs" />
+    <Compile Include="Models\InstallInstruction.cs" />
+    <Compile Include="Models\InstallStatus.cs" />
+    <Compile Include="Models\InstallType.cs" />
+    <Compile Include="Models\ProcessType.cs" />
+    <Compile Include="Models\PropertyConfigAction.cs" />
+    <Compile Include="Models\PropertyValue.cs" />
+    <Compile Include="Models\RunningStatus.cs" />
+    <Compile Include="Models\RunType.cs" />
+    <Compile Include="Models\ServiceAction.cs" />
+    <Compile Include="Models\ServiceActionType.cs" />
+    <Compile Include="Models\ServiceInstallAction.cs" />
+    <Compile Include="Models\ServiceInstallType.cs" />
+    <Compile Include="Models\StartupType.cs" />
+    <Compile Include="Models\ToolDetail.cs" />
+    <Compile Include="Models\ToolGroup.cs" />
+    <Compile Include="Models\ToolStatus.cs" />
+    <Compile Include="Models\ToolValidator.cs" />
+    <Compile Include="Models\TrayStatus.cs" />
+    <Compile Include="Models\WinService.cs" />
+    <Compile Include="ProductManager.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common.ConfigProvider\Common.ConfigProvider.csproj">
+      <Project>{2E5DA9E9-CCD9-4E4F-A841-706393E59EAA}</Project>
+      <Name>Common.ConfigProvider</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.Core\Common.Core.csproj">
+      <Project>{12BBB8A8-535C-48B1-A50E-22ACD920A478}</Project>
+      <Name>Common.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.FileHelpers\Common.FileHelpers.csproj">
+      <Project>{BC9538D2-5B2E-487C-948D-E78BC2EE31BF}</Project>
+      <Name>Common.FileHelpers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.RegistryHelpers\Common.RegistryHelpers.csproj">
+      <Project>{FEAF253A-A8B4-45DE-A0DB-F009B86F1734}</Project>
+      <Name>Common.RegistryHelpers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MsiWrapper\MsiWrapper.csproj">
+      <Project>{fd09ba89-ba8f-4720-86be-1ff16bfbddf6}</Project>
+      <Name>MsiWrapper</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Serilog">
+      <Version>3.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="System.Management">
+      <Version>8.0.0</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

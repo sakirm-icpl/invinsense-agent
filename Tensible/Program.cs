@@ -1,6 +1,6 @@
-﻿using Tensible.Models;
-using System;
+﻿using System;
 using System.Linq;
+using Tensible.Models;
 
 namespace Tensible
 {
@@ -8,7 +8,7 @@ namespace Tensible
     {
         static void Main(string[] args)
         {
-            if(args.Contains("-v") || args.Contains("--version"))
+            if (args.Contains("-v") || args.Contains("--version"))
             {
                 Console.WriteLine("TensibleWrapper v0.1");
                 return;
@@ -20,7 +20,7 @@ namespace Tensible
             {
                 var varFile = args[varIndex].Trim('"');
 
-                if(!varFile.EndsWith(".yml") || !varFile.StartsWith("@"))
+                if (!varFile.EndsWith(".yml") || !varFile.StartsWith("@"))
                 {
                     Console.WriteLine("Extra vars file must be a .yml file");
                     return;

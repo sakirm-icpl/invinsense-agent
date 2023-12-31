@@ -49,9 +49,13 @@
       <Project>{2E5DA9E9-CCD9-4E4F-A841-706393E59EAA}</Project>
       <Name>Common.ConfigProvider</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{0698EB58-DEE6-4285-BAEF-872887FF15CB}</Project>
-      <Name>Common</Name>
+    <ProjectReference Include="..\MsiWrapper\MsiWrapper.csproj">
+      <Project>{fd09ba89-ba8f-4720-86be-1ff16bfbddf6}</Project>
+      <Name>MsiWrapper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ToolManager\ToolManager.csproj">
+      <Project>{b04124ba-1758-4aa2-8d3c-9bc0fb9c0e33}</Project>
+      <Name>ToolManager</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

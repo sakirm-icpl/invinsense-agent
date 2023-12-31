@@ -1,6 +1,6 @@
-﻿using Tensible.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Tensible.Models;
 
 namespace Tensible.Modules
 {
@@ -22,27 +22,27 @@ namespace Tensible.Modules
         {
             var module = new WinServiceModule();
 
-            if(dict == null)
+            if (dict == null)
             {
                 return module;
             }
 
-            if(dict.ContainsKey("path"))
+            if (dict.ContainsKey("path"))
             {
                 module.Path = dict["path"].ToString();
             }
 
-            if(dict.ContainsKey("product_id"))
+            if (dict.ContainsKey("product_id"))
             {
                 module.ProductId = dict["product_id"].ToString();
             }
 
-            if(dict.ContainsKey("state"))
+            if (dict.ContainsKey("state"))
             {
                 module.State = dict["state"].ToString();
             }
 
-            if(dict.ContainsKey("log_path"))
+            if (dict.ContainsKey("log_path"))
             {
                 module.LogPath = dict["log_path"].ToString();
             }

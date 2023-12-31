@@ -38,42 +38,7 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Encryption\FileEncryptDecrypt.cs" />
-    <Compile Include="Enumeration.cs" />
-    <Compile Include="Helpers\ZipArchiveHelper.cs" />
-    <Compile Include="GenericEnum.cs" />
-    <Compile Include="Extensions\EnumExtensions.cs" />
-    <Compile Include="Helpers\ProcessHelper.cs" />
-    <Compile Include="IntEnumeration.cs" />
-    <Compile Include="NamedPipes\BasicPipe.cs" />
-    <Compile Include="NamedPipes\ClientPipe.cs" />
-    <Compile Include="NamedPipes\PipeEventArgs.cs" />
-    <Compile Include="NamedPipes\ServerPipe.cs" />
-    <Compile Include="Persistance\ExecutableFile.cs" />
-    <Compile Include="Persistance\FileCopy.cs" />
-    <Compile Include="Persistance\FileExistsAction.cs" />
-    <Compile Include="Persistance\InstallInstruction.cs" />
-    <Compile Include="Persistance\InstallStatus.cs" />
-    <Compile Include="Persistance\InstallType.cs" />
-    <Compile Include="Persistance\ProcessType.cs" />
-    <Compile Include="Persistance\PropertyConfigAction.cs" />
-    <Compile Include="Persistance\PropertyValue.cs" />
-    <Compile Include="Persistance\RunningStatus.cs" />
-    <Compile Include="Persistance\RunType.cs" />
-    <Compile Include="Persistance\ServiceAction.cs" />
-    <Compile Include="Persistance\ServiceActionType.cs" />
-    <Compile Include="Persistance\ServiceInstallAction.cs" />
-    <Compile Include="Persistance\ServiceInstallType.cs" />
-    <Compile Include="Persistance\StartupType.cs" />
-    <Compile Include="Persistance\ToolDescriptor.cs" />
-    <Compile Include="Persistance\ToolGroup.cs" />
-    <Compile Include="Persistance\ToolRegistry.cs" />
-    <Compile Include="Persistance\ToolStatus.cs" />
-    <Compile Include="Persistance\TrayStatus.cs" />
-    <Compile Include="Persistance\WinService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Constants.cs" />
-    <Compile Include="StringEnumeration.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json">

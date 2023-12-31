@@ -5,11 +5,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.ServiceProcess;
 using System.Xml;
-using Common.Persistence;
 using MsiWrapper;
 using System.IO;
 using System.Text;
 using Common.Mappers;
+using Common.RegistryHelpers;
 
 namespace ToolManager
 {

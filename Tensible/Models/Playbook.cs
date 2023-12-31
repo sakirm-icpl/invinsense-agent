@@ -8,7 +8,7 @@ namespace Tensible.Models
         public string Name { get; set; }
 
         public string Hosts { get; set; }
-        
+
         public string Connection { get; set; }
 
         // Making gather_facts nullable and default to true

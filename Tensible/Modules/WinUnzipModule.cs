@@ -1,6 +1,6 @@
-﻿using Tensible.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Tensible.Models;
 
 namespace Tensible.Modules
 {
@@ -24,37 +24,37 @@ namespace Tensible.Modules
         {
             var module = new WinUnzipModule();
 
-            if(dict == null)
+            if (dict == null)
             {
                 return module;
             }
 
-            if(dict.ContainsKey("src"))
+            if (dict.ContainsKey("src"))
             {
                 module.Source = dict["src"].ToString();
             }
 
-            if(dict.ContainsKey("dest"))
+            if (dict.ContainsKey("dest"))
             {
                 module.Destination = dict["dest"].ToString();
             }
 
-            if(dict.ContainsKey("creates"))
+            if (dict.ContainsKey("creates"))
             {
                 module.Creates = dict["creates"].ToString();
             }
 
-            if(dict.ContainsKey("recurse"))
+            if (dict.ContainsKey("recurse"))
             {
                 module.Recursive = dict["recurse"].ToString() == "yes";
             }
 
-            if(dict.ContainsKey("password"))
+            if (dict.ContainsKey("password"))
             {
                 module.Password = dict["password"].ToString();
             }
 
-            if(dict.ContainsKey("delete_archive"))
+            if (dict.ContainsKey("delete_archive"))
             {
                 module.DeleteArchive = dict["delete_archive"].ToString() == "yes";
             }

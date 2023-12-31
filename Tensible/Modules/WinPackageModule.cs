@@ -1,6 +1,6 @@
-﻿using Tensible.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Tensible.Models;
 
 namespace Tensible.Modules
 {
@@ -29,42 +29,42 @@ namespace Tensible.Modules
         {
             var module = new WinPackageModule();
 
-            if(dict == null)
+            if (dict == null)
             {
                 return module;
             }
 
-            if(dict.ContainsKey("provider"))
+            if (dict.ContainsKey("provider"))
             {
                 module.Provider = dict["provider"].ToString();
             }
 
-            if(dict.ContainsKey("path"))
+            if (dict.ContainsKey("path"))
             {
                 module.Path = dict["path"].ToString();
             }
 
-            if(dict.ContainsKey("product_id"))
+            if (dict.ContainsKey("product_id"))
             {
                 module.ProductId = dict["product_id"].ToString();
             }
 
-            if(dict.ContainsKey("state"))
+            if (dict.ContainsKey("state"))
             {
                 module.State = dict["state"].ToString();
             }
 
-            if(dict.ContainsKey("log_path"))
+            if (dict.ContainsKey("log_path"))
             {
                 module.LogPath = dict["log_path"].ToString();
             }
 
-            if(dict.ContainsKey("creates_service"))
+            if (dict.ContainsKey("creates_service"))
             {
                 module.CreatesService = dict["creates_service"].ToString();
             }
 
-            if(dict.ContainsKey("validate_certs"))
+            if (dict.ContainsKey("validate_certs"))
             {
                 module.ValidateCerts = Convert.ToBoolean(dict["validate_certs"]);
             }

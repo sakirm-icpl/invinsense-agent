@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Diagnostics;
 using System.Threading;
-using Common;
 
 namespace EventLogSubscriber
 {

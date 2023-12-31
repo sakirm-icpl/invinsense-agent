@@ -22,7 +22,7 @@ namespace Tensible.Modules
         {
             var module = new WinUserRightModule(WinModuleNames.WIN_USER_RIGHT);
 
-            if(dict.ContainsKey("name"))
+            if (dict.ContainsKey("name"))
             {
                 module.Name = dict["name"].ToString();
             }

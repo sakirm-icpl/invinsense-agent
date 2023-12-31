@@ -1,11 +1,10 @@
-﻿using System;
+﻿using Common.Extensions;
+using Serilog;
+using System;
 using System.Diagnostics;
 using System.Security.AccessControl;
 using System.Text.RegularExpressions;
 using System.Threading;
-using Common.Extensions;
-using Common.Helpers;
-using Serilog;
 
 namespace MsiWrapper
 {
@@ -63,13 +62,26 @@ namespace MsiWrapper
 
         public static bool GetMsiVersion(string msiPath, out Version version)
         {
-            // Use a regular expression to find version numbers in the file name
-            var match = Regex.Match(msiPath, @"(\d+\.\d+\.\d+)");
-            if (match.Success)
+            Type type = Type.GetTypeFromProgID("WindowsInstaller.Installer");
+
+            WindowsInstaller.Installer installer = (WindowsInstaller.Installer)
+
+            Activator.CreateInstance(type);
+
+            try
             {
-                version = new Version(match.Groups[1].Value);
-                Log.Information("Found MSI version {0} in file name {1}", version, msiPath);
+                WindowsInstaller.Database db = installer.OpenDatabase(msiPath, 0);
+                WindowsInstaller.View dv = db.OpenView("SELECT `Value` FROM `Property` WHERE `Property`='ProductVersion'");
+                WindowsInstaller.Record record = null;
+                dv.Execute(record);
+                record = dv.Fetch();
+                string str = record.get_StringData(1).ToString();
+                version = new Version(str);
                 return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Failed to fetch version from {msiPath}: {ex.Message}");
             }
 
             version = null;

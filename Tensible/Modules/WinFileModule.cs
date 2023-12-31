@@ -1,6 +1,6 @@
-﻿using Tensible.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Tensible.Models;
 
 namespace Tensible.Modules
 {
@@ -20,37 +20,37 @@ namespace Tensible.Modules
         {
             var module = new WinFileModule();
 
-            if(dict == null)
+            if (dict == null)
             {
                 return module;
             }
 
-            if(dict.ContainsKey("path"))
+            if (dict.ContainsKey("path"))
             {
                 module.Path = dict["path"].ToString();
             }
 
-            if(dict.ContainsKey("state"))
+            if (dict.ContainsKey("state"))
             {
                 module.State = dict["state"].ToString();
             }
 
-            if(dict.ContainsKey("recurse"))
+            if (dict.ContainsKey("recurse"))
             {
                 module.Recurse = dict["recurse"].ToString();
             }
 
-            if(dict.ContainsKey("force"))
+            if (dict.ContainsKey("force"))
             {
                 module.Force = dict["force"].ToString();
             }
 
-            if(dict.ContainsKey("src"))
+            if (dict.ContainsKey("src"))
             {
                 module.Src = dict["src"].ToString();
             }
 
-            if(dict.ContainsKey("dest"))
+            if (dict.ContainsKey("dest"))
             {
                 module.Dest = dict["dest"].ToString();
             }

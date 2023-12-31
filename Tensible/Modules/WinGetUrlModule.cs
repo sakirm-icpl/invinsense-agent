@@ -1,6 +1,6 @@
-﻿using Tensible.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Tensible.Models;
 
 namespace Tensible.Modules
 {

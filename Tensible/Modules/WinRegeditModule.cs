@@ -65,15 +65,15 @@ namespace Tensible.Modules
         }
 
         public string Path { get; set; }
-       
+
         public string Name { get; set; }
-        
+
         public string Data { get; set; }
-        
+
         public string Type { get; set; }
-        
+
         public string State { get; set; }
-        
+
         public string Hive { get; set; }
 
         public override bool Validate()

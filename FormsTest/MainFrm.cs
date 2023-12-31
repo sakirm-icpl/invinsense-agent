@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Common.Mappers;
+using Common.RegistryHelpers;
+using FormsTest.Properties;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
-using Common.Mappers;
-using Common.Persistence;
-using FormsTest.Properties;
 
 namespace FormsTest
 {

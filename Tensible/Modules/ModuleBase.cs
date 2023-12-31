@@ -11,7 +11,7 @@
         }
 
         public string ModuleName { get; }
-        
+
         public abstract bool Validate();
 
         public abstract void Execute();
