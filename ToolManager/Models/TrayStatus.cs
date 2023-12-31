@@ -28,6 +28,7 @@ namespace Common.Persistence
 
     public enum VersionDetectionType
     {
+        FilePath,
         FileInfo,
         FileContent,
         Registry
