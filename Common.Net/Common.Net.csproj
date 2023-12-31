@@ -45,6 +45,7 @@
     <Compile Include="FragmentedFileDownloader.cs" />
     <Compile Include="HttpClientConfig.cs" />
     <Compile Include="HttpContentTypes.cs" />
+    <Compile Include="HttpMethodNames.cs" />
     <Compile Include="NetworkUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RetryPolicyHandler.cs" />

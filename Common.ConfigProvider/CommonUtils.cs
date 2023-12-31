@@ -28,8 +28,7 @@ namespace Common.ConfigProvider
 
         public static string LogsFolder => Path.Combine(DataFolder, "logs");
 
-        private static string DataFolder =>
-            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Infopercept");
+        private static string DataFolder => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Infopercept");
 
         public static string ConstructFromRoot(string path)
         {

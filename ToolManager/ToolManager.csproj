@@ -31,6 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Converters\ToolGroupConverter.cs" />
     <Compile Include="Models\ExecutableFile.cs" />
     <Compile Include="Models\FileCopy.cs" />
     <Compile Include="Models\FileExistsAction.cs" />
@@ -53,6 +54,7 @@
     <Compile Include="Models\ToolValidator.cs" />
     <Compile Include="Models\TrayStatus.cs" />
     <Compile Include="Models\WinService.cs" />
+    <Compile Include="OsQueryManager.cs" />
     <Compile Include="ProductManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -73,6 +75,10 @@
       <Project>{FEAF253A-A8B4-45DE-A0DB-F009B86F1734}</Project>
       <Name>Common.RegistryHelpers</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Common.Serialization\Common.Serialization.csproj">
+      <Project>{9B52D22C-E412-48FE-8544-77FE742B61B9}</Project>
+      <Name>Common.Serialization</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MsiWrapper\MsiWrapper.csproj">
       <Project>{fd09ba89-ba8f-4720-86be-1ff16bfbddf6}</Project>
       <Name>MsiWrapper</Name>
@@ -85,6 +91,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.3</Version>
+    </PackageReference>
     <PackageReference Include="Serilog">
       <Version>3.1.1</Version>
     </PackageReference>

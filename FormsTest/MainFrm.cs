@@ -91,9 +91,9 @@ namespace FormsTest
         {
             var displayMessage = DisplayMessageMapper.MapNetworkIsolationMessage(groups);
 
-            ToolRegistry.SetPropertyByName("I18N", "Groups", string.Join(",", groups));
-            ToolRegistry.SetPropertyByName("I18N", "IsolationTitle", displayMessage.Title);
-            ToolRegistry.SetPropertyByName("I18N", "IsolationMessage", displayMessage.Message);
+            ToolRegistry.SetPropertyByName("Infopercept\\I18N", "Groups", string.Join(",", groups));
+            ToolRegistry.SetPropertyByName("Infopercept\\I18N", "IsolationTitle", displayMessage.Title);
+            ToolRegistry.SetPropertyByName("Infopercept\\I18N", "IsolationMessage", displayMessage.Message);
         }
 
         private string MapRequiredCulture(IEnumerable<string> groups)
@@ -115,8 +115,8 @@ namespace FormsTest
 
         private void ShowDialogButtonClick(object sender, EventArgs e)
         {
-            var title = ToolRegistry.GetPropertyByName("I18N", "IsolationTitle");
-            var message = ToolRegistry.GetPropertyByName("I18N", "IsolationMessage");
+            var title = ToolRegistry.GetPropertyByName("Infopercept\\I18N", "IsolationTitle");
+            var message = ToolRegistry.GetPropertyByName("Infopercept\\I18N", "IsolationMessage");
             MessageBox.Show(message, title, MessageBoxButtons.OK);
         }
 

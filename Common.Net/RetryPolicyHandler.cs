@@ -16,7 +16,7 @@ namespace Common.Net
 
         private readonly ILogger _logger = Log.ForContext<RetryPolicyHandler>();
 
-        public RetryPolicyHandler(string key)
+        public RetryPolicyHandler(string key) : base(new HttpClientHandler())
         {
             _key = key;
         }

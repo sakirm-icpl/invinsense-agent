@@ -15,14 +15,30 @@ namespace ToolManager
     public abstract class ProductManager
     {
         protected readonly ILogger _logger;
+        protected readonly ToolDetail _toolDetail;
 
-        public ProductManager(ILogger logger)
+        public ProductManager(ToolDetail toolDetail, ILogger logger)
         {
             _logger = logger;
+            _toolDetail = toolDetail;
         }
 
-        protected bool GetInstalledVersion(VersionDetectionInstruction model, out Version version)
+        public abstract int Preinstall();
+
+        public abstract int Install();
+
+        public abstract void PostInstall();
+
+        public abstract int Remove();
+
+        public abstract VersionDetectionInstruction GetVersionDetectionInstruction();
+
+        public abstract InstallInstruction GetInstallInstruction();
+
+        public bool GetInstalledVersion(out Version version)
         {
+            var model = GetVersionDetectionInstruction();
+
             if (model.Type == VersionDetectionType.FilePath)
                 return GetVersionFromName(model.Path, out version);
 
@@ -39,13 +55,15 @@ namespace ToolManager
             return false;
         }
 
-        protected int InstallMsi(InstallInstruction instruction, VersionDetectionInstruction vdInstruction)
+        protected int InstallMsi()
         {
+            var instruction = GetInstallInstruction();
+
             try
             {
                 _logger.Information($"Preparing installation for {instruction.Name}");
 
-                var isInstalledVersionFetched = GetInstalledVersion(vdInstruction, out var installedVersion);
+                var isInstalledVersionFetched = GetInstalledVersion(out var installedVersion);
                 Log.Logger.Information($"Installed version: {installedVersion}");
 
                 //get latest msi file from artifacts folder
@@ -99,8 +117,9 @@ namespace ToolManager
             return 1;
         }
 
-        protected int UninstallMsi(InstallInstruction instruction)
+        protected int UninstallMsi()
         {
+            var instruction = GetInstallInstruction();
             try
             {
                 _logger.Information($"Preparing un-installation for {instruction.Name}");
@@ -212,13 +231,20 @@ namespace ToolManager
             return false;
         }
 
-        private bool GetRegistryVersion(string registryPath, string pattern, out Version version)
+        private bool GetRegistryVersion(string registryPath, string key, out Version version)
         {
             version = null;
 
             try
             {
-                var value = ToolRegistry.GetPropertyByName(registryPath, pattern);
+                var value = ToolRegistry.GetPropertyByName(registryPath, key);
+
+                if(string.IsNullOrWhiteSpace(value))
+                {
+                    _logger.Information($"{registryPath} {key} not found");
+                    return true;
+                }
+
                 version = new Version(value);
                 return true;
             }

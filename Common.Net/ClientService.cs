@@ -73,7 +73,7 @@ namespace Common.Net
 
         }
 
-        public async Task<ProcessResult<T, E>> InvokeAsync<T, E>(HttpMethod methodType, string path, object postData = null) where T : IModel where E : IException
+        public async Task<ProcessResult<T, E>> InvokeAsync<T, E>(HttpMethodNames methodType, string path, object postData = null) where T : IModel where E : IException
         {
             var result = await InvokeAsync(methodType, path, postData);
 
@@ -97,7 +97,7 @@ namespace Common.Net
             }
         }
 
-        public async Task<ProcessResult<T>> InvokeAsync<T>(HttpMethod methodType, string path, object postData = null) where T : IModel
+        public async Task<ProcessResult<T>> InvokeAsync<T>(HttpMethodNames methodType, string path, object postData = null) where T : IModel
         {
             var result = await InvokeAsync(methodType, path, postData);
 
@@ -135,7 +135,7 @@ namespace Common.Net
             }
         }
 
-        public async Task<ApiResponse> InvokeAsync(HttpMethod methodType, string path, object postData = null)
+        public async Task<ApiResponse> InvokeAsync(HttpMethodNames methodType, string path, object postData = null)
         {
             var client = InitClient();
 
@@ -145,15 +145,17 @@ namespace Common.Net
 
                 watch.Start();
 
+                var httpMethod = new HttpMethod(methodType.ToString());
+
                 var request = new HttpRequestMessage
                 {
-                    Method = methodType,
+                    Method = httpMethod,
                     RequestUri = new Uri($"{Configuration.BaseUrl}{path}")
                 };
 
                 var payload = string.Empty;
 
-                if ((methodType == HttpMethod.Post || methodType == HttpMethod.Put) && postData != null)
+                if ((httpMethod == HttpMethod.Post || httpMethod == HttpMethod.Put) && postData != null)
                 {
                     payload = JsonConvert.SerializeObject(postData);
                     request.Content = new StringContent(payload, Encoding.UTF8, "application/json");

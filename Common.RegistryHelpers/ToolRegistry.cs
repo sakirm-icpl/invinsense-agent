@@ -1,6 +1,5 @@
 ﻿using Microsoft.Win32;
 using Serilog;
-using System;
 
 namespace Common.RegistryHelpers
 {
@@ -8,33 +7,14 @@ namespace Common.RegistryHelpers
     {
         private static readonly ILogger _logger = Log.ForContext(typeof(ToolRegistry));
 
-        public static bool CanSkipMonitoring(string name)
-        {
-            try
-            {
-                using (var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
-                using (var key = hklm.OpenSubKey($"SOFTWARE\\Infopercept\\{name}", false)) // False is important!
-                {
-                    var skipMonitoring = key?.GetValue("SKIP_MONITORING") as string ?? "N";
-                    return skipMonitoring == "Y" || skipMonitoring == "y";
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Error($"Error in reading tool status. {ex}");
-            }
-
-            return false;
-        }
-
         public static string GetPropertyByName(string path, string name)
         {
             try
             {
-                using (var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
-                using (var key = hklm.OpenSubKey($"SOFTWARE\\Infopercept\\{path}", false)) // False is important!
+                using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
+                using (var subKey = baseKey.OpenSubKey($"SOFTWARE\\{path}", false)) // False is important!
                 {
-                    var value = key?.GetValue(name) as string;
+                    var value = subKey?.GetValue(name) as string;
                     return value;
                 }
             }
@@ -48,17 +28,17 @@ namespace Common.RegistryHelpers
         {
             try
             {
-                using (var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
-                using (var key = hklm.OpenSubKey($"SOFTWARE\\Infopercept\\{path}", true))
+                using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
+                using (var subKey = baseKey.OpenSubKey($"SOFTWARE\\{path}", true))
                 {
-                    if (key == null)
+                    if (subKey == null)
                     {
-                        var newKey = hklm.CreateSubKey($"SOFTWARE\\Infopercept\\{path}");
+                        var newKey = baseKey.CreateSubKey($"SOFTWARE\\{path}");
                         newKey.SetValue(name, value);
                     }
                     else
                     {
-                        key.SetValue(name, value);
+                        subKey.SetValue(name, value);
                     }
                 }
             }
