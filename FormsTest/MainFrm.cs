@@ -27,14 +27,13 @@ namespace FormsTest
         private void ShowToolTipClick(object sender, EventArgs e)
         {
             MessageBox.Show(Resources.IsolationDialogMessage, Resources.IsolationDialogTitle, MessageBoxButtons.OK);
-            NotifyTrayIcon.ShowBalloonTip(1000, Resources.IsolationDialogTitle, Resources.IsolationDialogMessage,
-                ToolTipIcon.Info);
+            NotifyTrayIcon.ShowBalloonTip(1000, Resources.IsolationDialogTitle, Resources.IsolationDialogMessage, ToolTipIcon.Info);
         }
 
         private void ReadConfigFileClick(object sender, EventArgs e)
         {
             var tag = ((Control)sender).Tag.ToString();
-            var configName = string.IsNullOrEmpty(tag) ? "ossec.conf" : $"ossec.{tag}.conf";
+            var configName = string.IsNullOrEmpty(tag) ? "samples\\ossec.conf" : $"samples\\ossec.{tag}.conf";
 
             var (success, error, configValues) = ReadFile(configName);
 
