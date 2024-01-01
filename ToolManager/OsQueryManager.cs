@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using Common.ConfigProvider;
-using Common.Helpers;
-using Common.Net;
 using Common.Persistence;
 using Serilog;
 using ToolManager.Models;
@@ -15,60 +13,6 @@ namespace ToolManager
         public OsQueryManager(ToolDetail toolDetail) : base(toolDetail, Log.ForContext(typeof(OsQueryManager)))
         {
             _logger.Information($"Initializing {nameof(OsQueryManager)} Manager");
-        }
-
-        /// <summary>
-        /// Download required files
-        /// </summary>
-        /// <returns></returns>
-        public override int Preinstall()
-        {
-            var success = GetInstalledVersion(out Version version);
-
-            if (!success)
-            {
-                Console.WriteLine("OsQuery Error in detecting version.");
-                return 1;
-            }
-
-            Console.WriteLine($"OsQuery version: {version}");
-
-            var osQrv = new Version(_toolDetail.Version);
-            var osQmv = new Version(_toolDetail.MinVersion);
-            var osQxv = new Version(_toolDetail.MaxVersion);
-
-            var downloader = new FragmentedFileDownloader();
-
-            if (version == null || version < osQmv)
-            {
-                // Download required files from server.
-                Console.WriteLine("OsQuery version is less than minimum version.");
-
-                var downloadUrl = _toolDetail.DownloadUrl;
-
-                Console.WriteLine($"Downloading {downloadUrl}");
-
-                var destinationFile = Path.Combine(CommonUtils.ArtifactsFolder, $"{ToolName.OsQuery}.zip");
-                var destinationFolder = Path.Combine(CommonUtils.ArtifactsFolder, ToolName.OsQuery);
-
-                downloader.DownloadFileAsync(downloadUrl, destinationFile).Wait();
-
-                //Extract zip file
-                ZipArchiveHelper.ExtractZipFileWithOverwrite(destinationFile, destinationFolder);
-
-                //Remove zip file
-                File.Delete(destinationFile);
-            }
-            else if (version > osQxv)
-            {
-                Console.WriteLine("OsQuery version is greater than maximum version.");
-            }
-
-            if (version == osQrv)
-            {
-                Console.WriteLine("OsQuery version is equal to required version.");
-            }
-            return 0;
         }
 
         public override VersionDetectionInstruction GetVersionDetectionInstruction()

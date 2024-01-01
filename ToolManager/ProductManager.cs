@@ -3,13 +3,12 @@ using System.Diagnostics;
 using System.IO;
 using System.ServiceProcess;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Common.ConfigProvider;
 using Common.Helpers;
 using Common.Persistence;
 using Common.RegistryHelpers;
-using ToolManager;
 using Serilog;
+using Common.Net;
 
 namespace ToolManager
 {
@@ -24,7 +23,57 @@ namespace ToolManager
             _toolDetail = toolDetail;
         }
 
-        public abstract int Preinstall();
+        public int Preinstall()
+        {
+            var success = GetInstalledVersion(out Version version);
+
+            if (!success)
+            {
+                Console.WriteLine("Error in detecting version.");
+                return 1;
+            }
+
+            Console.WriteLine($"version: {version}");
+
+            var osQrv = new Version(_toolDetail.Version);
+            var osQmv = new Version(_toolDetail.MinVersion);
+            var osQxv = new Version(_toolDetail.MaxVersion);
+
+            var downloader = new FragmentedFileDownloader();
+
+            if (version == null || version < osQmv)
+            {
+                // Download required files from server.
+                Console.WriteLine("version is less than minimum version.");
+
+                var downloadUrl = _toolDetail.DownloadUrl;
+
+                Console.WriteLine($"Downloading {downloadUrl}");
+
+                var destinationFile = Path.Combine(CommonUtils.ArtifactsFolder, $"{_toolDetail.Name}.zip");
+                var destinationFolder = Path.Combine(CommonUtils.ArtifactsFolder, _toolDetail.Name);
+
+                downloader.DownloadFileAsync(downloadUrl, destinationFile).Wait();
+
+                //Extract zip file
+                ZipArchiveHelper.ExtractZipFileWithOverwrite(destinationFile, destinationFolder);
+
+                //Remove zip file
+                File.Delete(destinationFile);
+
+                Console.WriteLine($"File downloaded and extracted.");
+            }
+            else if (version > osQxv)
+            {
+                Console.WriteLine("version is greater than maximum version.");
+            }
+
+            if (version == osQrv)
+            {
+                Console.WriteLine("version is equal to required version.");
+            }
+            return 0;
+        }
 
         public abstract int Install();
 

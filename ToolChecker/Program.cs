@@ -6,7 +6,6 @@ using Newtonsoft.Json;
 using Serilog;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using ToolManager;
@@ -27,7 +26,7 @@ namespace ToolChecker
                 Name = "Invinsense.Server",
                 AuthRequired = false,
                 TimeOut = 60,
-                BaseUrl = "http://localhost:5197",
+                BaseUrl = "https://65.1.109.28:5001",
                 BaseHeaders = new Dictionary<string, string>(),
                 ExtraParams = new Dictionary<string, string>()
             });
@@ -51,11 +50,19 @@ namespace ToolChecker
                 return;
             }
 
-            var osQueryToolDetail = toolDetails[ToolName.OsQuery];
+            var otd = toolDetails[ToolName.OsQuery];
+            var om = new OsQueryManager(otd);
+            om.Preinstall();
 
-            var osQueryManager = new OsQueryManager(osQueryToolDetail);
+            var sd = toolDetails[ToolName.Sysmon];
+            var sm = new SysmonManager(sd);
+            sm.Preinstall();
 
-            osQueryManager.Preinstall();
+            var wd = toolDetails[ToolName.Wazuh];
+            var wm = new WazuhManager(wd);
+            wm.Preinstall();
+
+          //  Console.ReadLine();
         }
 
     }

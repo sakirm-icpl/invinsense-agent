@@ -6,9 +6,7 @@ using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography;
-using System.Text.RegularExpressions;
 using System.Threading;
-using ToolManager;
 
 namespace ToolManager
 {
@@ -64,7 +62,7 @@ namespace ToolManager
 
         #region Methods
 
-        private static void ShowCertificateInfo(string msiPath)
+        public static void ShowCertificateInfo(string msiPath)
         {
             try
             {

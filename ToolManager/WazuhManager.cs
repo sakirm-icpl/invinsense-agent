@@ -1,21 +1,17 @@
-﻿using Common.ConfigProvider;
+﻿using System;
+using System.Collections.Generic;
+using Common.ConfigProvider;
 using Common.Persistence;
 using Serilog;
-using System;
-using System.Collections.Generic;
 using ToolManager.Models;
 
 namespace ToolManager
 {
-    /// <summary>
-    /// https://www.blumira.com/enable-sysmon/
-    /// 
-    /// </summary>
-    public sealed class SysmonManager : ProductManager
+    public sealed class WazuhManager : ProductManager
     {
-        public SysmonManager(ToolDetail toolDetail) : base(toolDetail, Log.ForContext(typeof(SysmonManager)))
+        public WazuhManager(ToolDetail toolDetail) : base(toolDetail, Log.ForContext(typeof(WazuhManager)))
         {
-            _logger.Information($"Initializing {nameof(SysmonManager)} Manager");
+            _logger.Information($"Initializing {nameof(WazuhManager)} Manager");
         }
 
         public override VersionDetectionInstruction GetVersionDetectionInstruction()
@@ -23,7 +19,7 @@ namespace ToolManager
             return new VersionDetectionInstruction
             {
                 Type = VersionDetectionType.Registry,
-                Path = ToolName.Sysmon,
+                Path = ToolName.Wazuh,
                 Pattern = "version"
             };
         }
@@ -34,13 +30,14 @@ namespace ToolManager
             {
                 Name = _toolDetail.Name,
                 WorkingDirectory = CommonUtils.ArtifactsFolder,
-                InstallType = InstallType.Executable,
+                InstallType = InstallType.Installer,
                 RequiredVersion = _toolDetail.Version,
                 MinimumVersion = _toolDetail.MinVersion,
                 MaximumVersion = _toolDetail.MaxVersion,
                 InstallArgs = new List<string>
                 {
-                   
+                    "ALLUSERS=1", 
+                    "ACCEPTEULA=1"
                 },
                 UninstallArgs = new List<string>
                 {
@@ -71,11 +68,12 @@ namespace ToolManager
 
         public override void PostInstall()
         {
+           
         }
 
         public override int Remove()
         {
-            return -1;
+            return UninstallMsi();
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Common.Net
 
         public FragmentedFileDownloader()
         {
-            _client = new HttpClient();
+            _client = new HttpClient(new RetryPolicyHandler("Downloader"));
         }
 
         public async Task<bool> ServerSupportsRangeAsync(string url)
