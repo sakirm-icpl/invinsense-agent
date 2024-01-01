@@ -50,11 +50,16 @@
     <Compile Include="Models\StartupType.cs" />
     <Compile Include="Models\ToolDetail.cs" />
     <Compile Include="Models\ToolGroup.cs" />
+    <Compile Include="Models\ToolName.cs" />
     <Compile Include="Models\ToolStatus.cs" />
     <Compile Include="Models\ToolValidator.cs" />
     <Compile Include="Models\TrayStatus.cs" />
     <Compile Include="Models\WinService.cs" />
+    <Compile Include="MoWrapper.cs" />
+    <Compile Include="MsiExitCode.cs" />
+    <Compile Include="MsiPackage.cs" />
     <Compile Include="OsQueryManager.cs" />
+    <Compile Include="ProcessHelper.cs" />
     <Compile Include="ProductManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -71,6 +76,10 @@
       <Project>{BC9538D2-5B2E-487C-948D-E78BC2EE31BF}</Project>
       <Name>Common.FileHelpers</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Common.Net\Common.Net.csproj">
+      <Project>{B564AA85-C85E-44A9-8D0F-D5F22CECF199}</Project>
+      <Name>Common.Net</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.RegistryHelpers\Common.RegistryHelpers.csproj">
       <Project>{FEAF253A-A8B4-45DE-A0DB-F009B86F1734}</Project>
       <Name>Common.RegistryHelpers</Name>
@@ -78,10 +87,6 @@
     <ProjectReference Include="..\Common.Serialization\Common.Serialization.csproj">
       <Project>{9B52D22C-E412-48FE-8544-77FE742B61B9}</Project>
       <Name>Common.Serialization</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MsiWrapper\MsiWrapper.csproj">
-      <Project>{fd09ba89-ba8f-4720-86be-1ff16bfbddf6}</Project>
-      <Name>MsiWrapper</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -103,6 +108,17 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="WindowsInstaller">
+      <Guid>{000C1092-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>1033</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

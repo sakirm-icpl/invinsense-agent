@@ -36,15 +36,21 @@ namespace ProcessMonitorTest
                 var counterDataCollection = new CounterCreationDataCollection();
 
                 // Add the counter.
-                var averageCount64 = new CounterCreationData();
-                averageCount64.CounterType = PerformanceCounterType.AverageCount64;
-                averageCount64.CounterName = "AverageCounter64Sample";
+                var averageCount64 = new CounterCreationData
+                {
+                    CounterType = PerformanceCounterType.AverageCount64,
+                    CounterName = "AverageCounter64Sample"
+                };
+
                 counterDataCollection.Add(averageCount64);
 
                 // Add the base counter.
-                var averageCount64Base = new CounterCreationData();
-                averageCount64Base.CounterType = PerformanceCounterType.AverageBase;
-                averageCount64Base.CounterName = "AverageCounter64SampleBase";
+                var averageCount64Base = new CounterCreationData
+                {
+                    CounterType = PerformanceCounterType.AverageBase,
+                    CounterName = "AverageCounter64SampleBase"
+                };
+
                 counterDataCollection.Add(averageCount64Base);
 
                 // Create the category.
@@ -137,8 +143,8 @@ namespace ProcessMonitorTest
         private static float MyComputeCounterValue(CounterSample s0, CounterSample s1)
         {
             var numerator = s1.RawValue - (float)s0.RawValue;
-            var denomenator = s1.BaseValue - (float)s0.BaseValue;
-            var counterValue = numerator / denomenator;
+            var denominator = s1.BaseValue - (float)s0.BaseValue;
+            var counterValue = numerator / denominator;
             return counterValue;
         }
 

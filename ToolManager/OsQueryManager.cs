@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using Common.ConfigProvider;
+using Common.Helpers;
+using Common.Net;
 using Common.Persistence;
 using Serilog;
 using ToolManager.Models;
@@ -15,8 +17,57 @@ namespace ToolManager
             _logger.Information($"Initializing {nameof(OsQueryManager)} Manager");
         }
 
+        /// <summary>
+        /// Download required files
+        /// </summary>
+        /// <returns></returns>
         public override int Preinstall()
         {
+            var success = GetInstalledVersion(out Version version);
+
+            if (!success)
+            {
+                Console.WriteLine("OsQuery Error in detecting version.");
+                return 1;
+            }
+
+            Console.WriteLine($"OsQuery version: {version}");
+
+            var osQrv = new Version(_toolDetail.Version);
+            var osQmv = new Version(_toolDetail.MinVersion);
+            var osQxv = new Version(_toolDetail.MaxVersion);
+
+            var downloader = new FragmentedFileDownloader();
+
+            if (version == null || version < osQmv)
+            {
+                // Download required files from server.
+                Console.WriteLine("OsQuery version is less than minimum version.");
+
+                var downloadUrl = _toolDetail.DownloadUrl;
+
+                Console.WriteLine($"Downloading {downloadUrl}");
+
+                var destinationFile = Path.Combine(CommonUtils.ArtifactsFolder, $"{ToolName.OsQuery}.zip");
+                var destinationFolder = Path.Combine(CommonUtils.ArtifactsFolder, ToolName.OsQuery);
+
+                downloader.DownloadFileAsync(downloadUrl, destinationFile).Wait();
+
+                //Extract zip file
+                ZipArchiveHelper.ExtractZipFileWithOverwrite(destinationFile, destinationFolder);
+
+                //Remove zip file
+                File.Delete(destinationFile);
+            }
+            else if (version > osQxv)
+            {
+                Console.WriteLine("OsQuery version is greater than maximum version.");
+            }
+
+            if (version == osQrv)
+            {
+                Console.WriteLine("OsQuery version is equal to required version.");
+            }
             return 0;
         }
 
@@ -25,7 +76,7 @@ namespace ToolManager
             return new VersionDetectionInstruction
             {
                 Type = VersionDetectionType.Registry,
-                Path = "osquery",
+                Path = ToolName.OsQuery,
                 Pattern = "version"
             };
         }
@@ -79,13 +130,13 @@ namespace ToolManager
             //Get OSQuery installation path Program Files\osquery
             var installationPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), _toolDetail.Name);
 
-            //Copy osqueryd.conf to installation path
-            var configSource = Path.Combine(sourcePath, "osquery.conf");
-            var configDestination = Path.Combine(installationPath, "osquery.conf");
+            //Copy osquery.conf to installation path
+            var configSource = Path.Combine(sourcePath, $"{ToolName.OsQuery}.conf");
+            var configDestination = Path.Combine(installationPath, $"{ToolName.OsQuery}.conf");
             EnsureSourceToDestination(configSource, configDestination);
 
             //Copy packs to installation path
-            var packsSourcePath = Path.Combine(sourcePath, "osquery-packs.zip");
+            var packsSourcePath = Path.Combine(sourcePath, $"{ToolName.OsQuery}-packs.zip");
             var packsDestinationPath = Path.Combine(installationPath, "packs");
             ExtractSourceToDestination(packsSourcePath, packsDestinationPath);
         }

@@ -1,7 +1,7 @@
 ﻿using Serilog;
 using System.Diagnostics;
 
-namespace MsiWrapper
+namespace ToolManager
 {
     /// <summary>
     ///     Provides methods to help with interacting with processes.

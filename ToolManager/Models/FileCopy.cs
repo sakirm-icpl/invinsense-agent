@@ -1,5 +1,6 @@
 ﻿namespace Common.Persistence
 {
+
     public class FileCopy
     {
         public string Source { get; set; }

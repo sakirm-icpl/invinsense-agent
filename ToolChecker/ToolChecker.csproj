@@ -53,6 +53,10 @@
       <Project>{12BBB8A8-535C-48B1-A50E-22ACD920A478}</Project>
       <Name>Common.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Common.FileHelpers\Common.FileHelpers.csproj">
+      <Project>{BC9538D2-5B2E-487C-948D-E78BC2EE31BF}</Project>
+      <Name>Common.FileHelpers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.Net\Common.Net.csproj">
       <Project>{B564AA85-C85E-44A9-8D0F-D5F22CECF199}</Project>
       <Name>Common.Net</Name>
@@ -60,10 +64,6 @@
     <ProjectReference Include="..\Common.Serialization\Common.Serialization.csproj">
       <Project>{9B52D22C-E412-48FE-8544-77FE742B61B9}</Project>
       <Name>Common.Serialization</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MsiWrapper\MsiWrapper.csproj">
-      <Project>{fd09ba89-ba8f-4720-86be-1ff16bfbddf6}</Project>
-      <Name>MsiWrapper</Name>
     </ProjectReference>
     <ProjectReference Include="..\ToolManager\ToolManager.csproj">
       <Project>{b04124ba-1758-4aa2-8d3c-9bc0fb9c0e33}</Project>

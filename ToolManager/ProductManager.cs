@@ -3,11 +3,12 @@ using System.Diagnostics;
 using System.IO;
 using System.ServiceProcess;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Common.ConfigProvider;
 using Common.Helpers;
 using Common.Persistence;
 using Common.RegistryHelpers;
-using MsiWrapper;
+using ToolManager;
 using Serilog;
 
 namespace ToolManager

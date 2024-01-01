@@ -2,11 +2,15 @@
 using Serilog;
 using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Security.AccessControl;
+using System.Security.Cryptography.X509Certificates;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Threading;
+using ToolManager;
 
-namespace MsiWrapper
+namespace ToolManager
 {
     /// <summary>
     ///     Encapsulates MSI package installation/uninstallation operations.
@@ -60,6 +64,27 @@ namespace MsiWrapper
 
         #region Methods
 
+        private static void ShowCertificateInfo(string msiPath)
+        {
+            try
+            {
+                var x509 = X509Certificate.CreateFromSignedFile(msiPath);
+                if (x509.GetHashCode() != 0)
+                    Console.WriteLine(x509.ToString(true));
+                else
+                    Console.WriteLine("Assembly isn't signed by a software publisher certificate");
+            }
+            catch (COMException ce)
+            {
+                // using a test certificate without trusting the test root ?
+                Console.WriteLine(ce.Message);
+            }
+            catch (CryptographicException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
         public static bool GetMsiVersion(string msiPath, out Version version)
         {
             Type type = Type.GetTypeFromProgID("WindowsInstaller.Installer");
@@ -111,10 +136,13 @@ namespace MsiWrapper
                 using (Process p = ProcessHelper.CreateHiddenProcess(WindowsInstallerProgramName, arguments))
                 {
                     Log.Information("Starting process: {0}", p.StartInfo.FileName);
+                    
                     p.Start();
+
                     p.WaitForExit();
 
                     var installResultDescription = ((MsiExitCode)p.ExitCode).GetEnumDescription();
+                    
                     Log.Information("MSI package install result: ({0}) {1}", p.ExitCode, installResultDescription);
 
                     if (p.ExitCode != 0) throw new Exception(installResultDescription);
