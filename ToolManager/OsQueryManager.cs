@@ -25,6 +25,10 @@ namespace ToolManager
             };
         }
 
+        /// <summary>
+        /// Arguments = $"/I \"{msiPath}\" /QN /l*vx \"{logPath}\" ACCEPTEULA=1 ALLUSERS=1",
+        /// </summary>
+        /// <returns></returns>
         public override InstallInstruction GetInstallInstruction()
         {
             return new InstallInstruction
@@ -57,8 +61,7 @@ namespace ToolManager
             try
             {
                 var exitCode = InstallMsi();
-                if (exitCode != 0) return exitCode;
-                return 0;
+                return exitCode;
             }
             catch (Exception ex)
             {

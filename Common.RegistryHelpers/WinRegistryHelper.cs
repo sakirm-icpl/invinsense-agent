@@ -3,9 +3,9 @@ using Serilog;
 
 namespace Common.RegistryHelpers
 {
-    public static class ToolRegistry
+    public static class WinRegistryHelper
     {
-        private static readonly ILogger _logger = Log.ForContext(typeof(ToolRegistry));
+        private static readonly ILogger _logger = Log.ForContext(typeof(WinRegistryHelper));
 
         public static string GetPropertyByName(string path, string name)
         {

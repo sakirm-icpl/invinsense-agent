@@ -1,6 +1,7 @@
 ﻿using Common.ConfigProvider;
 using Common.Net;
 using Common.Persistence;
+using Common.RegistryHelpers;
 using Common.Utils;
 using Newtonsoft.Json;
 using Serilog;
@@ -18,8 +19,8 @@ namespace ToolChecker
         {
             Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
 
-            Console.WriteLine($"Artifacts: {CommonUtils.ArtifactsFolder}");
-            Console.WriteLine($"Artifacts: {CommonUtils.LogsFolder}");
+            Log.Logger.Information($"Artifacts: {CommonUtils.ArtifactsFolder}");
+            Log.Logger.Information($"Artifacts: {CommonUtils.LogsFolder}");
 
             var client = new ClientService(new HttpClientConfig
             {
@@ -46,14 +47,31 @@ namespace ToolChecker
             }
             catch (Exception ex)
             {
-                Console.WriteLine("HTTP:{IsSuccess} - {Message} : payload: {Payload}", apiResponse.IsSuccess, ex.Message);
+                Log.Logger.Error("HTTP:{IsSuccess} - {Message} : payload: {Payload}", apiResponse.IsSuccess, ex.Message);
                 return;
             }
 
             var otd = toolDetails[ToolName.OsQuery];
             var om = new OsQueryManager(otd);
-            om.Preinstall();
 
+            var status = om.Preinstall();
+
+            if(status == 0)
+            {
+                om.Install();
+            }
+
+            var lastUpdate = WinRegistryHelper.GetPropertyByName("Infopercept", "osquery_last_update");
+
+            var lastUpdateTime = lastUpdate == null ? DateTime.MinValue : DateTime.Parse(lastUpdate);
+
+            if(otd.UpdatedOn >= lastUpdateTime)
+            {
+                om.PostInstall();
+                WinRegistryHelper.SetPropertyByName("Infopercept", "osquery_last_update", DateTime.Now.ToString());
+            }
+
+            /*
             var sd = toolDetails[ToolName.Sysmon];
             var sm = new SysmonManager(sd);
             sm.Preinstall();
@@ -61,7 +79,7 @@ namespace ToolChecker
             var wd = toolDetails[ToolName.Wazuh];
             var wm = new WazuhManager(wd);
             wm.Preinstall();
-
+            */
           //  Console.ReadLine();
         }
 

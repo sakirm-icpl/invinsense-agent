@@ -61,6 +61,10 @@
       <Project>{B564AA85-C85E-44A9-8D0F-D5F22CECF199}</Project>
       <Name>Common.Net</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Common.RegistryHelpers\Common.RegistryHelpers.csproj">
+      <Project>{FEAF253A-A8B4-45DE-A0DB-F009B86F1734}</Project>
+      <Name>Common.RegistryHelpers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.Serialization\Common.Serialization.csproj">
       <Project>{9B52D22C-E412-48FE-8544-77FE742B61B9}</Project>
       <Name>Common.Serialization</Name>

@@ -1,10 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using Common.Models;
+using Newtonsoft.Json;
+using System;
 using ToolManager.Converters;
 using ToolManager.Models;
 
 namespace Common.Persistence
 {
-    public class ToolDetail : Models.IModel
+    public class ToolDetail : IModel
     {
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -36,5 +38,8 @@ namespace Common.Persistence
 
         [JsonProperty("isActive")]
         public bool IsActive { get; set; }
+
+        [JsonProperty("updatedOn")]
+        public DateTime UpdatedOn { get; set; }
     }
 }
