@@ -52,7 +52,7 @@ namespace ToolManager
 
         public override int Install()
         {
-            if (_toolDetail.IsActive)
+            if (!_toolDetail.IsActive)
             {
                 _logger.Information("Installation is not required as tool is not active");
                 return 0;
@@ -72,19 +72,19 @@ namespace ToolManager
 
         public override void PostInstall()
         {
-            var sourcePath = Path.Combine(CommonUtils.ArtifactsFolder, _toolDetail.Name);
+            var sourceFolder = Path.Combine(CommonUtils.ArtifactsFolder, _toolDetail.Name);
+            var destinationFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), _toolDetail.Name);
 
-            //Get OSQuery installation path Program Files\osquery
-            var installationPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), _toolDetail.Name);
+            _logger.Information($"Source: {sourceFolder}, Destination: {destinationFolder}");
 
             //Copy osquery.conf to installation path
-            var configSource = Path.Combine(sourcePath, $"{ToolName.OsQuery}.conf");
-            var configDestination = Path.Combine(installationPath, $"{ToolName.OsQuery}.conf");
+            var configSource = Path.Combine(sourceFolder, $"{ToolName.OsQuery}.conf");
+            var configDestination = Path.Combine(destinationFolder, $"{ToolName.OsQuery}.conf");
             EnsureSourceToDestination(configSource, configDestination);
 
             //Copy packs to installation path
-            var packsSourcePath = Path.Combine(sourcePath, $"{ToolName.OsQuery}-packs.zip");
-            var packsDestinationPath = Path.Combine(installationPath, "packs");
+            var packsSourcePath = Path.Combine(sourceFolder, $"{ToolName.OsQuery}-packs.zip");
+            var packsDestinationPath = Path.Combine(destinationFolder, "packs");
             ExtractSourceToDestination(packsSourcePath, packsDestinationPath);
         }
 

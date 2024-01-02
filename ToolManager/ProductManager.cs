@@ -163,7 +163,6 @@ namespace ToolManager
                 if (installedVersion != null && newVersion <= installedVersion)
                 {
                     _logger.Error($"{instruction.Name} is already installed.");
-                    File.Delete(msiPath);
                     return 0;
                 }
 
@@ -181,7 +180,6 @@ namespace ToolManager
                 if (isSuccess)
                 {
                     _logger.Information($"{instruction.Name} installation completed");
-                    File.Delete(msiPath);
                     return 0;
                 }
             }
@@ -342,7 +340,8 @@ namespace ToolManager
 
         protected string GetLatestPath(string toolName, string extension)
         {
-            var files = Directory.GetFiles(CommonUtils.ArtifactsFolder, $"{toolName}-*.{extension}");
+            var path = Path.Combine(CommonUtils.ArtifactsFolder, toolName);
+            var files = Directory.GetFiles(path, $"{toolName}-*.{extension}");
 
             _logger.Information($"Found files: {string.Join(",", files)}");
 
@@ -424,9 +423,6 @@ namespace ToolManager
             }
 
             File.Copy(sourcePath, destinationPath, true);
-
-            _logger.Information($"Removing {sourcePath}");
-            File.Delete(sourcePath);
         }
 
         protected void ExtractSourceToDestination(string sourcePath, string destinationPath)
@@ -439,9 +435,6 @@ namespace ToolManager
             }
 
             ZipArchiveHelper.ExtractZipFileWithOverwrite(sourcePath, destinationPath);
-
-            _logger.Information($"Removing {sourcePath}");
-            File.Delete(sourcePath);
         }
     }
 }

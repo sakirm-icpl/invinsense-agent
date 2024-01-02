@@ -32,6 +32,8 @@ namespace ToolChecker
                 ExtraParams = new Dictionary<string, string>()
             });
 
+            Console.WriteLine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles));
+
             var apiResponse = await client.InvokeAsync(HttpMethodNames.Get, $"/api/tools");
 
             var content = Encoding.UTF8.GetString(apiResponse.Response, 0, apiResponse.Response.Length);
@@ -80,7 +82,9 @@ namespace ToolChecker
             var wm = new WazuhManager(wd);
             wm.Preinstall();
             */
-          //  Console.ReadLine();
+            Console.ReadLine();
+
+            Console.ReadLine();
         }
 
     }
