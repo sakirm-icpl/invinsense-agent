@@ -1,6 +1,6 @@
 ﻿using Common.Core;
 
-namespace Common.Persistence
+namespace ToolManager.Models
 {
     public class ProcessType : StringEnumeration
     {

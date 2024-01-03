@@ -1,4 +1,4 @@
-﻿namespace Common.Persistence
+﻿namespace ToolManager.Models
 {
     public enum RunningStatus
     {

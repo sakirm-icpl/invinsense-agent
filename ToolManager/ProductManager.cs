@@ -1,14 +1,15 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.ServiceProcess;
 using System.Text.RegularExpressions;
 using Common.ConfigProvider;
-using Common.Helpers;
-using Common.Persistence;
-using Common.RegistryHelpers;
+using ToolManager.Models;
 using Serilog;
 using Common.Net;
+using Microsoft.Win32;
+using System.Globalization;
+using System.Runtime.InteropServices;
+using Common.FileHelpers;
 
 namespace ToolManager
 {
@@ -25,7 +26,7 @@ namespace ToolManager
 
         public InstallStatus GetInstallStatus()
         {
-            var success = GetInstalledVersion(out Version version);
+            var success = GetInstalledVersion(out InstallStatusWithDetail detail);
 
             if (!success)
             {
@@ -33,25 +34,27 @@ namespace ToolManager
                 return InstallStatus.Error;
             }
 
-            var requiredVersion = new Version(_toolDetail.Version);
-            var minVersion = new Version(_toolDetail.MinVersion);
-            var maxVersion = new Version(_toolDetail.MaxVersion);
+            var versionDetectionInstruction = _toolDetail.VersionDetectionInstruction;
 
-            _logger.Information($"version: {version}, Required: {requiredVersion}, Min: {minVersion}, Max: {maxVersion}");
+            var requiredVersion = new Version(versionDetectionInstruction.Version);
+            var minVersion = new Version(versionDetectionInstruction.MinVersion);
+            var maxVersion = new Version(versionDetectionInstruction.MaxVersion);
 
-            if (version == null || version < minVersion)
+            _logger.Information($"version: {detail}, Required: {requiredVersion}, Min: {minVersion}, Max: {maxVersion}");
+
+            if (detail.Version < minVersion)
             {
                 _logger.Information("version is less than minimum version.");
                 return InstallStatus.Outdated;
             }
 
-            if (version > maxVersion)
+            if (detail.Version > maxVersion)
             {
                 _logger.Information("version is greater than maximum version.");
                 return InstallStatus.UnSupported;
             }
 
-            if (version == requiredVersion)
+            if (detail.Version == requiredVersion)
             {
                 _logger.Information("version is equal to required version.");
                 return InstallStatus.Installed;
@@ -101,56 +104,55 @@ namespace ToolManager
             return 0;
         }
 
-        public abstract int Install();
-
         public abstract void PostInstall();
 
-        public abstract int Remove();
-
-        public abstract VersionDetectionInstruction GetVersionDetectionInstruction();
-
-        public abstract InstallInstruction GetInstallInstruction();
-
-        public bool GetInstalledVersion(out Version version)
+        public bool GetInstalledVersion(out InstallStatusWithDetail detail)
         {
-            var model = GetVersionDetectionInstruction();
+            var versionDetectionInstruction = _toolDetail.VersionDetectionInstruction;
 
-            if (model.Type == VersionDetectionType.FilePath)
-                return GetVersionFromName(model.Path, out version);
+            if(versionDetectionInstruction.Type == VersionDetectionType.Unknown)
+            {
+                detail = new InstallStatusWithDetail
+                {
+                    InstallStatus = InstallStatus.Unknown,
+                };
+                return false;
+            }
 
-            if (model.Type == VersionDetectionType.FileInfo)
-                return GetFileVersion(model.Path, out version);
+            if (versionDetectionInstruction.Type == VersionDetectionType.ProgramRegistry)
+                return GetProductInfoReg(versionDetectionInstruction.Key, out detail);
 
-            if (model.Type == VersionDetectionType.FileContent)
-                return GetFileContentVersion(model.Path, model.Pattern, out version);
+            if (versionDetectionInstruction.Type == VersionDetectionType.ServiceRegistry)
+                return GetServiceInfo(versionDetectionInstruction.Key, out detail);
 
-            if (model.Type == VersionDetectionType.Registry)
-                return GetRegistryVersion(model.Path, model.Pattern, out version);
-
-            version = null;
+            detail = new InstallStatusWithDetail
+            {
+                InstallStatus = InstallStatus.Unknown
+            };
             return false;
         }
 
-        protected int InstallMsi()
+        public int InstallProduct()
         {
-            var instruction = GetInstallInstruction();
+            if (!_toolDetail.IsActive)
+            {
+                _logger.Information("Installation is not required as tool is not active");
+                return 0;
+            }
+
+            var toolName = _toolDetail.Name;
+            var instruction = _toolDetail.InstallInstructions;
 
             try
             {
-                _logger.Information($"Preparing installation for {instruction.Name}");
+                _logger.Information($"Preparing installation for {toolName}");
 
-                var isInstalledVersionFetched = GetInstalledVersion(out var installedVersion);
-                Log.Logger.Information($"Installed version: {installedVersion}");
+                var isInstalledVersionFetched = GetInstalledVersion(out var detail);
+                Log.Logger.Information($"Installed version: {detail}");
 
-                //get latest msi file from artifacts folder
-                var msiPath = GetLatestPath(instruction.Name, "msi");
-                if (string.IsNullOrEmpty(msiPath))
-                {
-                    _logger.Error("Exiting process as MSI file not supplied.");
-                    return installedVersion == null ? -1 : 0;
-                }
+                var installerFile = instruction.InstallerFile;
 
-                var isNewVersionFetched = MsiPackageWrapper.GetMsiVersion(msiPath, out var newVersion);
+                var isNewVersionFetched = MsiPackageWrapper.GetMsiVersion(installerFile, out var newVersion);
 
                 if (!isInstalledVersionFetched || !isNewVersionFetched)
                 {
@@ -158,11 +160,13 @@ namespace ToolManager
                     return -1;
                 }
 
+                var msiPath = Path.Combine(CommonUtils.ArtifactsFolder, toolName, installerFile);
+
                 _logger.Information($"MSI Path: {msiPath}, version: {newVersion}");
 
-                if (installedVersion != null && newVersion <= installedVersion)
+                if (detail.Version != null && newVersion <= detail.Version)
                 {
-                    _logger.Error($"{instruction.Name} is already installed.");
+                    _logger.Error($"{toolName} is already installed.");
                     return 0;
                 }
 
@@ -170,16 +174,16 @@ namespace ToolManager
 
                 _logger.Information("MSI installer is ready");
 
-                var logPath = Path.Combine(CommonUtils.LogsFolder, $"{instruction.Name}-install.log");
+                var logPath = Path.Combine(CommonUtils.LogsFolder, $"{toolName}-install.log");
 
-                _logger.Information($"{instruction.Name} msiPath {msiPath}");
-                _logger.Information($"{instruction.Name} logPath {logPath}");
+                _logger.Information($"{toolName} msiPath {msiPath}");
+                _logger.Information($"{toolName} logPath {logPath}");
 
                 var isSuccess = MsiPackageWrapper.Install(msiPath, logPath, instruction.InstallArgs.ToArray());
 
                 if (isSuccess)
                 {
-                    _logger.Information($"{instruction.Name} installation completed");
+                    _logger.Information($"{toolName} installation completed");
                     return 0;
                 }
             }
@@ -191,25 +195,41 @@ namespace ToolManager
             return 1;
         }
 
-        protected int UninstallMsi()
+        protected int UninstallProduct()
         {
-            var instruction = GetInstallInstruction();
+            var toolName = _toolDetail.Name;
+            var instruction = _toolDetail.InstallInstructions;
+            var productName = _toolDetail.VersionDetectionInstruction.Key;
+
             try
             {
-                _logger.Information($"Preparing un-installation for {instruction.Name}");
+                _logger.Information($"Preparing un-installation for {toolName}");
 
-                if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
+                var status = false;
+
+                if (instruction.InstallType == InstallType.Installer)
                 {
-                    _logger.Error("MSI installer is not ready.");
-                    return 1618;
+                    if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
+                    {
+                        _logger.Error("MSI installer is not ready.");
+                        return 1618;
+                    }
+
+                    _logger.Information("MSI installer is ready");
+
+                    _logger.Information($"{productName} uninstall started...");
+                    status = MsiPackageWrapper.Uninstall(productName);
                 }
+                else if (instruction.InstallType == InstallType.Executable)
+                {
+                    _logger.Information($"{productName} uninstall started...");
 
-                var status = true;
-
-                _logger.Information("MSI installer is ready");
-
-                _logger.Information($"{instruction.Name} uninstall started...");
-                status = MsiPackageWrapper.Uninstall(instruction.Name);
+                    ExePackageWrapper.Uninstall(instruction.InstallerFile, instruction.UninstallArgs.ToString());
+                }
+                else
+                {
+                    _logger.Error($"Install Type {instruction.InstallType} not supported");
+                }
 
                 return status ? 0 : 1;
             }
@@ -220,177 +240,92 @@ namespace ToolManager
             }
         }
 
-        /// <summary>
-        ///     Get the latest version of executable from the default path
-        /// </summary>
-        /// <param name="version"></param>
-        /// <returns>true: without error, false: with error</returns>
-        private bool GetFileVersion(string executablePath, out Version version)
+        public static bool GetProductInfoReg(string productName, out InstallStatusWithDetail productInfo)
         {
-            version = null;
-
-            try
-            {
-                if (!File.Exists(executablePath))
-                {
-                    _logger.Information(executablePath + " not found");
-                    return true;
-                }
-
-                // Get product version from file properties
-                var fileInfo = FileVersionInfo.GetVersionInfo(executablePath);
-                var versionString = fileInfo.ProductVersion;
-
-                if (!string.IsNullOrWhiteSpace(versionString))
-                    // ProductVersion might include additional text, e.g. "5.10.2 (build 5.10.2-1.win64)"
-                    version = new Version(versionString.Split(' ')[0]);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                _logger.Error($"{ex.Message}");
-            }
-
+            if (GetProductInfoRegByKey(productName, Architecture.X64, out productInfo)) return true;
+            if (GetProductInfoRegByKey(productName, Architecture.X86, out productInfo)) return true;
             return false;
         }
 
-        /// <summary>
-        ///     Get version from file content
-        /// </summary>
-        /// <param name="filePath"></param>
-        /// <param name="pattern"></param>
-        /// <param name="version"></param>
-        /// <returns></returns>
-        private bool GetFileContentVersion(string filePath, string pattern, out Version version)
+        private static bool GetProductInfoRegByKey(string productName, Architecture architecture, out InstallStatusWithDetail productInfo)
         {
-            version = null;
+            productInfo = new InstallStatusWithDetail();
 
-            try
+            var found = false;
+
+            var regViewType = architecture == Architecture.X64 ? RegistryView.Registry64 : RegistryView.Registry32;
+
+            using (var rk = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, regViewType))
             {
-                if (!File.Exists(filePath))
-                {
-                    _logger.Information(filePath + " not found");
-                    return true;
-                }
+                var uninstallKey = rk.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall");
 
-                var fileContent = File.ReadAllText(filePath);
-                var match = Regex.Match(fileContent, pattern);
-
-                if (match.Success)
-                {
-                    version = new Version(match.Groups[1].Value);
-                    return true;
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Error($"{ex.Message}");
-            }
-
-            return false;
-        }
-
-        private bool GetVersionFromName(string filePath, out Version version)
-        {
-            if (!File.Exists(filePath))
-            {
-                _logger.Information(filePath + " not found");
-                version = null;
-                return true;
-            }
-
-            // Use a regular expression to find version numbers in the file name
-            var match = Regex.Match(filePath, @"(\d+\.\d+\.\d+)");
-            if (match.Success)
-            {
-                version = new Version(match.Groups[1].Value);
-                _logger.Information("Found MSI version {0} in file name {1}", version, filePath);
-                return true;
-            }
-
-            _logger.Error("Could not find version in file name {0}", filePath);
-            version = null;
-            return false;
-        }
-
-        private bool GetRegistryVersion(string registryPath, string key, out Version version)
-        {
-            try
-            {
-                var value = WinRegistryHelper.GetPropertyByName(registryPath, key);
-
-                if (string.IsNullOrWhiteSpace(value))
-                {
-                    _logger.Information($"{registryPath} {key} not found");
-                    version = null;
-                    return true;
-                }
-
-                version = new Version(value);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                _logger.Error($"{ex.Message}");
-            }
-
-            version = null;
-            return false;
-        }
-
-        protected string GetLatestPath(string toolName, string extension)
-        {
-            var path = Path.Combine(CommonUtils.ArtifactsFolder, toolName);
-            var files = Directory.GetFiles(path, $"{toolName}-*.{extension}");
-
-            _logger.Information($"Found files: {string.Join(",", files)}");
-
-            if (files.Length == 0)
-            {
-                _logger.Error("No msi file found in artifacts folder");
-                return string.Empty;
-            }
-
-            if (files.Length > 1)
-            {
-                _logger.Error("More than one msi file found in artifacts folder");
-
-                // Sort the files by version number in descending order
-                Array.Sort(files, (a, b) =>
-                {
-                    // Extract version numbers from file names using a regular expression
-                    var regex = new Regex($@"{toolName}-(\d+\.\d+\.\d+)\.{extension}");
-                    var matchA = regex.Match(Path.GetFileName(a));
-                    var matchB = regex.Match(Path.GetFileName(b));
-
-                    if (matchA.Success && matchB.Success)
+                foreach (var skName in uninstallKey.GetSubKeyNames())
+                    using (var subkey = uninstallKey.OpenSubKey(skName))
                     {
-                        var versionA = new Version(matchA.Groups[1].Value);
-                        var versionB = new Version(matchB.Groups[1].Value);
+                        try
+                        {
+                            var displayName = (string)subkey.GetValue("DisplayName");
 
-                        return versionB.CompareTo(versionA); // Sort in descending order
+                            if (displayName == null || !displayName.Contains(productName)) continue;
+
+                            found = true;
+                            productInfo.Name = displayName;
+                            productInfo.Version = new Version(subkey.GetValue("DisplayVersion").ToString());
+                            productInfo.InstalledDate = ConvertToDateTime((string)subkey.GetValue("InstallDate"));
+                            productInfo.InstallPath = (string)subkey.GetValue("InstallLocation");
+                            productInfo.FileDate = CommonFileHelpers.GetFileDate(productInfo.InstallPath);
+                            productInfo.Architecture = architecture;
+                            break;
+                        }
+                        catch (Exception ex)
+                        {
+                            // If there is an error, continue with the next subkey
+                            Console.WriteLine(ex.Message);
+                        }
                     }
+            }
 
-                    return 0; // Default to no change in order
-                });
+            return found;
+        }
 
-                // Keep the latest file and delete the rest
-                for (var i = 1; i < files.Length; i++)
+        public static bool GetServiceInfo(string productName, out InstallStatusWithDetail productInfo)
+        {
+            productInfo = new InstallStatusWithDetail();
+
+            var registryKeyPath = $@"SYSTEM\CurrentControlSet\Services\{productName}";
+            using (var key = Registry.LocalMachine.OpenSubKey(registryKeyPath))
+            {
+                if (key == null)
                 {
-                    File.Delete(files[i]);
-                    _logger.Information($"Deleted: {files[i]}");
+                    Console.WriteLine($"Product {productName} not found.");
+                    return false;
                 }
 
-                _logger.Information("Old files deleted.");
-            }
-            else
-            {
-                _logger.Information("No old files to delete.");
+                productInfo.Name = key.GetValue("DisplayName") as string;
+                var imagePath = key.GetValue("ImagePath") as string;
+                productInfo.InstallPath = ExtractExecutableFilePath(imagePath);
+                productInfo.Version = CommonFileHelpers.GetFileVersion(productInfo.InstallPath);
+                productInfo.FileDate = CommonFileHelpers.GetFileDate(productInfo.InstallPath);
             }
 
-            _logger.Information($"Using file: {files[0]}");
+            return true;
+        }
 
-            return files[0];
+        private static string ExtractExecutableFilePath(string path)
+        {
+            var absoluteImagePath = Regex.Replace(path, "%(.*?)%", m => Environment.GetEnvironmentVariable(m.Groups[1].Value));
+
+            if (absoluteImagePath.Length == 0) return "";
+
+            return absoluteImagePath[0] == '\"' ? absoluteImagePath.Split('\"')[1] : absoluteImagePath.Split(' ')[0];
+        }    
+        
+
+        // The install date string format is YYYYMMDD
+        private static DateTime? ConvertToDateTime(string installDateStr)
+        {
+            if (DateTime.TryParseExact(installDateStr, "yyyyMMdd", null, DateTimeStyles.None, out var date)) return date;
+            return null;
         }
 
         protected bool IsServiceInstalled(string serviceName)
@@ -411,30 +346,6 @@ namespace ToolManager
             }
 
             return true;
-        }
-
-        protected void EnsureSourceToDestination(string sourcePath, string destinationPath)
-        {
-            _logger.Information($"Copying {sourcePath} to {destinationPath}");
-            if (!File.Exists(sourcePath))
-            {
-                _logger.Error($"{sourcePath} not found");
-                return;
-            }
-
-            File.Copy(sourcePath, destinationPath, true);
-        }
-
-        protected void ExtractSourceToDestination(string sourcePath, string destinationPath)
-        {
-            _logger.Information($"Extracting {sourcePath} to {destinationPath}");
-            if (!File.Exists(sourcePath))
-            {
-                _logger.Error($"{sourcePath} not found");
-                return;
-            }
-
-            ZipArchiveHelper.ExtractZipFileWithOverwrite(sourcePath, destinationPath);
         }
     }
 }

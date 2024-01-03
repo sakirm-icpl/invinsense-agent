@@ -2,10 +2,7 @@
 using Serilog;
 using System;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 using System.Security.AccessControl;
-using System.Security.Cryptography.X509Certificates;
-using System.Security.Cryptography;
 using System.Threading;
 
 namespace ToolManager
@@ -17,6 +14,8 @@ namespace ToolManager
     public static class MsiPackageWrapper
     {
         #region Constants
+
+        private static readonly ILogger logger = logger.ForContext(typeof(MsiPackageWrapper));
 
         private const string WindowsInstallerProgramName = "msiexec";
 
@@ -62,27 +61,6 @@ namespace ToolManager
 
         #region Methods
 
-        public static void ShowCertificateInfo(string msiPath)
-        {
-            try
-            {
-                var x509 = X509Certificate.CreateFromSignedFile(msiPath);
-                if (x509.GetHashCode() != 0)
-                    Console.WriteLine(x509.ToString(true));
-                else
-                    Console.WriteLine("Assembly isn't signed by a software publisher certificate");
-            }
-            catch (COMException ce)
-            {
-                // using a test certificate without trusting the test root ?
-                Console.WriteLine(ce.Message);
-            }
-            catch (CryptographicException e)
-            {
-                Console.WriteLine(e.Message);
-            }
-        }
-
         public static bool GetMsiVersion(string msiPath, out Version version)
         {
             Type type = Type.GetTypeFromProgID("WindowsInstaller.Installer");
@@ -104,7 +82,7 @@ namespace ToolManager
             }
             catch (Exception ex)
             {
-                Log.Error($"Failed to fetch version from {msiPath}: {ex.Message}");
+                logger.Error($"Failed to fetch version from {msiPath}: {ex.Message}");
             }
 
             version = null;
@@ -119,7 +97,7 @@ namespace ToolManager
         {
             try
             {
-                Log.Information("Beginning MSI package installation");
+                logger.Information("Beginning MSI package installation");
 
                 var arguments = $"/i \"{installerFile}\" /quiet";
 
@@ -133,7 +111,7 @@ namespace ToolManager
 
                 using (Process p = ProcessHelper.CreateHiddenProcess(WindowsInstallerProgramName, arguments))
                 {
-                    Log.Information("Starting process: {0}", p.StartInfo.FileName);
+                    logger.Information("Starting process: {0}", p.StartInfo.FileName);
                     
                     p.Start();
 
@@ -141,16 +119,16 @@ namespace ToolManager
 
                     var installResultDescription = ((MsiExitCode)p.ExitCode).GetEnumDescription();
                     
-                    Log.Information("MSI package install result: ({0}) {1}", p.ExitCode, installResultDescription);
+                    logger.Information("MSI package install result: ({0}) {1}", p.ExitCode, installResultDescription);
 
                     if (p.ExitCode != 0) throw new Exception(installResultDescription);
                 }
 
-                Log.Information("Installation completed");
+                logger.Information("Installation completed");
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "An exception occurred.");
+                logger.Error(ex, "An exception occurred.");
                 throw;
             }
 
@@ -167,7 +145,7 @@ namespace ToolManager
 
             try
             {
-                Log.Information("Beginning MSI package uninstallation");
+                logger.Information("Beginning MSI package uninstallation");
                 var identifier = MoWrapper.GetPackageIdentifier(packageName);
 
                 if (string.IsNullOrEmpty(identifier)) return false;
@@ -184,21 +162,21 @@ namespace ToolManager
 
                 using (Process p = ProcessHelper.CreateHiddenProcess(WindowsInstallerProgramName, arguments))
                 {
-                    Log.Information("Starting process '{0}'", p.StartInfo.FileName);
+                    logger.Information("Starting process '{0}'", p.StartInfo.FileName);
                     p.Start();
                     p.WaitForExit();
 
                     var uninstallResultDescription = ((MsiExitCode)p.ExitCode).GetEnumDescription();
-                    Log.Information("MSI package uninstall result: ({0}) {1}", p.ExitCode, uninstallResultDescription);
+                    logger.Information("MSI package uninstall result: ({0}) {1}", p.ExitCode, uninstallResultDescription);
 
                     if (p.ExitCode != 0) throw new Exception(uninstallResultDescription);
                 }
 
-                Log.Information("Uninstallation completed");
+                logger.Information("Uninstallation completed");
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "An exception occurred.");
+                logger.Error(ex, "An exception occurred.");
                 throw;
             }
 

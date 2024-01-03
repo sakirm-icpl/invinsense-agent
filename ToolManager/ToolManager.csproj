@@ -31,7 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Converters\InstallTypeConverter.cs" />
     <Compile Include="Converters\ToolGroupConverter.cs" />
+    <Compile Include="Converters\VersionDetectionTypeConverter.cs" />
+    <Compile Include="ExePackageWrapper.cs" />
     <Compile Include="Models\ExecutableFile.cs" />
     <Compile Include="Models\FileCopy.cs" />
     <Compile Include="Models\FileExistsAction.cs" />
@@ -47,6 +50,7 @@
     <Compile Include="Models\ServiceActionType.cs" />
     <Compile Include="Models\ServiceInstallAction.cs" />
     <Compile Include="Models\ServiceInstallType.cs" />
+    <Compile Include="Models\InstallStatusWithDetail.cs" />
     <Compile Include="Models\StartupType.cs" />
     <Compile Include="Models\ToolDetail.cs" />
     <Compile Include="Models\ToolGroup.cs" />
@@ -54,6 +58,8 @@
     <Compile Include="Models\ToolStatus.cs" />
     <Compile Include="Models\ToolValidator.cs" />
     <Compile Include="Models\TrayStatus.cs" />
+    <Compile Include="Models\InstallIStatusDetection.cs" />
+    <Compile Include="Models\VersionDetectionType.cs" />
     <Compile Include="Models\WinService.cs" />
     <Compile Include="MoWrapper.cs" />
     <Compile Include="MsiExitCode.cs" />

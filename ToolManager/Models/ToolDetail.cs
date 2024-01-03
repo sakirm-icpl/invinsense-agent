@@ -2,9 +2,8 @@
 using Newtonsoft.Json;
 using System;
 using ToolManager.Converters;
-using ToolManager.Models;
 
-namespace Common.Persistence
+namespace ToolManager.Models
 {
     public class ToolDetail : IModel
     {
@@ -13,16 +12,7 @@ namespace Common.Persistence
 
         [JsonConverter(typeof(ToolGroupConverter))]
         [JsonProperty("group")]
-        public ToolGroup ToolGroup { get; set; }
-
-        [JsonProperty("version")]
-        public string Version { get; set; }
-
-        [JsonProperty("minVersion")]
-        public string MinVersion { get; set; }
-
-        [JsonProperty("maxVersion")]
-        public string MaxVersion { get; set; }
+        public ToolGroup ToolGroup { get; set; }        
 
         [JsonProperty("runtimeIdentifier")]
         public string RuntimeIdentifier { get; set; }
@@ -30,8 +20,14 @@ namespace Common.Persistence
         [JsonProperty("downloadUrl")]
         public string DownloadUrl { get; set; }
 
-        [JsonProperty("destinationPath")]
-        public string DestinationPath { get; set; }
+        [JsonProperty("downloadFileName")]
+        public string DownloadFileName { get; set; }
+
+        [JsonProperty("versionDetectionInstruction")]
+        public InstallIStatusDetection VersionDetectionInstruction { get; set; }
+
+        [JsonProperty("installInstructions")]
+        public InstallInstruction InstallInstructions { get; set; }
 
         [JsonProperty("description")]
         public string Description { get; set; }

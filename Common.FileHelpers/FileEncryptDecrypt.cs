@@ -3,7 +3,6 @@ using System.Security.Cryptography;
 
 namespace Common.Encryption
 {
-
     internal class FileEncryptDecrypt
     {
         private const int SaltSize = 8;

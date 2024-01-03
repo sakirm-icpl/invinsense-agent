@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
-using ToolManager.Models;
 
-namespace Common.Persistence
+namespace ToolManager.Models
 {
     public class ToolStatus
     {

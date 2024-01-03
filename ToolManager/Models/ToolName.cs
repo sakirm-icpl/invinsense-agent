@@ -1,4 +1,4 @@
-﻿namespace Common.Persistence
+﻿namespace ToolManager.Models
 {
     public readonly struct ToolName
     {

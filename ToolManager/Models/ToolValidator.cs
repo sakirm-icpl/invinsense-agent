@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Common.Persistence
+namespace ToolManager.Models
 {
     public class ToolValidator
     {

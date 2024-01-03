@@ -11,6 +11,7 @@ namespace ToolManager.Models
 
         public InstallType(string id, string name) : base(id, name)
         {
+
         }
     }
 }

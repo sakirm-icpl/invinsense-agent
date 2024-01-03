@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using Common.ConfigProvider;
-using Common.Persistence;
-using Serilog;
+using Common.FileHelpers;
 using ToolManager.Models;
+using Serilog;
 
 namespace ToolManager
 {
@@ -13,61 +12,6 @@ namespace ToolManager
         public OsQueryManager(ToolDetail toolDetail) : base(toolDetail, Log.ForContext(typeof(OsQueryManager)))
         {
             _logger.Information($"Initializing {nameof(OsQueryManager)} Manager");
-        }
-
-        public override VersionDetectionInstruction GetVersionDetectionInstruction()
-        {
-            return new VersionDetectionInstruction
-            {
-                Type = VersionDetectionType.Registry,
-                Path = ToolName.OsQuery,
-                Pattern = "version"
-            };
-        }
-
-        /// <summary>
-        /// Arguments = $"/I \"{msiPath}\" /QN /l*vx \"{logPath}\" ACCEPTEULA=1 ALLUSERS=1",
-        /// </summary>
-        /// <returns></returns>
-        public override InstallInstruction GetInstallInstruction()
-        {
-            return new InstallInstruction
-            {
-                Name = _toolDetail.Name,
-                WorkingDirectory = CommonUtils.ArtifactsFolder,
-                InstallType = InstallType.Installer,
-                RequiredVersion = _toolDetail.Version,
-                MinimumVersion = _toolDetail.MinVersion,
-                MaximumVersion = _toolDetail.MaxVersion,
-                InstallArgs = new List<string>
-                {
-                    "ALLUSERS=1", 
-                    "ACCEPTEULA=1"
-                },
-                UninstallArgs = new List<string>
-                {
-                }
-            };
-        }
-
-        public override int Install()
-        {
-            if (!_toolDetail.IsActive)
-            {
-                _logger.Information("Installation is not required as tool is not active");
-                return 0;
-            }
-
-            try
-            {
-                var exitCode = InstallMsi();
-                return exitCode;
-            }
-            catch (Exception ex)
-            {
-                _logger.Error($"{ex.Message}");
-                return 1;
-            }
         }
 
         public override void PostInstall()
@@ -80,17 +24,12 @@ namespace ToolManager
             //Copy osquery.conf to installation path
             var configSource = Path.Combine(sourceFolder, $"{ToolName.OsQuery}.conf");
             var configDestination = Path.Combine(destinationFolder, $"{ToolName.OsQuery}.conf");
-            EnsureSourceToDestination(configSource, configDestination);
+            CommonFileHelpers.EnsureSourceToDestination(configSource, configDestination);
 
             //Copy packs to installation path
             var packsSourcePath = Path.Combine(sourceFolder, $"{ToolName.OsQuery}-packs.zip");
             var packsDestinationPath = Path.Combine(destinationFolder, "packs");
-            ExtractSourceToDestination(packsSourcePath, packsDestinationPath);
-        }
-
-        public override int Remove()
-        {
-            return UninstallMsi();
+            CommonFileHelpers.ExtractSourceToDestination(packsSourcePath, packsDestinationPath);
         }
     }
 }

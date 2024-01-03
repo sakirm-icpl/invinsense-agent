@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.IO.Compression;
 
-namespace Common.Helpers
+namespace Common.FileHelpers
 {
     public static class ZipArchiveHelper
     {

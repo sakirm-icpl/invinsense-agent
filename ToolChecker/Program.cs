@@ -1,6 +1,6 @@
 ﻿using Common.ConfigProvider;
 using Common.Net;
-using Common.Persistence;
+using ToolManager.Models;
 using Common.RegistryHelpers;
 using Common.Utils;
 using Newtonsoft.Json;
@@ -21,6 +21,14 @@ namespace ToolChecker
 
             Log.Logger.Information($"Artifacts: {CommonUtils.ArtifactsFolder}");
             Log.Logger.Information($"Artifacts: {CommonUtils.LogsFolder}");
+
+            if (ProductManager.GetServiceInfo("Sysmon64", out var sysmonInfo)) Console.WriteLine(sysmonInfo);
+
+            if (ProductManager.GetProductInfoReg("7-Zip", out var _7zip)) Console.WriteLine(_7zip);
+
+            if (ProductManager.GetProductInfoReg("Git", out var git)) Console.WriteLine(git);
+
+            if (ProductManager.GetProductInfoReg("osquery", out var osquery)) Console.WriteLine(osquery);
 
             var client = new ClientService(new HttpClientConfig
             {
@@ -60,7 +68,7 @@ namespace ToolChecker
 
             if(status == 0)
             {
-                om.Install();
+                om.InstallProduct();
             }
 
             var lastUpdate = WinRegistryHelper.GetPropertyByName("Infopercept", "osquery_last_update");
@@ -73,16 +81,43 @@ namespace ToolChecker
                 WinRegistryHelper.SetPropertyByName("Infopercept", "osquery_last_update", DateTime.Now.ToString());
             }
 
-            /*
             var sd = toolDetails[ToolName.Sysmon];
             var sm = new SysmonManager(sd);
-            sm.Preinstall();
+            status = sm.Preinstall();
+            if (status == 0)
+            {
+                sm.InstallProduct();
+            }
 
+            lastUpdate = WinRegistryHelper.GetPropertyByName("Infopercept", "sysmon_last_update");
+
+            lastUpdateTime = lastUpdate == null ? DateTime.MinValue : DateTime.Parse(lastUpdate);
+
+            if (sd.UpdatedOn >= lastUpdateTime)
+            {
+                sm.PostInstall();
+                WinRegistryHelper.SetPropertyByName("Infopercept", "sysmon_last_update", DateTime.Now.ToString());
+            }
+
+            /*
             var wd = toolDetails[ToolName.Wazuh];
             var wm = new WazuhManager(wd);
-            wm.Preinstall();
+            status = wm.Preinstall();
+            if (status == 0)
+            {
+                wm.Install();
+            }
+
+            lastUpdate = WinRegistryHelper.GetPropertyByName("Infopercept", "wazuh_last_update");
+
+            lastUpdateTime = lastUpdate == null ? DateTime.MinValue : DateTime.Parse(lastUpdate);
+
+            if (otd.UpdatedOn >= lastUpdateTime)
+            {
+                wm.PostInstall();
+                WinRegistryHelper.SetPropertyByName("Infopercept", "wazuh_last_update", DateTime.Now.ToString());
+            }
             */
-            Console.ReadLine();
 
             Console.ReadLine();
         }

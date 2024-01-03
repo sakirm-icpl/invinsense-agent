@@ -1,24 +1,22 @@
-﻿using System.Collections.Generic;
-using ToolManager.Models;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
+using ToolManager.Converters;
 
-namespace Common.Persistence
+namespace ToolManager.Models
 {
     public class InstallInstruction
     {
-        public string Name { get; set; }
-
-        public string RequiredVersion { get; set; }
-
-        public string MinimumVersion { get; set; }
-
-        public string MaximumVersion { get; set; }
-
+        [JsonConverter(typeof(InstallTypeConverter))]
+        [JsonProperty("installType")]
         public InstallType InstallType { get; set; }
 
-        public string WorkingDirectory { get; set; }
+        [JsonProperty("installerFile")]
+        public string InstallerFile { get; set; }
 
+        [JsonProperty("installArgs")]
         public List<string> InstallArgs { get; set; }
 
+        [JsonProperty("uninstallArgs")]
         public List<string> UninstallArgs { get; set; }
     }
 }
