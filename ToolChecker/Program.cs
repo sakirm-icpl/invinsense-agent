@@ -22,13 +22,15 @@ namespace ToolChecker
             Log.Logger.Information($"Artifacts: {CommonUtils.ArtifactsFolder}");
             Log.Logger.Information($"Artifacts: {CommonUtils.LogsFolder}");
 
-            if (ProductManager.GetServiceInfo("Sysmon64", out var sysmonInfo)) Console.WriteLine(sysmonInfo);
+            if (MsiPackageWrapper.GetProductInfoReg("7-Zip", out var pi7zip)) Log.Logger.Information(pi7zip.ToString());
 
-            if (ProductManager.GetProductInfoReg("7-Zip", out var _7zip)) Console.WriteLine(_7zip);
+            if (MsiPackageWrapper.GetProductInfoReg("Git", out var piGit)) Log.Logger.Information(piGit.ToString());
 
-            if (ProductManager.GetProductInfoReg("Git", out var git)) Console.WriteLine(git);
+            if (MsiPackageWrapper.GetProductInfoReg("osquery", out var piOsq)) Log.Logger.Information(piOsq.ToString());
 
-            if (ProductManager.GetProductInfoReg("osquery", out var osquery)) Console.WriteLine(osquery);
+            if (MsiPackageWrapper.GetProductInfoReg("wazuh", out var piWaz)) Log.Logger.Information(piWaz.ToString()); 
+            
+            if (ServiceHelper.GetServiceInfo("Sysmon64", out var piSym)) Log.Logger.Information(piSym.ToString());
 
             var client = new ClientService(new HttpClientConfig
             {
@@ -40,7 +42,7 @@ namespace ToolChecker
                 ExtraParams = new Dictionary<string, string>()
             });
 
-            Console.WriteLine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles));
+            Log.Logger.Information(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles));
 
             var apiResponse = await client.InvokeAsync(HttpMethodNames.Get, $"/api/tools");
 
@@ -81,6 +83,7 @@ namespace ToolChecker
                 WinRegistryHelper.SetPropertyByName("Infopercept", "osquery_last_update", DateTime.Now.ToString());
             }
 
+            /*
             var sd = toolDetails[ToolName.Sysmon];
             var sm = new SysmonManager(sd);
             status = sm.Preinstall();

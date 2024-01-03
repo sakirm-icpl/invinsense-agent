@@ -9,10 +9,5 @@ namespace ToolManager
         {
             _logger.Information($"Initializing {nameof(WazuhManager)} Manager");
         }
-
-        public override void PostInstall()
-        {
-           
-        }
     }
 }

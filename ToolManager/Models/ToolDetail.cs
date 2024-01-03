@@ -26,8 +26,8 @@ namespace ToolManager.Models
         [JsonProperty("versionDetectionInstruction")]
         public InstallIStatusDetection VersionDetectionInstruction { get; set; }
 
-        [JsonProperty("installInstructions")]
-        public InstallInstruction InstallInstructions { get; set; }
+        [JsonProperty("installInstruction")]
+        public InstallInstruction InstallInstruction { get; set; }
 
         [JsonProperty("description")]
         public string Description { get; set; }

@@ -14,7 +14,21 @@ namespace ToolManager
             _logger.Information($"Initializing {nameof(OsQueryManager)} Manager");
         }
 
-        public override void PostInstall()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override int Preinstall()
+        {
+            return base.Preinstall();
+        }
+
+        /// <summary>
+        /// 1. Copy osquery.conf to installation path
+        /// 2. Copy packs to installation path
+        /// </summary>
+        /// <returns></returns>
+        public override int PostInstall()
         {
             var sourceFolder = Path.Combine(CommonUtils.ArtifactsFolder, _toolDetail.Name);
             var destinationFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), _toolDetail.Name);
@@ -30,6 +44,8 @@ namespace ToolManager
             var packsSourcePath = Path.Combine(sourceFolder, $"{ToolName.OsQuery}-packs.zip");
             var packsDestinationPath = Path.Combine(destinationFolder, "packs");
             CommonFileHelpers.ExtractSourceToDestination(packsSourcePath, packsDestinationPath);
+
+            return base.PostInstall();
         }
     }
 }

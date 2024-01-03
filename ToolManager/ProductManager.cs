@@ -1,14 +1,9 @@
 ﻿using System;
 using System.IO;
-using System.ServiceProcess;
-using System.Text.RegularExpressions;
 using Common.ConfigProvider;
 using ToolManager.Models;
 using Serilog;
 using Common.Net;
-using Microsoft.Win32;
-using System.Globalization;
-using System.Runtime.InteropServices;
 using Common.FileHelpers;
 
 namespace ToolManager
@@ -63,7 +58,7 @@ namespace ToolManager
             return InstallStatus.Installed;
         }
 
-        public int Preinstall()
+        public virtual int Preinstall()
         {
             var status = GetInstallStatus();
 
@@ -104,7 +99,10 @@ namespace ToolManager
             return 0;
         }
 
-        public abstract void PostInstall();
+        public virtual int PostInstall()
+        {
+            return 0;
+        }
 
         public bool GetInstalledVersion(out InstallStatusWithDetail detail)
         {
@@ -120,10 +118,10 @@ namespace ToolManager
             }
 
             if (versionDetectionInstruction.Type == VersionDetectionType.ProgramRegistry)
-                return GetProductInfoReg(versionDetectionInstruction.Key, out detail);
+                return MsiPackageWrapper.GetProductInfoReg(versionDetectionInstruction.Key, out detail);
 
             if (versionDetectionInstruction.Type == VersionDetectionType.ServiceRegistry)
-                return GetServiceInfo(versionDetectionInstruction.Key, out detail);
+                return ServiceHelper.GetServiceInfo(versionDetectionInstruction.Key, out detail);
 
             detail = new InstallStatusWithDetail
             {
@@ -141,7 +139,7 @@ namespace ToolManager
             }
 
             var toolName = _toolDetail.Name;
-            var instruction = _toolDetail.InstallInstructions;
+            var instruction = _toolDetail.InstallInstruction;
 
             try
             {
@@ -170,7 +168,11 @@ namespace ToolManager
                     return 0;
                 }
 
-                if (!IsMsiInstallerBusy()) return 1;
+                if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
+                {
+                    _logger.Error("MSI installer is not ready. 1618");
+                    return 1618;
+                }
 
                 _logger.Information("MSI installer is ready");
 
@@ -198,7 +200,7 @@ namespace ToolManager
         protected int UninstallProduct()
         {
             var toolName = _toolDetail.Name;
-            var instruction = _toolDetail.InstallInstructions;
+            var instruction = _toolDetail.InstallInstruction;
             var productName = _toolDetail.VersionDetectionInstruction.Key;
 
             try
@@ -223,7 +225,6 @@ namespace ToolManager
                 else if (instruction.InstallType == InstallType.Executable)
                 {
                     _logger.Information($"{productName} uninstall started...");
-
                     ExePackageWrapper.Uninstall(instruction.InstallerFile, instruction.UninstallArgs.ToString());
                 }
                 else
@@ -238,114 +239,6 @@ namespace ToolManager
                 _logger.Error($"{ex.Message}");
                 return 1;
             }
-        }
-
-        public static bool GetProductInfoReg(string productName, out InstallStatusWithDetail productInfo)
-        {
-            if (GetProductInfoRegByKey(productName, Architecture.X64, out productInfo)) return true;
-            if (GetProductInfoRegByKey(productName, Architecture.X86, out productInfo)) return true;
-            return false;
-        }
-
-        private static bool GetProductInfoRegByKey(string productName, Architecture architecture, out InstallStatusWithDetail productInfo)
-        {
-            productInfo = new InstallStatusWithDetail();
-
-            var found = false;
-
-            var regViewType = architecture == Architecture.X64 ? RegistryView.Registry64 : RegistryView.Registry32;
-
-            using (var rk = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, regViewType))
-            {
-                var uninstallKey = rk.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall");
-
-                foreach (var skName in uninstallKey.GetSubKeyNames())
-                    using (var subkey = uninstallKey.OpenSubKey(skName))
-                    {
-                        try
-                        {
-                            var displayName = (string)subkey.GetValue("DisplayName");
-
-                            if (displayName == null || !displayName.Contains(productName)) continue;
-
-                            found = true;
-                            productInfo.Name = displayName;
-                            productInfo.Version = new Version(subkey.GetValue("DisplayVersion").ToString());
-                            productInfo.InstalledDate = ConvertToDateTime((string)subkey.GetValue("InstallDate"));
-                            productInfo.InstallPath = (string)subkey.GetValue("InstallLocation");
-                            productInfo.FileDate = CommonFileHelpers.GetFileDate(productInfo.InstallPath);
-                            productInfo.Architecture = architecture;
-                            break;
-                        }
-                        catch (Exception ex)
-                        {
-                            // If there is an error, continue with the next subkey
-                            Console.WriteLine(ex.Message);
-                        }
-                    }
-            }
-
-            return found;
-        }
-
-        public static bool GetServiceInfo(string productName, out InstallStatusWithDetail productInfo)
-        {
-            productInfo = new InstallStatusWithDetail();
-
-            var registryKeyPath = $@"SYSTEM\CurrentControlSet\Services\{productName}";
-            using (var key = Registry.LocalMachine.OpenSubKey(registryKeyPath))
-            {
-                if (key == null)
-                {
-                    Console.WriteLine($"Product {productName} not found.");
-                    return false;
-                }
-
-                productInfo.Name = key.GetValue("DisplayName") as string;
-                var imagePath = key.GetValue("ImagePath") as string;
-                productInfo.InstallPath = ExtractExecutableFilePath(imagePath);
-                productInfo.Version = CommonFileHelpers.GetFileVersion(productInfo.InstallPath);
-                productInfo.FileDate = CommonFileHelpers.GetFileDate(productInfo.InstallPath);
-            }
-
-            return true;
-        }
-
-        private static string ExtractExecutableFilePath(string path)
-        {
-            var absoluteImagePath = Regex.Replace(path, "%(.*?)%", m => Environment.GetEnvironmentVariable(m.Groups[1].Value));
-
-            if (absoluteImagePath.Length == 0) return "";
-
-            return absoluteImagePath[0] == '\"' ? absoluteImagePath.Split('\"')[1] : absoluteImagePath.Split(' ')[0];
-        }    
-        
-
-        // The install date string format is YYYYMMDD
-        private static DateTime? ConvertToDateTime(string installDateStr)
-        {
-            if (DateTime.TryParseExact(installDateStr, "yyyyMMdd", null, DateTimeStyles.None, out var date)) return date;
-            return null;
-        }
-
-        protected bool IsServiceInstalled(string serviceName)
-        {
-            var services = ServiceController.GetServices();
-            foreach (var service in services)
-                if (service.ServiceName.Equals(serviceName, StringComparison.OrdinalIgnoreCase))
-                    return true;
-            return false;
-        }
-
-        private bool IsMsiInstallerBusy()
-        {
-            if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
-            {
-                _logger.Error("MSI installer is not ready. 1618");
-                return false;
-            }
-
-            return true;
-        }
+        }        
     }
 }

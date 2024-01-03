@@ -1,9 +1,11 @@
 ﻿using Newtonsoft.Json;
+using ToolManager.Converters;
 
 namespace ToolManager.Models
 {
     public class InstallIStatusDetection
     {
+        [JsonConverter(typeof(VersionDetectionTypeConverter))]
         [JsonProperty("type")] public VersionDetectionType Type { get; set; }
 
         [JsonProperty("key")] public string Key { get; set; }

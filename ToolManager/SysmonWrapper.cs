@@ -14,9 +14,14 @@ namespace ToolManager
             _logger.Information($"Initializing {nameof(SysmonManager)} Manager");
         }
 
-        public override void PostInstall()
+        public override int Preinstall()
         {
-            
+            return base.Preinstall();
+        }
+
+        public override int PostInstall()
+        {
+            return base.PostInstall();
         }
     }
 }

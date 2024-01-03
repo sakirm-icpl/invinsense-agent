@@ -7,11 +7,44 @@ namespace Common.RegistryHelpers
     {
         private static readonly ILogger _logger = Log.ForContext(typeof(WinRegistryHelper));
 
+        /// <summary>
+        /// reg.local.PATH.KEY
+        ///     reg = RegistryView.Registry32
+        ///     reg64 = RegistryView.Registry64
+        ///     Local = RegistryHive.LocalMachine
+        ///     PATH = Open subkey
+        ///     Key = Key value
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static string GetPropertyByTemplate(string path)
+        {
+            var parts = path.Split('.');
+            try
+            {
+                var regView = parts[0] == "reg64" ? RegistryView.Registry64 : RegistryView.Registry32;
+                var regHive = parts[1] == "Local" ? RegistryHive.LocalMachine : RegistryHive.CurrentUser;
+                var keyPath = parts[2];
+                var key = parts[3];
+
+                using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32))
+                using (var subkey = baseKey.OpenSubKey($"SOFTWARE\\{keyPath}", false)) // False is important!
+                {
+                    var value = subkey?.GetValue(key) as string;
+                    return value;
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public static string GetPropertyByName(string path, string name)
         {
             try
             {
-                using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
+                using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32))
                 using (var subKey = baseKey.OpenSubKey($"SOFTWARE\\{path}", false)) // False is important!
                 {
                     var value = subKey?.GetValue(name) as string;

@@ -1,9 +1,14 @@
 ﻿using Common.Extensions;
+using Common.FileHelpers;
+using Microsoft.Win32;
 using Serilog;
 using System;
 using System.Diagnostics;
+using System.Globalization;
+using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Threading;
+using ToolManager.Models;
 
 namespace ToolManager
 {
@@ -15,7 +20,7 @@ namespace ToolManager
     {
         #region Constants
 
-        private static readonly ILogger logger = logger.ForContext(typeof(MsiPackageWrapper));
+        private static readonly ILogger logger = Log.ForContext(typeof(MsiPackageWrapper));
 
         private const string WindowsInstallerProgramName = "msiexec";
 
@@ -184,5 +189,60 @@ namespace ToolManager
         }
 
         #endregion
+
+        public static bool GetProductInfoReg(string productName, out InstallStatusWithDetail productInfo)
+        {
+            if (GetProductInfoRegByKey(productName, Architecture.X64, out productInfo)) return true;
+            if (GetProductInfoRegByKey(productName, Architecture.X86, out productInfo)) return true;
+            return false;
+        }
+
+        private static bool GetProductInfoRegByKey(string productName, Architecture architecture, out InstallStatusWithDetail productInfo)
+        {
+            productInfo = new InstallStatusWithDetail();
+
+            var found = false;
+
+            var regViewType = architecture == Architecture.X64 ? RegistryView.Registry64 : RegistryView.Registry32;
+
+            using (var rk = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, regViewType))
+            {
+                var uninstallKey = rk.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall");
+
+                foreach (var skName in uninstallKey.GetSubKeyNames())
+                    using (var subkey = uninstallKey.OpenSubKey(skName))
+                    {
+                        try
+                        {
+                            var displayName = (string)subkey.GetValue("DisplayName");
+
+                            if (displayName == null || !displayName.Contains(productName)) continue;
+
+                            found = true;
+                            productInfo.Name = displayName;
+                            productInfo.Version = new Version(subkey.GetValue("DisplayVersion").ToString());
+                            productInfo.InstalledDate = ConvertToDateTime((string)subkey.GetValue("InstallDate"));
+                            productInfo.InstallPath = (string)subkey.GetValue("InstallLocation");
+                            productInfo.FileDate = CommonFileHelpers.GetFileDate(productInfo.InstallPath);
+                            productInfo.Architecture = architecture;
+                            break;
+                        }
+                        catch (Exception ex)
+                        {
+                            // If there is an error, continue with the next subkey
+                            Console.WriteLine(ex.Message);
+                        }
+                    }
+            }
+
+            return found;
+        }
+
+        // The install date string format is YYYYMMDD
+        private static DateTime? ConvertToDateTime(string installDateStr)
+        {
+            if (DateTime.TryParseExact(installDateStr, "yyyyMMdd", null, DateTimeStyles.None, out var date)) return date;
+            return null;
+        }
     }
 }

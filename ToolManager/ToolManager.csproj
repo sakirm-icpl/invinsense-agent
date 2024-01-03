@@ -63,7 +63,8 @@
     <Compile Include="Models\WinService.cs" />
     <Compile Include="MoWrapper.cs" />
     <Compile Include="MsiExitCode.cs" />
-    <Compile Include="MsiPackage.cs" />
+    <Compile Include="MsiPackageWrapper.cs" />
+    <Compile Include="ServiceHelper.cs" />
     <Compile Include="WazuhManager.cs" />
     <Compile Include="OsQueryManager.cs" />
     <Compile Include="ProcessHelper.cs" />
