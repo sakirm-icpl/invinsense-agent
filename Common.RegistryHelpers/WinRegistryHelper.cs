@@ -44,7 +44,7 @@ namespace Common.RegistryHelpers
         {
             try
             {
-                using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32))
+                using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
                 using (var subKey = baseKey.OpenSubKey($"SOFTWARE\\{path}", false)) // False is important!
                 {
                     var value = subKey?.GetValue(name) as string;

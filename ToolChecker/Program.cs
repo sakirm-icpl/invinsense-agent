@@ -70,12 +70,14 @@ namespace ToolChecker
 
             if(status == 0)
             {
-                om.InstallProduct();
+   //             om.InstallProduct();
             }
 
             var lastUpdate = WinRegistryHelper.GetPropertyByName("Infopercept", "osquery_last_update");
 
             var lastUpdateTime = lastUpdate == null ? DateTime.MinValue : DateTime.Parse(lastUpdate);
+
+            Log.Logger.Information($"Last Update Time: {lastUpdateTime}, Database Update Time: {otd.UpdatedOn}");
 
             if(otd.UpdatedOn >= lastUpdateTime)
             {

@@ -70,9 +70,7 @@ namespace ToolManager
         {
             Type type = Type.GetTypeFromProgID("WindowsInstaller.Installer");
 
-            WindowsInstaller.Installer installer = (WindowsInstaller.Installer)
-
-            Activator.CreateInstance(type);
+            WindowsInstaller.Installer installer = (WindowsInstaller.Installer) Activator.CreateInstance(type);
 
             try
             {
@@ -194,12 +192,21 @@ namespace ToolManager
         {
             if (GetProductInfoRegByKey(productName, Architecture.X64, out productInfo)) return true;
             if (GetProductInfoRegByKey(productName, Architecture.X86, out productInfo)) return true;
-            return false;
+            
+            productInfo = new InstallStatusWithDetail
+            {
+                InstallStatus = InstallStatus.NotFound
+            };
+            
+            return true;
         }
 
         private static bool GetProductInfoRegByKey(string productName, Architecture architecture, out InstallStatusWithDetail productInfo)
         {
-            productInfo = new InstallStatusWithDetail();
+            productInfo = new InstallStatusWithDetail
+            {
+                InstallStatus = InstallStatus.NotFound
+            };
 
             var found = false;
 
@@ -220,6 +227,7 @@ namespace ToolManager
 
                             found = true;
                             productInfo.Name = displayName;
+                            productInfo.InstallStatus = InstallStatus.Installed;
                             productInfo.Version = new Version(subkey.GetValue("DisplayVersion").ToString());
                             productInfo.InstalledDate = ConvertToDateTime((string)subkey.GetValue("InstallDate"));
                             productInfo.InstallPath = (string)subkey.GetValue("InstallLocation");
@@ -230,10 +238,12 @@ namespace ToolManager
                         catch (Exception ex)
                         {
                             // If there is an error, continue with the next subkey
-                            Console.WriteLine(ex.Message);
+                            logger.Error(ex.Message);
                         }
                     }
             }
+
+            logger.Information($"{productName} Found: {found}, {productInfo}");
 
             return found;
         }

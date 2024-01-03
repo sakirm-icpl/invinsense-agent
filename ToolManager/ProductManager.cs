@@ -29,6 +29,12 @@ namespace ToolManager
                 return InstallStatus.Error;
             }
 
+            if (detail.InstallStatus == InstallStatus.NotFound)
+            {
+                _logger.Information("Product is not installed.");
+                return InstallStatus.NotFound;
+            }
+
             var versionDetectionInstruction = _toolDetail.VersionDetectionInstruction;
 
             var requiredVersion = new Version(versionDetectionInstruction.Version);
@@ -127,6 +133,7 @@ namespace ToolManager
             {
                 InstallStatus = InstallStatus.Unknown
             };
+
             return false;
         }
 
@@ -148,9 +155,9 @@ namespace ToolManager
                 var isInstalledVersionFetched = GetInstalledVersion(out var detail);
                 Log.Logger.Information($"Installed version: {detail}");
 
-                var installerFile = instruction.InstallerFile;
+                var msiPath = Path.Combine(CommonUtils.ArtifactsFolder, toolName, instruction.InstallerFile);
 
-                var isNewVersionFetched = MsiPackageWrapper.GetMsiVersion(installerFile, out var newVersion);
+                var isNewVersionFetched = MsiPackageWrapper.GetMsiVersion(msiPath, out var newVersion);
 
                 if (!isInstalledVersionFetched || !isNewVersionFetched)
                 {
@@ -158,13 +165,11 @@ namespace ToolManager
                     return -1;
                 }
 
-                var msiPath = Path.Combine(CommonUtils.ArtifactsFolder, toolName, installerFile);
-
                 _logger.Information($"MSI Path: {msiPath}, version: {newVersion}");
 
                 if (detail.Version != null && newVersion <= detail.Version)
                 {
-                    _logger.Error($"{toolName} is already installed.");
+                    _logger.Information($"{toolName} is already installed.");
                     return 0;
                 }
 
