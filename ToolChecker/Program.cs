@@ -67,10 +67,9 @@ namespace ToolChecker
             var om = new OsQueryManager(otd);
 
             var status = om.Preinstall();
-
             if(status == 0)
             {
-   //             om.InstallProduct();
+                om.InstallProduct();
             }
 
             var lastUpdate = WinRegistryHelper.GetPropertyByName("Infopercept", "osquery_last_update");
@@ -85,7 +84,6 @@ namespace ToolChecker
                 WinRegistryHelper.SetPropertyByName("Infopercept", "osquery_last_update", DateTime.Now.ToString());
             }
 
-            /*
             var sd = toolDetails[ToolName.Sysmon];
             var sm = new SysmonManager(sd);
             status = sm.Preinstall();

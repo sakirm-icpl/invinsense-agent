@@ -20,7 +20,10 @@ namespace ToolManager
 
         public static bool GetServiceInfo(string productName, out InstallStatusWithDetail productInfo)
         {
-            productInfo = new InstallStatusWithDetail();
+            productInfo = new InstallStatusWithDetail
+            {
+                InstallStatus = InstallStatus.NotFound
+            };
 
             var registryKeyPath = $@"SYSTEM\CurrentControlSet\Services\{productName}";
             using (var key = Registry.LocalMachine.OpenSubKey(registryKeyPath))
