@@ -100,6 +100,12 @@ namespace ToolManager
         {
             try
             {
+                if (!IsMsiExecFree(TimeSpan.FromMinutes(5)))
+                {
+                    logger.Error("MSI installer is not ready. 1618");
+                    return false;
+                }
+
                 logger.Information("Beginning MSI package installation");
 
                 var arguments = $"/i \"{installerFile}\" /quiet";
@@ -148,6 +154,12 @@ namespace ToolManager
 
             try
             {
+                if (!IsMsiExecFree(TimeSpan.FromMinutes(5)))
+                {
+                    logger.Error("MSI installer is not ready.");
+                    return false;
+                }
+
                 logger.Information("Beginning MSI package uninstallation");
                 var identifier = MoWrapper.GetPackageIdentifier(packageName);
 

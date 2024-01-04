@@ -153,11 +153,29 @@ namespace ToolManager
                 _logger.Information($"Preparing installation for {toolName}");
 
                 var isInstalledVersionFetched = GetInstalledVersion(out var detail);
-                Log.Logger.Information($"Installed version: {detail}");
 
-                var msiPath = Path.Combine(CommonUtils.ArtifactsFolder, toolName, instruction.InstallerFile);
+                _logger.Information($"Installed version: {detail}");
 
-                var isNewVersionFetched = MsiPackageWrapper.GetMsiVersion(msiPath, out var newVersion);
+                var installerFile = Path.Combine(CommonUtils.ArtifactsFolder, toolName, instruction.InstallerFile);
+
+                var isNewVersionFetched = false;
+                Version newVersion;
+                
+                if(instruction.InstallType == InstallType.Executable)
+                {
+                    isNewVersionFetched = ExePackageWrapper.GetProductVersion(installerFile, out newVersion);
+                    _logger.Information($"Executable Path: {installerFile}, version: {newVersion}");
+                }
+                else if (instruction.InstallType == InstallType.Installer)
+                {
+                    MsiPackageWrapper.GetMsiVersion(installerFile, out newVersion);
+                    _logger.Information($"Executable Path: {installerFile}, version: {newVersion}");
+                }
+                else
+                {
+                    _logger.Error($"Install Type {instruction.InstallType} not supported");
+                    return -1;
+                }
 
                 if (!isInstalledVersionFetched || !isNewVersionFetched)
                 {
@@ -165,7 +183,7 @@ namespace ToolManager
                     return -1;
                 }
 
-                _logger.Information($"MSI Path: {msiPath}, version: {newVersion}");
+                _logger.Information($"MSI Path: {installerFile}, version: {newVersion}");
 
                 if (detail.Version != null && newVersion <= detail.Version)
                 {
@@ -173,20 +191,26 @@ namespace ToolManager
                     return 0;
                 }
 
-                if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
-                {
-                    _logger.Error("MSI installer is not ready. 1618");
-                    return 1618;
-                }
-
-                _logger.Information("MSI installer is ready");
 
                 var logPath = Path.Combine(CommonUtils.LogsFolder, $"{toolName}-install.log");
 
-                _logger.Information($"{toolName} msiPath {msiPath}");
+                _logger.Information($"{toolName} msiPath {installerFile}");
                 _logger.Information($"{toolName} logPath {logPath}");
 
-                var isSuccess = MsiPackageWrapper.Install(msiPath, logPath, instruction.InstallArgs.ToArray());
+                var isSuccess = false;
+
+                if(instruction.InstallType == InstallType.Executable)
+                {
+                    isSuccess = ExePackageWrapper.Install(installerFile, instruction.InstallArgs.ToArray());
+                }
+                else if (instruction.InstallType == InstallType.Installer)
+                {
+                    isSuccess = MsiPackageWrapper.Install(installerFile, logPath, instruction.InstallArgs.ToArray());
+                }
+                else
+                {
+                    _logger.Error($"Install Type {instruction.InstallType} not supported");
+                }
 
                 if (isSuccess)
                 {
@@ -210,26 +234,16 @@ namespace ToolManager
 
             try
             {
-                _logger.Information($"Preparing un-installation for {toolName}");
+                _logger.Information($"{toolName} - {productName} uninstall started...");
 
                 var status = false;
 
                 if (instruction.InstallType == InstallType.Installer)
                 {
-                    if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
-                    {
-                        _logger.Error("MSI installer is not ready.");
-                        return 1618;
-                    }
-
-                    _logger.Information("MSI installer is ready");
-
-                    _logger.Information($"{productName} uninstall started...");
                     status = MsiPackageWrapper.Uninstall(productName);
                 }
                 else if (instruction.InstallType == InstallType.Executable)
                 {
-                    _logger.Information($"{productName} uninstall started...");
                     ExePackageWrapper.Uninstall(instruction.InstallerFile, instruction.UninstallArgs.ToString());
                 }
                 else
