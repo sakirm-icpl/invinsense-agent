@@ -68,7 +68,6 @@ namespace ToolChecker
                 Log.Logger.Information($"{td.Key} - {td.Value}");
             }
 
-            /*
             var otd = toolDetails[ToolName.OsQuery];
             var om = new OsQueryManager(otd);
 
@@ -89,7 +88,6 @@ namespace ToolChecker
                 om.PostInstall();
                 WinRegistryHelper.SetPropertyByName("Infopercept", "osquery_last_update", DateTime.Now.ToString());
             }
-            */
 
             var sd = toolDetails[ToolName.Sysmon];
             var sm = new SysmonManager(sd);

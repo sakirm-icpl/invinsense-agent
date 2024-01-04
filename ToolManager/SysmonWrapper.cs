@@ -37,16 +37,14 @@ namespace ToolManager
 
             var lastUpdateTime = lastUpdate == null ? DateTime.MinValue : DateTime.Parse(lastUpdate);
 
-            if (_toolDetail.UpdatedOn >= lastUpdateTime)
-            {
-                CopyConfig();
-                WinRegistryHelper.SetPropertyByName("Infopercept", "sysmon_last_update", DateTime.Now.ToString());
-            }
-            else
+            if (_toolDetail.UpdatedOn <= lastUpdateTime)
             {
                 _logger.Information("Sysmon config is up to date.");
+                return base.PostInstall();   
             }
 
+            CopyConfig();
+            WinRegistryHelper.SetPropertyByName("Infopercept", "sysmon_last_update", DateTime.Now.ToString());
             return base.PostInstall();
         }
 

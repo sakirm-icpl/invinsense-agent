@@ -4,6 +4,7 @@ using Common.ConfigProvider;
 using Common.FileHelpers;
 using ToolManager.Models;
 using Serilog;
+using Common.RegistryHelpers;
 
 namespace ToolManager
 {
@@ -30,6 +31,18 @@ namespace ToolManager
         /// <returns></returns>
         public override int PostInstall()
         {
+            var lastUpdate = WinRegistryHelper.GetPropertyByName("Infopercept", "osquery_last_update");
+
+            var lastUpdateTime = lastUpdate == null ? DateTime.MinValue : DateTime.Parse(lastUpdate);
+
+            Log.Logger.Information($"Last Update Time: {lastUpdateTime}, Database Update Time: {_toolDetail.UpdatedOn}");
+
+            if (_toolDetail.UpdatedOn <= lastUpdateTime)
+            {
+                _logger.Information("OSQuery config is up to date.");
+                return base.PostInstall();
+            }
+
             var sourceFolder = Path.Combine(CommonUtils.ArtifactsFolder, _toolDetail.Name);
             var destinationFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), _toolDetail.Name);
 
@@ -44,6 +57,8 @@ namespace ToolManager
             var packsSourcePath = Path.Combine(sourceFolder, $"{ToolName.OsQuery}-packs.zip");
             var packsDestinationPath = Path.Combine(destinationFolder, "packs");
             CommonFileHelpers.ExtractSourceToDestination(packsSourcePath, packsDestinationPath);
+
+            WinRegistryHelper.SetPropertyByName("Infopercept", "osquery_last_update", DateTime.Now.ToString());
 
             return base.PostInstall();
         }
