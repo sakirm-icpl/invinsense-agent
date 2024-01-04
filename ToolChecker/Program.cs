@@ -63,6 +63,12 @@ namespace ToolChecker
                 return;
             }
 
+            foreach (var td in toolDetails)
+            {
+                Log.Logger.Information($"{td.Key} - {td.Value}");
+            }
+
+            /*
             var otd = toolDetails[ToolName.OsQuery];
             var om = new OsQueryManager(otd);
 
@@ -83,24 +89,16 @@ namespace ToolChecker
                 om.PostInstall();
                 WinRegistryHelper.SetPropertyByName("Infopercept", "osquery_last_update", DateTime.Now.ToString());
             }
+            */
 
             var sd = toolDetails[ToolName.Sysmon];
             var sm = new SysmonManager(sd);
-            status = sm.Preinstall();
+            var status = sm.Preinstall();
             if (status == 0)
             {
                 sm.InstallProduct();
             }
-
-            lastUpdate = WinRegistryHelper.GetPropertyByName("Infopercept", "sysmon_last_update");
-
-            lastUpdateTime = lastUpdate == null ? DateTime.MinValue : DateTime.Parse(lastUpdate);
-
-            if (sd.UpdatedOn >= lastUpdateTime)
-            {
-                sm.PostInstall();
-                WinRegistryHelper.SetPropertyByName("Infopercept", "sysmon_last_update", DateTime.Now.ToString());
-            }
+            sm.PostInstall();
 
             /*
             var wd = toolDetails[ToolName.Wazuh];

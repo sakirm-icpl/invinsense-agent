@@ -13,6 +13,7 @@ namespace Common
         }
 
         public T Id { get; }
+
         public string Name { get; }
 
         public int CompareTo(GenericEnum<T> other)

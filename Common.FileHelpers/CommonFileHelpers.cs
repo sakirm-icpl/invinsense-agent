@@ -9,15 +9,26 @@ namespace Common.FileHelpers
     {
         private static readonly Serilog.ILogger _logger = Serilog.Log.ForContext(typeof(CommonFileHelpers));
 
-        public static Version GetFileVersion(string path)
+        public static bool GetFileVersion(string path, out Version version)
         {
-            if (!File.Exists(path)) return null;
+            if (!File.Exists(path))
+            {
+                version = null;
+                return false;
+            }
 
             var versionInfo = FileVersionInfo.GetVersionInfo(path);
-            return new Version(versionInfo.ProductVersion);
+            version = new Version(versionInfo.ProductVersion);
+            return true;
         }
 
         public static DateTime? GetFileDate(string path)
+        {
+            if (!File.Exists(path)) return null;
+            return File.GetCreationTime(path);
+        }
+
+        public static DateTime? GetDirectoryDate(string path)
         {
             if (!Directory.Exists(path)) return null;
             return Directory.GetCreationTime(path);

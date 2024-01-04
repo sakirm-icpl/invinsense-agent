@@ -4,11 +4,14 @@ using System.Text.RegularExpressions;
 using ToolManager.Models;
 using Microsoft.Win32;
 using Common.FileHelpers;
+using Serilog;
 
 namespace ToolManager
 {
     public static class ServiceHelper
     {
+        private static readonly ILogger logger = Log.ForContext(typeof(ServiceHelper));
+
         public static bool IsServiceInstalled(string serviceName)
         {
             var services = ServiceController.GetServices();
@@ -26,19 +29,28 @@ namespace ToolManager
             };
 
             var registryKeyPath = $@"SYSTEM\CurrentControlSet\Services\{productName}";
-            using (var key = Registry.LocalMachine.OpenSubKey(registryKeyPath))
+            using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
+            using (var subKey = baseKey.OpenSubKey(registryKeyPath, false)) // False is important!
             {
-                if (key == null)
+                if (subKey == null)
                 {
-                    Console.WriteLine($"Product {productName} not found.");
+                    logger.Information($"Product {productName} not found.");
+                    return true;
+                }
+
+                productInfo.Name = subKey.GetValue("DisplayName") as string;
+                var imagePath = subKey.GetValue("ImagePath") as string;
+                productInfo.InstallPath = ExtractExecutableFilePath(imagePath);
+                productInfo.FileDate = CommonFileHelpers.GetFileDate(productInfo.InstallPath); 
+                var success = CommonFileHelpers.GetFileVersion(productInfo.InstallPath, out var version);
+                if (!success)
+                {
+                    logger.Information($"Product {productName} not found.");
                     return false;
                 }
 
-                productInfo.Name = key.GetValue("DisplayName") as string;
-                var imagePath = key.GetValue("ImagePath") as string;
-                productInfo.InstallPath = ExtractExecutableFilePath(imagePath);
-                productInfo.Version = CommonFileHelpers.GetFileVersion(productInfo.InstallPath);
-                productInfo.FileDate = CommonFileHelpers.GetFileDate(productInfo.InstallPath);
+                productInfo.InstallStatus = InstallStatus.Installed;
+                productInfo.Version = version;                
             }
 
             return true;

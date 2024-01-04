@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Text;
 using ToolManager.Converters;
 
 namespace ToolManager.Models
@@ -18,5 +19,22 @@ namespace ToolManager.Models
 
         [JsonProperty("uninstallArgs")]
         public List<string> UninstallArgs { get; set; }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"{InstallType} - {InstallerFile}");
+            sb.AppendLine("Install Args:");
+            foreach (var arg in InstallArgs)
+            {
+                sb.AppendLine(arg);
+            }
+            sb.AppendLine("Uninstall Args:");
+            foreach (var arg in UninstallArgs)
+            {
+                sb.AppendLine(arg);
+            }
+            return sb.ToString();            
+        }
     }
 }

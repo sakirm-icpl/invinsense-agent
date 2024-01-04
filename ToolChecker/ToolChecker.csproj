@@ -17,7 +17,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -87,9 +87,7 @@
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  
   <Target Name="AfterBuild">
     <Exec Command="&quot;$(SolutionDir)tools\ILRepack.exe&quot; /out:&quot;$(TargetDir)$(AssemblyName).merged.exe&quot; &quot;$(TargetPath)&quot; &quot;$(TargetDir)Common.ConfigProvider.dll&quot; &quot;$(TargetDir)Common.Core.dll&quot; &quot;$(TargetDir)Common.FileHelpers.dll&quot; &quot;$(TargetDir)Common.Net.dll&quot; &quot;$(TargetDir)Common.RegistryHelpers.dll&quot; &quot;$(TargetDir)Common.Serialization.dll&quot; &quot;$(TargetDir)Newtonsoft.Json.dll&quot; &quot;$(TargetDir)Serilog.dll&quot; &quot;$(TargetDir)Serilog.Sinks.Console.dll&quot; &quot;$(TargetDir)System.Buffers.dll&quot; &quot;$(TargetDir)System.CodeDom.dll&quot; &quot;$(TargetDir)System.Diagnostics.DiagnosticSource.dll&quot; &quot;$(TargetDir)System.Memory.dll&quot; &quot;$(TargetDir)System.Numerics.Vectors.dll&quot; &quot;$(TargetDir)System.Runtime.CompilerServices.Unsafe.dll&quot; &quot;$(TargetDir)ToolManager.dll&quot;" />
   </Target>
-  
 </Project>

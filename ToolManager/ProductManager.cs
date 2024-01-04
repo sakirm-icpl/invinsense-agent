@@ -163,12 +163,12 @@ namespace ToolManager
                 
                 if(instruction.InstallType == InstallType.Executable)
                 {
-                    isNewVersionFetched = ExePackageWrapper.GetProductVersion(installerFile, out newVersion);
+                    isNewVersionFetched = CommonFileHelpers.GetFileVersion(installerFile, out newVersion);
                     _logger.Information($"Executable Path: {installerFile}, version: {newVersion}");
                 }
                 else if (instruction.InstallType == InstallType.Installer)
                 {
-                    MsiPackageWrapper.GetMsiVersion(installerFile, out newVersion);
+                    isNewVersionFetched = MsiPackageWrapper.GetMsiVersion(installerFile, out newVersion);
                     _logger.Information($"Executable Path: {installerFile}, version: {newVersion}");
                 }
                 else
@@ -183,19 +183,13 @@ namespace ToolManager
                     return -1;
                 }
 
-                _logger.Information($"MSI Path: {installerFile}, version: {newVersion}");
+                _logger.Information($"Installer Path: {installerFile}, version: {newVersion}");
 
                 if (detail.Version != null && newVersion <= detail.Version)
                 {
                     _logger.Information($"{toolName} is already installed.");
                     return 0;
                 }
-
-
-                var logPath = Path.Combine(CommonUtils.LogsFolder, $"{toolName}-install.log");
-
-                _logger.Information($"{toolName} msiPath {installerFile}");
-                _logger.Information($"{toolName} logPath {logPath}");
 
                 var isSuccess = false;
 
@@ -205,6 +199,7 @@ namespace ToolManager
                 }
                 else if (instruction.InstallType == InstallType.Installer)
                 {
+                    var logPath = Path.Combine(CommonUtils.LogsFolder, $"{toolName}-install.log");
                     isSuccess = MsiPackageWrapper.Install(installerFile, logPath, instruction.InstallArgs.ToArray());
                 }
                 else

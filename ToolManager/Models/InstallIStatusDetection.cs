@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Text;
 using ToolManager.Converters;
 
 namespace ToolManager.Models
@@ -15,5 +16,16 @@ namespace ToolManager.Models
         [JsonProperty("minVersion")] public string MinVersion { get; set; }
 
         [JsonProperty("maxVersion")] public string MaxVersion { get; set; }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"Type: {Type}");
+            sb.AppendLine($"Key: {Key}");
+            sb.AppendLine($"Version: {Version}");
+            sb.AppendLine($"MinVersion: {MinVersion}");
+            sb.AppendLine($"MaxVersion: {MaxVersion}");
+            return sb.ToString();
+        }
     }
 }

@@ -243,7 +243,7 @@ namespace ToolManager
                             productInfo.Version = new Version(subkey.GetValue("DisplayVersion").ToString());
                             productInfo.InstalledDate = ConvertToDateTime((string)subkey.GetValue("InstallDate"));
                             productInfo.InstallPath = (string)subkey.GetValue("InstallLocation");
-                            productInfo.FileDate = CommonFileHelpers.GetFileDate(productInfo.InstallPath);
+                            productInfo.FileDate = CommonFileHelpers.GetDirectoryDate(productInfo.InstallPath);
                             productInfo.Architecture = architecture;
                             break;
                         }

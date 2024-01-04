@@ -9,34 +9,6 @@ namespace ToolManager
     {
         private static readonly ILogger logger = Log.ForContext(typeof(ExePackageWrapper));
 
-        public static bool GetProductVersion(string msiPath, out Version version)
-        {
-            Type type = Type.GetTypeFromProgID("WindowsInstaller.Installer");
-
-            WindowsInstaller.Installer installer = (WindowsInstaller.Installer)
-
-            Activator.CreateInstance(type);
-
-            try
-            {
-                WindowsInstaller.Database db = installer.OpenDatabase(msiPath, 0);
-                WindowsInstaller.View dv = db.OpenView("SELECT `Value` FROM `Property` WHERE `Property`='ProductVersion'");
-                WindowsInstaller.Record record = null;
-                dv.Execute(record);
-                record = dv.Fetch();
-                string str = record.get_StringData(1).ToString();
-                version = new Version(str);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                logger.Error($"Failed to fetch version from {msiPath}: {ex.Message}");
-            }
-
-            version = null;
-            return false;
-        }
-
         /// <summary>
         ///     Installs the program.
         /// </summary>
