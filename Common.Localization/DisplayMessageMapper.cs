@@ -1,4 +1,5 @@
-﻿using Common.Models;
+﻿using Common.Localization;
+using Common.Models;
 using System.Linq;
 
 namespace Common.Mappers

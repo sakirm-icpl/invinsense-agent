@@ -1,5 +1,5 @@
-﻿using Common.Extensions;
-using Common.FileHelpers;
+﻿using Common.FileHelpers;
+using Common.Models;
 using Microsoft.Win32;
 using Serilog;
 using System;
@@ -8,7 +8,6 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Threading;
-using ToolManager.Models;
 
 namespace ToolManager
 {
@@ -118,7 +117,7 @@ namespace ToolManager
 
                 foreach (var arg in args) arguments += $" {arg}";
 
-                using (Process p = ProcessHelper.CreateHiddenProcess(WindowsInstallerProgramName, arguments))
+                using (Process p = ProcessExtensions.CreateHiddenProcess(WindowsInstallerProgramName, arguments))
                 {
                     logger.Information("Starting process: {0}", p.StartInfo.FileName);
                     
@@ -175,7 +174,7 @@ namespace ToolManager
 
                 foreach (var arg in args) arguments += $" {arg}";
 
-                using (Process p = ProcessHelper.CreateHiddenProcess(WindowsInstallerProgramName, arguments))
+                using (Process p = ProcessExtensions.CreateHiddenProcess(WindowsInstallerProgramName, arguments))
                 {
                     logger.Information("Starting process '{0}'", p.StartInfo.FileName);
                     p.Start();

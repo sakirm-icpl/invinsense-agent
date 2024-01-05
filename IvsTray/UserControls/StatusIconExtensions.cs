@@ -1,5 +1,4 @@
-﻿using Common.Persistence;
-using System.Drawing;
+﻿using System.Drawing;
 
 namespace IvsTray
 {

@@ -50,10 +50,6 @@
       <Project>{2E5DA9E9-CCD9-4E4F-A841-706393E59EAA}</Project>
       <Name>Common.ConfigProvider</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common.Core\Common.Core.csproj">
-      <Project>{12BBB8A8-535C-48B1-A50E-22ACD920A478}</Project>
-      <Name>Common.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Common.FileHelpers\Common.FileHelpers.csproj">
       <Project>{BC9538D2-5B2E-487C-948D-E78BC2EE31BF}</Project>
       <Name>Common.FileHelpers</Name>
@@ -69,6 +65,14 @@
     <ProjectReference Include="..\Common.Serialization\Common.Serialization.csproj">
       <Project>{9B52D22C-E412-48FE-8544-77FE742B61B9}</Project>
       <Name>Common.Serialization</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.ServiceHelpers\Common.ServiceHelpers.csproj">
+      <Project>{AE36D533-FC41-4EED-9770-85204CBC3894}</Project>
+      <Name>Common.ServiceHelpers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{59DB54E9-A91D-469F-9AD4-8252BC748DA1}</Project>
+      <Name>Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\ToolManager\ToolManager.csproj">
       <Project>{b04124ba-1758-4aa2-8d3c-9bc0fb9c0e33}</Project>
@@ -87,7 +91,4 @@
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="AfterBuild">
-    <Exec Command="&quot;$(SolutionDir)tools\ILRepack.exe&quot; /out:&quot;$(TargetDir)$(AssemblyName).merged.exe&quot; &quot;$(TargetPath)&quot; &quot;$(TargetDir)Common.ConfigProvider.dll&quot; &quot;$(TargetDir)Common.Core.dll&quot; &quot;$(TargetDir)Common.FileHelpers.dll&quot; &quot;$(TargetDir)Common.Net.dll&quot; &quot;$(TargetDir)Common.RegistryHelpers.dll&quot; &quot;$(TargetDir)Common.Serialization.dll&quot; &quot;$(TargetDir)Newtonsoft.Json.dll&quot; &quot;$(TargetDir)Serilog.dll&quot; &quot;$(TargetDir)Serilog.Sinks.Console.dll&quot; &quot;$(TargetDir)System.Buffers.dll&quot; &quot;$(TargetDir)System.CodeDom.dll&quot; &quot;$(TargetDir)System.Diagnostics.DiagnosticSource.dll&quot; &quot;$(TargetDir)System.Memory.dll&quot; &quot;$(TargetDir)System.Numerics.Vectors.dll&quot; &quot;$(TargetDir)System.Runtime.CompilerServices.Unsafe.dll&quot; &quot;$(TargetDir)ToolManager.dll&quot;" />
-  </Target>
 </Project>

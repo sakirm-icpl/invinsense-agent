@@ -1,13 +1,13 @@
 ﻿using Common;
 using Common.Events;
 using Common.Models;
-using Common.Persistence;
 using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using ToolManager.Models;
 
 namespace IvsTray.UserControls
 {

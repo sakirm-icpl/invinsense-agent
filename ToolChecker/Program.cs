@@ -1,6 +1,7 @@
 ﻿using Common.ConfigProvider;
+using Common.Models;
 using Common.Net;
-using ToolManager.Models;
+using Common.ServiceHelpers;
 using Common.Utils;
 using Newtonsoft.Json;
 using Serilog;

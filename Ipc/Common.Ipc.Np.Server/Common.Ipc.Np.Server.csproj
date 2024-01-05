@@ -47,9 +47,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Serilog">
       <Version>3.1.1</Version>
     </PackageReference>

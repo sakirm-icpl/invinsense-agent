@@ -1,5 +1,4 @@
 ﻿using Common.Models;
-using Common.Persistence;
 using System.Windows.Forms;
 
 namespace IvsTray.Extensions

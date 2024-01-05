@@ -49,9 +49,9 @@
     <None Include="app.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common.Core\Common.Core.csproj">
-      <Project>{12BBB8A8-535C-48B1-A50E-22ACD920A478}</Project>
-      <Name>Common.Core</Name>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{59db54e9-a91d-469f-9ad4-8252bc748da1}</Project>
+      <Name>Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

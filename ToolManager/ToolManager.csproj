@@ -31,56 +31,28 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Converters\InstallTypeConverter.cs" />
-    <Compile Include="Converters\ToolGroupConverter.cs" />
-    <Compile Include="Converters\VersionDetectionTypeConverter.cs" />
     <Compile Include="ExePackageWrapper.cs" />
-    <Compile Include="Models\ExecutableFile.cs" />
-    <Compile Include="Models\FileCopy.cs" />
-    <Compile Include="Models\FileExistsAction.cs" />
-    <Compile Include="Models\InstallInstruction.cs" />
-    <Compile Include="Models\InstallStatus.cs" />
-    <Compile Include="Models\InstallType.cs" />
-    <Compile Include="Models\ProcessType.cs" />
-    <Compile Include="Models\PropertyConfigAction.cs" />
-    <Compile Include="Models\PropertyValue.cs" />
-    <Compile Include="Models\RunningStatus.cs" />
-    <Compile Include="Models\RunType.cs" />
-    <Compile Include="Models\ServiceAction.cs" />
-    <Compile Include="Models\ServiceActionType.cs" />
-    <Compile Include="Models\ServiceInstallAction.cs" />
-    <Compile Include="Models\ServiceInstallType.cs" />
-    <Compile Include="Models\InstallStatusWithDetail.cs" />
-    <Compile Include="Models\StartupType.cs" />
-    <Compile Include="Models\ToolDetail.cs" />
-    <Compile Include="Models\ToolGroup.cs" />
-    <Compile Include="Models\ToolName.cs" />
-    <Compile Include="Models\ToolStatus.cs" />
-    <Compile Include="Models\ToolValidator.cs" />
-    <Compile Include="Models\TrayStatus.cs" />
-    <Compile Include="Models\InstallIStatusDetection.cs" />
-    <Compile Include="Models\VersionDetectionType.cs" />
-    <Compile Include="Models\WinService.cs" />
+    <Compile Include="FileFaker.cs" />
+    <Compile Include="ProcessExtensions.cs" />
+    <Compile Include="UserExtensions.cs" />
     <Compile Include="MoWrapper.cs" />
     <Compile Include="MsiExitCode.cs" />
     <Compile Include="MsiPackageWrapper.cs" />
-    <Compile Include="ServiceHelper.cs" />
     <Compile Include="VariableHelper.cs" />
     <Compile Include="WazuhManager.cs" />
     <Compile Include="OsQueryManager.cs" />
-    <Compile Include="ProcessHelper.cs" />
     <Compile Include="ProductManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SysmonWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common.AvHelper\Common.AvHelper.csproj">
+      <Project>{7b636aed-aa0b-4b93-b47a-f46c197f0356}</Project>
+      <Name>Common.AvHelper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.ConfigProvider\Common.ConfigProvider.csproj">
       <Project>{2E5DA9E9-CCD9-4E4F-A841-706393E59EAA}</Project>
       <Name>Common.ConfigProvider</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Common.Core\Common.Core.csproj">
-      <Project>{12BBB8A8-535C-48B1-A50E-22ACD920A478}</Project>
-      <Name>Common.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common.FileHelpers\Common.FileHelpers.csproj">
       <Project>{BC9538D2-5B2E-487C-948D-E78BC2EE31BF}</Project>
@@ -102,10 +74,19 @@
       <Project>{9B52D22C-E412-48FE-8544-77FE742B61B9}</Project>
       <Name>Common.Serialization</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Common.ServiceHelpers\Common.ServiceHelpers.csproj">
+      <Project>{ae36d533-fc41-4eed-9770-85204cbc3894}</Project>
+      <Name>Common.ServiceHelpers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{59db54e9-a91d-469f-9ad4-8252bc748da1}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
+    <Reference Include="System.DirectoryServices, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -134,5 +115,6 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

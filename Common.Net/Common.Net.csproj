@@ -66,13 +66,13 @@
       <Project>{2e5da9e9-ccd9-4e4f-a841-706393e59eaa}</Project>
       <Name>Common.ConfigProvider</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common.Core\Common.Core.csproj">
-      <Project>{12bbb8a8-535c-48b1-a50e-22acd920a478}</Project>
-      <Name>Common.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Common.Serialization\Common.Serialization.csproj">
       <Project>{9b52d22c-e412-48fe-8544-77fe742b61b9}</Project>
       <Name>Common.Serialization</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{59db54e9-a91d-469f-9ad4-8252bc748da1}</Project>
+      <Name>Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

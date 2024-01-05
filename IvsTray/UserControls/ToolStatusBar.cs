@@ -1,5 +1,4 @@
 ﻿using Common.Events;
-using Common.Persistence;
 using IvsTray.Extensions;
 using Serilog;
 using System;

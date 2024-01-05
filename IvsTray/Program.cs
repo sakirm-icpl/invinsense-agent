@@ -1,4 +1,4 @@
-﻿using Common.Utils;
+﻿using Common.ConfigProvider;
 using Serilog;
 using System;
 using System.Threading;

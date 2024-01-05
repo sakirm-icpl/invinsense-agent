@@ -3,14 +3,13 @@ using Serilog;
 using System;
 using System.Diagnostics;
 using System.ServiceProcess;
-using Common.Persistence;
-using ToolManager;
 using System.Threading.Tasks;
 using IvsAgent.Extensions;
 using System.Linq;
 using System.Collections.Generic;
+using ToolManager.Models;
+using Common.Ipc.Np.Server;
 using Common;
-using Common.NamedPipes;
 
 namespace IvsAgent
 {
@@ -66,7 +65,7 @@ namespace IvsAgent
             LmpServiceChecker = new ExtendedServiceController("IvsAgent");
             LmpServiceChecker.StatusChanged += (object sender, ServiceStatusEventArgs e) => LmpStatusUpdate(e.Status);
 
-            AvStatusWatcher.Instance.AvStatusChaned += (object sender, ToolStatus e) => SendStatusUpdate(e);
+            AvStatusWatcher.Instance.AvStatusChanged += (object sender, ToolStatus e) => SendStatusUpdate(e);
         }
 
         protected override void OnStart(string[] args)
@@ -90,7 +89,7 @@ namespace IvsAgent
                 VerifyDependencyAndInstall();
             });
 
-            _logger.Information("Invinsense service started.");
+            _logger.Information("Service started.");
             SendStatusUpdate(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.Installed, RunningStatus.Running));
         }
 
@@ -163,7 +162,7 @@ namespace IvsAgent
 
         private void CreateServerPipe()
         {
-            _serverPipe = new ServerPipe(Constants.IvsName, p => p.StartStringReaderAsync());
+            _serverPipe = new ServerPipe(Constants.BrandName, p => p.StartStringReaderAsync());
 
             // Data received from client
             _serverPipe.DataReceived += (sndr, args) =>
@@ -269,7 +268,7 @@ namespace IvsAgent
             if (status == null)
             {
                 _logger.Information("{Name} not found", ToolName.EndpointDetectionAndResponse);
-                SendStatusUpdate(new ToolStatus(ToolName.EndpointDetectionAndResponse, InstallStatus.NotFound, RunningStatus.NotFound));
+                SendStatusUpdate(new ToolStatus(ToolName.EndpointDetectionAndResponse, InstallStatus.NotFound, RunningStatus.Unknown));
                 return;
             }
 
@@ -293,7 +292,7 @@ namespace IvsAgent
             if (status == null)
             {
                 _logger.Information("{Name} not found", ToolName.EndpointDeception);
-                SendStatusUpdate(new ToolStatus(ToolName.EndpointDeception, InstallStatus.NotFound, RunningStatus.NotFound));
+                SendStatusUpdate(new ToolStatus(ToolGroup.EndpointDeception, InstallStatus.NotFound, RunningStatus.Unknown));
                 return;
             }
 
@@ -302,7 +301,7 @@ namespace IvsAgent
             switch (status.Value)
             {
                 case ServiceControllerStatus.Running:
-                    SendStatusUpdate(new ToolStatus(ToolName.EndpointDeception, InstallStatus.Installed, RunningStatus.Running));
+                    SendStatusUpdate(new ToolStatus(ToolGroup.EndpointDeception.get.EndpointDeception, InstallStatus.Installed, RunningStatus.Running));
                     return;
                 case ServiceControllerStatus.Stopped:
                     SendStatusUpdate(new ToolStatus(ToolName.EndpointDeception, InstallStatus.Installed, RunningStatus.Stopped));
@@ -317,7 +316,7 @@ namespace IvsAgent
             if (status == null)
             {
                 _logger.Information("{Name} not found", ToolName.UserBehaviorAnalytics);
-                SendStatusUpdate(new ToolStatus(ToolName.UserBehaviorAnalytics, InstallStatus.NotFound, RunningStatus.NotFound));
+                SendStatusUpdate(new ToolStatus(ToolName.UserBehaviorAnalytics, InstallStatus.NotFound, RunningStatus.Unknown));
                 return;
             }
 
@@ -340,12 +339,12 @@ namespace IvsAgent
         {
             if (status == null)
             {
-                _logger.Information("{Name} not found", ToolName.AdvanceTelemetry);
-                SendStatusUpdate(new ToolStatus(ToolName.AdvanceTelemetry, InstallStatus.NotFound, RunningStatus.NotFound));
+                _logger.Information("{Name} not found", ToolGroup.AdvanceTelemetry);
+                SendStatusUpdate(new ToolStatus(ToolName.AdvanceTelemetry, InstallStatus.NotFound, RunningStatus.Unknown));
                 return;
             }
 
-            _logger.Information("{Name} is {Status}", ToolName.AdvanceTelemetry, status.Value);
+            _logger.Information("{Name} is {Status}", ToolGroup.AdvanceTelemetry, status.Value);
 
             switch (status.Value)
             {
@@ -364,12 +363,12 @@ namespace IvsAgent
         {
             if (status == null)
             {
-                _logger.Information("{Name} not found", ToolName.LateralMovementProtection);
-                SendStatusUpdate(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.NotFound, RunningStatus.NotFound));
+                _logger.Information("{Name} not found", ToolGroup.LateralMovementProtection);
+                SendStatusUpdate(new ToolStatus(ToolName.LateralMovementProtection, InstallStatus.NotFound, RunningStatus.Unknown));
                 return;
             }
 
-            _logger.Information("{Name} is {Status}", ToolName.LateralMovementProtection, status.Value);
+            _logger.Information("{Name} is {Status}", ToolGroup.LateralMovementProtection, status.Value);
 
             switch (status.Value)
             {

@@ -1,8 +1,6 @@
 using Common;
 using Common.Events;
 using Common.Models;
-using Common.NamedPipes;
-using Common.Persistence;
 using IvsTray.Extensions;
 using IvsTray.Properties;
 using Newtonsoft.Json;

@@ -1,4 +1,6 @@
-﻿namespace Common.Models
+﻿using Common.Models;
+
+namespace Common.Localization
 {
     public class DisplayMessage
     {

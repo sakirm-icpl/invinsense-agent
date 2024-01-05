@@ -1,10 +1,9 @@
-﻿using ToolManager.Models;
-using Serilog;
+﻿using Serilog;
 using Common.ConfigProvider;
 using Common.FileHelpers;
 using System.IO;
 using System;
-using Common.RegistryHelpers;
+using Common.Models;
 
 namespace ToolManager
 {

@@ -1,8 +1,8 @@
-﻿using Common.Persistence;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ServiceProcess;
 using System.Threading.Tasks;
+using ToolManager.Models;
 
 namespace IvsAgent.Monitor
 {
@@ -41,7 +41,7 @@ namespace IvsAgent.Monitor
             {
                 if(Status == null)
                 {
-                    return RunningStatus.NotFound;
+                    return RunningStatus.Error;
                 }
 
                 switch (Status)
@@ -57,7 +57,7 @@ namespace IvsAgent.Monitor
                     case ServiceControllerStatus.PausePending:
                         return RunningStatus.Warning;
                     default:
-                        return RunningStatus.NotFound;
+                        return RunningStatus.Warning;
                 }
             }
         }

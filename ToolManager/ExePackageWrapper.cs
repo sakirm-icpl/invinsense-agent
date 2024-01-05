@@ -1,7 +1,7 @@
-﻿using Common.Extensions;
-using Serilog;
+﻿using Serilog;
 using System;
 using System.Diagnostics;
+using Common.Models;
 
 namespace ToolManager
 {
@@ -23,7 +23,7 @@ namespace ToolManager
 
                 foreach (var arg in args) arguments += $" {arg}";
 
-                using (Process p = ProcessHelper.CreateHiddenProcess(installerFile, arguments))
+                using (Process p = ProcessExtensions.CreateHiddenProcess(installerFile, arguments))
                 {
                     logger.Information("Starting process: {0}", p.StartInfo.FileName);
 
@@ -65,7 +65,7 @@ namespace ToolManager
 
                 foreach (var arg in args) arguments += $" {arg}";
 
-                using (Process p = ProcessHelper.CreateHiddenProcess(installerFile, arguments))
+                using (Process p = ProcessExtensions.CreateHiddenProcess(installerFile, arguments))
                 {
                     logger.Information("Starting process '{0}'", p.StartInfo.FileName);
                     p.Start();
