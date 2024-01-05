@@ -19,33 +19,23 @@ namespace ToolManager
             _logger.Information($"Initializing {nameof(SysmonManager)} Manager");
         }
 
-        public override int Preinstall()
+        protected override int PreInstall(int status)
         {
-            var status = base.Preinstall();
-
             if(status == 0)
             {
-                CopyConfig();  
+                CopyConfig();
             }
 
             return status;
         }
 
-        public override int PostInstall()
+        protected override int PostInstall(int status)
         {
-            var lastUpdate = WinRegistryHelper.GetPropertyByName("Infopercept", "sysmon_last_update");
-
-            var lastUpdateTime = lastUpdate == null ? DateTime.MinValue : DateTime.Parse(lastUpdate);
-
-            if (_toolDetail.UpdatedOn <= lastUpdateTime)
-            {
-                _logger.Information("Sysmon config is up to date.");
-                return base.PostInstall();   
-            }
+            if (status != 0) return status;
 
             CopyConfig();
-            WinRegistryHelper.SetPropertyByName("Infopercept", "sysmon_last_update", DateTime.Now.ToString());
-            return base.PostInstall();
+
+            return status;
         }
 
         private void CopyConfig()

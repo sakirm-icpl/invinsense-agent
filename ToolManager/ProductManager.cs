@@ -5,9 +5,13 @@ using ToolManager.Models;
 using Serilog;
 using Common.Net;
 using Common.FileHelpers;
+using Common.RegistryHelpers;
 
 namespace ToolManager
 {
+    /// <summary>
+    /// TODO: Gather facts about installation as well as dependencies.
+    /// </summary>
     public abstract class ProductManager
     {
         protected readonly ILogger _logger;
@@ -64,24 +68,24 @@ namespace ToolManager
             return InstallStatus.Installed;
         }
 
-        public virtual int Preinstall()
+        public int PreInstall()
         {
             var status = GetInstallStatus();
 
             if (status == InstallStatus.Error || status == InstallStatus.Unknown)
             {
-                return -1;
+                return PreInstall(-1);
             }
 
             if (status == InstallStatus.UnSupported)
             {
-                return 1;
+                return PreInstall(1);
             }
 
             if (status == InstallStatus.Installed)
             {
                 _logger.Information("Tool is already installed.");
-                return 1;
+                return PreInstall(1);
             }
 
             var downloader = new FragmentedFileDownloader();
@@ -102,19 +106,43 @@ namespace ToolManager
             File.Delete(destinationFile);
 
             _logger.Information($"File downloaded and extracted.");
-            return 0;
+
+
+            return PreInstall(0);
         }
 
-        public virtual int PostInstall()
+        protected abstract int PreInstall(int status);
+
+        public int PostInstall()
         {
-            return 0;
+            var lastUpdate = WinRegistryHelper.GetPropertyByName(Common.Constants.BrandName, $"{_toolDetail.Name}_last_update");
+
+            var lastUpdateTime = lastUpdate == null ? DateTime.MinValue : DateTime.Parse(lastUpdate);
+
+            Log.Logger.Information($"Last Update Time: {lastUpdateTime}, Database Update Time: {_toolDetail.UpdatedOn}");
+
+            if (_toolDetail.UpdatedOn <= lastUpdateTime)
+            {
+                _logger.Information($"{_toolDetail.Name} config is up to date.");
+                return PostInstall(0);
+            }
+
+            var status = PostInstall(0);
+            if (status == 0)
+            {
+                WinRegistryHelper.SetPropertyByName(Common.Constants.BrandName, $"{_toolDetail.Name}_last_update", DateTime.Now.ToString());
+            }
+
+            return status;
         }
+
+        protected abstract int PostInstall(int status);
 
         public bool GetInstalledVersion(out InstallStatusWithDetail detail)
         {
             var versionDetectionInstruction = _toolDetail.VersionDetectionInstruction;
 
-            if(versionDetectionInstruction.Type == VersionDetectionType.Unknown)
+            if (versionDetectionInstruction.Type == VersionDetectionType.Unknown)
             {
                 detail = new InstallStatusWithDetail
                 {
@@ -160,8 +188,8 @@ namespace ToolManager
 
                 var isNewVersionFetched = false;
                 Version newVersion;
-                
-                if(instruction.InstallType == InstallType.Executable)
+
+                if (instruction.InstallType == InstallType.Executable)
                 {
                     isNewVersionFetched = CommonFileHelpers.GetFileVersion(installerFile, out newVersion);
                     _logger.Information($"Executable Path: {installerFile}, version: {newVersion}");
@@ -193,14 +221,16 @@ namespace ToolManager
 
                 var isSuccess = false;
 
-                if(instruction.InstallType == InstallType.Executable)
+                var args = VariableHelper.PrepareArgs(instruction.InstallArgs.ToArray());
+
+                if (instruction.InstallType == InstallType.Executable)
                 {
-                    isSuccess = ExePackageWrapper.Install(installerFile, instruction.InstallArgs.ToArray());
+                    isSuccess = ExePackageWrapper.Install(installerFile, args);
                 }
                 else if (instruction.InstallType == InstallType.Installer)
                 {
                     var logPath = Path.Combine(CommonUtils.LogsFolder, $"{toolName}-install.log");
-                    isSuccess = MsiPackageWrapper.Install(installerFile, logPath, instruction.InstallArgs.ToArray());
+                    isSuccess = MsiPackageWrapper.Install(installerFile, logPath, args);
                 }
                 else
                 {
@@ -239,7 +269,8 @@ namespace ToolManager
                 }
                 else if (instruction.InstallType == InstallType.Executable)
                 {
-                    ExePackageWrapper.Uninstall(instruction.InstallerFile, instruction.UninstallArgs.ToString());
+                    var args = VariableHelper.PrepareArgs(instruction.UninstallArgs.ToArray());
+                    ExePackageWrapper.Uninstall(instruction.InstallerFile, args);
                 }
                 else
                 {
@@ -253,6 +284,6 @@ namespace ToolManager
                 _logger.Error($"{ex.Message}");
                 return 1;
             }
-        }        
+        }
     }
 }

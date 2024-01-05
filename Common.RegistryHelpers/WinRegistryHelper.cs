@@ -23,12 +23,12 @@ namespace Common.RegistryHelpers
             try
             {
                 var regView = parts[0] == "reg64" ? RegistryView.Registry64 : RegistryView.Registry32;
-                var regHive = parts[1] == "Local" ? RegistryHive.LocalMachine : RegistryHive.CurrentUser;
+                var regHive = parts[1] == "local" ? RegistryHive.LocalMachine : RegistryHive.CurrentUser;
                 var keyPath = parts[2];
                 var key = parts[3];
 
-                using (var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32))
-                using (var subkey = baseKey.OpenSubKey($"SOFTWARE\\{keyPath}", false)) // False is important!
+                using (var baseKey = RegistryKey.OpenBaseKey(regHive, regView))
+                using (var subkey = baseKey.OpenSubKey($"{keyPath}", false)) // False is important!
                 {
                     var value = subkey?.GetValue(key) as string;
                     return value;

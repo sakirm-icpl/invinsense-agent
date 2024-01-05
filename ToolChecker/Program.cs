@@ -1,7 +1,6 @@
 ﻿using Common.ConfigProvider;
 using Common.Net;
 using ToolManager.Models;
-using Common.RegistryHelpers;
 using Common.Utils;
 using Newtonsoft.Json;
 using Serilog;
@@ -28,8 +27,8 @@ namespace ToolChecker
 
             if (MsiPackageWrapper.GetProductInfoReg("osquery", out var piOsq)) Log.Logger.Information(piOsq.ToString());
 
-            if (MsiPackageWrapper.GetProductInfoReg("wazuh", out var piWaz)) Log.Logger.Information(piWaz.ToString()); 
-            
+            if (MsiPackageWrapper.GetProductInfoReg("wazuh", out var piWaz)) Log.Logger.Information(piWaz.ToString());
+
             if (ServiceHelper.GetServiceInfo("Sysmon64", out var piSym)) Log.Logger.Information(piSym.ToString());
 
             var client = new ClientService(new HttpClientConfig
@@ -70,7 +69,7 @@ namespace ToolChecker
 
             var otd = toolDetails[ToolName.OsQuery];
             var om = new OsQueryManager(otd);
-            if(om.Preinstall() == 0)
+            if (om.PreInstall() == 0)
             {
                 om.InstallProduct();
             }
@@ -78,31 +77,21 @@ namespace ToolChecker
 
             var sd = toolDetails[ToolName.Sysmon];
             var sm = new SysmonManager(sd);
-            if (sm.Preinstall() == 0)
+            if (sm.PreInstall() == 0)
             {
                 sm.InstallProduct();
             }
             sm.PostInstall();
 
-            /*
             var wd = toolDetails[ToolName.Wazuh];
             var wm = new WazuhManager(wd);
-            status = wm.Preinstall();
-            if (status == 0)
+            if (wm.PreInstall() == 0)
             {
-                wm.Install();
+                wm.InstallProduct();
             }
+            wm.PostInstall();
 
-            lastUpdate = WinRegistryHelper.GetPropertyByName("Infopercept", "wazuh_last_update");
-
-            lastUpdateTime = lastUpdate == null ? DateTime.MinValue : DateTime.Parse(lastUpdate);
-
-            if (otd.UpdatedOn >= lastUpdateTime)
-            {
-                wm.PostInstall();
-                WinRegistryHelper.SetPropertyByName("Infopercept", "wazuh_last_update", DateTime.Now.ToString());
-            }
-            */
+            Console.WriteLine("DONE. Press any key to exist.");
 
             Console.ReadLine();
         }

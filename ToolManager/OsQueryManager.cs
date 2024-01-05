@@ -16,12 +16,13 @@ namespace ToolManager
         }
 
         /// <summary>
-        /// 
+        /// TODO: Can be used to gather facts about OSQuery installation
         /// </summary>
+        /// <param name="status"></param>
         /// <returns></returns>
-        public override int Preinstall()
+        protected override int PreInstall(int status)
         {
-            return base.Preinstall();
+            return status;
         }
 
         /// <summary>
@@ -29,19 +30,9 @@ namespace ToolManager
         /// 2. Copy packs to installation path
         /// </summary>
         /// <returns></returns>
-        public override int PostInstall()
+        protected override int PostInstall(int status)
         {
-            var lastUpdate = WinRegistryHelper.GetPropertyByName("Infopercept", "osquery_last_update");
-
-            var lastUpdateTime = lastUpdate == null ? DateTime.MinValue : DateTime.Parse(lastUpdate);
-
-            Log.Logger.Information($"Last Update Time: {lastUpdateTime}, Database Update Time: {_toolDetail.UpdatedOn}");
-
-            if (_toolDetail.UpdatedOn <= lastUpdateTime)
-            {
-                _logger.Information("OSQuery config is up to date.");
-                return base.PostInstall();
-            }
+            if (status != 0) return status;
 
             var sourceFolder = Path.Combine(CommonUtils.ArtifactsFolder, _toolDetail.Name);
             var destinationFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), _toolDetail.Name);
@@ -60,7 +51,7 @@ namespace ToolManager
 
             WinRegistryHelper.SetPropertyByName("Infopercept", "osquery_last_update", DateTime.Now.ToString());
 
-            return base.PostInstall();
+            return status;
         }
     }
 }

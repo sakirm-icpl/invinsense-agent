@@ -5,7 +5,7 @@ using System.Diagnostics;
 namespace EventLogPublisher
 {
     /// <summary>
-    ///     Powershell Commands:
+    ///     PowerShell Commands:
     ///     Remove-EventLog -LogName "Invinsense"
     /// </summary>
     internal class Program
@@ -48,7 +48,7 @@ namespace EventLogPublisher
                     //There is a latency time to enable the source, it should be created
                     //prior to executing the application that uses the source.
                     //Execute this sample a second time to use the new source.
-                    EventLog.CreateEventSource(Constants.IvsAgentName, Constants.LogGroupName);
+                    EventLog.CreateEventSource(Constants.IvsAgentName, Constants.CompanyName);
                     Console.WriteLine("CreatedEventSource");
                     Console.WriteLine("Exiting, execute the application a second time to use the source.");
                     return;
@@ -67,10 +67,10 @@ namespace EventLogPublisher
                         Console.WriteLine("Source not exists");
                     }
 
-                    if (EventLog.Exists(Constants.LogGroupName))
+                    if (EventLog.Exists(Constants.CompanyName))
                     {
-                        Console.WriteLine($"Log exists {Constants.LogGroupName}");
-                        EventLog.Delete(Constants.LogGroupName);
+                        Console.WriteLine($"Log exists {Constants.CompanyName}");
+                        EventLog.Delete(Constants.CompanyName);
                     }
                     else
                     {
@@ -98,8 +98,7 @@ namespace EventLogPublisher
                 if (str.StartsWith("clear all"))
                     foreach (var log in EventLog.GetEventLogs())
                     {
-                        Console.WriteLine(
-                            $"Clearing logs for : {log.Source}, Grouop: {log.Log}, LogDisplay: {log.LogDisplayName}");
+                        Console.WriteLine($"Clearing logs for : {log.Source}, Grouop: {log.Log}, LogDisplay: {log.LogDisplayName}");
                         log.Clear();
                     }
             }

@@ -65,6 +65,7 @@
     <Compile Include="MsiExitCode.cs" />
     <Compile Include="MsiPackageWrapper.cs" />
     <Compile Include="ServiceHelper.cs" />
+    <Compile Include="VariableHelper.cs" />
     <Compile Include="WazuhManager.cs" />
     <Compile Include="OsQueryManager.cs" />
     <Compile Include="ProcessHelper.cs" />
@@ -84,6 +85,10 @@
     <ProjectReference Include="..\Common.FileHelpers\Common.FileHelpers.csproj">
       <Project>{BC9538D2-5B2E-487C-948D-E78BC2EE31BF}</Project>
       <Name>Common.FileHelpers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.Localization\Common.Localization.csproj">
+      <Project>{51A8F89B-689A-4F15-B250-01C943630838}</Project>
+      <Name>Common.Localization</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common.Net\Common.Net.csproj">
       <Project>{B564AA85-C85E-44A9-8D0F-D5F22CECF199}</Project>

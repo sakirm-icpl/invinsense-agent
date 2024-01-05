@@ -20,7 +20,7 @@ namespace EventLogSubscriber
         /// </summary>
         private static void Main()
         {
-            var log = new EventLog(Constants.LogGroupName)
+            var log = new EventLog(Constants.CompanyName)
             {
                 EnableRaisingEvents = true
             };
