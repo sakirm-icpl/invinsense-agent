@@ -34,7 +34,7 @@ namespace IvsAgent
             // SingleIvsAgent
             // 
             this.ServiceName = Constants.IvsAgentName;
-            this.EventLog.Log = Constants.LogGroupName;
+            this.EventLog.Log = Constants.CompanyName;
             this.EventLog.Source = Constants.IvsAgentName;
 
         }

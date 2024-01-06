@@ -70,9 +70,21 @@
     <Reference Include="System.ServiceProcess" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common.AvHelper\Common.AvHelper.csproj">
+      <Project>{7B636AED-AA0B-4B93-B47A-F46C197F0356}</Project>
+      <Name>Common.AvHelper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.ConfigProvider\Common.ConfigProvider.csproj">
       <Project>{2E5DA9E9-CCD9-4E4F-A841-706393E59EAA}</Project>
       <Name>Common.ConfigProvider</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.RegistryHelpers\Common.RegistryHelpers.csproj">
+      <Project>{feaf253a-a8b4-45de-a0db-f009b86f1734}</Project>
+      <Name>Common.RegistryHelpers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.ServiceHelpers\Common.ServiceHelpers.csproj">
+      <Project>{ae36d533-fc41-4eed-9770-85204cbc3894}</Project>
+      <Name>Common.ServiceHelpers</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{59DB54E9-A91D-469F-9AD4-8252BC748DA1}</Project>

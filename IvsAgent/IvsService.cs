@@ -7,6 +7,11 @@ using System.Linq;
 using System.Collections.Generic;
 using Common.Ipc.Np.Server;
 using Common.Models;
+using Common;
+using Common.ServiceHelpers;
+using Common.AvHelper;
+using ToolManager;
+using Common.RegistryHelpers;
 
 namespace IvsAgent
 {
@@ -22,7 +27,7 @@ namespace IvsAgent
 
         private readonly ILogger _logger = Log.ForContext<IvsService>();
 
-        private readonly string[] servicesToMonitor = new[] { "WazuhAgent", "osqueryd", "Sysmon64", "IvsAgent" };
+        private readonly string[] servicesToMonitor = new[] { "WazuhSvc", "osqueryd", "Sysmon64", "IvsAgent" };
 
         public IvsService()
         {
@@ -52,7 +57,7 @@ namespace IvsAgent
             CreateServerPipe();
 
             _logger.Information("Start watching IvsTray App");
-            IvsTrayMonitor.Instance.StartMonitoring();
+            ServiceMonitorUtility.ResumeMonitoring();
 
             _logger.Information("Start watching windows defender events");
             AvStatusWatcher.Instance.StartMonitoring();
@@ -62,7 +67,10 @@ namespace IvsAgent
             {
                 _logger.Information("Start waiting for tool verification");
                 await Task.Delay(5000);
-                VerifyDependencyAndInstall();
+
+                //"https://65.1.109.28:5001"
+                var apiUrl = WinRegistryHelper.GetPropertyByName(Constants.CompanyName, "ApiUrl");
+                await CheckRequiredTools.Install(apiUrl);
             });
         }
 
@@ -73,7 +81,7 @@ namespace IvsAgent
             try
             {
                 _logger.Information("Stopping IvsTray watcher");
-                IvsTrayMonitor.Instance.StopMonitoring();
+                ServiceMonitorUtility.StopMonitoring();
 
                 _logger.Information("Stopping windows defender watcher");
                 AvStatusWatcher.Instance.StopMonitoring();
@@ -138,19 +146,19 @@ namespace IvsAgent
             _serverPipe = new ServerPipe(Constants.BrandName, p => p.StartStringReaderAsync());
 
             // Data received from client
-            _serverPipe.DataReceived += (sndr, args) =>
+            _serverPipe.DataReceived += (sender, args) =>
             {
                 _logger.Verbose($"Message received: {args.String}");
             };
 
             // Client connected
-            _serverPipe.Connected += (sndr, args) =>
+            _serverPipe.Connected += (sender, args) =>
             {
                 _logger.Debug("Client is connected.");
                 SendToolStatuses();
             };
 
-            _serverPipe.PipeClosed += (sndr, args) =>
+            _serverPipe.PipeClosed += (sender, args) =>
             {
                 _logger.Debug("Client is disconnected. Creating new server pipe...");
                 CreateServerPipe();
@@ -167,14 +175,11 @@ namespace IvsAgent
         {
             var trayStatus = new TrayStatus();
             
+            //Fetch initial statuses.
             trayStatus.ToolStatuses.AddRange(new List<ToolStatus>
-                {
-                    GetToolStatus(ToolName.EndpointProtection),
-                    GetToolStatus(ToolName.UserBehaviorAnalytics),
-                    GetToolStatus(ToolName.EndpointDetectionAndResponse),
-                    GetToolStatus(ToolName.AdvanceTelemetry),
-                    GetToolStatus(ToolName.LateralMovementProtection)
-                });
+            {
+                
+            });
 
             var message = Newtonsoft.Json.JsonConvert.SerializeObject(trayStatus);
             _logger.Verbose($"Sending status to tray. ErrorCode:{trayStatus.ErrorCode}, Message:{trayStatus.ErrorMessage}, {string.Join(", ", trayStatus.ToolStatuses.Select(x => x))}");

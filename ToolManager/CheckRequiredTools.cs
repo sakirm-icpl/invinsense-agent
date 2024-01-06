@@ -16,10 +16,10 @@ namespace ToolManager
         {
             var client = new ClientService(new HttpClientConfig
             {
-                Name = "Invinsense.Server",
+                Name = "API",
                 AuthRequired = false,
                 TimeOut = 60,
-                BaseUrl = "https://65.1.109.28:5001",
+                BaseUrl = apiUrl,
                 BaseHeaders = new Dictionary<string, string>(),
                 ExtraParams = new Dictionary<string, string>()
             });
