@@ -2,9 +2,9 @@
 using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace ServiceMonitorTest.Helper
+namespace Common.ServiceHelpers.Wrapper
 {
-    public static class ServiceHelper
+    public static class ServiceWrapper
     {
         private const int STANDARD_RIGHTS_REQUIRED = 0xF0000;
         private const int SERVICE_WIN32_OWN_PROCESS = 0x00000010;

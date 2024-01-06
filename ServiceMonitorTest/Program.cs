@@ -1,5 +1,5 @@
-﻿using ServiceMonitorTest.Helper;
-using ServiceMonitorTest.Monitor;
+﻿using Common.ServiceHelpers;
+using Common.ServiceHelpers.Wrapper;
 using System;
 using System.Diagnostics;
 using System.ServiceProcess;
@@ -61,11 +61,10 @@ namespace ServiceMonitorTest
                 if (line.Equals("i"))
                 {
                     string[] args = { };
-                    ServiceHelper.InstallAndStart("SampleService", "My Sample Service",
-                        "C:\\Code\\invinsense-agent\\SampleService\\bin\\Debug\\SampleService.exe", args);
+                    ServiceWrapper.InstallAndStart("SampleService", "My Sample Service", "C:\\Code\\invinsense-agent\\SampleService\\bin\\Debug\\SampleService.exe", args);
                 }
 
-                if (line.Equals("u")) ServiceHelper.Uninstall("SampleService");
+                if (line.Equals("u")) ServiceWrapper.Uninstall("SampleService");
             }
         }
 

@@ -41,10 +41,6 @@
     <ApplicationIcon>green_logo_22_22.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Monitor\ExtendedServiceController.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Monitor\IvsTrayMonitor.cs" />
     <Compile Include="IvsService.cs">
       <SubType>Component</SubType>
     </Compile>

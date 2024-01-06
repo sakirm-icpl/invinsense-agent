@@ -1,8 +1,10 @@
 ﻿using Common.Models;
 using Serilog;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
+using System.Management;
 
 namespace Common.AvHelper
 {
@@ -80,7 +82,7 @@ namespace Common.AvHelper
 
         public ToolStatus GetStatus()
         {
-            var installedAntiviruses = AvMonitor.ListAvStatuses();
+            var installedAntiviruses = ListAvStatuses();
             ToolStatus avStatus;
             if (installedAntiviruses.Any(x => x.IsAvEnabled && x.AvName == "Windows Defender"))
             {
@@ -94,6 +96,26 @@ namespace Common.AvHelper
             }
 
             return avStatus;
+        }
+
+        public static IEnumerable<AvStatus> ListAvStatuses()
+        {
+            //Windows Defender
+            //393472 (060100) = disabled and up to date
+            //397584 (061110) = enabled and out of date
+            //397568 (061100) = enabled and up to date
+
+            ManagementObjectSearcher wmiData = new ManagementObjectSearcher(@"root\SecurityCenter2", "SELECT * FROM AntiVirusProduct");
+            ManagementObjectCollection data = wmiData.Get();
+
+            List<AvStatus> avStatuses = new List<AvStatus>();
+
+            foreach (ManagementObject mo in data.OfType<ManagementObject>())
+            {
+                avStatuses.Add(new AvStatus(mo));
+            }
+
+            return avStatuses;
         }
     }
 }

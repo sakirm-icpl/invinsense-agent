@@ -1,19 +1,19 @@
 ﻿using Common.ConfigProvider;
-using IvsAgent.Extensions;
 using Serilog;
 using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Timers;
+using ToolManager;
 
-namespace IvsAgent.Monitor
+namespace ToolChecker.Monitor
 {
     /// <summary>
     /// TODO: Need to handle multiple user sessions.
     /// </summary>
     public sealed class IvsTrayMonitor
     {
-        private readonly ILogger _logger = Log.ForContext<IvsService>();
+        private readonly ILogger _logger = Log.ForContext<IvsTrayMonitor>();
 
         private static IvsTrayMonitor instance = null;
 
@@ -88,7 +88,7 @@ namespace IvsAgent.Monitor
                 {
                     //TODO: Handle closed event to start new tray app immediately.
                     Process trayApp = processes.FirstOrDefault(pp => pp.ProcessName.StartsWith("IvsTray"));
-                  
+
                     //TODO: Evaluate below scenario for multiple user sessions.
                     //Process myExplorer = Process.GetProcesses().FirstOrDefault(pp => pp.ProcessName == "explorer" && pp.SessionId == trayApp.SessionId);
 
@@ -98,7 +98,7 @@ namespace IvsAgent.Monitor
                     }
                     else
                     {
-                        var ivsTrayFile = CommonUtils.ConstructFromRoot("..\\IvsTray\\IvsTray.exe");
+                        var ivsTrayFile = CommonUtils.ConstructFromRoot("C:\\code\\invinsense-agent\\FormsTest\\bin\\Debug\\FormsTest.exe");
                         _logger.Information($"IvsTray is not running. Starting... {ivsTrayFile}");
                         ProcessExtensions.RunInActiveUserSession(null, ivsTrayFile);
                     }

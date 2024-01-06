@@ -22,6 +22,19 @@ namespace ToolChecker
             Log.Logger.Information($"Artifacts: {CommonUtils.ArtifactsFolder}");
             Log.Logger.Information($"Artifacts: {CommonUtils.LogsFolder}");
 
+            ServiceMonitorUtility.ServiceStatusChanged += (serviceName, status) =>
+            {
+                Log.Logger.Information($"Service {serviceName} changed status to {status}");
+            };
+
+            ServiceMonitorUtility.AddService("IBMPMSVC");
+            ServiceMonitorUtility.AddService("Lenovo Instant On");
+
+            Console.ReadLine();
+        }
+
+        public static void CheckInstallStatus()
+        {
             if (MsiPackageWrapper.GetProductInfoReg("7-Zip", out var pi7zip)) Log.Logger.Information(pi7zip.ToString());
 
             if (MsiPackageWrapper.GetProductInfoReg("Git", out var piGit)) Log.Logger.Information(piGit.ToString());
@@ -31,7 +44,10 @@ namespace ToolChecker
             if (MsiPackageWrapper.GetProductInfoReg("wazuh", out var piWaz)) Log.Logger.Information(piWaz.ToString());
 
             if (ServiceHelper.GetServiceInfo("Sysmon64", out var piSym)) Log.Logger.Information(piSym.ToString());
+        }
 
+        public static async Task Install()
+        {
             var client = new ClientService(new HttpClientConfig
             {
                 Name = "Invinsense.Server",
@@ -93,8 +109,6 @@ namespace ToolChecker
             wm.PostInstall();
 
             Console.WriteLine("DONE. Press any key to exist.");
-
-            Console.ReadLine();
         }
 
     }

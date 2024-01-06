@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ServiceMonitorTest.Helper
+namespace Common.ServiceHelpers.Wrapper
 {
     [Flags]
     public enum ServiceAccessRights
@@ -8,7 +8,7 @@ namespace ServiceMonitorTest.Helper
         QueryConfig = 0x1,
         ChangeConfig = 0x2,
         QueryStatus = 0x4,
-        EnumerateDependants = 0x8,
+        EnumerateDependents = 0x8,
         Start = 0x10,
         Stop = 0x20,
         PauseContinue = 0x40,
@@ -18,7 +18,7 @@ namespace ServiceMonitorTest.Helper
         StandardRightsRequired = 0xF0000,
 
         AllAccess = StandardRightsRequired | QueryConfig | ChangeConfig |
-                    QueryStatus | EnumerateDependants | Start | Stop | PauseContinue |
+                    QueryStatus | EnumerateDependents | Start | Stop | PauseContinue |
                     Interrogate | UserDefinedControl
     }
 }

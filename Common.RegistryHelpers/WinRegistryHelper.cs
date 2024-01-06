@@ -30,6 +30,11 @@ namespace Common.RegistryHelpers
                 using (var baseKey = RegistryKey.OpenBaseKey(regHive, regView))
                 using (var subkey = baseKey.OpenSubKey($"{keyPath}", false)) // False is important!
                 {
+                    if (subkey == null)
+                    {
+                        return null;
+                    }
+
                     var value = subkey?.GetValue(key) as string;
                     return value;
                 }

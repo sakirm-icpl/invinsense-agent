@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.ServiceProcess;
 using System.Threading.Tasks;
 
-namespace ServiceMonitorTest.Monitor
+namespace Common.ServiceHelpers
 {
     public class ExtendedServiceController : ServiceController
     {
-        private readonly Dictionary<ServiceControllerStatus, Task> _tasks =
-            new Dictionary<ServiceControllerStatus, Task>();
+        private readonly Dictionary<ServiceControllerStatus, Task> _tasks = new Dictionary<ServiceControllerStatus, Task>();
 
         public ExtendedServiceController(string ServiceName) : base(ServiceName)
         {
             foreach (ServiceControllerStatus status in Enum.GetValues(typeof(ServiceControllerStatus)))
+            {
                 _tasks.Add(status, null);
+            }   
         }
 
         public new ServiceControllerStatus? Status

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ServiceMonitorTest.Helper
+namespace Common.ServiceHelpers.Wrapper
 {
     [Flags]
     public enum ScmAccessRights

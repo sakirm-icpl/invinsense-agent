@@ -1,4 +1,4 @@
-﻿namespace ServiceMonitorTest.Helper
+﻿namespace Common.ServiceHelpers.Wrapper
 {
     public enum ServiceControl
     {

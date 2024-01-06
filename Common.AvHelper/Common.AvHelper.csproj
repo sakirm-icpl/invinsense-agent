@@ -40,7 +40,6 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AvMonitor.cs" />
     <Compile Include="AvStatus.cs" />
     <Compile Include="AVStatusFlags.cs" />
     <Compile Include="AvStatusWatcher.cs" />
