@@ -31,6 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CheckRequiredTools.cs" />
     <Compile Include="UserSessionAppMonitor.cs" />
     <Compile Include="ExePackageWrapper.cs" />
     <Compile Include="FileFaker.cs" />
