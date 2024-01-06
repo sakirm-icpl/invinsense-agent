@@ -1,4 +1,5 @@
 ﻿using Common.Events;
+using Common.Models;
 using IvsTray.Extensions;
 using Serilog;
 using System;
@@ -12,33 +13,11 @@ namespace IvsTray
 
         public event EventHandler<NotifyEventArgs> Notify;
 
-        public ToolStatusBar(string toolCategory, RunningStatus runningStatus)
+        public ToolStatusBar(ToolGroup toolGroup, RunningStatus runningStatus)
         {
             InitializeComponent();
 
-            CategoryName = toolCategory;
-
-            switch (toolCategory)
-            {
-                case ToolName.EndpointDetectionAndResponse:
-                    lblToolName.Text = "Endpoint Detection and Response";
-                    break;
-                case ToolName.EndpointDeception:
-                    lblToolName.Text = "Endpoint Deception";
-                    break;
-                case ToolName.AdvanceTelemetry:
-                    lblToolName.Text = "Advance Telemetry";
-                    break;
-                case ToolName.EndpointProtection:
-                    lblToolName.Text = "Endpoint Protection";
-                    break;
-                case ToolName.UserBehaviorAnalytics:
-                    lblToolName.Text = "User Behavior Analytics";
-                    break;
-                case ToolName.LateralMovementProtection:
-                    lblToolName.Text = "Lateral Movement Protection";
-                    break;
-            }
+            lblToolName.Text = toolGroup.ToString();
 
             _runningStatus = runningStatus; 
             pbStatus.Image = StatusIconExtensions.Convert(runningStatus);

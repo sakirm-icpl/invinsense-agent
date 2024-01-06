@@ -74,9 +74,9 @@
       <Project>{2E5DA9E9-CCD9-4E4F-A841-706393E59EAA}</Project>
       <Name>Common.ConfigProvider</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common.Core\Common.Core.csproj">
-      <Project>{12BBB8A8-535C-48B1-A50E-22ACD920A478}</Project>
-      <Name>Common.Core</Name>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{59DB54E9-A91D-469F-9AD4-8252BC748DA1}</Project>
+      <Name>Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Ipc\Common.Ipc.Np.Server\Common.Ipc.Np.Server.csproj">
       <Project>{E1B798CD-B65C-42B1-9B9D-7241C2BC1786}</Project>

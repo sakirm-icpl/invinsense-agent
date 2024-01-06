@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using Common.Models;
+using System.Drawing;
 
 namespace IvsTray
 {
@@ -8,7 +9,7 @@ namespace IvsTray
         {
             switch (runningStatus)
             {
-                case RunningStatus.NotFound:
+                case RunningStatus.Unknown:
                     return Properties.Resources.gray;
                 case RunningStatus.Running:
                     return Properties.Resources.green;

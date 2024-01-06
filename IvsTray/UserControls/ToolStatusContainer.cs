@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using ToolManager.Models;
 
 namespace IvsTray.UserControls
 {
@@ -18,7 +17,7 @@ namespace IvsTray.UserControls
         private event EventHandler<EventArgs> ToolNumberModified;
         public event EventHandler<NotifyEventArgs> Notify;
 
-        private readonly IDictionary<string, ToolStatusBar> _toolRunningStatuses = new Dictionary<string, ToolStatusBar>();
+        private readonly IDictionary<ToolGroup, ToolStatusBar> _toolRunningStatuses = new Dictionary<ToolGroup, ToolStatusBar>();
 
         public ToolStatusContainer()
         {
@@ -62,22 +61,24 @@ namespace IvsTray.UserControls
 
             foreach (var item in statuses)
             {
-                if (_toolRunningStatuses.ContainsKey(item.Name))
+                var group = ToolGroup.FromId<ToolGroup>(item.Group) as ToolGroup;
+
+                if (_toolRunningStatuses.ContainsKey(group))
                 {
-                    _toolRunningStatuses[item.Name].UpdateRunningStatus(item.RunningStatus);
+                    _toolRunningStatuses[group].UpdateRunningStatus(item.RunningStatus);
                 }
                 else
                 {
-                    _logger.Verbose("Adding new control for {ToolName}", item.Name);
+                    _logger.Verbose("Adding new control for {ToolName}", group.Name);
 
-                    var control = new ToolStatusBar(item.Name, item.RunningStatus)
+                    var control = new ToolStatusBar(group, item.RunningStatus)
                     {
-                        Tag = item.Name
+                        Tag = group
                     };
 
-                    control.Notify += (sndr, args) => { Notify?.Invoke(sndr, args); };
+                    control.Notify += (sender, args) => { Notify?.Invoke(sender, args); };
 
-                    _toolRunningStatuses.Add(item.Name, control);
+                    _toolRunningStatuses.Add(group, control);
 
                     toolNumbersChanged = true;
                 }

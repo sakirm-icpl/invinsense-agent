@@ -28,7 +28,7 @@ namespace IvsTray.Extensions
                     return NotifyType.Info;
                 case RunningStatus.Warning:
                     return NotifyType.Warning;
-                case RunningStatus.NotFound:
+                case RunningStatus.Unknown:
                 case RunningStatus.Error:
                 case RunningStatus.Stopped:
                     return NotifyType.Error;

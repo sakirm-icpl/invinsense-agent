@@ -1,6 +1,8 @@
 using Common;
 using Common.Events;
 using Common.Models;
+using Common.NamedPipes;
+using Common.RegistryHelpers;
 using IvsTray.Extensions;
 using IvsTray.Properties;
 using Newtonsoft.Json;
@@ -26,7 +28,7 @@ namespace IvsTray
             Icon = Resources.green_logo_22_22;
             notifyIcon.Icon = Resources.green_logo_22_22;
 
-            _clientPipe = new ClientPipe(".", Constants.IvsName, p => p.StartStringReaderAsync());
+            _clientPipe = new ClientPipe(".", Constants.BrandName, p => p.StartStringReaderAsync());
             tsc.Notify += NotifyTray;
         }
 
@@ -78,8 +80,8 @@ namespace IvsTray
                         continue;
                     }
 
-                    var title = ToolRegistry.GetPropertyByName("I18N", "IsolationTitle");
-                    var message = ToolRegistry.GetPropertyByName("I18N", "IsolationMessage");
+                    var title = WinRegistryHelper.GetPropertyByName("Infopercept\\I18N", "IsolationTitle");
+                    var message = WinRegistryHelper.GetPropertyByName("Infopercept\\I18N", "IsolationMessage");
 
                     MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
@@ -130,12 +132,12 @@ namespace IvsTray
                 return;
             }
 
-            const int margine = 10;
+            const int margin = 10;
 
             var newHeight = tsc.Height + fuc.Height;
 
             Rectangle workingArea = Screen.GetWorkingArea(this);
-            Location = new Point(workingArea.Right - Size.Width - margine, workingArea.Bottom - newHeight - margine);
+            Location = new Point(workingArea.Right - Size.Width - margin, workingArea.Bottom - newHeight - margin);
             Size = new Size(Size.Width, newHeight);
 
             //Making form borderless and rounded in the corners.

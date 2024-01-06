@@ -139,9 +139,25 @@
       <Project>{2E5DA9E9-CCD9-4E4F-A841-706393E59EAA}</Project>
       <Name>Common.ConfigProvider</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Common.Core\Common.Core.csproj">
-      <Project>{12BBB8A8-535C-48B1-A50E-22ACD920A478}</Project>
-      <Name>Common.Core</Name>
+    <ProjectReference Include="..\Common.Localization\Common.Localization.csproj">
+      <Project>{51a8f89b-689a-4f15-b250-01c943630838}</Project>
+      <Name>Common.Localization</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.RegistryHelpers\Common.RegistryHelpers.csproj">
+      <Project>{feaf253a-a8b4-45de-a0db-f009b86f1734}</Project>
+      <Name>Common.RegistryHelpers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{59db54e9-a91d-469f-9ad4-8252bc748da1}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ipc\Common.Ipc.Np.Client\Common.Ipc.Np.Client.csproj">
+      <Project>{FD25DEFA-2D2E-4C87-BC8F-EEF832D6E470}</Project>
+      <Name>Common.Ipc.Np.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ipc\Common.Ipc.Np\Common.Ipc.Np.csproj">
+      <Project>{F5631E2F-34D6-4ED1-8695-A1CFB38B2A1A}</Project>
+      <Name>Common.Ipc.Np</Name>
     </ProjectReference>
     <ProjectReference Include="..\ToolManager\ToolManager.csproj">
       <Project>{B04124BA-1758-4AA2-8D3C-9BC0FB9C0E33}</Project>
