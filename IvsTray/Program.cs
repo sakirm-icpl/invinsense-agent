@@ -36,12 +36,12 @@ namespace IvsTray
             Exception ex = e.Exception;
 
             string LF = Environment.NewLine + Environment.NewLine;
-            string infos = $"Message : {LF}{ex.Message}{LF}" +
+            string info = $"Message : {LF}{ex.Message}{LF}" +
                            $"Source : {LF}{ex.Source}{LF}" +
                            $"Stack : {LF}{ex.StackTrace}{LF}" +
                            $"InnerException : {ex.InnerException}";
 
-            Log.Logger.Error(infos);
+            Log.Logger.Error(info);
         }
 
         static void GlobalHandler(object sender, UnhandledExceptionEventArgs args)
@@ -49,12 +49,12 @@ namespace IvsTray
             Exception ex = (Exception)args.ExceptionObject;
 
             string LF = Environment.NewLine + Environment.NewLine;
-            string infos = $"Message : {LF}{ex.Message}{LF}" +
+            string info = $"Message : {LF}{ex.Message}{LF}" +
                            $"Source : {LF}{ex.Source}{LF}" +
                            $"Stack : {LF}{ex.StackTrace}{LF}" +
                            $"InnerException : {ex.InnerException}";
 
-            Log.Logger.Error(infos);
+            Log.Logger.Error(info);
         }
     }
 }

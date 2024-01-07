@@ -87,7 +87,7 @@ namespace Common.AvHelper
             if (installedAntiviruses.Any(x => x.IsAvEnabled && x.AvName == "Windows Defender"))
             {
                 var defenderStatus = installedAntiviruses.FirstOrDefault(x => x.IsAvEnabled && x.AvName == "Windows Defender");
-                var runningStatus = defenderStatus.IsAvEnabled && defenderStatus.IsAvUptoDate ? RunningStatus.Running : RunningStatus.Warning;
+                var runningStatus = defenderStatus.IsAvEnabled && defenderStatus.IsAvUpToDate ? RunningStatus.Running : RunningStatus.Warning;
                 avStatus = new ToolStatus(ToolGroup.EndpointProtection.Id, InstallStatus.Installed, runningStatus);
             }
             else

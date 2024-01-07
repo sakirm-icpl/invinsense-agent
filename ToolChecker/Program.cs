@@ -22,13 +22,13 @@ namespace ToolChecker
             Log.Logger.Information($"Artifacts: {CommonUtils.ArtifactsFolder}");
             Log.Logger.Information($"Artifacts: {CommonUtils.LogsFolder}");
 
-            ServiceMonitorUtility.ServiceStatusChanged += (serviceName, status) =>
+            ServiceStatusWatcher.ServiceStatusChanged += (serviceName, status) =>
             {
                 Log.Logger.Information($"Service {serviceName} changed status to {status}");
             };
 
-            ServiceMonitorUtility.AddService("IBMPMSVC");
-            ServiceMonitorUtility.AddService("Lenovo Instant On");
+            ServiceStatusWatcher.AddService("IBMPMSVC");
+            ServiceStatusWatcher.AddService("Lenovo Instant On");
 
             Console.ReadLine();
         }

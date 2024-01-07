@@ -57,7 +57,7 @@ namespace IvsAgent
             CreateServerPipe();
 
             _logger.Information("Start watching IvsTray App");
-            ServiceMonitorUtility.ResumeMonitoring();
+            ServiceStatusWatcher.ResumeMonitoring();
 
             _logger.Information("Start watching windows defender events");
             AvStatusWatcher.Instance.StartMonitoring();
@@ -68,7 +68,6 @@ namespace IvsAgent
                 _logger.Information("Start waiting for tool verification");
                 await Task.Delay(5000);
 
-                //"https://65.1.109.28:5001"
                 var apiUrl = WinRegistryHelper.GetPropertyByName(Constants.CompanyName, "ApiUrl");
                 await CheckRequiredTools.Install(apiUrl);
             });
@@ -81,7 +80,7 @@ namespace IvsAgent
             try
             {
                 _logger.Information("Stopping IvsTray watcher");
-                ServiceMonitorUtility.StopMonitoring();
+                ServiceStatusWatcher.StopMonitoring();
 
                 _logger.Information("Stopping windows defender watcher");
                 AvStatusWatcher.Instance.StopMonitoring();

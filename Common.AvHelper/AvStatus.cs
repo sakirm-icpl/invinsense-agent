@@ -38,7 +38,7 @@ namespace Common.AvHelper
                 return ProviderStatus.AVStatus.HasFlag(AVStatusFlags.Disable);
             }
         }
-        public bool IsAvUptoDate
+        public bool IsAvUpToDate
         {
             get
             {

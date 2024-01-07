@@ -7,9 +7,9 @@ using Serilog;
 
 namespace Common.ServiceHelpers
 {
-    public static class ServiceMonitorUtility
+    public static class ServiceStatusWatcher
     {
-        private static readonly ILogger _logger = Log.ForContext(typeof(ServiceMonitorUtility));
+        private static readonly ILogger _logger = Log.ForContext(typeof(ServiceStatusWatcher));
 
         private static Dictionary<string, ServiceController> _monitoredServices = new Dictionary<string, ServiceController>();
         private static Dictionary<string, Task> _monitoringTasks = new Dictionary<string, Task>();
@@ -23,7 +23,7 @@ namespace Common.ServiceHelpers
         {
             if (!ServiceHelper.GetServiceInfo(serviceName, out var detail))
             {
-                _logger.Error(serviceName + " not found");    
+                _logger.Error(serviceName + " not found");
             }
 
             _logger.Information($"Service {serviceName} found with {detail.Version}.");
@@ -51,8 +51,8 @@ namespace Common.ServiceHelpers
                     {
                         try
                         {
-                            var lastStatus = _serviceStatuses[service.ServiceName]; 
-                            
+                            var lastStatus = _serviceStatuses[service.ServiceName];
+
                             ServiceControllerStatus currentStatus = service.Status;
 
                             if (lastStatus != currentStatus)
@@ -60,7 +60,7 @@ namespace Common.ServiceHelpers
                                 _serviceStatuses[service.ServiceName] = currentStatus;
                                 ServiceStatusChanged?.Invoke(service.ServiceName, currentStatus);
                             }
-                            
+
                             ServiceControllerStatus targetStatus = currentStatus == ServiceControllerStatus.Running ? ServiceControllerStatus.Stopped : ServiceControllerStatus.Running;
                             service.WaitForStatus(targetStatus, TimeSpan.FromSeconds(30)); // Set an appropriate timeout
                             _serviceStatuses[service.ServiceName] = service.Status;
@@ -103,17 +103,19 @@ namespace Common.ServiceHelpers
             if (_cancellationTokenSource.IsCancellationRequested)
             {
                 _cancellationTokenSource.Dispose();
-                _cancellationTokenSource = new CancellationTokenSource();
+            }
 
-                foreach (var service in _monitoredServices.Values)
+            _cancellationTokenSource = new CancellationTokenSource();
+
+            foreach (var service in _monitoredServices.Values)
+            {
+                var serviceName = service.ServiceName;
+                if (_monitoringTasks[serviceName].IsCompleted)
                 {
-                    var serviceName = service.ServiceName;
-                    if (!_monitoringTasks.ContainsKey(serviceName))
-                    {
-                        _monitoringTasks[serviceName] = MonitorServiceAsync(service, _cancellationTokenSource.Token);
-                    }
+                    _monitoringTasks[serviceName] = MonitorServiceAsync(service, _cancellationTokenSource.Token);
                 }
             }
         }
     }
+}
 }
