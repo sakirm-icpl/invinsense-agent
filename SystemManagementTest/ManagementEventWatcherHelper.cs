@@ -3,7 +3,7 @@ using System.Management;
 
 namespace SystemManagementTest
 {
-    internal class MgmtEvtWatcher
+    internal class ManagementEventWatcherHelper
     {
         public static void RunManagementEventWatcherForWindowsServices()
         {

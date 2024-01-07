@@ -27,8 +27,6 @@ namespace ToolChecker
 
             var consoleMenu = new ConsoleMenuUtility();
             consoleMenu.DisplayMenuAndHandleInput();
-
-            Console.ReadLine();
         }
 
         [ConsoleOption(3, "Option 3 chosen")]
