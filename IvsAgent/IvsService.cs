@@ -47,6 +47,11 @@ namespace IvsAgent
 
             //Allow service to handle session change
             CanHandleSessionChangeEvent = true;
+
+            foreach (var serviceName in servicesToMonitor)
+            {
+                ServiceStatusWatcher.AddService(serviceName);
+            }
         }
 
         protected override void OnStart(string[] args)

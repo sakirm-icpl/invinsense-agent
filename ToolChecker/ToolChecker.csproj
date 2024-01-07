@@ -76,6 +76,10 @@
       <Project>{59DB54E9-A91D-469F-9AD4-8252BC748DA1}</Project>
       <Name>Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ConsoleMenu\ConsoleMenu.csproj">
+      <Project>{55e7de4a-bf34-48b4-9187-78714def1c0c}</Project>
+      <Name>ConsoleMenu</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ToolManager\ToolManager.csproj">
       <Project>{b04124ba-1758-4aa2-8d3c-9bc0fb9c0e33}</Project>
       <Name>ToolManager</Name>

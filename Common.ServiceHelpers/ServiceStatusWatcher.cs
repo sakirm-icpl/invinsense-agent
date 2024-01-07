@@ -24,12 +24,12 @@ namespace Common.ServiceHelpers
             if (!ServiceHelper.GetServiceInfo(serviceName, out var detail))
             {
                 _logger.Error(serviceName + " not found");
+                return;
             }
-
-            _logger.Information($"Service {serviceName} found with {detail.Version}.");
 
             if (!_monitoredServices.ContainsKey(serviceName))
             {
+                _logger.Information($"Monitoring service status: {serviceName} - {detail.Version}.");
                 var service = new ServiceController(serviceName);
                 _monitoredServices.Add(serviceName, service);
                 _serviceStatuses.Add(serviceName, service.Status);
@@ -37,7 +37,7 @@ namespace Common.ServiceHelpers
             }
             else
             {
-                _logger.Error($"Service {serviceName} already added.");
+                _logger.Information($"{serviceName} - {detail.Version} already monitored.");
             }
         }
 
