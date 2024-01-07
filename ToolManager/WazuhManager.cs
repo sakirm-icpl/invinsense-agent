@@ -7,7 +7,6 @@ using System;
 using System.Xml;
 using Common.Mappers;
 using Common.Models;
-using System.Collections.Generic;
 
 namespace ToolManager
 {
@@ -23,18 +22,7 @@ namespace ToolManager
         /// </summary>
         /// <returns></returns>
         protected override int PreInstall(int status)
-        {
-            _toolDetail.InstallInstruction.InstallerFile = "wazuh-agent-4.7.1.msi";
-
-            _toolDetail.InstallInstruction.InstallArgs = new List<string>
-            {
-                "ALLUSERS=1",
-                "ACCEPTEULA=1",
-                "WAZUH_MANAGER=\"65.1.109.28\"",
-                "WAZUH_REGISTRATION_SERVER=\"65.1.109.28\"",
-                "WAZUH_AGENT_GROUP=\"{{reg64.local.SOFTWARE\\Infopercept.Groups}}\""
-            };
-
+        {   
             if (status != 0) return status;
             return status;
         }

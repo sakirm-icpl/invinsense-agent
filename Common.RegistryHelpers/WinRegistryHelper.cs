@@ -17,7 +17,7 @@ namespace Common.RegistryHelpers
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static string GetPropertyByTemplate(string path)
+        public static string GetPropertyByTemplate(string path, string defaultValue = "")
         {
             var parts = path.Split('.');
             try
@@ -32,16 +32,16 @@ namespace Common.RegistryHelpers
                 {
                     if (subkey == null)
                     {
-                        return null;
+                        return defaultValue;
                     }
 
-                    var value = subkey?.GetValue(key) as string;
-                    return value;
+                    var value = subkey.GetValue(key) as string;
+                    return value ?? defaultValue;
                 }
             }
             catch
             {
-                return null;
+                return defaultValue;
             }
         }
 
