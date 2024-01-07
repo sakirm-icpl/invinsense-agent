@@ -3,17 +3,13 @@ using Common.ServiceHelpers;
 using ConsoleMenu;
 using Serilog;
 using System;
-using System.Threading.Tasks;
 using ToolManager;
 
 namespace ToolChecker
 {
-
-
-
     internal class Program
     {
-        private static async Task Main()
+        private static void Main()
         {
             Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
 
@@ -29,7 +25,7 @@ namespace ToolChecker
             consoleMenu.DisplayMenuAndHandleInput();
         }
 
-        [ConsoleOption(3, "Option 3 chosen")]
+        [ConsoleOption(1, "Check Install Status of 7zip, Git, OSQuery, Sysmon and Wazuh")]
         public static void CheckInstallStatus()
         {
             if (MsiPackageWrapper.GetProductInfoReg("7-Zip", out var pi7zip)) Log.Logger.Information(pi7zip.ToString());
@@ -43,19 +39,28 @@ namespace ToolChecker
             if (ServiceHelper.GetServiceInfo("Sysmon64", out var piSym)) Log.Logger.Information(piSym.ToString());
         }
 
-        [ConsoleOption(1, "Option 1 chosen")]
+        [ConsoleOption(2, "Start monitoring services IBMPMSVC and 'Lenovo Instant On'")]
         public static void MonitorSampleServices()
         {
-            Log.Logger.Information("Option 1 is chosen");
-            //Log.Logger.Information("Monitoring sample services.");
-            //ServiceStatusWatcher.AddService("IBMPMSVC");
-            //ServiceStatusWatcher.AddService("Lenovo Instant On");
+            ServiceStatusWatcher.AddService("IBMPMSVC");
+            ServiceStatusWatcher.AddService("Lenovo Instant On");
         }
 
-        [ConsoleOption(2, "Option 2 chosen")]
+        [ConsoleOption(3, "Monitor antivirus status")]
+        public static void MonitorAntivirus()
+        {
+            Common.AvHelper.AvStatusWatcher.Instance.AvStatusChanged += (sender, args) =>
+            {
+                Log.Logger.Information($"Antivirus status changed to {args.RunningStatus}");
+            };
+
+            Common.AvHelper.AvStatusWatcher.Instance.StartMonitoring();
+        }
+
+        [ConsoleOption(4, "Install Tools from server")]
         public static void RemoveSampleServices()
         {
-            Log.Logger.Information("Option 2 is chosen");
+            CheckRequiredTools.Install("https://65.1.109.28:5001").Wait();
         }
     }
 }

@@ -48,6 +48,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common.AvHelper\Common.AvHelper.csproj">
+      <Project>{7b636aed-aa0b-4b93-b47a-f46c197f0356}</Project>
+      <Name>Common.AvHelper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.ConfigProvider\Common.ConfigProvider.csproj">
       <Project>{2E5DA9E9-CCD9-4E4F-A841-706393E59EAA}</Project>
       <Name>Common.ConfigProvider</Name>
