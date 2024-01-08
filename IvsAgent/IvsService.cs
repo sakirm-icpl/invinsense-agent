@@ -27,7 +27,13 @@ namespace IvsAgent
 
         private readonly ILogger _logger = Log.ForContext<IvsService>();
 
-        private readonly string[] servicesToMonitor = new[] { "WazuhSvc", "osqueryd", "Sysmon64", "IvsAgent" };
+        private readonly Dictionary<string, ToolGroup> servicesToMonitor = new Dictionary<string, ToolGroup>
+        {
+            { "WazuhSvc", ToolGroup.EndpointDetectionAndResponse },
+            { "osqueryd", ToolGroup.UserBehaviorAnalytics },
+            { "Sysmon64", ToolGroup.AdvanceTelemetry },
+            { "IvsAgent", ToolGroup.LateralMovementProtection }
+        };
 
         public IvsService()
         {
@@ -48,10 +54,12 @@ namespace IvsAgent
             //Allow service to handle session change
             CanHandleSessionChangeEvent = true;
 
-            foreach (var serviceName in servicesToMonitor)
+            foreach (var service in servicesToMonitor)
             {
-                ServiceStatusWatcher.AddService(serviceName);
+                ServiceStatusWatcher.AddService(service.Key);
             }
+
+            ServiceStatusWatcher.ServiceStatusChanged += SendStatusUpdate;
         }
 
         protected override void OnStart(string[] args)
@@ -178,19 +186,26 @@ namespace IvsAgent
         private void SendToolStatuses()
         {
             var trayStatus = new TrayStatus();
-            
-            //Fetch initial statuses.
-            trayStatus.ToolStatuses.AddRange(new List<ToolStatus>
+
+            //Get service status and convert into ToolStatus and prepare list of ToolStatuses.
+            foreach (var service in servicesToMonitor)
             {
-                
-            });
+                if(!ServiceHelper.GetServiceInfo(service.Key, out var detail))
+                {
+                    _logger.Error($"Error in getting details for service: {service.Key}");
+                    continue;
+                }
+
+                var status = ServiceHelper.GetServiceStatus(service.Key);
+                trayStatus.ToolStatuses.Add(new ToolStatus(service.Value.Id, detail.InstallStatus, ServiceStatusMapper.Map(status)));
+            }
 
             var message = Newtonsoft.Json.JsonConvert.SerializeObject(trayStatus);
             _logger.Verbose($"Sending status to tray. ErrorCode:{trayStatus.ErrorCode}, Message:{trayStatus.ErrorMessage}, {string.Join(", ", trayStatus.ToolStatuses.Select(x => x))}");
             _serverPipe.WriteString(message);
         }
 
-        private void SendStatusUpdate(ToolStatus status)
+        private void SendStatusUpdate(string serviceName, ServiceControllerStatus status)
         {
             //Capture the event in the event logger
             var eventInstance = new EventInstance(status.GetHashCode(), 0, EventLogEntryType.Information);
@@ -198,7 +213,7 @@ namespace IvsAgent
             EventLog.WriteEvent(eventInstance, status.ToString());
 
             //Send the status to the client
-            var statuses = new List<ToolStatus> { status };
+            var statuses = new List<ToolStatus> { ServiceStatusMapper.Map(servicesToMonitor[serviceName], status) };
 
             var message = Newtonsoft.Json.JsonConvert.SerializeObject(statuses);
             _logger.Verbose($"Sending status to tray {string.Join(", ", statuses.Select(x => x))}");

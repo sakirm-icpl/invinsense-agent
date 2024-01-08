@@ -21,10 +21,10 @@ namespace Common.ServiceHelpers
             return false;
         }
 
-        public static string GetServiceStatus(string serviceName)
+        public static ServiceControllerStatus GetServiceStatus(string serviceName)
         {
             ServiceController sc = new ServiceController(serviceName);
-            return sc.Status.ToString();
+            return sc.Status;
         }
 
         public static void SendCommand(string serviceName, int command)
