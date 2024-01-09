@@ -52,29 +52,17 @@ namespace ToolManager
 
             var otd = toolDetails[ToolName.OsQuery];
             var om = new OsQueryManager(otd);
-            if (om.PreInstall() == 0)
-            {
-                om.InstallProduct();
-            }
-            om.PostInstall();
+            om.Ensure();
 
             var sd = toolDetails[ToolName.Sysmon];
             var sm = new SysmonManager(sd);
-            if (sm.PreInstall() == 0)
-            {
-                sm.InstallProduct();
-            }
-            sm.PostInstall();
+            sm.Ensure();
 
             var wd = toolDetails[ToolName.Wazuh];
             var wm = new WazuhManager(wd);
-            if (wm.PreInstall() == 0)
-            {
-                wm.InstallProduct();
-            }
-            wm.PostInstall();
+            wm.Ensure();
 
-            Console.WriteLine("DONE. Press any key to exist.");
+            Log.Logger.Information("DONE");
         }
     }
 }

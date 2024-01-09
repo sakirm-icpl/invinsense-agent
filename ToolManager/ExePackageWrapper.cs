@@ -26,27 +26,17 @@ namespace ToolManager
                 using (Process p = ProcessExtensions.CreateHiddenProcess(installerFile, arguments))
                 {
                     logger.Information("Starting process: {0}", p.StartInfo.FileName);
-
                     p.Start();
-
                     p.WaitForExit();
-
-                    var installResultDescription = ((MsiExitCode)p.ExitCode).GetEnumDescription();
-
-                    logger.Information("Package install result: ({0}) {1}", p.ExitCode, installResultDescription);
-
-                    if (p.ExitCode != 0) throw new Exception(installResultDescription);
+                    logger.Information("Package install result: {0}", p.ExitCode);
+                    return p.ExitCode == 0;
                 }
-
-                logger.Information("Installation completed");
             }
             catch (Exception ex)
             {
                 logger.Error(ex, "An exception occurred.");
-                throw;
+                return false;
             }
-
-            return true;
         }
 
         /// <summary>

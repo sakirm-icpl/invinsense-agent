@@ -5,8 +5,6 @@
         Unknown,
         Error,
         NotFound,
-        Outdated,
-        UnSupported,
         Installed
     }
 }

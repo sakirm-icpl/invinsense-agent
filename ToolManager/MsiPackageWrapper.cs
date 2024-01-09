@@ -216,7 +216,8 @@ namespace ToolManager
         {
             productInfo = new InstallStatusWithDetail
             {
-                InstallStatus = InstallStatus.NotFound
+                InstallStatus = InstallStatus.NotFound,
+                Architecture = architecture
             };
 
             var found = false;

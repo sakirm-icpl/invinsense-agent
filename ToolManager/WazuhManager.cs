@@ -17,16 +17,11 @@ namespace ToolManager
             _logger.Information($"Initializing {nameof(WazuhManager)} Manager");
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        protected override int PreInstall(int status)
-        {   
-            if (status != 0) return status;
-            return status;
+        protected override void BeforeUninstall(InstallStatusWithDetail detail)
+        {
+            
         }
-        
+
         /// <summary>
         /// 1. Copy local_internal_options.conf
         /// 2. Extract active-response\\bin
@@ -36,10 +31,8 @@ namespace ToolManager
         /// 6. Set I18n
         /// </summary>
         /// <returns></returns>
-        protected override int PostInstall(int status)
+        protected override void PostInstall()
         {
-            if (status != 0) return status;
-
             var sourceFolder = Path.Combine(CommonUtils.ArtifactsFolder, _toolDetail.Name);
             var destinationFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "ossec-agent");
 
@@ -63,8 +56,6 @@ namespace ToolManager
 
             //Set Isolation message
             EnsureIsolationMessage();
-
-            return status;
         }
 
         /// <summary>
@@ -106,7 +97,7 @@ namespace ToolManager
         {
             foreach (var arg in _toolDetail.InstallInstruction.InstallArgs)
             {
-                if(arg.StartsWith("WAZUH_MANAGER="))
+                if (arg.StartsWith("WAZUH_MANAGER="))
                 {
                     var managerIp = arg.Split('=')[1];
                     Environment.SetEnvironmentVariable("WAZUH_MANAGER", managerIp, EnvironmentVariableTarget.Machine);
@@ -138,7 +129,7 @@ namespace ToolManager
             var groups = WinRegistryHelper.GetPropertyByName($"{Common.Constants.CompanyName}", "Groups");
             var displayMessage = DisplayMessageMapper.MapNetworkIsolationMessage(groups.Split(','));
 
-            var i18Path = $"{Common.Constants.BrandName}\\i18n"; 
+            var i18Path = $"{Common.Constants.BrandName}\\i18n";
             WinRegistryHelper.SetPropertyByName(i18Path, "Groups", groups);
             WinRegistryHelper.SetPropertyByName(i18Path, "IsolationTitle", displayMessage.Title);
             WinRegistryHelper.SetPropertyByName(i18Path, "IsolationMessage", displayMessage.Message);

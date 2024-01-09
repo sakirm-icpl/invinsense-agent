@@ -41,6 +41,7 @@
     <Compile Include="Models\Converters\InstallTypeConverter.cs" />
     <Compile Include="Models\Converters\ToolGroupConverter.cs" />
     <Compile Include="Models\Converters\VersionDetectionTypeConverter.cs" />
+    <Compile Include="Models\DowngradeInstruction.cs" />
     <Compile Include="Models\Enumeration.cs" />
     <Compile Include="Models\EnumExtensions.cs" />
     <Compile Include="Models\Error.cs" />
@@ -49,8 +50,8 @@
     <Compile Include="Models\FileExistsAction.cs" />
     <Compile Include="Models\GenericEnum.cs" />
     <Compile Include="Models\IModel.cs" />
+    <Compile Include="Models\InstallCheckInstruction.cs" />
     <Compile Include="Models\InstallInstruction.cs" />
-    <Compile Include="Models\InstallIStatusDetection.cs" />
     <Compile Include="Models\InstallStatus.cs" />
     <Compile Include="Models\InstallStatusWithDetail.cs" />
     <Compile Include="Models\InstallType.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="Models\ToolStatus.cs" />
     <Compile Include="Models\ToolValidator.cs" />
     <Compile Include="Models\TrayStatus.cs" />
+    <Compile Include="Models\UpgradeInstruction.cs" />
     <Compile Include="Models\VersionDetectionType.cs" />
     <Compile Include="Models\WinService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

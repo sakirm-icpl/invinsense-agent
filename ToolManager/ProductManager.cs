@@ -24,69 +24,39 @@ namespace ToolManager
             _toolDetail = toolDetail;
         }
 
-        public InstallStatus GetInstallStatus()
+        public void Ensure()
         {
             var success = GetInstalledVersion(out InstallStatusWithDetail detail);
 
-            if (!success)
+            if (success && detail.InstallStatus == InstallStatus.Installed)
             {
-                _logger.Error("Error in detecting version.");
-                return InstallStatus.Error;
-            }
+                var requiredVersion = new Version(_toolDetail.Version);
+                var minVersion = new Version(_toolDetail.UpgradeInstruction.MinVersion);
+                var maxVersion = new Version(_toolDetail.DowngradeInstruction.MaxVersion);
 
-            if (detail.InstallStatus == InstallStatus.NotFound)
-            {
-                _logger.Information("Product is not installed.");
-                return InstallStatus.NotFound;
-            }
+                _logger.Information($"version: {detail}, Required: {requiredVersion}, Min: {minVersion}, Max: {maxVersion}");
 
-            var versionDetectionInstruction = _toolDetail.VersionDetectionInstruction;
+                _logger.Information($"{_toolDetail.Name} is already installed but is not in supported version range.");
 
-            var requiredVersion = new Version(versionDetectionInstruction.Version);
-            var minVersion = new Version(versionDetectionInstruction.MinVersion);
-            var maxVersion = new Version(versionDetectionInstruction.MaxVersion);
+                if (detail.Version >= minVersion && detail.Version <= maxVersion)
+                {
+                    _logger.Information($"{_toolDetail.Name} is already installed and is in supported version range.");
+                    SyncDatabase();
+                    return;
+                }
 
-            _logger.Information($"version: {detail}, Required: {requiredVersion}, Min: {minVersion}, Max: {maxVersion}");
-
-            if (detail.Version < minVersion)
-            {
-                _logger.Information("version is less than minimum version.");
-                return InstallStatus.Outdated;
-            }
-
-            if (detail.Version > maxVersion)
-            {
-                _logger.Information("version is greater than maximum version.");
-                return InstallStatus.UnSupported;
-            }
-
-            if (detail.Version == requiredVersion)
-            {
-                _logger.Information("version is equal to required version.");
-                return InstallStatus.Installed;
-            }
-
-            return InstallStatus.Installed;
-        }
-
-        public int PreInstall()
-        {
-            var status = GetInstallStatus();
-
-            if (status == InstallStatus.Error || status == InstallStatus.Unknown)
-            {
-                return PreInstall(-1);
-            }
-
-            if (status == InstallStatus.UnSupported)
-            {
-                return PreInstall(1);
-            }
-
-            if (status == InstallStatus.Installed)
-            {
-                _logger.Information("Tool is already installed.");
-                return PreInstall(1);
+                if (detail.Version < minVersion && _toolDetail.UpgradeInstruction.UnInstallBeforeUpgrade)
+                {
+                    _logger.Information($"Uninstalling {_toolDetail.Name} before upgrade.");
+                    BeforeUninstall(detail);
+                    UninstallProduct();
+                }
+                else if (detail.Version > maxVersion && _toolDetail.DowngradeInstruction.UnInstallBeforeDowngrade)
+                {
+                    _logger.Information($"Uninstalling {_toolDetail.Name} before downgrade.");
+                    BeforeUninstall(detail);
+                    UninstallProduct();
+                }
             }
 
             var downloader = new FragmentedFileDownloader();
@@ -108,40 +78,34 @@ namespace ToolManager
 
             _logger.Information($"File downloaded and extracted.");
 
+            InstallProduct();
 
-            return PreInstall(0);
+            SyncDatabase();
         }
 
-        protected abstract int PreInstall(int status);
-
-        public int PostInstall()
+        private void SyncDatabase()
         {
             var lastUpdate = WinRegistryHelper.GetPropertyByName(Common.Constants.BrandName, $"{_toolDetail.Name}_last_update");
 
             var lastUpdateTime = lastUpdate == null ? DateTime.MinValue : DateTime.Parse(lastUpdate);
 
-            Log.Logger.Information($"Last Update Time: {lastUpdateTime}, Database Update Time: {_toolDetail.UpdatedOn}");
+            _logger.Information($"Last Update Time: {lastUpdateTime}, Database Update Time: {_toolDetail.UpdatedOn}");
 
-            if (_toolDetail.UpdatedOn <= lastUpdateTime)
+            if (_toolDetail.UpdatedOn >= lastUpdateTime)
             {
                 _logger.Information($"{_toolDetail.Name} config is up to date.");
-                return PostInstall(0);
-            }
-
-            var status = PostInstall(0);
-            if (status == 0)
-            {
+                PostInstall();
                 WinRegistryHelper.SetPropertyByName(Common.Constants.BrandName, $"{_toolDetail.Name}_last_update", DateTime.Now.ToString());
             }
-
-            return status;
         }
 
-        protected abstract int PostInstall(int status);
+        protected abstract void PostInstall();
+
+        protected abstract void BeforeUninstall(InstallStatusWithDetail detail);
 
         public bool GetInstalledVersion(out InstallStatusWithDetail detail)
         {
-            var versionDetectionInstruction = _toolDetail.VersionDetectionInstruction;
+            var versionDetectionInstruction = _toolDetail.InstallCheckInstruction;
 
             if (versionDetectionInstruction.Type == VersionDetectionType.Unknown)
             {
@@ -166,7 +130,7 @@ namespace ToolManager
             return false;
         }
 
-        public int InstallProduct()
+        private int InstallProduct()
         {
             if (!_toolDetail.IsActive)
             {
@@ -252,11 +216,11 @@ namespace ToolManager
             return 1;
         }
 
-        protected int UninstallProduct()
+        private int UninstallProduct()
         {
             var toolName = _toolDetail.Name;
             var instruction = _toolDetail.InstallInstruction;
-            var productName = _toolDetail.VersionDetectionInstruction.Key;
+            var productName = _toolDetail.InstallCheckInstruction.Key;
 
             try
             {

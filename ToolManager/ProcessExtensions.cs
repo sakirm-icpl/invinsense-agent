@@ -284,14 +284,17 @@ namespace ToolManager
         /// <returns>The created hidden process</returns>
         public static Process CreateHiddenProcess(string processFilePath, string processArguments)
         {
-            Log.Information("Creating hidden process '{0}' with arguments '{1}'", processFilePath, processArguments);
+            _logger.Information("Creating hidden process '{0}' with arguments '{1}'", processFilePath, processArguments);
 
             var process = new Process();
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             process.StartInfo.FileName = processFilePath;
             process.StartInfo.Arguments = processArguments;
 
-            Log.Information("Hidden process '{0}' with arguments '{1}' created", processFilePath, processArguments);
+            process.ErrorDataReceived += (sender, args) => _logger.Error(args.Data);
+            process.OutputDataReceived += (sender, args) => _logger.Information(args.Data);
+
+            _logger.Information("Hidden process '{0}' with arguments '{1}' created", processFilePath, processArguments);
 
             return process;
         }

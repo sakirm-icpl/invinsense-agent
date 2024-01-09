@@ -16,24 +16,12 @@ namespace ToolManager
         }
 
         /// <summary>
-        /// TODO: Can be used to gather facts about OSQuery installation
-        /// </summary>
-        /// <param name="status"></param>
-        /// <returns></returns>
-        protected override int PreInstall(int status)
-        {
-            return status;
-        }
-
-        /// <summary>
         /// 1. Copy osquery.conf to installation path
         /// 2. Copy packs to installation path
         /// </summary>
         /// <returns></returns>
-        protected override int PostInstall(int status)
+        protected override void PostInstall()
         {
-            if (status != 0) return status;
-
             var sourceFolder = Path.Combine(CommonUtils.ArtifactsFolder, _toolDetail.Name);
             var destinationFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), _toolDetail.Name);
 
@@ -50,8 +38,16 @@ namespace ToolManager
             CommonFileHelpers.ExtractSourceToDestination(packsSourcePath, packsDestinationPath);
 
             WinRegistryHelper.SetPropertyByName("Infopercept", "osquery_last_update", DateTime.Now.ToString());
+        }
 
-            return status;
+        /// <summary>
+        /// 1. Check service present.
+        /// 2. Stop service
+        /// </summary>
+        /// <param name="detail"></param>
+        protected override void BeforeUninstall(InstallStatusWithDetail detail)
+        {
+            
         }
     }
 }

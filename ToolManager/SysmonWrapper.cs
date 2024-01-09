@@ -18,26 +18,12 @@ namespace ToolManager
             _logger.Information($"Initializing {nameof(SysmonManager)} Manager");
         }
 
-        protected override int PreInstall(int status)
-        {
-            if(status == 0)
-            {
-                CopyConfig();
-            }
-
-            return status;
-        }
-
-        protected override int PostInstall(int status)
-        {
-            if (status != 0) return status;
-
-            CopyConfig();
-
-            return status;
-        }
-
-        private void CopyConfig()
+        /// <summary>
+        /// Copy config and update
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        protected override void PostInstall()
         {
             var sourceFolder = Path.Combine(CommonUtils.ArtifactsFolder, _toolDetail.Name);
 
@@ -49,6 +35,18 @@ namespace ToolManager
             var configSource = Path.Combine(sourceFolder, "sysmonconfig.xml");
             var configDestination = Path.Combine(destinationFolder, "sysmonconfig.xml");
             CommonFileHelpers.EnsureSourceToDestination(configSource, configDestination);
+
+            var exeSource = Path.Combine(destinationFolder, "Sysmon64.exe");
+
+            //configure service
+            var p = ProcessExtensions.CreateHiddenProcess(exeSource, $"-c {configDestination}");
+            p.Start();
+            p.WaitForExit();
+        }
+
+        protected override void BeforeUninstall(InstallStatusWithDetail detail)
+        {
+
         }
     }
 }
