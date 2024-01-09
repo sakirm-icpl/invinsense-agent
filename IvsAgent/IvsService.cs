@@ -30,7 +30,7 @@ namespace IvsAgent
         private readonly Dictionary<string, ToolGroup> servicesToMonitor = new Dictionary<string, ToolGroup>
         {
             { "WazuhSvc", ToolGroup.EndpointDetectionAndResponse },
-            { "osqueryd", ToolGroup.UserBehaviorAnalytics },
+            { "osquery", ToolGroup.UserBehaviorAnalytics },
             { "Sysmon64", ToolGroup.AdvanceTelemetry },
             { "IvsAgent", ToolGroup.LateralMovementProtection }
         };
