@@ -127,6 +127,13 @@ namespace ToolManager
         private void EnsureIsolationMessage()
         {
             var groups = WinRegistryHelper.GetPropertyByName($"{Common.Constants.CompanyName}", "Groups");
+
+            if(string.IsNullOrEmpty(groups))
+            {
+                _logger.Warning("Default groups are not set. Setting default groups to default.");
+                groups = "default";
+            }
+
             var displayMessage = DisplayMessageMapper.MapNetworkIsolationMessage(groups.Split(','));
 
             var i18Path = $"{Common.Constants.CompanyName}\\i18n";
