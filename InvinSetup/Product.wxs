@@ -25,17 +25,12 @@
 
     <!--Fetch property of API-->
     <Property Id="API_BASE">
-      <RegistrySearch Id="ApiBaseUrl" Root="HKLM" Key="SOFTWARE\infopercxept" Name="API_BASE" Type="raw" />
-    </Property>
-
-    <!--Fetch property of EDR_SERVER-->
-    <Property Id="EDR_SERVER">
-      <RegistrySearch Id="EdrServerIp" Root="HKLM" Key="SOFTWARE\infopercxept" Name="EDR_SERVER" Type="raw" />
+      <RegistrySearch Id="ApiBaseUrl" Root="HKLM" Key="SOFTWARE\infopercxept" Name="ApiUrl" Type="raw" />
     </Property>
 
     <!--Fetch property of AGENT_GROUP-->
     <Property Id="AGENT_GROUPS">
-      <RegistrySearch Id="AgentGroups" Root="HKLM" Key="SOFTWARE\infopercxept" Name="AGENT_GROUPS" Type="raw" />
+      <RegistrySearch Id="AgentGroups" Root="HKLM" Key="SOFTWARE\infopercxept" Name="Groups" Type="raw" />
     </Property>
     
     <!--Adding the icon for msi -->
@@ -78,8 +73,6 @@
 
         <RegistryValue Name="API_BASE" Value="[API_BASE]" Type="string" />
 
-        <RegistryValue Name="EDR_SERVER" Value="[EDR_SERVER]" Type="string" />
-        
         <RegistryValue Name="AGENT_GROUPS" Value="[AGENT_GROUPS]" Type="string" />
 
       </RegistryKey>

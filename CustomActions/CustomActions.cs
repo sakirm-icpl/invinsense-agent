@@ -28,12 +28,6 @@ namespace ToolManager
                 return ActionResult.Failure;
             }
 
-            if (string.IsNullOrEmpty(session["EDR_SERVER"]))
-            {
-                session.Log($"Required parameter 'EDR_SERVER' is missing. Installer will exit.");
-                return ActionResult.Failure;
-            }
-
             if (string.IsNullOrEmpty(session["AGENT_GROUPS"]))
             {
                 session.Log($"Required parameter 'AGENT_GROUPS' is missing. Installer will exit.");
