@@ -291,9 +291,6 @@ namespace ToolManager
             process.StartInfo.FileName = processFilePath;
             process.StartInfo.Arguments = processArguments;
 
-            process.ErrorDataReceived += (sender, args) => _logger.Error(args.Data);
-            process.OutputDataReceived += (sender, args) => _logger.Information(args.Data);
-
             _logger.Information("Hidden process '{0}' with arguments '{1}' created", processFilePath, processArguments);
 
             return process;

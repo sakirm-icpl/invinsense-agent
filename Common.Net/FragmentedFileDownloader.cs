@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -8,6 +9,8 @@ namespace Common.Net
 {
     public class FragmentedFileDownloader
     {
+        private static readonly ILogger logger = Log.Logger.ForContext(typeof(FragmentedFileDownloader));
+
         private readonly HttpClient _client;
 
         public FragmentedFileDownloader()
@@ -28,6 +31,7 @@ namespace Common.Net
         {
             if (!await ServerSupportsRangeAsync(fileUrl))
             {
+                logger.Error("Server does not support range requests.");
                 throw new InvalidOperationException("Server does not support range requests.");
             }
 
@@ -69,6 +73,8 @@ namespace Common.Net
                 {
                     return response.Content.Headers.ContentLength.Value;
                 }
+
+                logger.Error("Failed to get file size for {Url}", url);
                 return null;
             }
         }

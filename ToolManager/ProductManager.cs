@@ -36,8 +36,6 @@ namespace ToolManager
 
                 _logger.Information($"version: {detail}, Required: {requiredVersion}, Min: {minVersion}, Max: {maxVersion}");
 
-                _logger.Information($"{_toolDetail.Name} is already installed but is not in supported version range.");
-
                 if (detail.Version >= minVersion && detail.Version <= maxVersion)
                 {
                     _logger.Information($"{_toolDetail.Name} is already installed and is in supported version range.");
@@ -93,7 +91,7 @@ namespace ToolManager
 
             if (_toolDetail.UpdatedOn >= lastUpdateTime)
             {
-                _logger.Information($"{_toolDetail.Name} config is up to date.");
+                _logger.Information($"{_toolDetail.Name} PostInstall required.");
                 PostInstall();
                 WinRegistryHelper.SetPropertyByName(Common.Constants.BrandName, $"{_toolDetail.Name}_last_update", DateTime.Now.ToString());
             }

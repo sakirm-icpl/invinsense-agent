@@ -12,6 +12,7 @@ namespace ToolManager
 {
     public static class CheckRequiredTools
     {
+        private static readonly ILogger logger = Log.Logger.ForContext(typeof(CheckRequiredTools));
         public static async Task Install(string apiUrl)
         {
             var client = new ClientService(new HttpClientConfig
@@ -24,7 +25,7 @@ namespace ToolManager
                 ExtraParams = new Dictionary<string, string>()
             });
 
-            Log.Logger.Information(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles));
+            logger.Information(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles));
 
             var apiResponse = await client.InvokeAsync(HttpMethodNames.Get, $"/api/tools");
 
@@ -41,13 +42,13 @@ namespace ToolManager
             }
             catch (Exception ex)
             {
-                Log.Logger.Error("HTTP:{IsSuccess} - {Message} : payload: {Payload}", apiResponse.IsSuccess, ex.Message);
+                logger.Error("HTTP:{IsSuccess} - {Message} : payload: {Payload}", apiResponse.IsSuccess, ex.Message);
                 return;
             }
 
             foreach (var td in toolDetails)
             {
-                Log.Logger.Information($"{td.Key} - {td.Value}");
+                logger.Information($"{td.Key} - {td.Value}");
             }
 
             var otd = toolDetails[ToolName.OsQuery];
@@ -62,7 +63,7 @@ namespace ToolManager
             var wm = new WazuhManager(wd);
             wm.Ensure();
 
-            Log.Logger.Information("DONE");
+            logger.Information("DONE");
         }
     }
 }

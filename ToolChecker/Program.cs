@@ -13,12 +13,14 @@ namespace ToolChecker
         {
             Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
 
-            Log.Logger.Information($"Artifacts: {CommonUtils.ArtifactsFolder}");
-            Log.Logger.Information($"Artifacts: {CommonUtils.LogsFolder}");
+            var logger = Log.Logger.ForContext(typeof(Program));
+
+            logger.Information($"Artifacts: {CommonUtils.ArtifactsFolder}");
+            logger.Information($"Artifacts: {CommonUtils.LogsFolder}");
 
             ServiceStatusWatcher.ServiceStatusChanged += (serviceName, status) =>
             {
-                Log.Logger.Information($"Service {serviceName} changed status to {status}");
+                logger.Information($"Service {serviceName} changed status to {status}");
             };
 
             var consoleMenu = new ConsoleMenuUtility();
@@ -28,15 +30,17 @@ namespace ToolChecker
         [ConsoleOption(1, "Check Install Status of 7zip, Git, OSQuery, Sysmon and Wazuh")]
         public static void CheckInstallStatus()
         {
-            if (MsiPackageWrapper.GetProductInfoReg("7-Zip", out var pi7zip)) Log.Logger.Information(pi7zip.ToString());
+            var logger = Log.Logger.ForContext(typeof(Program));
 
-            if (MsiPackageWrapper.GetProductInfoReg("Git", out var piGit)) Log.Logger.Information(piGit.ToString());
+            if (MsiPackageWrapper.GetProductInfoReg("7-Zip", out var pi7zip)) logger.Information(pi7zip.ToString());
 
-            if (MsiPackageWrapper.GetProductInfoReg("osquery", out var piOsq)) Log.Logger.Information(piOsq.ToString());
+            if (MsiPackageWrapper.GetProductInfoReg("Git", out var piGit)) logger.Information(piGit.ToString());
 
-            if (MsiPackageWrapper.GetProductInfoReg("wazuh", out var piWaz)) Log.Logger.Information(piWaz.ToString());
+            if (MsiPackageWrapper.GetProductInfoReg("osquery", out var piOsq)) logger.Information(piOsq.ToString());
 
-            if (ServiceHelper.GetServiceInfo("Sysmon64", out var piSym)) Log.Logger.Information(piSym.ToString());
+            if (MsiPackageWrapper.GetProductInfoReg("Wazuh Agent", out var piWaz)) logger.Information(piWaz.ToString());
+
+            if (ServiceHelper.GetServiceInfo("Sysmon64", out var piSym)) logger.Information(piSym.ToString());
         }
 
         [ConsoleOption(2, "Start monitoring services IBMPMSVC and 'Lenovo Instant On'")]
@@ -49,9 +53,11 @@ namespace ToolChecker
         [ConsoleOption(3, "Monitor antivirus status")]
         public static void MonitorAntivirus()
         {
+            var logger = Log.Logger.ForContext(typeof(Program));
+            
             Common.AvHelper.AvStatusWatcher.Instance.AvStatusChanged += (sender, args) =>
             {
-                Log.Logger.Information($"Antivirus status changed to {args.RunningStatus}");
+                logger.Information($"Antivirus status changed to {args.RunningStatus}");
             };
 
             Common.AvHelper.AvStatusWatcher.Instance.StartMonitoring();

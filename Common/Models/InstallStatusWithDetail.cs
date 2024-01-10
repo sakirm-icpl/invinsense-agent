@@ -15,7 +15,7 @@ namespace Common.Models
 
         public override string ToString()
         {
-            return $"Name: {Name}\nVersion: {Version}\nInstall Path: {InstallPath}\nArchitecture: {Architecture}\nFileDate Date: {FileDate}\nInstalledDate: {InstalledDate}";
+            return $"Name: {Name} Version: {Version} Install Path: {InstallPath} Architecture: {Architecture} FileDate Date: {FileDate} InstalledDate: {InstalledDate}";
         }
     }
 }

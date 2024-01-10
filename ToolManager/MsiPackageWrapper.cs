@@ -129,7 +129,7 @@ namespace ToolManager
                     
                     logger.Information("MSI package install result: ({0}) {1}", p.ExitCode, installResultDescription);
 
-                    if (p.ExitCode != 0) throw new Exception(installResultDescription);
+                    if (p.ExitCode != 0) return false;
                 }
 
                 logger.Information("Installation completed");
@@ -137,7 +137,7 @@ namespace ToolManager
             catch (Exception ex)
             {
                 logger.Error(ex, "An exception occurred.");
-                throw;
+                return false;
             }
 
             return true;
