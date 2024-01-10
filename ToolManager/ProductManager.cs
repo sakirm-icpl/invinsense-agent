@@ -83,7 +83,7 @@ namespace ToolManager
 
         private void SyncDatabase()
         {
-            var lastUpdate = WinRegistryHelper.GetPropertyByName(Common.Constants.BrandName, $"{_toolDetail.Name}_last_update");
+            var lastUpdate = WinRegistryHelper.GetPropertyByName(Common.Constants.CompanyName, $"{_toolDetail.Name}_last_update");
 
             var lastUpdateTime = lastUpdate == null ? DateTime.MinValue : DateTime.Parse(lastUpdate);
 
@@ -93,7 +93,7 @@ namespace ToolManager
             {
                 _logger.Information($"{_toolDetail.Name} PostInstall required.");
                 PostInstall();
-                WinRegistryHelper.SetPropertyByName(Common.Constants.BrandName, $"{_toolDetail.Name}_last_update", DateTime.Now.ToString());
+                WinRegistryHelper.SetPropertyByName(Common.Constants.CompanyName, $"{_toolDetail.Name}_last_update", DateTime.Now.ToString());
             }
         }
 

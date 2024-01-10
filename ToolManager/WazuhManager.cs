@@ -44,7 +44,7 @@ namespace ToolManager
             CommonFileHelpers.EnsureSourceToDestination(configSource, configDestination);
 
             //Copy active to installation path
-            var packsSourcePath = Path.Combine(sourceFolder, $"{ToolName.OsQuery}-packs.zip");
+            var packsSourcePath = Path.Combine(sourceFolder, "active-response.zip");
             var packsDestinationPath = Path.Combine(destinationFolder, "active-response", "bin");
             CommonFileHelpers.ExtractSourceToDestination(packsSourcePath, packsDestinationPath);
 
@@ -129,7 +129,7 @@ namespace ToolManager
             var groups = WinRegistryHelper.GetPropertyByName($"{Common.Constants.CompanyName}", "Groups");
             var displayMessage = DisplayMessageMapper.MapNetworkIsolationMessage(groups.Split(','));
 
-            var i18Path = $"{Common.Constants.BrandName}\\i18n";
+            var i18Path = $"{Common.Constants.CompanyName}\\i18n";
             WinRegistryHelper.SetPropertyByName(i18Path, "Groups", groups);
             WinRegistryHelper.SetPropertyByName(i18Path, "IsolationTitle", displayMessage.Title);
             WinRegistryHelper.SetPropertyByName(i18Path, "IsolationMessage", displayMessage.Message);
