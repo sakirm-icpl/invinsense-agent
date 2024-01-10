@@ -22,65 +22,21 @@ namespace ToolManager
         {
             session.Log("Preparing Install. Checking required parameters.");
 
-            if (string.IsNullOrEmpty(session["WAZUH_MANAGER"]))
+            if (string.IsNullOrEmpty(session["API_BASE"]))
             {
-                session.Log($"Required parameter 'WAZUH_MANAGER' is missing. Installer will exit.");
+                session.Log($"Required parameter 'API_BASE' is missing. Installer will exit.");
                 return ActionResult.Failure;
             }
 
-            if (string.IsNullOrEmpty(session["WAZUH_REGISTRATION_SERVER"]))
+            if (string.IsNullOrEmpty(session["EDR_SERVER"]))
             {
-                session.Log($"Required parameter 'WAZUH_REGISTRATION_SERVER' is missing. Installer will exit.");
+                session.Log($"Required parameter 'EDR_SERVER' is missing. Installer will exit.");
                 return ActionResult.Failure;
             }
 
-            if (string.IsNullOrEmpty(session["WAZUH_AGENT_GROUP"]))
+            if (string.IsNullOrEmpty(session["AGENT_GROUPS"]))
             {
-                session.Log($"Required parameter 'WAZUH_AGENT_GROUP' is missing. Installer will exit.");
-                return ActionResult.Failure;
-            }
-
-            if (string.IsNullOrEmpty(session["WAZUH_REGISTRATION_TYPE"]))
-            {
-                session.Log($"Required parameter 'WAZUH_REGISTRATION_TYPE' is missing. Installer will exit.");
-                return ActionResult.Failure;
-            }
-
-            var authType = session["WAZUH_REGISTRATION_TYPE"];
-
-            if(!(authType == "NONE" || authType == "PASSWORD" || authType == "CERTIFICATE"))
-            {
-                session.Log($"'WAZUH_REGISTRATION_TYPE' value is invalid. Expected: NONE | PASSWORD | CERTIFICATE");
-                return ActionResult.Failure;
-            }
-
-            if (authType == "PASSWORD" && string.IsNullOrEmpty(session["WAZUH_REGISTRATION_PASSWORD"]))
-            {
-                session.Log($"Required parameter 'WAZUH_REGISTRATION_PASSWORD' is missing. Installer will exit.");
-                return ActionResult.Failure;
-            }
-
-            if (authType == "CERTIFICATE" && (string.IsNullOrEmpty(session["WAZUH_REGISTRATION_CERTIFICATE"]) || string.IsNullOrEmpty(session["WAZUH_REGISTRATION_KEY"])))
-            {
-                session.Log($"Required parameter 'WAZUH_REGISTRATION_CERTIFICATE' or 'WAZUH_REGISTRATION_KEY' is missing. Installer will exit.");
-                return ActionResult.Failure;
-            }
-
-            var skipEndpointDeception = session["SKIP_ENDPOINT_DECEPTION"];
-            if (skipEndpointDeception == "Y" || skipEndpointDeception == "y")
-            {
-                return ActionResult.Success;
-            }
-
-            if (string.IsNullOrEmpty(session["DBYTES_SERVER"]))
-            {
-                session.Log($"Required parameter 'DBYTES_SERVER' is missing. Installer will exit.");
-                return ActionResult.Failure;
-            }
-
-            if (string.IsNullOrEmpty(session["DBYTES_APIKEY"]))
-            {
-                session.Log($"Required parameter 'DBYTES_APIKEY' is missing. Installer will exit.");
+                session.Log($"Required parameter 'AGENT_GROUPS' is missing. Installer will exit.");
                 return ActionResult.Failure;
             }
 
@@ -118,7 +74,7 @@ namespace ToolManager
         {
             session.Log("Preparing Uninstall. Checking required parameters...");
 
-            if (session["UNINSTALL_KEY"] != "ICPL_2023")
+            if (session["UNINSTALL_KEY"] != "ICPL_2024")
             {
                 session.Log($"Uninstall key {session["UNINSTALL_KEY"]} not valid. Uninstall process failed...");
                 return ActionResult.Failure;
