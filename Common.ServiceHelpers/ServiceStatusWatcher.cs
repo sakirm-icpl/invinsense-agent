@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Threading;
 using Serilog;
+using Common.Models;
 
 namespace Common.ServiceHelpers
 {
@@ -23,7 +24,13 @@ namespace Common.ServiceHelpers
         {
             if (!ServiceHelper.GetServiceInfo(serviceName, out var detail))
             {
-                _logger.Error(serviceName + " not found");
+                _logger.Error($"Error in getting service information for : {serviceName}");
+                return;
+            }
+
+            if(detail.InstallStatus != InstallStatus.Installed)
+            {
+                _logger.Error(serviceName + " not installed");
                 return;
             }
 

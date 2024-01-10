@@ -18,8 +18,18 @@ namespace Common.FileHelpers
             }
 
             var versionInfo = FileVersionInfo.GetVersionInfo(path);
-            version = new Version(versionInfo.ProductVersion);
-            return true;
+
+            var regex = new Regex(@"[vV]?(?<version>\d+(\.\d+)+)");
+            Match match = regex.Match(versionInfo.ProductVersion);
+            if (match.Success)
+            {
+                version = new Version(match.Groups["version"].Value);
+                return true;
+            }
+         
+            _logger.Error("Failed to parse version from {0}", versionInfo.ProductVersion);
+            version = null;
+            return false;
         }
 
         public static DateTime? GetFileDate(string path)

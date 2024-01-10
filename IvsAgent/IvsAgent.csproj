@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{8256E95F-31D8-4F30-9CD3-B7D0C3D3CE74}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <RootNamespace>IvsAgent</RootNamespace>
     <AssemblyName>IvsAgent</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
@@ -39,6 +39,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>green_logo_22_22.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="IvsService.cs">

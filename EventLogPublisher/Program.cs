@@ -1,4 +1,5 @@
 ﻿using Common;
+using ConsoleMenu;
 using System;
 using System.Diagnostics;
 
@@ -6,101 +7,93 @@ namespace EventLogPublisher
 {
     /// <summary>
     ///     PowerShell Commands:
-    ///     Remove-EventLog -LogName "Invinsense"
     /// </summary>
     internal class Program
     {
-        /// <summary>
-        ///     default constructor
-        /// </summary>
-        protected Program()
-        {
-        }
-
         private static void Main()
         {
-            Console.WriteLine("Press \"q\" to stop");
+            var consoleMenu = new ConsoleMenuUtility();
+            consoleMenu.DisplayMenuAndHandleInput();
+        }
 
-            string str;
-            while ((str = Console.ReadLine()) != "q")
+        [ConsoleOption(1, "Create Event Log Source")]
+        public static void CreateEventLogSource()
+        {
+            if (EventLog.SourceExists(Constants.IvsAgentName))
             {
-                if (str.StartsWith("create"))
-                {
-                    // Create the source, if it does not already exist.
-                    if (EventLog.SourceExists(Constants.IvsAgentName))
-                    {
-                        Console.WriteLine(
-                            $"Source exists from {EventLog.LogNameFromSourceName(Constants.IvsAgentName, ".")}");
+                Console.WriteLine($"Source exists from {EventLog.LogNameFromSourceName(Constants.IvsAgentName, ".")}");
+                EventLog.WriteEntry(Constants.IvsAgentName, "Test message", EventLogEntryType.Warning);                
+            }
+            else
+            {
+                Console.WriteLine($"Creating {EventLog.LogNameFromSourceName(Constants.IvsAgentName, ".")}");
+                EventLog.CreateEventSource(Constants.IvsAgentName, Constants.CompanyName);
+            }
+        }
 
-                        EventLog.WriteEntry(Constants.IvsAgentName, "Test message", EventLogEntryType.Warning);
+        /// <summary>
+        /// An event log source should not be created and immediately used.
+        /// There is a latency time to enable the source, it should be created
+        /// prior to executing the application that uses the source.
+        /// Execute this sample a second time to use the new source.
+        /// </summary>
+        [ConsoleOption(2, "Write Entry")]
+        public static void CreateEventSource()
+        {
+            var log = new EventLog
+            {
+                Source = Constants.IvsAgentName
+            };
 
-                        var log = new EventLog
-                        {
-                            Source = Constants.IvsAgentName
-                        };
+            log.WriteEntry("Test entry", EventLogEntryType.Information);
+        }
 
-                        log.WriteEntry("Test entry", EventLogEntryType.Information);
+        [ConsoleOption(3, "Delete Event Log Source")]
+        public static void DeleteEventLogSource()
+        {
+            if (EventLog.SourceExists(Constants.IvsAgentName))
+            {
+                Console.WriteLine($"Source exists from {EventLog.LogNameFromSourceName(Constants.IvsAgentName, ".")}");
+                EventLog.DeleteEventSource(Constants.IvsAgentName);
+            }
+            else
+            {
+                Console.WriteLine("Source not exists");
+            }
 
-                        continue;
-                    }
+            if (EventLog.Exists(Constants.CompanyName))
+            {
+                Console.WriteLine($"Log exists {Constants.CompanyName}");
+                EventLog.Delete(Constants.CompanyName);
+            }
+            else
+            {
+                Console.WriteLine("Log not exists");
+            }
+        }
 
-                    //An event log source should not be created and immediately used.
-                    //There is a latency time to enable the source, it should be created
-                    //prior to executing the application that uses the source.
-                    //Execute this sample a second time to use the new source.
-                    EventLog.CreateEventSource(Constants.IvsAgentName, Constants.CompanyName);
-                    Console.WriteLine("CreatedEventSource");
-                    Console.WriteLine("Exiting, execute the application a second time to use the source.");
-                    return;
-                }
+        [ConsoleOption(4, "Write MySource")]
+        public static void TestMyLogSource()
+        {
+            if (EventLog.SourceExists("MySource"))
+            {
+                Console.WriteLine($"Source exists from {EventLog.LogNameFromSourceName("MySource", ".")}");
+                EventLog.DeleteEventSource("MySource");
+                EventLog.Delete("MyNewLog");
+                return;
+            }
 
-                if (str.StartsWith("delete"))
-                {
-                    if (EventLog.SourceExists(Constants.IvsAgentName))
-                    {
-                        Console.WriteLine(
-                            $"Source exists from {EventLog.LogNameFromSourceName(Constants.IvsAgentName, ".")}");
-                        EventLog.DeleteEventSource(Constants.IvsAgentName);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Source not exists");
-                    }
+            Console.WriteLine("Source not exists. creating...");
+            EventLog.CreateEventSource("MySource", "MyNewLog");
+        }
 
-                    if (EventLog.Exists(Constants.CompanyName))
-                    {
-                        Console.WriteLine($"Log exists {Constants.CompanyName}");
-                        EventLog.Delete(Constants.CompanyName);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Log not exists");
-                    }
-
-                    continue;
-                }
-
-                if (str.StartsWith("test source"))
-                {
-                    if (EventLog.SourceExists("MySource"))
-                    {
-                        Console.WriteLine($"Source exists from {EventLog.LogNameFromSourceName("MySource", ".")}");
-                        EventLog.DeleteEventSource("MySource");
-                        EventLog.Delete("MyNewLog");
-                        continue;
-                    }
-
-                    Console.WriteLine("Source not exists. creating...");
-                    EventLog.CreateEventSource("MySource", "MyNewLog");
-                    continue;
-                }
-
-                if (str.StartsWith("clear all"))
-                    foreach (var log in EventLog.GetEventLogs())
-                    {
-                        Console.WriteLine($"Clearing logs for : {log.Source}, Grouop: {log.Log}, LogDisplay: {log.LogDisplayName}");
-                        log.Clear();
-                    }
+        [ConsoleOption(5, "Clear all")]
+        public static void ClearAll()
+        {
+            foreach (var log in EventLog.GetEventLogs())
+            {
+                Console.WriteLine($"Clearing logs for : {log.Source}, Group: {log.Log}, LogDisplay: {log.LogDisplayName}");
+                log.Clear();
             }
         }
     }

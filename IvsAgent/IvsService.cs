@@ -54,11 +54,6 @@ namespace IvsAgent
             //Allow service to handle session change
             CanHandleSessionChangeEvent = true;
 
-            foreach (var service in servicesToMonitor)
-            {
-                ServiceStatusWatcher.AddService(service.Key);
-            }
-
             ServiceStatusWatcher.ServiceStatusChanged += SendStatusUpdate;
 
             AvStatusWatcher.Instance.AvStatusChanged += AvStatusChanged;
@@ -67,7 +62,7 @@ namespace IvsAgent
         internal void TestStartupAndStop(string[] args)
         {
             OnStart(args);
-            Console.ReadLine();
+ 			Console.ReadLine();
             OnStop();
         }
 
@@ -99,6 +94,11 @@ namespace IvsAgent
                 }
 
                 await CheckRequiredTools.Install(apiUrl);
+
+                foreach (var service in servicesToMonitor)
+                {
+                    ServiceStatusWatcher.AddService(service.Key);
+                }
             });
         }
 
@@ -209,6 +209,12 @@ namespace IvsAgent
                 if(!ServiceHelper.GetServiceInfo(service.Key, out var detail))
                 {
                     _logger.Error($"Error in getting details for service: {service.Key}");
+                    continue;
+                }
+
+                if(detail.InstallStatus != InstallStatus.Installed)
+                {
+                    _logger.Error($"Service {service.Key} is not installed");
                     continue;
                 }
 

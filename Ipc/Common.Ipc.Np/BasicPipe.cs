@@ -76,10 +76,10 @@ namespace Common.Ipc.Np
 
         public Task WriteBytes(byte[] bytes)
         {
-            var blength = BitConverter.GetBytes(bytes.Length);
-            var bfull = blength.Concat(bytes).ToArray();
+            var bufferLen = BitConverter.GetBytes(bytes.Length);
+            var buffer = bufferLen.Concat(bytes).ToArray();
 
-            return pipeStream.WriteAsync(bfull, 0, bfull.Length);
+            return pipeStream.WriteAsync(buffer, 0, buffer.Length);
         }
 
         protected void StartByteReaderAsync(Action<byte[]> packetReceived)

@@ -53,6 +53,10 @@
       <Project>{59db54e9-a91d-469f-9ad4-8252bc748da1}</Project>
       <Name>Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ConsoleMenu\ConsoleMenu.csproj">
+      <Project>{55e7de4a-bf34-48b4-9187-78714def1c0c}</Project>
+      <Name>ConsoleMenu</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
