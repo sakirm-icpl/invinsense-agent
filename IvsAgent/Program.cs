@@ -16,7 +16,7 @@ namespace IvsAgent
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
-                .WriteTo.File(CommonUtils.GetLogFilePath("IvsAgent.log"), rollOnFileSizeLimit: true, retainedFileCountLimit:5, fileSizeLimitBytes: 30000, rollingInterval: RollingInterval.Day)
+                .WriteTo.File(CommonUtils.GetLogFilePath("IvsAgent.log"), rollOnFileSizeLimit: true, retainedFileCountLimit: 5, fileSizeLimitBytes: 30000, rollingInterval: RollingInterval.Day)
                 .CreateLogger();
 
             Log.Information("Initializing service");
@@ -29,13 +29,17 @@ namespace IvsAgent
                     EventLog.CreateEventSource(Constants.IvsAgentName, Constants.CompanyName);
                 }
 
-                ServiceBase[] ServicesToRun;
-                ServicesToRun = new ServiceBase[]
+                if (Environment.UserInteractive)
                 {
-                    new IvsService()
-                };
-
-                ServiceBase.Run(ServicesToRun);
+                    var service = new IvsService();
+                    service.TestStartupAndStop(Array.Empty<string>());
+                }
+                else
+                {
+                    ServiceBase[] ServicesToRun;
+                    ServicesToRun = new ServiceBase[] { new IvsService() };
+                    ServiceBase.Run(ServicesToRun);
+                }
             }
             catch (Exception ex)
             {

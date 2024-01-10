@@ -30,7 +30,7 @@ namespace IvsAgent
         private readonly Dictionary<string, ToolGroup> servicesToMonitor = new Dictionary<string, ToolGroup>
         {
             { "WazuhSvc", ToolGroup.EndpointDetectionAndResponse },
-            { "osquery", ToolGroup.UserBehaviorAnalytics },
+            { "osqueryd", ToolGroup.UserBehaviorAnalytics },
             { "Sysmon64", ToolGroup.AdvanceTelemetry },
             { "IvsAgent", ToolGroup.LateralMovementProtection }
         };
@@ -60,6 +60,15 @@ namespace IvsAgent
             }
 
             ServiceStatusWatcher.ServiceStatusChanged += SendStatusUpdate;
+
+            AvStatusWatcher.Instance.AvStatusChanged += AvStatusChanged;
+        }
+
+        internal void TestStartupAndStop(string[] args)
+        {
+            OnStart(args);
+            Console.ReadLine();
+            OnStop();
         }
 
         protected override void OnStart(string[] args)
@@ -82,6 +91,13 @@ namespace IvsAgent
                 await Task.Delay(5000);
 
                 var apiUrl = WinRegistryHelper.GetPropertyByName(Constants.CompanyName, "ApiUrl");
+
+                if(string.IsNullOrEmpty(apiUrl)) 
+                {
+                    _logger.Error("ApiUrl is not set in registry");
+                    return;
+                }
+
                 await CheckRequiredTools.Install(apiUrl);
             });
         }
@@ -214,6 +230,16 @@ namespace IvsAgent
 
             //Send the status to the client
             var statuses = new List<ToolStatus> { ServiceStatusMapper.Map(servicesToMonitor[serviceName], status) };
+
+            var message = Newtonsoft.Json.JsonConvert.SerializeObject(statuses);
+            _logger.Verbose($"Sending status to tray {string.Join(", ", statuses.Select(x => x))}");
+            _serverPipe.WriteString(message);
+        }
+
+        private void AvStatusChanged(object sender, ToolStatus e)
+        {
+            //Send the status to the client
+            var statuses = new List<ToolStatus> { e };
 
             var message = Newtonsoft.Json.JsonConvert.SerializeObject(statuses);
             _logger.Verbose($"Sending status to tray {string.Join(", ", statuses.Select(x => x))}");
