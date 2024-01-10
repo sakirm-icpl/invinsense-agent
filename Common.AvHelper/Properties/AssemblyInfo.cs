@@ -7,9 +7,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Common.AvHelper")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Common.AvHelper")]
-[assembly: AssemblyCopyright("Copyright ©  2024")]
+[assembly: AssemblyCompany(Common.Constants.CompanyName)]
+[assembly: AssemblyProduct(Common.Constants.BrandName)]
+[assembly: AssemblyCopyright(Common.Constants.CopyRight)]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -18,7 +18,7 @@ using System.Runtime.InteropServices;
 // COM, set the ComVisible attribute to true on that type.
 [assembly: ComVisible(false)]
 
-// The following GUID is for the ID of the typelib if this project is exposed to COM
+// The following GUID is for the ID of the type lib if this project is exposed to COM
 [assembly: Guid("7b636aed-aa0b-4b93-b47a-f46c197f0356")]
 
 // Version information for an assembly consists of the following four values:
@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion(Common.Constants.ProductVersion)]
+[assembly: AssemblyFileVersion(Common.Constants.ProductVersion)]
