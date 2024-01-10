@@ -206,20 +206,22 @@ namespace IvsAgent
             //Get service status and convert into ToolStatus and prepare list of ToolStatuses.
             foreach (var service in servicesToMonitor)
             {
+                RunningStatus status = RunningStatus.Unknown;
+
                 if(!ServiceHelper.GetServiceInfo(service.Key, out var detail))
                 {
                     _logger.Error($"Error in getting details for service: {service.Key}");
-                    continue;
                 }
-
-                if(detail.InstallStatus != InstallStatus.Installed)
+                else if(detail.InstallStatus != InstallStatus.Installed)
                 {
                     _logger.Error($"Service {service.Key} is not installed");
-                    continue;
+                }
+                else
+                {
+                    status = ServiceStatusMapper.Map(ServiceHelper.GetServiceStatus(service.Key));
                 }
 
-                var status = ServiceHelper.GetServiceStatus(service.Key);
-                trayStatus.ToolStatuses.Add(new ToolStatus(service.Value.Id, detail.InstallStatus, ServiceStatusMapper.Map(status)));
+                trayStatus.ToolStatuses.Add(new ToolStatus(service.Value.Id, detail.InstallStatus, status));
             }
 
             var message = Newtonsoft.Json.JsonConvert.SerializeObject(trayStatus);
@@ -234,11 +236,13 @@ namespace IvsAgent
             //var log = new EventLog(Constants.LogGroupName) { Source = Constants.IvsAgentName };
             EventLog.WriteEvent(eventInstance, status.ToString());
 
-            //Send the status to the client
-            var statuses = new List<ToolStatus> { ServiceStatusMapper.Map(servicesToMonitor[serviceName], status) };
+            var trayStatus = new TrayStatus();
 
-            var message = Newtonsoft.Json.JsonConvert.SerializeObject(statuses);
-            _logger.Verbose($"Sending status to tray {string.Join(", ", statuses.Select(x => x))}");
+            //Send the status to the client
+            trayStatus.ToolStatuses.Add(ServiceStatusMapper.Map(servicesToMonitor[serviceName], status));
+
+            var message = Newtonsoft.Json.JsonConvert.SerializeObject(trayStatus);
+            _logger.Verbose($"Sending status to tray {string.Join(", ", trayStatus.ToolStatuses.Select(x => x))}");
             _serverPipe.WriteString(message);
         }
 

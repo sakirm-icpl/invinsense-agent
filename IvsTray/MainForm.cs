@@ -53,7 +53,7 @@ namespace IvsTray
             {
                 _logger.Verbose("Data Received: {0}", args.String);
                 var trayStatus = JsonConvert.DeserializeObject<TrayStatus>(args.String);
-                if(trayStatus.ErrorCode != 0)
+                if (trayStatus.ErrorCode != 0)
                 {
                     MessageBox.Show(trayStatus.ErrorMessage);
                 }
@@ -71,11 +71,11 @@ namespace IvsTray
 
             Task.Run(async () =>
             {
-                while(true)
+                while (true)
                 {
                     await Task.Delay(1000);
                     var isolationState = Environment.GetEnvironmentVariable("isolation_state", EnvironmentVariableTarget.Machine);
-                    if(isolationState != "true")
+                    if (isolationState != "true")
                     {
                         continue;
                     }
@@ -177,23 +177,29 @@ namespace IvsTray
         private void NotifyTray(object sender, NotifyEventArgs e)
         {
             _logger.Verbose("NotifyTray: {Message}", e.Message);
+            UpdateIcon(e.Title, e.Message, e.NotifyType);
+        }
 
-            if(e.Title == Constants.IvsTrayName)
+        private void UpdateIcon(string title, string message, NotifyType notifyType)
+        {
+            if (InvokeRequired)
             {
-                if(e.NotifyType == NotifyType.Info)
-                {
-                    Icon = Resources.green_logo_22_22;
-                    notifyIcon.Icon = Resources.green_logo_22_22;
-                }
-                else
-                {
-                    Icon = Resources.red_logo_22_22;
-                    notifyIcon.Icon = Resources.red_logo_22_22;
-                }
+                Invoke(new Action(() => UpdateIcon(title, message, notifyType)));
                 return;
             }
 
-            notifyIcon.ShowBalloonTip(5000, e.Title, e.Message, NotifyEventArgsExtensions.ConvertIcon(e.NotifyType));
+            if (notifyType == NotifyType.Info)
+            {
+                Icon = Resources.green_logo_22_22;
+                notifyIcon.Icon = Resources.green_logo_22_22;
+            }
+            else
+            {
+                Icon = Resources.red_logo_22_22;
+                notifyIcon.Icon = Resources.red_logo_22_22;
+            }
+
+            notifyIcon.ShowBalloonTip(5000, title, message, NotifyEventArgsExtensions.ConvertIcon(notifyType));
         }
     }
 }

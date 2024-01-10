@@ -5,9 +5,9 @@ namespace Common.Models
     public class ToolStatus
     {
         [JsonConstructor]
-        public ToolStatus(int groupId, InstallStatus installStatus, RunningStatus runningStatus)
+        public ToolStatus(int group, InstallStatus installStatus, RunningStatus runningStatus)
         {
-            Group = groupId;
+            Group = group;
             InstallStatus = installStatus;
             RunningStatus = runningStatus;
         }
