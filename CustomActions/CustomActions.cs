@@ -22,15 +22,15 @@ namespace ToolManager
         {
             session.Log("Preparing Install. Checking required parameters.");
 
-            if (string.IsNullOrEmpty(session["API_BASE"]))
+            if (string.IsNullOrEmpty(session["APIURL"]))
             {
-                session.Log($"Required parameter 'API_BASE' is missing. Installer will exit.");
+                session.Log($"Required parameter 'APIURL' is missing. Installer will exit.");
                 return ActionResult.Failure;
             }
 
-            if (string.IsNullOrEmpty(session["AGENT_GROUPS"]))
+            if (string.IsNullOrEmpty(session["GROUPS"]))
             {
-                session.Log($"Required parameter 'AGENT_GROUPS' is missing. Installer will exit.");
+                session.Log($"Required parameter 'GROUPS' is missing. Installer will exit.");
                 return ActionResult.Failure;
             }
 

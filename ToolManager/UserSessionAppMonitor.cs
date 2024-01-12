@@ -1,10 +1,11 @@
 ﻿using Serilog;
+using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 
 namespace ToolManager
 {
-
     public sealed class UserSessionAppMonitor
     {
         private readonly ILogger _logger = Log.ForContext<UserSessionAppMonitor>();
@@ -16,26 +17,29 @@ namespace ToolManager
 
         private Process monitoredProcess = null; // Process being monitored
 
-        private UserSessionAppMonitor(string applicationName, string applicationPath)
+        private UserSessionAppMonitor()
         {
-            appName = applicationName; // Set the application name
-            appPath = applicationPath;
-            StartMonitoring();
+            appName = "IvsTray";
+            var destinationFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Infopercept", "IvsTray");
+            appPath = Path.Combine(destinationFolder, $"{appName}.exe");
         }
 
-        public static UserSessionAppMonitor Instance(string applicationName, string applicationPath)
+        public static UserSessionAppMonitor Instance
         {
-            lock (padlock)
+            get
             {
-                if (instance == null)
+                lock (padlock)
                 {
-                    instance = new UserSessionAppMonitor(applicationName, applicationPath);
+                    if (instance == null)
+                    {
+                        instance = new UserSessionAppMonitor();
+                    }
+                    return instance;
                 }
-                return instance;
             }
         }
 
-        private void StartMonitoring()
+        public void StartMonitoring()
         {
             // Find the process and start monitoring
             monitoredProcess = Process.GetProcessesByName(appName).FirstOrDefault();
@@ -46,6 +50,14 @@ namespace ToolManager
             else
             {
                 StartApplication();
+            }
+        }
+
+        public void StopMonitoring()
+        {
+            if (monitoredProcess != null && !monitoredProcess.HasExited)
+            {
+                monitoredProcess.Kill();
             }
         }
 
@@ -69,14 +81,6 @@ namespace ToolManager
             if(ProcessExtensions.RunInActiveUserSession(null, appPath))
             {
                 MonitorProcess();
-            }
-        }
-
-        public void StopMonitoring()
-        {
-            if (monitoredProcess != null && !monitoredProcess.HasExited)
-            {
-                monitoredProcess.Kill();
             }
         }
     }

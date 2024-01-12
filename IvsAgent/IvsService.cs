@@ -100,6 +100,9 @@ namespace IvsAgent
                     ServiceStatusWatcher.AddService(service.Key);
                 }
             });
+
+            _logger.Information("Start watching IvsTray App");
+            UserSessionAppMonitor.Instance.StartMonitoring();
         }
 
         protected override void OnStop()
@@ -113,6 +116,9 @@ namespace IvsAgent
 
                 _logger.Information("Stopping windows defender watcher");
                 AvStatusWatcher.Instance.StopMonitoring();
+
+                _logger.Information("Stopping IvsTray App");
+                UserSessionAppMonitor.Instance.StartMonitoring();
 
                 _logger.Information("Cleaning up pipe server");
                 DestroyServerPipe();

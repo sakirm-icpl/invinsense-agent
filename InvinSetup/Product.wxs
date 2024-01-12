@@ -24,13 +24,13 @@
     <!--User provided Property values in registry keys and use a RegistrySearch to read them back out for repair, upgrade and uninstall-->
 
     <!--Fetch property of API-->
-    <Property Id="API_BASE">
-      <RegistrySearch Id="ApiBaseUrl" Root="HKLM" Key="SOFTWARE\infopercxept" Name="ApiUrl" Type="raw" />
+    <Property Id="APIURL">
+      <RegistrySearch Id="ApiBaseUrl" Root="HKLM" Key="SOFTWARE\Infopercxept" Name="ApiUrl" Type="raw" />
     </Property>
 
     <!--Fetch property of AGENT_GROUP-->
-    <Property Id="AGENT_GROUPS">
-      <RegistrySearch Id="AgentGroups" Root="HKLM" Key="SOFTWARE\infopercxept" Name="Groups" Type="raw" />
+    <Property Id="GROUPS">
+      <RegistrySearch Id="AgentGroups" Root="HKLM" Key="SOFTWARE\Infopercxept" Name="Groups" Type="raw" />
     </Property>
     
     <!--Adding the icon for msi -->
@@ -70,11 +70,8 @@
     <Component Id="ConfigurationValues" Directory="ManufacturerFolder" Bitness="always64">
       
       <RegistryKey Root="HKLM" Key="SOFTWARE\Infopercept">
-
-        <RegistryValue Name="API_BASE" Value="[API_BASE]" Type="string" />
-
-        <RegistryValue Name="AGENT_GROUPS" Value="[AGENT_GROUPS]" Type="string" />
-
+        <RegistryValue Name="ApiUrl" Value="[APIURL]" Type="string" />
+        <RegistryValue Name="Groups" Value="[GROUPS]" Type="string" />
       </RegistryKey>
       
       <!--Removing old registry key before fresh installation-->
@@ -97,6 +94,7 @@
       <Directory Id="ProgramDataFolder" Name="$(var.Manufacturer)">
         <Directory Id="ARTIFACTSFOLDER" Name="$(var.ArtifactsName)" />
         <Directory Id="LOGFOLDER" Name="$(var.LogsFolder)" />
+        <Directory Id="CONFIGFOLDER" Name="$(var.ConfigFolder)" />
       </Directory>
     </StandardDirectory>
 
