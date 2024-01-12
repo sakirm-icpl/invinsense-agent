@@ -83,17 +83,24 @@ namespace ToolManager
 
         private void SyncDatabase()
         {
-            var lastUpdate = WinRegistryHelper.GetPropertyByName(Common.Constants.CompanyName, $"{_toolDetail.Name}_last_update");
-
-            var lastUpdateTime = lastUpdate == null ? DateTime.MinValue : DateTime.Parse(lastUpdate);
-
-            _logger.Information($"Last Update Time: {lastUpdateTime}, Database Update Time: {_toolDetail.UpdatedOn}");
-
-            if (_toolDetail.UpdatedOn >= lastUpdateTime)
+            try
             {
-                _logger.Information($"{_toolDetail.Name} PostInstall required.");
-                PostInstall();
-                WinRegistryHelper.SetPropertyByName(Common.Constants.CompanyName, $"{_toolDetail.Name}_last_update", DateTime.Now.ToString());
+                var lastUpdate = WinRegistryHelper.GetPropertyByName(Common.Constants.CompanyName, $"{_toolDetail.Name}_last_update");
+
+                var lastUpdateTime = lastUpdate == null ? DateTime.MinValue : DateTime.Parse(lastUpdate);
+
+                _logger.Information($"Last Update Time: {lastUpdateTime}, Database Update Time: {_toolDetail.UpdatedOn}");
+
+                if (_toolDetail.UpdatedOn >= lastUpdateTime)
+                {
+                    _logger.Information($"{_toolDetail.Name} PostInstall required.");
+                    PostInstall();
+                    WinRegistryHelper.SetPropertyByName(Common.Constants.CompanyName, $"{_toolDetail.Name}_last_update", DateTime.Now.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"{ex.Message}");
             }
         }
 
