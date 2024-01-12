@@ -7,9 +7,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Invinsense Uninstaller")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Infopercept")]
-[assembly: AssemblyProduct("IvsUninstall")]
-[assembly: AssemblyCopyright("Copyright ©  2023")]
+[assembly: AssemblyCompany(Common.Constants.CompanyName)]
+[assembly: AssemblyProduct(Common.Constants.BrandName)]
+[assembly: AssemblyCopyright(Common.Constants.CopyRight)]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("4.1.0.0")]
-[assembly: AssemblyFileVersion("4.1.0.0")]
+[assembly: AssemblyVersion(Common.Constants.ProductVersion)]
+[assembly: AssemblyFileVersion(Common.Constants.ProductVersion)]

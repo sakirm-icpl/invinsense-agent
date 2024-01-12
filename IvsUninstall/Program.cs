@@ -1,5 +1,4 @@
-﻿using Common.Utils;
-using Serilog;
+﻿using Serilog;
 using System;
 using System.IO;
 using System.Linq;
@@ -7,14 +6,22 @@ using System.ServiceProcess;
 using System.Threading;
 using ToolManager;
 using System.DirectoryServices.AccountManagement;
-using Common.Persistence;
-using MsiWrapper;
+using Common.ConfigProvider;
+using Common.Models;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Text;
+using Common.Net;
+using System.Threading.Tasks;
+using Common.RegistryHelpers;
+using Common.Utils;
+using Common;
 
 namespace IvsUninstall
 {
     internal class Program
     {
-        static void Main()
+        static async Task Main()
         {
             Log.Logger = new LoggerConfiguration()
                    .MinimumLevel.Verbose()
@@ -26,18 +33,6 @@ namespace IvsUninstall
 
             try
             {
-                logger.Information("Uninstalling Invinsense 4.1 components");
-                logger.Information("Finding the Invinsense service.....");
-
-                var listPrograms = MoWrapper.ListPrograms();
-
-                foreach (var item in listPrograms)
-                {
-                    //_logger.Information($"Program: {item}");
-                }
-
-                Thread.Sleep(2000);
-
                 string serviceName = "IvsAgent";
 
                 ServiceController[] services = ServiceController.GetServices();
@@ -47,7 +42,7 @@ namespace IvsUninstall
                     if (sc.Status == ServiceControllerStatus.Running)
                     {
                         sc.Stop();
-                        Thread.Sleep(4000);
+                        Thread.Sleep(5000);
                     }
                 }
                 else
@@ -55,94 +50,61 @@ namespace IvsUninstall
                     logger.Information("The service has been stopped early..");
                 }
 
-                #region Endpoint Deception
-                logger.Information("Uninstalling Deceptive Bytes...");
+                var apiUrl = WinRegistryHelper.GetPropertyByName(Constants.CompanyName, "ApiUrl");
 
-                if (DBytesWrapper.Verify() == 0)
+                if (string.IsNullOrEmpty(apiUrl))
                 {
-                    var dBytesExitCode = DBytesWrapper.Remove();
-
-                    logger.Information($"Deceptive Bytes remove exit code={dBytesExitCode}");
-
-                    Thread.Sleep(3000);
-                }
-                else
-                {
-                    logger.Information("DeceptiveBytes is already uninstalled");
+                    logger.Error("ApiUrl is not set in registry");
+                    return;
                 }
 
-                #endregion
-
-                #region OSQUERY
-
-                logger.Information("Uninstalling OsQuery...");
-
-                //Checking if file is exists or not
-                if (OsQueryWrapper.Verify() == 0)
+                var client = new ClientService(new HttpClientConfig
                 {
-                    var osQueryExitCode = OsQueryWrapper.Remove();
+                    Name = "API",
+                    AuthRequired = false,
+                    TimeOut = 60,
+                    BaseUrl = apiUrl,
+                    BaseHeaders = new Dictionary<string, string>(),
+                    ExtraParams = new Dictionary<string, string>()
+                });
 
-                    logger.Information($"OSQUERY remove exit code={osQueryExitCode}");
+                logger.Information(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles));
 
-                    Thread.Sleep(3000);
+                var apiResponse = await client.InvokeAsync(HttpMethodNames.Get, $"/api/tools");
+
+                var content = Encoding.UTF8.GetString(apiResponse.Response, 0, apiResponse.Response.Length);
+
+                Dictionary<string, ToolDetail> toolDetails = null;
+
+                try
+                {
+                    if (apiResponse.IsSuccess && apiResponse.Response.Length > 0)
+                    {
+                        toolDetails = JsonConvert.DeserializeObject<Dictionary<string, ToolDetail>>(content, SerializationExtension.DefaultOptions);
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    logger.Information("Osquery is already uninstalled");
-                }
-
-                //TODO:Removing folder : C:\Program Files\osquery
-                var osqueryPath = "C:\\Program Files\\osquery";
-                if (Directory.Exists(osqueryPath)) Directory.Delete(osqueryPath, true);
-
-                Thread.Sleep(1000);
-
-                #endregion
-
-                #region WAZUH
-
-                //Checking if file is exists or not
-                if (WazuhWrapper.GetInstalledVersion(out Version edrVersion))
-                {
-                    logger.Information($"Uninstalling {ToolName.EndpointDetectionAndResponse} - {edrVersion}");
-
-                    var wazuhExitCode = WazuhWrapper.Remove();
-
-                    logger.Information($"Wazuh remove exit code={wazuhExitCode}");
-
-                    Thread.Sleep(3000);
-                }
-                else
-                {
-                    logger.Information("Wazuh is already uninstalled");
+                    logger.Error("HTTP:{IsSuccess} - {Message} : payload: {Payload}", apiResponse.IsSuccess, ex.Message);
+                    return;
                 }
 
-                //TODO:Removing folder : C:\\Program Files (x86)\\ossec
-                var wazuhPath = "C:\\Program Files (x86)\\ossec";
-                if (Directory.Exists(wazuhPath)) Directory.Delete(wazuhPath, true);
-
-                Thread.Sleep(1000);
-
-                #endregion
-
-                #region SYSMON
-
-                //Checking if file is exists or not
-                if (SysmonWrapper.Verify() == 0)
+                foreach (var td in toolDetails)
                 {
-                    logger.Information("Uninstalling Sysmon...");
-
-                    var sysmonExitCode = SysmonWrapper.Remove();
-
-                    logger.Information($"SYSMON remove exit code={sysmonExitCode}");
-
-                    Thread.Sleep(3000);
+                    logger.Information($"{td.Key} - {td.Value}");
                 }
-                else
-                {
-                    logger.Information("Sysmon is already uninstalled");
-                }
-                #endregion
+
+                var otd = toolDetails[ToolName.OsQuery];
+                var om = new OsQueryManager(otd);
+                om.Remove();
+
+                var sd = toolDetails[ToolName.Sysmon];
+                var sm = new SysmonManager(sd);
+                sm.Remove();
+
+                var wd = toolDetails[ToolName.Wazuh];
+                var wm = new WazuhManager(wd);
+                wm.Remove();
             }
             catch (Exception ex)
             {
@@ -160,7 +122,7 @@ namespace IvsUninstall
 
                 logger.Information("Agent Uninstallation is ready");
 
-                var status = MsiPackageWrapper.Uninstall("Invinsense", "UNINSTALL_KEY=\"ICPL_2023\"");
+                var status = MsiPackageWrapper.Uninstall("Invinsense", "UNINSTALL_KEY=\"ICPL_2024\"");
 
             }
             catch (Exception ex)

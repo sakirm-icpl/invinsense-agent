@@ -81,6 +81,26 @@ namespace ToolManager
             SyncDatabase();
         }
 
+        public void Remove()
+        {
+            var success = GetInstalledVersion(out InstallStatusWithDetail detail);
+
+            if (!success)
+            {
+                _logger.Error($"Error fetching installed version of {_toolDetail.Name}");
+                return;
+            }
+
+            if (detail.InstallStatus != InstallStatus.Installed)
+            {
+                _logger.Information($"{_toolDetail.Name} is not installed.");
+                return;
+            }
+
+            BeforeUninstall(detail);
+            UninstallProduct();
+        }
+
         private void SyncDatabase()
         {
             try
