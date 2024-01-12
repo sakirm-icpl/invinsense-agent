@@ -105,15 +105,7 @@ namespace IvsUninstall
                 var wd = toolDetails[ToolName.Wazuh];
                 var wm = new WazuhManager(wd);
                 wm.Remove();
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex.Message);
-            }
 
-            //Removing Agent with uninstall key
-            try
-            {
                 if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
                 {
                     logger.Information("MSI Installer is not free.");
@@ -123,7 +115,6 @@ namespace IvsUninstall
                 logger.Information("Agent Uninstallation is ready");
 
                 var status = MsiPackageWrapper.Uninstall("Invinsense", "UNINSTALL_KEY=\"ICPL_2024\"");
-
             }
             catch (Exception ex)
             {

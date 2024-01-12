@@ -42,7 +42,6 @@
       <ComponentRef Id="ConfigurationValues" />
       <ComponentGroupRef Id="AgentComponents" />
       <ComponentGroupRef Id="TrayComponents" />
-      <ComponentGroupRef Id="ToolComponents" />
       <ComponentGroupRef Id="PostInstallation" />
     </Feature>
 
@@ -74,14 +73,13 @@
         <RegistryValue Name="Groups" Value="[GROUPS]" Type="string" />
       </RegistryKey>
       
-      <!--Removing old registry key before fresh installation-->
-      <RemoveRegistryKey Action="removeOnInstall" Key="SOFTWARE\Infopercept" Root="HKLM" />
-      <RemoveFile Id="RemoveOldLogId" Name="*.*" On="install" Directory="ManufacturerFolder" />
     </Component>
   </Fragment>
 
   <!--Fragment with details of installation directory-->
   <Fragment>
+
+    <!-- %ProgramFiles%, C:\Program Files -->
     <StandardDirectory Id="ProgramFiles64Folder">
       <Directory Id="ManufacturerFolder" Name="$(var.Manufacturer)">
         <Directory Id="AGENTFOLDER" Name="$(var.AgentName)" />
@@ -127,16 +125,6 @@
       </Component>
     </ComponentGroup>
 
-  </Fragment>
-
-  <!--Fragment with Artifacts installation-->
-  <Fragment>
-    <ComponentGroup Id="ToolComponents" Directory="ARTIFACTSFOLDER">
-      <Component Id="c00" Guid="DEF1F99A-A721-4F70-87BC-92E13E47B0B1" Bitness="always64">
-        <!--Removing all the old files on building new msi file-->
-        <RemoveFile Id="ToolComponentsCopiedFiles" Name="*.*" On="install" />
-      </Component>
-    </ComponentGroup>
   </Fragment>
 
   <!--Fragment with post installation steps-->
