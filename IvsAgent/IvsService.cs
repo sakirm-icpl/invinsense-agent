@@ -73,12 +73,6 @@ namespace IvsAgent
             _logger.Information("Starting IPC server");
             CreateServerPipe();
 
-            _logger.Information("Start watching IvsTray App");
-            ServiceStatusWatcher.ResumeMonitoring();
-
-            _logger.Information("Start watching windows defender events");
-            AvStatusWatcher.Instance.StartMonitoring();
-
             //TODO: Need to move tool installation logic to separate class.
             Task.Factory.StartNew(async () =>
             {
@@ -99,6 +93,12 @@ namespace IvsAgent
                 {
                     ServiceStatusWatcher.AddService(service.Key);
                 }
+
+                _logger.Information("Start watching IvsTray App");
+                ServiceStatusWatcher.ResumeMonitoring();
+
+                _logger.Information("Start watching windows defender events");
+                AvStatusWatcher.Instance.StartMonitoring();
             });
 
             _logger.Information("Start watching IvsTray App");
