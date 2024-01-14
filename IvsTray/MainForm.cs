@@ -80,8 +80,9 @@ namespace IvsTray
                         continue;
                     }
 
-                    var title = WinRegistryHelper.GetPropertyByName("Infopercept\\I18N", "IsolationTitle");
-                    var message = WinRegistryHelper.GetPropertyByName("Infopercept\\I18N", "IsolationMessage");
+                    var i18Path = $"{Constants.CompanyName}\\i18n";
+                    var title = WinRegistryHelper.GetPropertyByName(i18Path, "IsolationTitle");
+                    var message = WinRegistryHelper.GetPropertyByName(i18Path, "IsolationMessage");
 
                     MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;

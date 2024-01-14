@@ -36,8 +36,6 @@ namespace ToolManager
             var packsSourcePath = Path.Combine(sourceFolder, $"{ToolName.OsQuery}-packs.zip");
             var packsDestinationPath = Path.Combine(destinationFolder, "packs");
             CommonFileHelpers.ExtractSourceToDestination(packsSourcePath, packsDestinationPath);
-
-            WinRegistryHelper.SetPropertyByName("Infopercept", "osquery_last_update", DateTime.Now.ToString());
         }
 
         /// <summary>
