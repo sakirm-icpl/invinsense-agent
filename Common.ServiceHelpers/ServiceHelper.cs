@@ -52,6 +52,7 @@ namespace Common.ServiceHelpers
 
                 productInfo.Name = subKey.GetValue("DisplayName") as string;
                 var imagePath = subKey.GetValue("ImagePath") as string;
+                productInfo.Architecture = System.Runtime.InteropServices.Architecture.X64;
                 productInfo.InstallPath = ExtractExecutableFilePath(imagePath);
                 productInfo.FileDate = CommonFileHelpers.GetFileDate(productInfo.InstallPath);
                 var success = CommonFileHelpers.GetFileVersion(productInfo.InstallPath, out var version);

@@ -102,7 +102,7 @@
   <Fragment>
     <ComponentGroup Id="AgentComponents" Directory="AGENTFOLDER">
       <Component Id="a00" Guid="380bbddd-daa7-0744-517b-37da768f5570" Bitness="always64">
-        <File Id="a01" Source="$(var.Agent_Service_TargetDir)\IvsAgent.exe" />
+        <File Id="a01" Source="$(var.Agent_Service_TargetDir)\IvsAgent.exe" KeyPath="yes" />
         <File Id="a02" Source="$(var.Agent_Service_TargetDir)\IvsAgent.exe.config" />
         <!--Removing all the old files on building new msi file-->
         <RemoveFile Id="AgentComponentsCopiedFiles" Name="*.*" On="install" />
@@ -131,7 +131,6 @@
   <Fragment>
     <ComponentGroup Id="PostInstallation" Directory="AGENTFOLDER">
       <Component Id="s0" Guid="868F4F33-6851-4169-B814-F25842A2D414" Bitness="always64">
-        <File Id="AgentEXE" Name="IvsAgent" DiskId="1" Source="$(var.Agent_Service_TargetDir)\IvsAgent.exe" KeyPath="yes" />
         <ServiceInstall Id="s1" Name="IvsAgent" DisplayName="$(var.Description)" Description="$(var.Description)" ErrorControl="normal" Start="auto" Type="ownProcess" />
         <ServiceControl Id="s2" Name="IvsAgent" Start="install" Stop="both" Remove="both" Wait="yes" />
       </Component>

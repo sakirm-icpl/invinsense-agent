@@ -111,7 +111,7 @@ namespace IvsUninstall
                 wm.Remove();
 
                 var id = toolDetails[ToolName.Invinsense];
-                var im = new SysmonManager(sd);
+                var im = new InvinsenseManager(id);
                 im.Remove();
             }
             catch (Exception ex)

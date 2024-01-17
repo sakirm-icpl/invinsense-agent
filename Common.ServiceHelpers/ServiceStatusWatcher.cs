@@ -103,6 +103,8 @@ namespace Common.ServiceHelpers
             {
                 task.Wait(); // Ensuring all tasks are completed before exiting
             }
+
+            _logger.Information("All task monitoring stopped.");
         }
 
         public static void ResumeMonitoring()
@@ -110,9 +112,8 @@ namespace Common.ServiceHelpers
             if (_cancellationTokenSource.IsCancellationRequested)
             {
                 _cancellationTokenSource.Dispose();
+                _cancellationTokenSource = new CancellationTokenSource();
             }
-
-            _cancellationTokenSource = new CancellationTokenSource();
 
             foreach (var service in _monitoredServices.Values)
             {
