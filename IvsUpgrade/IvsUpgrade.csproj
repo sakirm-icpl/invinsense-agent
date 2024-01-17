@@ -71,6 +71,10 @@
       <Project>{59db54e9-a91d-469f-9ad4-8252bc748da1}</Project>
       <Name>Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ToolManager\ToolManager.csproj">
+      <Project>{b04124ba-1758-4aa2-8d3c-9bc0fb9c0e33}</Project>
+      <Name>ToolManager</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Serilog">

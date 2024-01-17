@@ -15,6 +15,8 @@
 
         public static ToolName Wazuh => new ToolName ("wazuh");
 
+        public static ToolName Invinsense => new ToolName ("invinsense");
+
         public static implicit operator string(ToolName toolName)
         {
             return toolName.ToString();

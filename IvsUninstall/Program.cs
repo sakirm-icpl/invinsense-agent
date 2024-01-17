@@ -21,7 +21,7 @@ namespace IvsUninstall
 {
     internal class Program
     {
-        static async Task Main()
+        static async Task Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
                    .MinimumLevel.Verbose()
@@ -54,8 +54,12 @@ namespace IvsUninstall
 
                 if (string.IsNullOrEmpty(apiUrl))
                 {
-                    logger.Error("ApiUrl is not set in registry");
-                    return;
+                    if (args.Length == 0)
+                    {
+                        logger.Error("ApiUrl is not set in registry");
+                        return;
+                    }
+                    apiUrl = args[0];
                 }
 
                 var client = new ClientService(new HttpClientConfig

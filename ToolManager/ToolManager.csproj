@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CheckRequiredTools.cs" />
+    <Compile Include="InvinsenseManager.cs" />
     <Compile Include="UserSessionAppMonitor.cs" />
     <Compile Include="ExePackageWrapper.cs" />
     <Compile Include="FileFaker.cs" />

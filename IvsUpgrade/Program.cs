@@ -13,6 +13,7 @@ using Common;
 using Common.Models;
 using Newtonsoft.Json;
 using Common.Utils;
+using ToolManager;
 
 namespace IvsUpgrade
 {
@@ -51,10 +52,14 @@ namespace IvsUpgrade
 
                 if (string.IsNullOrEmpty(apiUrl))
                 {
-                    logger.Error("ApiUrl is not set in registry");
-                    return;
+                    if(args.Length == 0)
+                    {
+                        logger.Error("ApiUrl is not set in registry");
+                        return;
+                    }
+                    apiUrl = args[0];
                 }
-
+               
                 var client = new ClientService(new HttpClientConfig
                 {
                     Name = "API",
@@ -93,9 +98,9 @@ namespace IvsUpgrade
 
                 logger.Information("Agent Upgrade is ready");
 
-
-
-                
+                var td = toolDetails[ToolName.Invinsense];
+                var tm = new InvinsenseManager(td);
+                tm.Ensure();
             }
             catch (Exception ex)
             {
