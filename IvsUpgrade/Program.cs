@@ -124,6 +124,8 @@ namespace IvsUpgrade
                 var detail = toolDetails[ToolName.Invinsense];
                 var manager = new InvinsenseManager(detail);
                 manager.Ensure();
+
+                logger.Information("Agent Upgrade is completed");
             }
             catch (Exception ex)
             {

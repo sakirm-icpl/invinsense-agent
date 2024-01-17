@@ -113,6 +113,8 @@ namespace IvsUninstall
                 var id = toolDetails[ToolName.Invinsense];
                 var im = new InvinsenseManager(id);
                 im.Remove();
+
+                logger.Information("All components are removed.");
             }
             catch (Exception ex)
             {
