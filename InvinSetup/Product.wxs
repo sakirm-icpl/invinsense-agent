@@ -32,7 +32,7 @@
     <Property Id="GROUPS">
       <RegistrySearch Id="AgentGroups" Root="HKLM" Key="SOFTWARE\Infopercxept" Name="Groups" Type="raw" />
     </Property>
-    
+
     <!--Adding the icon for msi -->
     <Icon Id="green_logo_22_22.ico" SourceFile="Assets\green_logo_22_22.ico" />
     <Property Id="ARPPRODUCTICON" Value="green_logo_22_22.ico" />
@@ -67,12 +67,12 @@
   <!--Fragment to save properties-->
   <Fragment>
     <Component Id="ConfigurationValues" Directory="ManufacturerFolder" Bitness="always64">
-      
+
       <RegistryKey Root="HKLM" Key="SOFTWARE\Infopercept">
         <RegistryValue Name="ApiUrl" Value="[APIURL]" Type="string" />
         <RegistryValue Name="Groups" Value="[GROUPS]" Type="string" />
       </RegistryKey>
-      
+
     </Component>
   </Fragment>
 
@@ -103,6 +103,7 @@
     <ComponentGroup Id="AgentComponents" Directory="AGENTFOLDER">
       <Component Id="a00" Guid="380bbddd-daa7-0744-517b-37da768f5570" Bitness="always64">
         <File Id="a01" Source="$(var.Agent_Service_TargetDir)\IvsAgent.exe" KeyPath="yes" />
+        <ServiceInstall Id="s1" Name="IvsAgent" DisplayName="$(var.Description)" Description="$(var.Description)" ErrorControl="normal" Start="auto" Type="ownProcess" />
         <File Id="a02" Source="$(var.Agent_Service_TargetDir)\IvsAgent.exe.config" />
         <!--Removing all the old files on building new msi file-->
         <RemoveFile Id="AgentComponentsCopiedFiles" Name="*.*" On="install" />
@@ -131,7 +132,6 @@
   <Fragment>
     <ComponentGroup Id="PostInstallation" Directory="AGENTFOLDER">
       <Component Id="s0" Guid="868F4F33-6851-4169-B814-F25842A2D414" Bitness="always64">
-        <ServiceInstall Id="s1" Name="IvsAgent" DisplayName="$(var.Description)" Description="$(var.Description)" ErrorControl="normal" Start="auto" Type="ownProcess" />
         <ServiceControl Id="s2" Name="IvsAgent" Start="install" Stop="both" Remove="both" Wait="yes" />
       </Component>
     </ComponentGroup>
