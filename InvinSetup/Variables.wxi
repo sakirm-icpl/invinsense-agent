@@ -4,7 +4,7 @@
 	<!-- The name of the product -->
 	<?define Name = "Invinsense" ?>
 	<!-- The Description of the product -->
-	<?define Description = "Invinsense Agent v4.7.1" ?>
+	<?define Description = "Invinsense Agent v4.7.2" ?>
 	<!-- The manufacturer, for setup package publisher and folder info -->
 	<?define Manufacturer = "Infopercept" ?>
   <!-- The Agent Name -->
@@ -18,7 +18,7 @@
   <!-- The config folder for all services-->
   <?define ConfigFolder = "config" ?>
   <!-- The version number of this setup package-->
-	<?define Version = "4.7.1.0" ?>
+	<?define Version = "4.7.2.0" ?>
 	<!-- UpgradeCode must be unique and not changed once the first version of the program is installed. -->
 	<?define UpgradeCode = "{38ECE878-1645-4310-BD9A-B9CA57FE0DF0}" ?>
 	<!-- The name of the Cabinet -->
