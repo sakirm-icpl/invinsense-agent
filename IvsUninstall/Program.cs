@@ -110,15 +110,9 @@ namespace IvsUninstall
                 var wm = new WazuhManager(wd);
                 wm.Remove();
 
-                if (!MsiPackageWrapper.IsMsiExecFree(TimeSpan.FromMinutes(5)))
-                {
-                    logger.Information("MSI Installer is not free.");
-                    return;
-                }
-
-                logger.Information("Agent Uninstallation is ready");
-
-                var status = MsiPackageWrapper.Uninstall("Invinsense", "UNINSTALL_KEY=\"ICPL_2024\"");
+                var id = toolDetails[ToolName.Invinsense];
+                var im = new SysmonManager(sd);
+                im.Remove();
             }
             catch (Exception ex)
             {
