@@ -51,7 +51,7 @@ namespace IvsUpgrade
                     logger.Information("The service has been stopped early..");
                 }
 
-                var apiUrl = WinRegistryHelper.GetPropertyByName(Constants.CompanyName, "ApiUrl");
+                var apiUrl = WinRegistryHelper.GetPropertyByName(Common.Constants.CompanyName, "ApiUrl");
 
                 if (string.IsNullOrEmpty(apiUrl))
                 {
