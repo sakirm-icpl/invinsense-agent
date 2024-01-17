@@ -55,7 +55,7 @@ namespace ToolManager
             EnableOsQueryWoodle(destinationFolder);
 
             //Set Isolation message
-            EnsureIsolationMessage();
+            EnsureIsolationMessage(destinationFolder);
         }
 
         /// <summary>
@@ -124,14 +124,28 @@ namespace ToolManager
         /// <summary>
         /// This is quick implementation to set Isolation message in registry.
         /// </summary>
-        private void EnsureIsolationMessage()
+        private void EnsureIsolationMessage(string destinationFolder)
         {
             var groups = WinRegistryHelper.GetPropertyByName($"{Common.Constants.CompanyName}", "Groups");
+            _logger.Information($"Groups from registry: {groups}");
 
-            if(string.IsNullOrEmpty(groups))
+            if (string.IsNullOrEmpty(groups))
             {
-                _logger.Warning("Default groups are not set. Setting default groups to default.");
-                groups = "default";
+                var response = ReadGroups(destinationFolder);
+
+                if(response.Item1)
+                {
+                    groups = response.Item3;
+                }
+                else
+                {
+                    _logger.Warning("Default groups are not set. Setting default.");
+                    groups = "default";
+                }
+
+                _logger.Information($"Groups from config: {groups}");
+
+                WinRegistryHelper.SetPropertyByName($"{Common.Constants.CompanyName}", "Groups", groups);
             }
 
             var displayMessage = DisplayMessageMapper.MapNetworkIsolationMessage(groups.Split(','));
@@ -142,12 +156,9 @@ namespace ToolManager
             WinRegistryHelper.SetPropertyByName(i18Path, "IsolationMessage", displayMessage.Message);
         }
 
-        /*
-        private static (bool, string, string) ReadGroups()
+        private static (bool, string, string) ReadGroups(string destinationFolder)
         {
-            string programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
-
-            var configPath = Path.Combine(programFiles, "ossec-agent\\ossec.conf");
+            var configPath = Path.Combine(destinationFolder, "ossec.conf");
 
             if (File.Exists(configPath) == false)
             {
@@ -177,6 +188,5 @@ namespace ToolManager
                 return (false, ex.Message, "");
             }
         }
-        */
     }
 }

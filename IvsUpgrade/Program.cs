@@ -14,6 +14,9 @@ using Common.Models;
 using Newtonsoft.Json;
 using Common.Utils;
 using ToolManager;
+using System.IO;
+using System.Xml;
+using Serilog.Core;
 
 namespace IvsUpgrade
 {
@@ -98,13 +101,70 @@ namespace IvsUpgrade
 
                 logger.Information("Agent Upgrade is ready");
 
-                var td = toolDetails[ToolName.Invinsense];
-                var tm = new InvinsenseManager(td);
-                tm.Ensure();
+                var groups = WinRegistryHelper.GetPropertyByName($"{Common.Constants.CompanyName}", "Groups");
+                logger.Information($"Groups from registry: {groups}");
+
+                if (string.IsNullOrEmpty(groups))
+                {
+                    var response = ReadGroups();
+
+                    if (response.Item1)
+                    {
+                        groups = response.Item3;
+                    }
+                    else
+                    {
+                        logger.Warning("Default groups are not set. Setting default.");
+                        groups = "default";
+                    }
+
+                    logger.Information($"Groups from config: {groups}");
+
+                    WinRegistryHelper.SetPropertyByName($"{Common.Constants.CompanyName}", "Groups", groups);
+                }
+
+                var detail = toolDetails[ToolName.Invinsense];
+                var manager = new InvinsenseManager(detail);
+                manager.Ensure();
             }
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
+            }
+        }
+
+        private static (bool, string, string) ReadGroups()
+        {
+            var destinationFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "ossec-agent");
+
+            var configPath = Path.Combine(destinationFolder, "ossec.conf");
+
+            if (File.Exists(configPath) == false)
+            {
+                return (false, "ossec.conf file not found under program files. Please ensure that wazuh agent is installed.", "");
+            }
+
+            try
+            {
+                string xmlContent = File.ReadAllText(configPath);
+
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(xmlContent);
+
+                XmlNode groupsNode = doc.SelectSingleNode("//groups");
+                if (groupsNode != null)
+                {
+                    string groupsText = groupsNode.InnerText;
+                    return (true, "", groupsText);
+                }
+                else
+                {
+                    return (false, "The <groups> element was not found.", "");
+                }
+            }
+            catch (Exception ex)
+            {
+                return (false, ex.Message, "");
             }
         }
     }
