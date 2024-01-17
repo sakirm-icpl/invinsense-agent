@@ -7,6 +7,7 @@ namespace IvsTray.UserControls
         public FooterUserControl()
         {
             InitializeComponent();
+            lblVersion.Text = Common.Constants.ProductVersion;
         }
     }
 }

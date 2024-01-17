@@ -37,14 +37,14 @@
             // 
             this.lblVersion.AutoSize = true;
             this.lblVersion.BackColor = System.Drawing.Color.Transparent;
-            this.lblVersion.Font = new System.Drawing.Font("Calibri", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblVersion.Font = new System.Drawing.Font("Calibri", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblVersion.ForeColor = System.Drawing.Color.Green;
-            this.lblVersion.Location = new System.Drawing.Point(272, 30);
+            this.lblVersion.Location = new System.Drawing.Point(279, 34);
             this.lblVersion.Margin = new System.Windows.Forms.Padding(0);
             this.lblVersion.Name = "lblVersion";
-            this.lblVersion.Size = new System.Drawing.Size(73, 39);
+            this.lblVersion.Size = new System.Drawing.Size(61, 29);
             this.lblVersion.TabIndex = 19;
-            this.lblVersion.Text = "v4.7";
+            this.lblVersion.Text = "0.0.0";
             // 
             // pbLogo
             // 
