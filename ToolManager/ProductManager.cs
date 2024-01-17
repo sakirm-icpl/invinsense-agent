@@ -246,6 +246,7 @@ namespace ToolManager
             var toolName = _toolDetail.Name;
             var instruction = _toolDetail.InstallInstruction;
             var productName = _toolDetail.InstallCheckInstruction.Key;
+            var args = VariableHelper.PrepareArgs(instruction.UninstallArgs.ToArray());
 
             try
             {
@@ -255,11 +256,10 @@ namespace ToolManager
 
                 if (instruction.InstallType == InstallType.Installer)
                 {
-                    status = MsiPackageWrapper.Uninstall(productName);
+                    status = MsiPackageWrapper.Uninstall(productName, args);
                 }
                 else if (instruction.InstallType == InstallType.Executable)
                 {
-                    var args = VariableHelper.PrepareArgs(instruction.UninstallArgs.ToArray());
                     ExePackageWrapper.Uninstall(instruction.InstallerFile, args);
                 }
                 else
