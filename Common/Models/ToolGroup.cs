@@ -14,11 +14,11 @@
 
         public static ToolGroup LateralMovementProtection = new ToolGroup(600, "LATERAL_MOVEMENT_PROTECTION", "Lateral Movement Protection");
 
-        public readonly string GroupCode;
+        public readonly string Description;
 
-        public ToolGroup(int id, string name, string groupCode) : base(id, name)
+        public ToolGroup(int id, string name, string description) : base(id, name)
         {
-            GroupCode = groupCode;
+            Description = description;
         }
     }
 }

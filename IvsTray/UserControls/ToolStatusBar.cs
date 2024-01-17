@@ -17,7 +17,7 @@ namespace IvsTray
         {
             InitializeComponent();
 
-            lblToolName.Text = toolGroup.Name;
+            lblToolName.Text = toolGroup.Description;
 
             _runningStatus = runningStatus; 
             pbStatus.Image = StatusIconExtensions.Convert(runningStatus);
