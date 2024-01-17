@@ -40,6 +40,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Localization", "Comm
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvsUninstall", "IvsUninstall\IvsUninstall.csproj", "{CBF19ED4-C4EA-4CE2-8A4C-ADDC04032418}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IvsUpgrade", "IvsUpgrade\IvsUpgrade.csproj", "{CD32B0C1-9DE4-45C3-9203-5568DC6D387F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -176,6 +178,14 @@ Global
 		{CBF19ED4-C4EA-4CE2-8A4C-ADDC04032418}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CBF19ED4-C4EA-4CE2-8A4C-ADDC04032418}.Release|x86.ActiveCfg = Release|Any CPU
 		{CBF19ED4-C4EA-4CE2-8A4C-ADDC04032418}.Release|x86.Build.0 = Release|Any CPU
+		{CD32B0C1-9DE4-45C3-9203-5568DC6D387F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD32B0C1-9DE4-45C3-9203-5568DC6D387F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD32B0C1-9DE4-45C3-9203-5568DC6D387F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CD32B0C1-9DE4-45C3-9203-5568DC6D387F}.Debug|x86.Build.0 = Debug|Any CPU
+		{CD32B0C1-9DE4-45C3-9203-5568DC6D387F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD32B0C1-9DE4-45C3-9203-5568DC6D387F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD32B0C1-9DE4-45C3-9203-5568DC6D387F}.Release|x86.ActiveCfg = Release|Any CPU
+		{CD32B0C1-9DE4-45C3-9203-5568DC6D387F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -3,7 +3,6 @@ using System.IO;
 using Common.ConfigProvider;
 using Common.FileHelpers;
 using Serilog;
-using Common.RegistryHelpers;
 using Common.Models;
 
 namespace ToolManager
