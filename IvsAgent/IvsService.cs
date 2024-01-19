@@ -24,7 +24,7 @@ namespace IvsAgent
     public partial class IvsService : ServiceBase
     {
         private ServerPipe _serverPipe;
-        private bool _isStopping = false;;
+        private bool _isStopping = false;
 
         private readonly ILogger _logger = Log.ForContext<IvsService>();
 
