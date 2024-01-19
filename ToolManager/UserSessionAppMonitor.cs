@@ -41,6 +41,8 @@ namespace ToolManager
 
         public void StartMonitoring()
         {
+            _logger.Information($"Starting monitoring application: {appName}");
+
             // Find the process and start monitoring
             monitoredProcess = Process.GetProcessesByName(appName).FirstOrDefault();
             if (monitoredProcess != null)
@@ -77,10 +79,15 @@ namespace ToolManager
 
         private void StartApplication()
         {
-            // Logic to start the application
+            _logger.Information($"Starting application: {appPath}");
+
             if(ProcessExtensions.RunInActiveUserSession(null, appPath))
             {
                 MonitorProcess();
+            }
+            else
+            {
+                _logger.Error($"Failed to start application: {appPath}");
             }
         }
     }

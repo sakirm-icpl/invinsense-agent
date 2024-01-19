@@ -24,6 +24,7 @@ namespace IvsAgent
     public partial class IvsService : ServiceBase
     {
         private ServerPipe _serverPipe;
+        private bool _isStopping = false;;
 
         private readonly ILogger _logger = Log.ForContext<IvsService>();
 
@@ -37,6 +38,8 @@ namespace IvsAgent
 
         public IvsService()
         {
+            _logger.Verbose("IvsService.Ctor");
+
             InitializeComponent();
 
             AutoLog = false;
@@ -109,6 +112,8 @@ namespace IvsAgent
         {
             _logger.Information("Stopping service");
 
+            _isStopping = true;
+
             try
             {
                 _logger.Information("Stopping IvsTray watcher");
@@ -128,6 +133,8 @@ namespace IvsAgent
             {
                 _logger.Error(ex, "Error while stopping service");
             }
+
+            _logger.Information("Service stopped");
         }
 
         protected override void OnPause()
@@ -171,6 +178,17 @@ namespace IvsAgent
             var message = $"IvsService.OnSessionChange {DateTime.Now.ToLongTimeString()} - UserSession Changed : {changeDescription.Reason}  Session ID: {changeDescription.SessionId}";
             _logger.Information(message);
             EventLog.WriteEntry(message);
+
+            if(changeDescription.Reason == SessionChangeReason.SessionLogon)
+            {
+                _logger.Information("Start watching IvsTray App");
+                UserSessionAppMonitor.Instance.StartMonitoring();
+            }
+            else if(changeDescription.Reason == SessionChangeReason.SessionLogoff)
+            {
+                _logger.Information("Stop watching IvsTray App");
+                UserSessionAppMonitor.Instance.StopMonitoring();
+            }
         }
 
         #region IPC Block
@@ -195,7 +213,8 @@ namespace IvsAgent
             _serverPipe.PipeClosed += (sender, args) =>
             {
                 _logger.Debug("Client is disconnected. Creating new server pipe...");
-                CreateServerPipe();
+
+                if(!_isStopping) CreateServerPipe();
             };
         }
 
