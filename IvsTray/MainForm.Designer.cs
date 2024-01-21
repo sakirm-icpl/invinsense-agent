@@ -69,7 +69,6 @@ namespace IvsTray
             this.Name = Common.Constants.IvsTrayName;
             this.ShowInTaskbar = false;
             this.Text = Common.Constants.BrandName;
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainFormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.OnFormClosed);
             this.Load += new System.EventHandler(this.MainFormOnLoad);
             this.DpiChanged += new System.Windows.Forms.DpiChangedEventHandler(this.OnDpiChanged);

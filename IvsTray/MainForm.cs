@@ -90,11 +90,6 @@ namespace IvsTray
             });
         }
 
-        private void MainFormClosing(object sender, FormClosingEventArgs e)
-        {
-            e.Cancel = true;
-        }
-
         private void FormClicked(object sender, EventArgs e)
         {
             Hide();
