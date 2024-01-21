@@ -39,7 +39,7 @@ namespace IvsTray
             // 
             // notifyIcon
             // 
-            this.notifyIcon.Text = "Invinsense 4.1";
+            this.notifyIcon.Text = Common.Constants.BrandName;
             this.notifyIcon.Visible = true;
             this.notifyIcon.Click += new System.EventHandler(this.ShowClick);
             // 
@@ -66,9 +66,9 @@ namespace IvsTray
             this.Controls.Add(this.fuc);
             this.Controls.Add(this.tsc);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Name = "MainForm";
+            this.Name = Common.Constants.IvsTrayName;
             this.ShowInTaskbar = false;
-            this.Text = "Invinsense 4.1";
+            this.Text = Common.Constants.BrandName;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainFormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.OnFormClosed);
             this.Load += new System.EventHandler(this.MainFormOnLoad);
