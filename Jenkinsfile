@@ -18,19 +18,11 @@ pipeline {
             }
         }
 
-        stage('Package MSI') {
-            steps {
-                script {
-                    bat "make IvsAgent"
-                    bat "make IvsTray"
-                }
-            }
-        }
     }
 
     post {
         success {
-            archiveArtifacts artifacts: 'path/to/msi/**', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'c:/msi/**', allowEmptyArchive: true
         }
     }
 }
