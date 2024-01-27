@@ -4,25 +4,37 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                script {
-                    checkout scm
-                }
+                // Checkout the source code from Git
+                checkout scm
             }
         }
 
         stage('Build') {
             steps {
-                script {
-                    bat "dotnet build Invinsense.sln"
-                }
+                // Use MSBuild to build the C# project
+                bat 'dotnet build Invinsense.sln'
             }
         }
 
+        stage('Package') {
+            steps {
+                // Use make command to create exe file
+                bat 'make IvsAgent'
+            }
+        }
+
+        stage('Create Setup') {
+            steps {
+                // Add steps to create your setup file
+                // For example, use Inno Setup or WiX Toolset
+				bat 'dotnet build Setup.sln'
+            }
+        }
     }
 
     post {
-        success {
-            archiveArtifacts artifacts: 'c:/msi/**', allowEmptyArchive: true
+        always {
+            // Clean up or perform additional steps after the build
         }
     }
 }
