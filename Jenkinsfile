@@ -27,7 +27,7 @@ pipeline {
             steps {
                 // Add steps to create your setup file
                 // For example, use Inno Setup or WiX Toolset
-				bat 'dotnet build Setup.sln'
+                bat 'dotnet build Setup.sln'
             }
         }
     }
@@ -35,6 +35,8 @@ pipeline {
     post {
         always {
             // Clean up or perform additional steps after the build
+            echo 'Performing cleanup or additional steps...'
+            // Add any additional steps you need
         }
     }
 }
